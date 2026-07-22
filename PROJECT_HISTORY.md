@@ -108,6 +108,33 @@ The Genesis importer is intentionally a prototype. The next step is to
 generalize the script so that all 73 books of the Catholic canon can be
 imported automatically.
 
+### First rendered translation milestone
+
+After validating the importer with Genesis, the browser itself was upgraded to
+load translation data dynamically.
+
+`app.js` now fetches:
+
+```text
+/data/translations/douay-rheims/genesis.json
+```
+
+and renders the selected Genesis chapter directly in the interface.
+
+This marks the first moment in the project's history where Maranatha displays
+real biblical text instead of placeholder rows.
+
+The implementation intentionally remains minimal and close to YaQuB:
+
+- translation files remain static JSON files;
+- one file exists per book;
+- the browser loads data on demand with `fetch()`;
+- GitHub Pages deployment remains possible;
+- only Genesis is currently wired to the reader.
+
+The remaining books still display placeholders until their translations are
+imported and connected.
+
 ## Phase 3+ (not started)
 
 Following the same shape as YaQuB's own roadmap: static skeleton app
