@@ -21,11 +21,25 @@
     <section class="panel" aria-labelledby="lookup-heading">
       <h2 id="lookup-heading">Browse</h2>
 
-      <div class="nav-row">
-        <label for="reference">Reference
-          <input id="reference" type="text" placeholder="Genesis 1:1-5 or Mark 3:14-19">
-        </label>
-        <button id="reference-button" type="button">Go to reference</button>
+      <div class="reference-panel">
+        <h3>Reference lookup</h3>
+
+        <label for="reference">Verse or passage</label>
+
+        <div class="nav-row reference-row">
+          <input
+            id="reference"
+            type="text"
+            size="80"
+            placeholder="Examples: Genesis 1:1, Genesis 1:1–5, Mark 3:14–19"
+          >
+
+          <button id="reference-button" type="button">Display</button>
+        </div>
+
+        <p>
+          Use a book name, a chapter, a verse range, or semicolon-separated references.
+        </p>
       </div>
 
       <div class="nav-row">
