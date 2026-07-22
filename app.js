@@ -5,6 +5,8 @@
   const locale = window.MARANATHA_LOCALE_EN;
 
   const refs = {
+    reference: q('#reference'),
+    referenceButton: q('#reference-button'),
     book: q('#book'),
     chapter: q('#chapter'),
     theme: q('#theme'),
@@ -36,6 +38,13 @@
 
     refs.chapter.addEventListener('change', () => render());
     refs.go.addEventListener('click', () => render());
+    refs.referenceButton.addEventListener('click', goToReference);
+    refs.reference.addEventListener('keydown', event => {
+      if (event.key === 'Enter') {
+        goToReference();
+      }
+    });
+
     refs.theme.addEventListener('change', () => setTheme());
 
     populateChapters();
@@ -72,7 +81,6 @@
 
   function populateChapters() {
     const book = currentBook();
-
     refs.chapter.innerHTML = '';
 
     book.chapters.forEach((verseCount, i) => {
@@ -81,6 +89,35 @@
       opt.textContent = `Chapter ${i + 1}`;
       refs.chapter.appendChild(opt);
     });
+  }
+
+  function goToReference() {
+    const input = refs.reference.value.trim();
+    const match = input.match(/^(.+?)\s+(\d+)/);
+
+    if (!match) {
+      setMessage('Could not parse reference. Example: Genesis 1:1-5');
+      return;
+    }
+
+    const bookName = match[1].toLowerCase();
+    const chapter = match[2];
+
+    const book = canon.books.find(candidate => {
+      const localized = locale.books[candidate.id]?.name?.toLowerCase();
+      return localized === bookName;
+    });
+
+    if (!book) {
+      setMessage(`Unknown book: ${match[1]}`);
+      return;
+    }
+
+    refs.book.value = book.id;
+    populateChapters();
+    refs.chapter.value = chapter;
+    setMessage('Verse-range parsing is planned; currently only the chapter is selected.');
+    render();
   }
 
   async function loadGenesis() {
