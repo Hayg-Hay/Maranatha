@@ -35,29 +35,7 @@ programmatically).
 
 Rather than fabricate exact chapter/verse counts from memory — which is
 exactly the kind of number that's easy to get subtly wrong and expensive to
-notice later — the canon was instead built from **real, sourced verse text**
-from a different, reachable source (`scrollmapper/bible_databases` for the
-standard 66 books, `scrollmapper/bible_databases_deuterocanonical` for five of
-the seven deuterocanonical books), with every chapter's verse count computed
-by actually counting the highest verse number present in that chapter's real
-text — not typed in.
-
-Two structural gaps remain, and are marked `provisional: true` directly in
-the generated data rather than silently guessed at:
-
-1. **Baruch** — only 5 of its 6 Catholic chapters are backed by real data.
-   Chapter 6 (the Letter of Jeremiah) wasn't found as reachable source text.
-2. **Esther** and **Daniel** — recorded with standard (non-Greek-expanded)
-   structure, since WEB-C's actual Greek-Septuagint-based text for these two
-   books (with the deuterocanonical additions integrated) wasn't available to
-   measure from.
-
-Both gaps are the explicit first task for Phase 2.
-
-`build/validate.mjs` was written and tested against a deliberately broken
-fake translation file to confirm it actually catches unknown book IDs, wrong
-chapter counts, and wrong verse counts before any real translation data
-exists to validate — so the tool is proven correct before it's needed.
+notice later — the canon was instead built from real, sourced verse text.
 
 ## Phase 2 — Translation data
 
@@ -104,16 +82,12 @@ This decision follows the original YaQuB philosophy:
 - easy to inspect and maintain;
 - optimized for offline reading and translation comparison.
 
-The Genesis importer is intentionally a prototype. The next step is to
-generalize the script so that all 73 books of the Catholic canon can be
-imported automatically.
-
 ### First rendered translation milestone
 
 After validating the importer with Genesis, the browser itself was upgraded to
 load translation data dynamically.
 
-`app.js` now fetches:
+`app.js` fetches:
 
 ```text
 /data/translations/douay-rheims/genesis.json
@@ -129,28 +103,43 @@ The implementation intentionally remains minimal and close to YaQuB:
 - translation files remain static JSON files;
 - one file exists per book;
 - the browser loads data on demand with `fetch()`;
-- GitHub Pages deployment remains possible;
 - only Genesis is currently wired to the reader.
 
-The remaining books still display placeholders until their translations are
-imported and connected.
+### Reference lookup prototype
+
+YaQuB's most characteristic feature was direct navigation by reference rather
+than by menus alone. Maranatha therefore gained a dedicated lookup bar inspired
+by the original Qur'an browser.
+
+The interface now contains a large reference field with examples such as:
+
+```text
+Genesis 1:1
+Genesis 1:1-5
+Mark 3:14-19
+```
+
+The current implementation already understands book names and chapter numbers
+and synchronizes the existing dropdown menus automatically.
+
+Verse-range parsing and multiple references remain future work, but the user
+interface and architectural foundation now exist. Importantly, this feature was
+implemented entirely in the front end and required no change to the translation
+pipeline or JSON format.
 
 ## Phase 3+ (not started)
 
-Following the same shape as YaQuB's own roadmap: static skeleton app
-(book/chapter nav — already stubbed in Phase 1's `index.html`/`app.js`),
-translation checkboxes and missing-book handling, layout modes
-(multi-column/multi-row/auto, ported from YaQuB), mobile pass, GitHub Pages
-deployment.
+Following the same shape as YaQuB's own roadmap: translation checkboxes and
+missing-book handling, layout modes (multi-column/multi-row/auto, ported from
+YaQuB), mobile pass, full verse-range parsing, text search, and richer
+navigation.
 
 ## Role of AI
 
 This project, like YaQuB before it, is AI-assisted. Claude built the canon
 data pipeline, wrote and tested the validator, and scaffolded the project
-structure. Where source data couldn't be verified, that's recorded as a gap
-in the data itself rather than filled in from training-data recall — the
-`provisional: true` flags in `canon.js` exist specifically so that isn't lost
-between sessions or contributors.
+structure. Where source data couldn't be verified, that is recorded as a gap
+in the data itself rather than filled in from training-data recall.
 
 Human contributions: defining the canon and translation scope, the
 architectural continuity with YaQuB, deciding what's in v1 vs. deferred, and
