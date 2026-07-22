@@ -59,12 +59,54 @@ fake translation file to confirm it actually catches unknown book IDs, wrong
 chapter counts, and wrong verse counts before any real translation data
 exists to validate — so the tool is proven correct before it's needed.
 
-## Phase 2 — Translation data (not started)
+## Phase 2 — Translation data
 
-Planned: fetch and normalize World English Bible Catholic Edition,
-Douay-Rheims, and KJV (for the deuterocanon chapters, since standard KJV
-lacks them) into `data/<id>.json` files matching the shape `validate.mjs`
-expects, closing the two Phase 1 gaps as part of the same work.
+The first translation pipeline prototype was built around the Douay–Rheims
+Bible.
+
+A new importer script, `build/import-douay-rheims.mjs`, and a new translation
+folder, `data/translations/douay-rheims/`, were added. The initial goal was
+not to import the whole Bible immediately, but to prove that Maranatha could
+consume an external translation source and normalize it into its own static
+format.
+
+Genesis was downloaded directly from the Douay–Rheims JSON API and stored as
+`genesis-raw.json`. Inspecting the real source before writing the importer
+proved important: the file contained much more than verse text, including
+introductions, annotations, cross-references, note markers, and HTML tags.
+
+For version 1, Maranatha deliberately discards that additional material.
+The importer keeps only the verse text itself, stripping note markers and
+formatting while preserving chapter and verse order.
+
+The first generated translation file, `genesis.json`, uses the following
+shape:
+
+```json
+{
+  "translation": "douay-rheims",
+  "book": "GEN",
+  "chapters": [
+    [
+      "Verse 1",
+      "Verse 2"
+    ]
+  ]
+}
+```
+
+This decision follows the original YaQuB philosophy:
+
+- entirely static;
+- one file per book;
+- no database;
+- GitHub Pages compatible;
+- easy to inspect and maintain;
+- optimized for offline reading and translation comparison.
+
+The Genesis importer is intentionally a prototype. The next step is to
+generalize the script so that all 73 books of the Catholic canon can be
+imported automatically.
 
 ## Phase 3+ (not started)
 
