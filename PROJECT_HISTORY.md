@@ -37,95 +37,55 @@ Rather than fabricate exact chapter/verse counts from memory — which is
 exactly the kind of number that's easy to get subtly wrong and expensive to
 notice later — the canon was instead built from real, sourced verse text.
 
-## Phase 2 — Translation data
+## Phase 2 — Translation data (attempt 1: tried, rolled back)
 
-The first translation pipeline prototype was built around the Douay–Rheims
-Bible.
+A side session (via ChatGPT, per the project's multi-collaborator workflow —
+see the handoff template referenced in this repo) prototyped a Douay-Rheims
+importer as an experiment, without first checking it against the plan agreed
+in this project's own history. It proved two things worth keeping as
+findings even though the code was reverted:
 
-A new importer script, `build/import-douay-rheims.mjs`, and a new translation
-folder, `data/translations/douay-rheims/`, were added. The initial goal was
-not to import the whole Bible immediately, but to prove that Maranatha could
-consume an external translation source and normalize it into its own static
-format.
+- **The real Douay-Rheims source is messy.** A test fetch of Genesis pulled
+  much more than verse text — introductions, annotations, cross-references,
+  note markers, and embedded HTML — confirming that any real importer needs
+  a deliberate strip-down step, not a raw pass-through.
+- **A working end-to-end render is achievable** — the prototype did get real
+  Douay-Rheims Genesis text on screen, proving the concept is sound.
 
-Genesis was downloaded directly from the Douay–Rheims JSON API and stored as
-`genesis-raw.json`. Inspecting the real source before writing the importer
-proved important: the file contained much more than verse text, including
-introductions, annotations, cross-references, note markers, and HTML tags.
+However, the prototype diverged from two decisions already on record in this
+file and in `README.md`:
 
-For version 1, Maranatha deliberately discards that additional material.
-The importer keeps only the verse text itself, stripping note markers and
-formatting while preserving chapter and verse order.
+1. It restructured translations as **one file per book**
+   (`data/translations/<id>/<book>.json`, ~219 files at full scale) instead
+   of the agreed **one file per translation** (`data/<id>.json`, all books
+   inside, lazy-loaded by translation checkbox).
+2. `app.js` was changed to load that data with `fetch()`. That silently
+   breaks opening `index.html` directly via `file://` without a server —
+   the exact constraint YaQuB was built around, and one already fixed once
+   in this project (the locale file briefly made the same mistake in Phase 1
+   and was corrected before it shipped).
 
-The first generated translation file, `genesis.json`, uses the following
-shape:
+Both changes were made without being checked against this document, and
+`PROJECT_HISTORY.md` was updated to describe them as settled rather than as
+an experiment — which is exactly the failure mode this file exists to
+prevent. Once reviewed, the decision was to **revert**: the experimental
+importer, its output folder, and the `fetch()`-based `app.js`/`index.html`
+were removed, and the project returned to the state at the end of Phase 1.
 
-```json
-{
-  "translation": "douay-rheims",
-  "book": "GEN",
-  "chapters": [
-    [
-      "Verse 1",
-      "Verse 2"
-    ]
-  ]
-}
-```
+This is left in the history rather than deleted, because the finding about
+the messiness of the real source text is genuine and will matter again once
+Phase 2 is retried properly — against the original plan (one file per
+translation, script-tag loading, no server, no `fetch()` of local data).
 
-This decision follows the original YaQuB philosophy:
+### Phase 2, take two (not started)
 
-- entirely static;
-- one file per book;
-- no database;
-- GitHub Pages compatible;
-- easy to inspect and maintain;
-- optimized for offline reading and translation comparison.
-
-### First rendered translation milestone
-
-After validating the importer with Genesis, the browser itself was upgraded to
-load translation data dynamically.
-
-`app.js` fetches:
-
-```text
-/data/translations/douay-rheims/genesis.json
-```
-
-and renders the selected Genesis chapter directly in the interface.
-
-This marks the first moment in the project's history where Maranatha displays
-real biblical text instead of placeholder rows.
-
-The implementation intentionally remains minimal and close to YaQuB:
-
-- translation files remain static JSON files;
-- one file exists per book;
-- the browser loads data on demand with `fetch()`;
-- only Genesis is currently wired to the reader.
-
-### Reference lookup prototype
-
-YaQuB's most characteristic feature was direct navigation by reference rather
-than by menus alone. Maranatha therefore gained a dedicated lookup bar inspired
-by the original Qur'an browser.
-
-The interface now contains a large reference field with examples such as:
-
-```text
-Genesis 1:1
-Genesis 1:1-5
-Mark 3:14-19
-```
-
-The current implementation already understands book names and chapter numbers
-and synchronizes the existing dropdown menus automatically.
-
-Verse-range parsing and multiple references remain future work, but the user
-interface and architectural foundation now exist. Importantly, this feature was
-implemented entirely in the front end and required no change to the translation
-pipeline or JSON format.
+Still ahead: fetch and normalize World English Bible Catholic Edition,
+Douay-Rheims, and KJV into `data/<id>.json` (one file per translation, all
+books inside), closing the two Phase 1 gaps (Baruch ch. 6, expanded
+Esther/Daniel) as part of the same work. If per-book lazy loading is wanted
+later for file-size reasons, it should be proposed as its own decision — with
+the `fetch()` vs. dynamic `<script>`-injection trade-off explicitly resolved
+first — not folded in silently.
 
 ## Phase 3+ (not started)
 
