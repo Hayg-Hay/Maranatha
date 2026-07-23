@@ -10,7 +10,9 @@ offline, with no server dependency. Maranatha reuses that architecture (static
 framework-free front end) for the Bible instead, targeting the Catholic
 73-book canon with English-first v1 translations and a language-independent
 data model so other languages (Armenian, specifically) can be added later
-without a rewrite.
+without a rewrite. The goal is for all books of the Armenian Canon to be contained.
+Since the Catholic Bible contains overwhelming overlapps it was fit. 
+The missing books will then be added separately.
 
 This project was set up as its own repository from the start, rather than as
 a branch or fork of `yaqub-local` — the two are architecturally related but
