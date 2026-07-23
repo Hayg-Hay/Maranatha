@@ -81,6 +81,8 @@ class ReferenceParser {
 
 }
 
+const loaded = new Set();
+const loading = new Set();
 
 (() => {
   'use strict';
@@ -88,10 +90,7 @@ class ReferenceParser {
     MARANATHA_CANON,
     MARANATHA_LOCALE_EN
 );
-console.log(parser.parse("Genesis 1:1"));
-console.log(parser.parse("John 3:16"));
-console.log(parser.parse("1 Corinthians 13"));
-console.log(parser.parse("Psalms 23"));
+
 
   // MARANATHA_CANON is provided by data/canon.js (structure only: ids, testament,
   // chapter/verse counts). MARANATHA_LOCALE_EN is provided by data/locales/en.js.
@@ -112,33 +111,107 @@ console.log(parser.parse("Psalms 23"));
 
   const canon = window.MARANATHA_CANON;
   const locale = window.MARANATHA_LOCALE_EN;
-  const refs = {
-    book: q('#book'), chapter: q('#chapter'), theme: q('#theme'), layout: q('#layout'),
-    go: q('#go-button'), results: q('#results'), message: q('#message'),
+const refs = {
+    reference: q('#reference'),
+    referenceGo: q('#reference-go'),
+    book: q('#book'),
+    chapter: q('#chapter'),
+    theme: q('#theme'),
+    layout: q('#layout'),
+    go: q('#go-button'),
+    results: q('#results'),
+    message: q('#message'),
     translations: q('#translations'),
-  };
+};
   const loaded = new Set();   // translation ids whose <script> has finished loading
   const loading = new Set();  // translation ids whose <script> is in flight
+
+  // ---------------------------------------------------------------------
+  // View state
+  //
+  // Explicit application mode, replacing the old "currentReference is
+  // truthy" implicit check. The renderer branches on viewState.mode only —
+  // never on the presence/absence of a reference object. This is also the
+  // extension point for future modes ('search', 'compare', etc.): add a new
+  // mode string and a matching field here, give the renderer one more
+  // branch, and leave the parser/render responsibilities untouched.
+  // ---------------------------------------------------------------------
+  const viewState = {
+    mode: 'browse',     // 'browse' | 'reference'
+    reference: null,    // populated only when mode === 'reference'
+  };
+
+  function setBrowseMode() {
+    viewState.mode = 'browse';
+    viewState.reference = null;
+  }
+
+  function setReferenceMode(parsed) {
+    viewState.mode = 'reference';
+    viewState.reference = parsed;
+  }
 
   init();
 
   function q(selector) { return document.querySelector(selector); }
-
-  function init() {
+function init() {
     if (!canon || !locale) {
-      setMessage('Could not load data/canon.js or data/locales/en.js. Open this page via the launcher or a local server, not as a bare file:// double-click in some browsers.');
-      return;
+        setMessage('Could not load data/canon.js or data/locales/en.js. Open this page via the launcher or a local server, not as a bare file:// double-click in some browsers.');
+        return;
     }
+
     populateBooks();
     populateTranslationCheckboxes();
-    refs.book.addEventListener('change', () => { populateChapters(); });
-    refs.go.addEventListener('click', () => render());
-    refs.theme.addEventListener('change', () => setTheme());
-    refs.layout.addEventListener('change', () => render());
+
+    refs.book.addEventListener('change', () => {
+        setBrowseMode();
+        populateChapters();
+        render();
+    });
+
+    refs.chapter.addEventListener('change', () => {
+        setBrowseMode();
+        render();
+    });
+
+    refs.go.addEventListener('click', () => {
+        setBrowseMode();
+        render();
+    });
+
+    refs.referenceGo.addEventListener('click', () => {
+
+        const parsed = parser.parse(refs.reference.value);
+
+        if (!parsed) {
+            setMessage('Invalid Bible reference.');
+            return;
+        }
+        setMessage('');
+        setReferenceMode(parsed);
+
+        refs.book.value = parsed.bookId;
+
+        populateChapters();
+
+        refs.chapter.value = String(parsed.chapter);
+
+        render();
+
+    });
+
+    refs.theme.addEventListener('change', () => {
+        setTheme();
+    });
+
+    refs.layout.addEventListener('change', () => {
+        render();
+    });
+
     populateChapters();
     setTheme();
     render();
-  }
+}
 
   function setTheme() { document.documentElement.dataset.theme = refs.theme.value; }
 
@@ -236,6 +309,25 @@ console.log(parser.parse("Psalms 23"));
     }
   }
 
+  // Single source of truth for "which verses does this chapter render, and
+  // are they highlighted as the target of a reference lookup". Both
+  // multiColumn and multiRow call this instead of inspecting viewState
+  // themselves — neither table layout function needs to know how modes work.
+  function verseRangeFor(bookId, chapterNum, verseCount) {
+    if (
+      viewState.mode === 'reference' &&
+      viewState.reference.bookId === bookId &&
+      viewState.reference.chapter === chapterNum
+    ) {
+      return {
+        start: viewState.reference.verseStart ?? 1,
+        end: viewState.reference.verseEnd ?? verseCount,
+        highlight: true,
+      };
+    }
+    return { start: 1, end: verseCount, highlight: false };
+  }
+
   // Ported from YaQuB's local/app.js multiColumn(): one table, a column per
   // translation, side by side.
   function multiColumn(bookId, chapterNum, verseCount, translations) {
@@ -248,11 +340,14 @@ console.log(parser.parse("Psalms 23"));
     table.append(head);
 
     const body = document.createElement('tbody');
-    for (let v = 1; v <= verseCount; v++) {
+    const { start, end, highlight } = verseRangeFor(bookId, chapterNum, verseCount);
+
+    for (let v = start; v <= end; v++) {
       const tr = document.createElement('tr');
       const ref = document.createElement('td');
       ref.className = 'reference';
       ref.textContent = `${chapterNum}:${v}`;
+      
       tr.append(ref);
       translations.forEach(t => {
         const td = document.createElement('td');
@@ -275,9 +370,13 @@ console.log(parser.parse("Psalms 23"));
     table.append(head);
 
     const body = document.createElement('tbody');
-    for (let v = 1; v <= verseCount; v++) {
-      translations.forEach(t => {
+    const { start, end, highlight } = verseRangeFor(bookId, chapterNum, verseCount);
+
+    for (let v = start; v <= end; v++) {
+      translations.forEach((t, i) => {
         const tr = document.createElement('tr');
+        if (highlight && v === start && i === 0) tr.id = 'current-reference';
+        if (highlight) tr.classList.add('highlighted-verse');
         const ref = document.createElement('td');
         ref.className = 'reference';
         ref.textContent = `${chapterNum}:${v}`;
@@ -333,6 +432,8 @@ console.log(parser.parse("Psalms 23"));
       ? multiColumn(book.id, chapterNum, verseCount, translations)
       : multiRow(book.id, chapterNum, verseCount, translations);
     refs.results.appendChild(table);
+
+ 
   }
 
   function setMessage(message) { refs.message.textContent = message; }
