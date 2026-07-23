@@ -3,6 +3,7 @@ class ReferenceParser {
 
     constructor(canon, locale) {
 
+        this.canon = canon;
         this.bookMap = new Map();
 
         for (const book of canon.books) {
@@ -35,54 +36,125 @@ class ReferenceParser {
 
     }
 
-    parse(reference) {
+    // Parses BibleGateway/YaQuB-style multi-reference strings, e.g.
+    //   "Mark 14:2,6-9;Matthew 26:26-31"
+    //   "Mark 14:2,6-9; Matthew 26:26-31"   (spacing around ';' doesn't matter)
+    //   "John 3:16;4:5"                     (a group with no book name
+    //                                         carries over the previous
+    //                                         group's book)
+    //   "1 Corinthians 13"                  (whole chapter, no verse spec)
+    //
+    // Returns an array of group objects:
+    //   { bookId, chapter, ranges }
+    // where ranges is either null (render the whole chapter) or an array
+    // of { start, end } verse ranges (a bare verse like "6" becomes
+    // { start: 6, end: 6 }).
+    //
+    // Throws an Error with a human-readable message on any malformed or
+    // out-of-range group — the caller is expected to catch it and show
+    // error.message to the user rather than let it propagate.
+    parseMulti(input) {
 
-        reference = reference.trim();
+        const groups = [];
+        let lastBookId = null;
 
-        const match =
-            reference.match(
-                /^(.+?)\s+(\d+)(?::(\d+)(?:-(\d+))?)?$/
-            );
+        // "<book name> <chapter>[:<verseSpec>]" — requires whitespace
+        // between the book name and the chapter number, which is what
+        // lets a bare "4:5" (no book) fail this pattern and fall through
+        // to chapterOnly below instead of being misread as book="4".
+        const withBook = /^(.+?)\s+(\d+)(?::\s*([\d,\s-]+))?$/;
 
-        if (!match)
-            return null;
+        // "<chapter>[:<verseSpec>]" with no book — only valid when a
+        // previous group in the same query already established one.
+        const chapterOnly = /^(\d+)(?::\s*([\d,\s-]+))?$/;
 
-        const book =
-            this.bookMap.get(
-                match[1].toLowerCase()
-            );
+        const parts = input.split(';').map(part => part.trim()).filter(Boolean);
 
-        if (!book)
-            return null;
+        if (!parts.length)
+            throw new Error('Enter at least one reference.');
 
-        return {
+        for (const part of parts) {
 
-            bookId: book.id,
+            let bookId;
+            let chapterText;
+            let verseSpec;
 
-            chapter: Number(match[2]),
+            const bareMatch = part.match(chapterOnly);
 
-            verseStart:
-                match[3]
-                    ? Number(match[3])
-                    : null,
+            if (bareMatch) {
 
-            verseEnd:
-                match[4]
-                    ? Number(match[4])
-                    : (
-                        match[3]
-                            ? Number(match[3])
-                            : null
-                    )
+                if (!lastBookId)
+                    throw new Error(`"${part}" has no book name, and there is no earlier reference to carry one over from.`);
 
-        };
+                bookId = lastBookId;
+                [, chapterText, verseSpec] = bareMatch;
+
+            } else {
+
+                const fullMatch = part.match(withBook);
+
+                if (!fullMatch)
+                    throw new Error(`"${part}" is not a valid reference.`);
+
+                const [, bookText, chapterMatch, verseSpecMatch] = fullMatch;
+                const book = this.bookMap.get(bookText.trim().toLowerCase());
+
+                if (!book)
+                    throw new Error(`Unknown book "${bookText.trim()}".`);
+
+                bookId = book.id;
+                chapterText = chapterMatch;
+                verseSpec = verseSpecMatch;
+
+            }
+
+            const book = this.canon.books.find(b => b.id === bookId);
+            const chapter = Number(chapterText);
+
+            if (!Number.isInteger(chapter) || chapter < 1 || chapter > book.chapters.length)
+                throw new Error(`"${part}" — chapter ${chapterText} does not exist in this book.`);
+
+            const verseCount = book.chapters[chapter - 1];
+            let ranges = null;
+
+            if (verseSpec) {
+
+                ranges = verseSpec
+                    .split(',')
+                    .map(item => item.trim())
+                    .filter(Boolean)
+                    .map(item => {
+
+                        const rangeMatch = item.match(/^(\d+)(?:-(\d+))?$/);
+
+                        if (!rangeMatch)
+                            throw new Error(`"${item}" in "${part}" is not a valid verse or verse range.`);
+
+                        const start = Number(rangeMatch[1]);
+                        const end = rangeMatch[2] ? Number(rangeMatch[2]) : start;
+
+                        if (end < start)
+                            throw new Error(`"${item}" in "${part}" has a reversed range — end comes before start.`);
+
+                        if (start < 1 || end > verseCount)
+                            throw new Error(`"${item}" in "${part}" is outside this chapter's ${verseCount} verses.`);
+
+                        return { start, end };
+
+                    });
+
+            }
+
+            groups.push({ bookId, chapter, ranges });
+            lastBookId = bookId;
+
+        }
+
+        return groups;
 
     }
 
 }
-
-const loaded = new Set();
-const loading = new Set();
 
 (() => {
   'use strict';
@@ -131,24 +203,25 @@ const refs = {
   //
   // Explicit application mode, replacing the old "currentReference is
   // truthy" implicit check. The renderer branches on viewState.mode only —
-  // never on the presence/absence of a reference object. This is also the
-  // extension point for future modes ('search', 'compare', etc.): add a new
-  // mode string and a matching field here, give the renderer one more
-  // branch, and leave the parser/render responsibilities untouched.
+  // never on the presence/absence of a reference object. 'reference' mode
+  // now always holds an ARRAY of groups (viewState.groups), even for a
+  // single-reference query — that's what lets the multi-reference case
+  // ("Mark 14:2,6-9;Matthew 26:26-31") reuse exactly the same rendering
+  // path as "John 3:16" instead of needing a third mode.
   // ---------------------------------------------------------------------
   const viewState = {
     mode: 'browse',     // 'browse' | 'reference'
-    reference: null,    // populated only when mode === 'reference'
+    groups: null,       // populated only when mode === 'reference'
   };
 
   function setBrowseMode() {
     viewState.mode = 'browse';
-    viewState.reference = null;
+    viewState.groups = null;
   }
 
-  function setReferenceMode(parsed) {
+  function setReferenceMode(groups) {
     viewState.mode = 'reference';
-    viewState.reference = parsed;
+    viewState.groups = groups;
   }
 
   init();
@@ -181,20 +254,29 @@ function init() {
 
     refs.referenceGo.addEventListener('click', () => {
 
-        const parsed = parser.parse(refs.reference.value);
+        let groups;
 
-        if (!parsed) {
-            setMessage('Invalid Bible reference.');
+        try {
+            groups = parser.parseMulti(refs.reference.value);
+        } catch (error) {
+            setMessage(error.message);
             return;
         }
+
         setMessage('');
-        setReferenceMode(parsed);
+        setReferenceMode(groups);
 
-        refs.book.value = parsed.bookId;
-
+        // Sync the Book/Chapter dropdowns to the first group, purely so
+        // they show something sensible if the user goes back to browsing.
+        // While in reference mode they are NOT the source of truth for
+        // what's rendered — render() reads viewState.groups directly, so
+        // a multi-group query like "Mark 14:2,6-9;Matthew 26:26-31" can
+        // display both books at once even though only one can occupy the
+        // dropdowns.
+        const first = groups[0];
+        refs.book.value = first.bookId;
         populateChapters();
-
-        refs.chapter.value = String(parsed.chapter);
+        refs.chapter.value = String(first.chapter);
 
         render();
 
@@ -309,28 +391,25 @@ function init() {
     }
   }
 
-  // Single source of truth for "which verses does this chapter render, and
-  // are they highlighted as the target of a reference lookup". Both
-  // multiColumn and multiRow call this instead of inspecting viewState
-  // themselves — neither table layout function needs to know how modes work.
-  function verseRangeFor(bookId, chapterNum, verseCount) {
-    if (
-      viewState.mode === 'reference' &&
-      viewState.reference.bookId === bookId &&
-      viewState.reference.chapter === chapterNum
-    ) {
-      return {
-        start: viewState.reference.verseStart ?? 1,
-        end: viewState.reference.verseEnd ?? verseCount,
-        highlight: true,
-      };
+  // Flattens a group's ranges (possibly discontiguous, e.g. "2,6-9") into
+  // a sorted, de-duplicated list of verse numbers. A group with no ranges
+  // (ranges === null, e.g. "1 Corinthians 13") means "the whole chapter".
+  function versesForGroup(group, verseCount) {
+    if (!group.ranges) {
+      return Array.from({ length: verseCount }, (_, i) => i + 1);
     }
-    return { start: 1, end: verseCount, highlight: false };
+    const set = new Set();
+    for (const { start, end } of group.ranges) {
+      for (let v = start; v <= end; v++) set.add(v);
+    }
+    return [...set].sort((a, b) => a - b);
   }
 
   // Ported from YaQuB's local/app.js multiColumn(): one table, a column per
-  // translation, side by side.
-  function multiColumn(bookId, chapterNum, verseCount, translations) {
+  // translation, side by side. Takes an explicit verse-number list (not a
+  // start/end pair) so it can render discontiguous verses like "2,6-9"
+  // just as easily as a full chapter.
+  function multiColumn(bookId, chapterNum, verses, translations, { highlight = false, anchorFirst = false } = {}) {
     const table = document.createElement('table');
     const head = document.createElement('thead');
     const headRow = document.createElement('tr');
@@ -340,14 +419,16 @@ function init() {
     table.append(head);
 
     const body = document.createElement('tbody');
-    const { start, end, highlight } = verseRangeFor(bookId, chapterNum, verseCount);
 
-    for (let v = start; v <= end; v++) {
+    verses.forEach((v, i) => {
       const tr = document.createElement('tr');
       const ref = document.createElement('td');
       ref.className = 'reference';
       ref.textContent = `${chapterNum}:${v}`;
-      
+      if (highlight) {
+        tr.classList.add('highlighted-verse');
+        if (anchorFirst && i === 0) tr.id = 'current-reference';
+      }
       tr.append(ref);
       translations.forEach(t => {
         const td = document.createElement('td');
@@ -355,7 +436,7 @@ function init() {
         tr.append(td);
       });
       body.append(tr);
-    }
+    });
     table.append(body);
     return table;
   }
@@ -363,20 +444,21 @@ function init() {
   // Ported from YaQuB's local/app.js multiRow(): one table, each verse's
   // translations listed as consecutive rows underneath it. Better than
   // multi-column when many translations are selected at once.
-  function multiRow(bookId, chapterNum, verseCount, translations) {
+  function multiRow(bookId, chapterNum, verses, translations, { highlight = false, anchorFirst = false } = {}) {
     const table = document.createElement('table');
     const head = document.createElement('thead');
     head.innerHTML = '<tr><th>Verse</th><th>Translation</th><th>Text</th></tr>';
     table.append(head);
 
     const body = document.createElement('tbody');
-    const { start, end, highlight } = verseRangeFor(bookId, chapterNum, verseCount);
 
-    for (let v = start; v <= end; v++) {
-      translations.forEach((t, i) => {
+    verses.forEach((v, i) => {
+      translations.forEach((t, j) => {
         const tr = document.createElement('tr');
-        if (highlight && v === start && i === 0) tr.id = 'current-reference';
-        if (highlight) tr.classList.add('highlighted-verse');
+        if (highlight) {
+          tr.classList.add('highlighted-verse');
+          if (anchorFirst && i === 0 && j === 0) tr.id = 'current-reference';
+        }
         const ref = document.createElement('td');
         ref.className = 'reference';
         ref.textContent = `${chapterNum}:${v}`;
@@ -388,20 +470,35 @@ function init() {
         tr.append(ref, label, td);
         body.append(tr);
       });
-    }
+    });
     table.append(body);
     return table;
   }
 
-  function render() {
+  // Builds one heading + table block and appends it to #results. Shared by
+  // both browse mode (a single block, the whole chapter, unhighlighted) and
+  // reference mode (one block per group, restricted verses, highlighted).
+  function appendResultBlock({ bookId, chapterNum, name, verseCount, verses, translations, layout, highlight, anchorFirst }) {
+    const head = document.createElement('div');
+    head.className = 'result-head';
+    const verseLabel = verses.length === verseCount
+      ? `${verseCount} verses`
+      : `${verses.length} of ${verseCount} verses`;
+    head.innerHTML = `<h2>${name} ${chapterNum} <small>(${verseLabel}, ${layout === 'multicolumn' ? 'multi-column' : 'multi-row'})</small></h2>`;
+    refs.results.appendChild(head);
+
+    const table = layout === 'multicolumn'
+      ? multiColumn(bookId, chapterNum, verses, translations, { highlight, anchorFirst })
+      : multiRow(bookId, chapterNum, verses, translations, { highlight, anchorFirst });
+    refs.results.appendChild(table);
+  }
+
+  function renderBrowseChapter(translations, layout) {
     const book = currentBook();
     if (!book) return;
     const chapterNum = Number(refs.chapter.value);
     const verseCount = book.chapters[chapterNum - 1];
     const name = (locale.books[book.id] && locale.books[book.id].name) || book.id;
-    const translations = selectedTranslations();
-
-    refs.results.innerHTML = '';
 
     if (book.provisional) {
       const notice = document.createElement('p');
@@ -409,6 +506,49 @@ function init() {
       notice.textContent = `${name}'s chapter/verse structure is provisional in canon.js and has not been verified against the real WEB Catholic Edition text yet — numbers shown below may change.`;
       refs.results.appendChild(notice);
     }
+
+    appendResultBlock({
+      bookId: book.id,
+      chapterNum,
+      name,
+      verseCount,
+      verses: Array.from({ length: verseCount }, (_, i) => i + 1),
+      translations,
+      layout,
+      highlight: false,
+      anchorFirst: false,
+    });
+  }
+
+  // One block per group, in query order, so "Mark 14:2,6-9;Matthew 26:26-31"
+  // renders as two separate headed tables — this is what lets different
+  // books/chapters appear in a single result set without a second
+  // rendering pipeline; it's the same appendResultBlock() browse mode uses.
+  function renderReferenceGroups(groups, translations, layout) {
+    groups.forEach((group, index) => {
+      const book = canon.books.find(b => b.id === group.bookId);
+      const name = (locale.books[book.id] && locale.books[book.id].name) || book.id;
+      const verseCount = book.chapters[group.chapter - 1];
+      const verses = versesForGroup(group, verseCount);
+
+      appendResultBlock({
+        bookId: book.id,
+        chapterNum: group.chapter,
+        name,
+        verseCount,
+        verses,
+        translations,
+        layout,
+        highlight: true,
+        anchorFirst: index === 0,
+      });
+    });
+  }
+
+  function render() {
+    const translations = selectedTranslations();
+
+    refs.results.innerHTML = '';
 
     if (!translations.length) {
       setMessage('Select at least one translation to display.');
@@ -423,17 +563,16 @@ function init() {
       ? (translations.length > 5 ? 'multirow' : 'multicolumn')
       : refs.layout.value;
 
-    const head = document.createElement('div');
-    head.className = 'result-head';
-    head.innerHTML = `<h2>${name} ${chapterNum} <small>(${verseCount} verses, ${layout === 'multicolumn' ? 'multi-column' : 'multi-row'})</small></h2>`;
-    refs.results.appendChild(head);
+    if (viewState.mode === 'reference') {
+      renderReferenceGroups(viewState.groups, translations, layout);
+    } else {
+      renderBrowseChapter(translations, layout);
+    }
 
-    const table = layout === 'multicolumn'
-      ? multiColumn(book.id, chapterNum, verseCount, translations)
-      : multiRow(book.id, chapterNum, verseCount, translations);
-    refs.results.appendChild(table);
-
- 
+    const target = document.getElementById('current-reference');
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   }
 
   function setMessage(message) { refs.message.textContent = message; }
