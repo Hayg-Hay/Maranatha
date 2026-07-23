@@ -9,28 +9,41 @@ thin `app.js` + `index.html` + `style.css` front end with no framework.
 
 ## Status
 
-This is an early, structure-only preview. **No translation text is loaded yet.**
-What works right now:
+**One real translation is live: the World English Bible (WEB), public domain,
+66 standard books.** Open `index.html`, the WEB checkbox is on by default,
+pick a book/chapter, and you'll see real verse text. The 7 Catholic
+deuterocanonical books (Tobit, Judith, Wisdom, Sirach, Baruch, 1–2 Maccabees)
+don't have a translation yet — they show a clear "not available" placeholder
+per book, which is expected, not a bug.
+
+What works:
 
 - `data/canon.js` — the full 73-book Catholic canon skeleton: stable book IDs,
   traditional Catholic order, and a real chapter/verse count for every chapter
   in every book.
-- `data/locales/en.json` (+ `en.js`) — English display names for those book
-  IDs, kept deliberately separate from `canon.js` so a future locale (e.g.
-  Armenian) can be added without touching the canon file at all.
-- `index.html` — lets you browse book → chapter and see the correct verse
-  numbers for that chapter, pulled from `canon.js`. Verse *text* is a visible
-  placeholder until a translation file exists.
-- `build/validate.mjs` — a real, working validator. Once a translation file
-  exists at `data/<id>.json`, run `node build/validate.mjs data/<id>.json`
-  against it before committing; it checks book IDs, chapter counts, and
-  verse counts against `canon.js`.
+- `data/locales/en.json` (+ `en.js`) — English display names, kept separate
+  from `canon.js` so a future locale (e.g. Armenian) can be added without
+  touching the canon file.
+- `data/web.json` (+ `web.js`) — real World English Bible text for the 66
+  standard books, built by `build/import-web.mjs` from a verified structured
+  source and validated with 0 errors against `canon.js`.
+- `index.html` — book/chapter navigation, a translation checkbox, and real
+  verse rendering. Translation data loads via a dynamically created
+  `<script>` tag when its checkbox is selected — never `fetch()` — so this
+  still works from a bare `file://` double-click with no server.
+- `build/validate.mjs` — checks a translation file's book IDs, chapter
+  counts, and verse counts against `canon.js` before it's trusted.
 
-What's still a stub, on purpose, rather than faked: `build/fetch-source.mjs`
-and `build/normalize.mjs`. See the comments in those files for exactly what
-was tried and didn't pan out, and what to try next — the actual World English
-Bible Catholic Edition text (with the Deuterocanon in Catholic order) hasn't
-been successfully fetched as structured data yet.
+**Douay-Rheims was tried and rejected for now.** The only source found
+(`xxruyle/Bible-DouayRheims`) turned out to have real chapter-boundary
+corruption in 42 of its 73 books — confirmed directly in the raw source, not
+assumed. Rather than ship damaged Scripture text, the output was deleted; the
+importer script and its book-name mapping are kept (real, reusable work) with
+a clear warning not to re-run it against that source. See
+`PROJECT_HISTORY.md`, Phase 2, for the full writeup, and `build/fetch-source.mjs`
+for what was tried and ruled out before that. **KJV** is next up; **NKJV was
+considered and rejected** — it's copyrighted (Thomas Nelson), unlike
+WEB/KJV/DRB, all public domain.
 
 ## Two known data gaps
 

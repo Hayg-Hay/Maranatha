@@ -77,15 +77,51 @@ the messiness of the real source text is genuine and will matter again once
 Phase 2 is retried properly — against the original plan (one file per
 translation, script-tag loading, no server, no `fetch()` of local data).
 
-### Phase 2, take two (not started)
+### Phase 2, take two — Douay-Rheims source rejected, WEB shipped
 
-Still ahead: fetch and normalize World English Bible Catholic Edition,
-Douay-Rheims, and KJV into `data/<id>.json` (one file per translation, all
-books inside), closing the two Phase 1 gaps (Baruch ch. 6, expanded
-Esther/Daniel) as part of the same work. If per-book lazy loading is wanted
-later for file-size reasons, it should be proposed as its own decision — with
-the `fetch()` vs. dynamic `<script>`-injection trade-off explicitly resolved
-first — not folded in silently.
+**Douay-Rheims:** a second source was tried (`xxruyle/Bible-DouayRheims`,
+MIT-licensed JSON transcription of the public-domain text, README claiming
+"all 73 books"). The importer (`build/import-douay-rheims.mjs`) mapped all 73
+old-style Vulgate book names (Josue, Machabees, 4 Kings, etc.) onto canon IDs
+correctly, and — bonus — its Baruch and Esther data confirmed real 6-chapter
+and expanded structure, real evidence toward eventually resolving canon.js's
+provisional flags. But running `validate.mjs` against the output found 228
+real errors across 42 of the 73 books — not the single missing-verse gap the
+source's own README admitted to, but genuine chapter-boundary corruption.
+Confirmed directly in the raw cached source (not assumed from the error
+count): Numbers "chapter 30" contains verse keys 19-72, not 1-16 — the
+upstream repo's line-by-line txt-to-JSON parser drifted. The importer script
+and its book-name mapping are kept (real, reusable work, clearly marked with
+a warning not to run and commit against this source again), but the output
+was deleted rather than shipped. Patching Scripture text by guessing at the
+correct wording was ruled out as worse than not having it yet.
+
+**WEB:** shipped successfully. Used the same real WEB verse data already
+cached from Phase 1 (`scrollmapper/bible_databases`, a proper structured
+database export, not a hand-rolled text parser — which is exactly why this
+one validated clean where Douay-Rheims didn't). `build/import-web.mjs` maps
+the standard 66-book edition onto canon IDs; `validate.mjs` reports 0 errors,
+0 warnings, with the 7 Catholic deuterocanonical books correctly flagged as
+expected-missing (this source doesn't have them; grafting in a different
+translation's text for those 7 books was considered and rejected — it would
+misrepresent the result as WEB when it isn't).
+
+One real bug was caught before shipping, not after: a browser smoke test
+(jsdom) surfaced literal backslash characters inside rendered verse text
+(`\"Let there be light,\"` instead of a plain quote). Traced to the raw
+source directly — an over-escaping artifact from an upstream SQL-to-JSON
+dump, one consistent pattern (`\"` as literal content) appearing 7,987 times
+across the whole text. Fixed in the importer's cleanup step before the data
+was committed.
+
+`app.js` was extended with a translation checkbox list and real verse
+rendering, loading `data/<id>.js` via a dynamically created `<script>` tag —
+never `fetch()` — so the file:// / no-server constraint holds even with
+on-demand loading. NKJV was considered as a second translation and rejected:
+it's copyrighted (Thomas Nelson), not public domain, unlike WEB/KJV/DRB. WEB
+was chosen specifically because "modern public-domain English" was already
+its design goal, which addresses the same "KJV is too old English" concern
+without a licensing problem.
 
 ## Phase 3+ (not started)
 
