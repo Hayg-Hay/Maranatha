@@ -13,6 +13,12 @@ body { margin:0; background:#f3f1ee; color:var(--ink); font:16px/1.45 Georgia, s
 .shell { max-width:1200px; margin:24px auto; padding:0 18px; }
 header { display:flex; gap:16px; align-items:center; margin-bottom:18px; }
 h1 { margin:0; font-size:1.55rem; } header p { margin:.15rem 0 0; color:#5a4f45; }
+header img {
+    height: 42px;
+    width: auto;
+    object-fit: contain;
+    flex-shrink: 0;
+}
 .panel { border:1px solid var(--line); background:var(--panel); padding:16px; margin:14px 0; } h2 { font-size:1.1rem; margin:0 0 10px; }
 .nav-row { display:flex; flex-wrap:wrap; gap:8px; align-items:end; }
 .nav-row label { display:grid; gap:4px; font-size:.9rem; }
