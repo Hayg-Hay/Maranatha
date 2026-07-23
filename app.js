@@ -1,5 +1,97 @@
+
+class ReferenceParser {
+
+    constructor(canon, locale) {
+
+        this.bookMap = new Map();
+
+        for (const book of canon.books) {
+
+            const info = locale.books[book.id];
+
+            if (!info)
+                continue;
+
+            this.bookMap.set(
+                info.name.toLowerCase(),
+                book
+            );
+
+            // Reserve a place for future aliases
+            if (info.aliases) {
+
+                for (const alias of info.aliases) {
+
+                    this.bookMap.set(
+                        alias.toLowerCase(),
+                        book
+                    );
+
+                }
+
+            }
+
+        }
+
+    }
+
+    parse(reference) {
+
+        reference = reference.trim();
+
+        const match =
+            reference.match(
+                /^(.+?)\s+(\d+)(?::(\d+)(?:-(\d+))?)?$/
+            );
+
+        if (!match)
+            return null;
+
+        const book =
+            this.bookMap.get(
+                match[1].toLowerCase()
+            );
+
+        if (!book)
+            return null;
+
+        return {
+
+            bookId: book.id,
+
+            chapter: Number(match[2]),
+
+            verseStart:
+                match[3]
+                    ? Number(match[3])
+                    : null,
+
+            verseEnd:
+                match[4]
+                    ? Number(match[4])
+                    : (
+                        match[3]
+                            ? Number(match[3])
+                            : null
+                    )
+
+        };
+
+    }
+
+}
+
+
 (() => {
   'use strict';
+  const parser = new ReferenceParser(
+    MARANATHA_CANON,
+    MARANATHA_LOCALE_EN
+);
+console.log(parser.parse("Genesis 1:1"));
+console.log(parser.parse("John 3:16"));
+console.log(parser.parse("1 Corinthians 13"));
+console.log(parser.parse("Psalms 23"));
 
   // MARANATHA_CANON is provided by data/canon.js (structure only: ids, testament,
   // chapter/verse counts). MARANATHA_LOCALE_EN is provided by data/locales/en.js.
