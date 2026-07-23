@@ -161,12 +161,67 @@ consecutive rows. The "book not available in this translation" and
 shared-table cells and re-verified, since the old per-translation-block
 version handled those differently.
 
-## Phase 3+ (remaining)
+## Phase 4 — Verse reference lookup and explicit view modes
 
-Layout modes are done (see above). Still ahead: mobile responsiveness pass,
-full verse-range parsing (currently one chapter at a time, no YaQuB-style
-`5:20-` ranges or `;`-separated multi-reference lookup), text search, richer
-navigation, and GitHub Pages deployment.
+Goal: let a user type a single reference (`Genesis 1:1`, `John 3:16`,
+`Mark 1:3-6`, `1 Corinthians 13`) into the new reference search bar and have
+it drive the existing Book/Chapter dropdowns and the existing renderer,
+rather than building a second lookup pipeline.
+
+**Parser.** A `ReferenceParser` class was added, built from `canon.js` +
+`locales/en.js` at startup (book-name lookup, case-insensitive, with a
+reserved `aliases` slot for future YaQuB-style variant spellings). It parses
+`<book> <chapter>[:<verse>[-<verseEnd>]]` and returns a plain
+`{ bookId, chapter, verseStart, verseEnd }` object or `null`. The parser's
+only job is parsing — it does not touch DOM state or rendering, matching the
+separation-of-concerns constraint carried over from YaQuB's own querystring
+grammar.
+
+**View-mode refactor.** The first working version stored the parsed
+reference in a single `currentReference` variable and had the renderer infer
+its behavior from whether that variable was null. That mixed two concerns
+(state storage and application mode) into one implicit flag, and it meant
+"clicking a Book/Chapter dropdown after using reference search" had no
+defined behavior. This was replaced with an explicit state object:
+
+```js
+const viewState = { mode: 'browse', reference: null };
+```
+
+`setBrowseMode()` and `setReferenceMode(parsed)` are the only two places that
+mutate it. Every entry point that changes the visible chapter now goes
+through one of them: the Book dropdown, the Chapter dropdown, and the
+existing "Show" button all call `setBrowseMode()` before re-rendering (the
+Chapter dropdown previously had no `change` listener at all — added one, so
+switching chapters manually exits reference mode immediately instead of only
+on the next button click); the reference bar calls `setReferenceMode(parsed)`
+and then syncs the dropdowns to match.
+
+The renderer branches on `viewState.mode` through one shared helper,
+`verseRangeFor(bookId, chapterNum, verseCount)`, which returns the verse
+range to display and whether it should be highlighted. Both `multiColumn()`
+and `multiRow()` call this same helper — previously only `multiColumn()`
+consulted `currentReference` directly, so `multiRow()` silently ignored
+reference mode and always rendered the full chapter; that inconsistency is
+gone now that both layouts share one source of truth.
+
+**Known gap (found on this review pass, not yet fixed):** the currently
+committed `multiColumn()` computes `highlight` from `verseRangeFor()` but
+never applies it to the row — the `highlighted-verse` class and the
+`current-reference` id are only being set inside `multiRow()`. `render()`
+also no longer calls `scrollIntoView()` on `#current-reference` after
+building the table, so in multi-column layout a reference lookup correctly
+narrows to the requested verse(s) but doesn't visually mark or scroll to
+them. Both are small, contained fixes (mirror the two lines already present
+in `multiRow()`, and restore the `scrollIntoView` call at the end of
+`render()`) and are next up before this phase is considered fully closed.
+
+## Phase 4+ (remaining)
+
+Fix the multi-column highlight/scroll gap noted above. Still ahead beyond
+that: mobile responsiveness pass, full YaQuB-style multi-reference parsing
+(`5:20-` open-ended ranges, `;`-separated multiple references in one query),
+text search, richer navigation, and GitHub Pages deployment.
 
 ## Role of AI
 
