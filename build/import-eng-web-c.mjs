@@ -110,10 +110,9 @@ function parseChapterVerses(html) {
   // from the step above, so this can't accidentally eat those instead.)
   region = region.replace(/<a\b[^>]*>(.{0,3})<\/a>/gs, '');
 
-  const markerRegex = /<span\b[^>]*\bclass=["']verse["'][^>]*\bid=["']V(\d+)["'][^>]*>.*?<\/span>|<span\b[^>]*\bid=["']V(\d+)["'][^>]*\bclass=["']verse["'][^>]*>.*?<\/span>/gs;
+  const markerRegex = /<span\b[^>]*\bclass=(['"])verse\1[^>]*\bid=(['"])V(\d+)\2[^>]*>[\s\S]*?<\/span>/gi;
   const verses = [];
-  let lastVerseEnd = 0;
-  let hasVerse = false;
+  const markers = [];
   let match;
 
   function normalizeVerseText(text) {
@@ -131,19 +130,26 @@ function parseChapterVerses(html) {
   }
 
   while ((match = markerRegex.exec(region)) !== null) {
-    const verseNum = Number(match[1] || match[2]);
+    const verseNum = Number(match[3]);
     if (Number.isNaN(verseNum)) continue;
-
-    if (hasVerse) {
-      verses.push(normalizeVerseText(region.slice(lastVerseEnd, match.index)));
-    }
-    hasVerse = true;
-    lastVerseEnd = markerRegex.lastIndex;
+    markers.push({ index: match.index, end: markerRegex.lastIndex });
   }
 
-  if (hasVerse) {
-    verses.push(normalizeVerseText(region.slice(lastVerseEnd)));
+  if (!markers.length) return [];
+
+  let scriptureEnd = region.length;
+  const footerRegex = /<div\b[^>]*(?:\bclass=(['"])(?:(?!\1).)*\bfootnote\b(?:(?!\1).)*\1|\bid=(['"])(?:(?!\2).)*\bfootnote\b(?:(?!\2).)*\2|\bclass=(['"])(?:(?!\3).)*\bfooter\b(?:(?!\3).)*\3|\bclass=(['"])(?:(?!\4).)*\bbottom\b(?:(?!\4).)*\4|\bclass=(['"])(?:(?!\5).)*\bcopyright\b(?:(?!\5).)*\5)[^>]*>/i;
+  const footerMatch = footerRegex.exec(region);
+  if (footerMatch) {
+    scriptureEnd = footerMatch.index;
   }
+
+  for (let i = 0; i < markers.length; i++) {
+    const start = markers[i].end;
+    const end = i + 1 < markers.length ? markers[i + 1].index : scriptureEnd;
+    verses.push(normalizeVerseText(region.slice(start, end)));
+  }
+
   return verses;
 }
 
