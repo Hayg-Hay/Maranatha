@@ -413,7 +413,7 @@ function init() {
     const table = document.createElement('table');
     const head = document.createElement('thead');
     const headRow = document.createElement('tr');
-    headRow.innerHTML = '<th>Verse</th>';
+    headRow.innerHTML = '<th class="reference">Verse</th>';
     translations.forEach(t => { const th = document.createElement('th'); th.textContent = t.label; headRow.append(th); });
     head.append(headRow);
     table.append(head);
@@ -447,7 +447,7 @@ function init() {
   function multiRow(bookId, chapterNum, verses, translations, { highlight = false, anchorFirst = false } = {}) {
     const table = document.createElement('table');
     const head = document.createElement('thead');
-    head.innerHTML = '<tr><th>Verse</th><th>Translation</th><th>Text</th></tr>';
+    head.innerHTML = '<tr><th class="reference">Verse</th><th class="translation-label">Translation</th><th>Text</th></tr>';
     table.append(head);
 
     const body = document.createElement('tbody');
