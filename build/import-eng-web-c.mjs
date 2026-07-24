@@ -23,12 +23,12 @@
 // WHAT IT DOES:
 //   1. For each of the 73 canon.js books, fetches http://ebible.org/eng-web-c/
 //      chapter pages one at a time (<BOOKCODE><NN>.htm), starting at chapter
-//      1 and following each page's own "next chapter" link to know when a
-//      book ends — it does NOT trust canon.js's current chapter counts,
-//      because three of them (Baruch, Esther, Daniel) are explicitly marked
-//      `provisional: true` in canon.js precisely because that hasn't been
-//      measured yet. This script measures it for real, from the actual
-//      pages, for all 73 books (not just the provisional three).
+//      1 and continuing until the server returns a real 404 — it does NOT
+//      trust canon.js's current chapter counts, because three of them
+//      (Baruch, Esther, Daniel) are explicitly marked `provisional: true`
+//      in canon.js precisely because that hasn't been measured yet. This
+//      script measures it for real, from the actual pages, for all 73
+//      books (not just the provisional three).
 //   2. Extracts verse text from each chapter page, stripping eBible's
 //      footnote markers (e.g. "[†...](#FN1)").
 //   3. Writes data/web.json (+ prints the counts it found for BAR/EST/DAN
@@ -79,26 +79,38 @@ async function fetchChapter(code, chapterNum) {
   return { url, html: await res.text() };
 }
 
-// Extracts the plain verse-numbered text block (between the chapter-number
-// header and the footnotes "---" divider) and the URL of the "next chapter"
-// nav link, if any.
-function parseChapterPage(html) {
-  // The nav row looks like: ...>1</a>] [<a href="...02.htm">&gt;</a>]
-  // eBible renders it as a plain link with text ">"; grab its href.
-  const nextLinkMatch = html.match(/<a href="([^"]+)">\s*(?:&gt;|>)\s*<\/a>/);
-  const nextUrl = nextLinkMatch ? nextLinkMatch[1] : null;
+// Extracts the plain verse-numbered text of one chapter page.
+function parseChapterVerses(html) {
+  // Every eng-web-c chapter page has the same nav row (a link back to the
+  // book's index.htm, plus prev/next chapter links) TWICE: once right
+  // before the verse text, once right after it (and before any footnotes
+  // — which may or may not exist for a given chapter). Slicing between the
+  // first and second occurrence of the nav row's book-index link isolates
+  // the verse content without needing footnotes to be present, which is
+  // what the earlier <p>...<hr> approach got wrong: short one-chapter
+  // books like Obadiah/Philemon/Jude/2 John often have NO translator
+  // footnotes, so there's no <hr> before the footer either, and that
+  // regex silently grabbed the wrong (or no) content for exactly those
+  // books — matching what validate.mjs actually reported.
+  const navLinks = [...html.matchAll(/href="[^"]*index\.htm"/g)];
+  let region = html;
+  if (navLinks.length >= 2) {
+    region = html.slice(navLinks[0].index, navLinks[1].index);
+  }
 
-  // Body content sits between the last nav list before the verses and the
-  // "<hr" that precedes the footnotes section. This is intentionally a bit
-  // loose (eBible's HTML isn't hand-authored per page) — validate.mjs is
-  // what actually catches mistakes here, not this regex being clever.
-  const bodyMatch = html.match(/<p[^>]*>([\s\S]*?)<hr/);
-  const body = bodyMatch ? bodyMatch[1] : html;
+  // Strip footnote reference markers (inline anchors linking to #FNn,
+  // regardless of their visible symbol/text length).
+  region = region.replace(/<a[^>]*href="#FN\d+"[^>]*>.*?<\/a>/gs, '');
 
-  // Strip footnote reference links like [†...](#FN1)-equivalent HTML anchors
-  // and superscript markers, then strip all remaining tags.
-  const text = body
-    .replace(/<a[^>]*href="#FN\d+"[^>]*>.*?<\/a>/gs, '')
+  // Strip the nav row's own short links — book-index link text (e.g.
+  // "Tobit"), and the "<", ">", and bare chapter-number links are all far
+  // shorter than any real verse prose, so removing any anchor with <=3
+  // characters of visible text clears the nav chrome without needing to
+  // know its exact class/structure. (Footnote anchors are already gone
+  // from the step above, so this can't accidentally eat those instead.)
+  region = region.replace(/<a\b[^>]*>(.{0,3})<\/a>/gs, '');
+
+  const text = region
     .replace(/<sup[^>]*>.*?<\/sup>/gs, '')
     .replace(/<[^>]+>/g, ' ')
     .replace(/&#8217;|&rsquo;/g, '\u2019')
@@ -111,19 +123,18 @@ function parseChapterPage(html) {
     .trim();
 
   // Split on verse-number markers: a digit run preceded by whitespace/start
-  // and followed by whitespace, that isn't part of the surrounding prose.
-  // WEB spells out numbers in running text ("forty days", not "40 days"),
-  // so a bare "<digits><space>" run is reliably a verse marker in practice —
-  // but this is a heuristic, not a guarantee. validate.mjs's verse-count
-  // check against canon.js is the real safety net; spot-check a sample of
-  // chapters by eye too, especially ones with genealogies or long lists.
+  // and followed by whitespace. WEB spells out numbers in running text
+  // ("forty days", not "40 days"), so a bare "<digits><space>" run is
+  // reliably a verse marker in practice — but this is a heuristic, not a
+  // guarantee. validate.mjs's verse-count check against canon.js is the
+  // real safety net; spot-check a sample of chapters by eye too, especially
+  // ones with genealogies or long lists.
   const parts = text.split(/(?:^|\s)(\d+)\s/).slice(1);
   const verses = [];
   for (let i = 0; i < parts.length; i += 2) {
     verses.push(parts[i + 1].trim());
   }
-
-  return { verses, nextUrl };
+  return verses;
 }
 
 function sleep(ms) {
@@ -135,16 +146,21 @@ async function importBook(canonId) {
   const chapters = [];
   let chapterNum = 1;
 
+  // Just keep requesting the next sequential chapter until the server
+  // returns a real 404 (fetchChapter() -> null). This replaces an earlier
+  // version that tried to parse a "next chapter" nav link out of each
+  // page's HTML to know when to stop — that regex was written against a
+  // markdown-converted preview (this sandbox can't reach ebible.org to see
+  // raw bytes) and never actually matched eBible's real markup, so it
+  // silently returned null every time and every book stopped after
+  // chapter 1. A real HTTP 404 from a static file server is a much safer
+  // thing to depend on than a guessed HTML pattern.
   while (true) {
     const result = await fetchChapter(code, chapterNum);
     if (!result) break;
 
-    const { verses, nextUrl } = parseChapterPage(result.html);
-    chapters.push(verses);
-
-    const stillSameBook = nextUrl && nextUrl.includes(code);
+    chapters.push(parseChapterVerses(result.html));
     await sleep(REQUEST_DELAY_MS);
-    if (!stillSameBook) break;
     chapterNum++;
   }
 
@@ -166,31 +182,41 @@ function loadCanon() {
 async function main() {
   if (process.argv.includes('--smoke-test')) {
     // IMPORTANT: run this FIRST, before the full import. The HTML-scraping
-    // regexes in parseChapterPage() below were written against markdown-
+    // regexes in parseChapterVerses() below were written against markdown-
     // converted previews of eng-web-c pages (fetched from a sandboxed
     // environment with no direct network access to ebible.org), not the
     // real raw HTML bytes a browser or `fetch()` sees. They are a
     // best-effort guess at the real markup, not a verified match. This
-    // mode fetches exactly one chapter (Tobit 1) and prints what got
-    // parsed, so you can eyeball it against https://ebible.org/eng-web-c/TOB01.htm
-    // and fix the regexes here if anything looks wrong — BEFORE spending
-    // ~1,400 requests finding that out the hard way.
-    console.log('Smoke-testing against Tobit 1 (http://ebible.org/eng-web-c/TOB01.htm)...\n');
-    const result = await fetchChapter('TOB', 1);
-    if (!result) {
-      console.error('Fetch failed — check your network connection and the URL pattern.');
+    // mode fetches Tobit 1 (a chapter WITH footnotes) and Obadiah 1 (a
+    // one-chapter book with NO footnotes — the exact case that broke last
+    // time) and prints what got parsed for both, so you can catch a
+    // regression in either case before spending ~1,400 requests finding
+    // out the hard way.
+    console.log('Smoke-testing against Tobit 1 and Obadiah 1...\n');
+
+    const tobit = await fetchChapter('TOB', 1);
+    if (!tobit) {
+      console.error('Fetch failed for Tobit 1 — check your network connection and the URL pattern.');
       process.exit(1);
     }
-    const { verses, nextUrl } = parseChapterPage(result.html);
-    console.log(`Parsed ${verses.length} verses. Tobit 1 should have 22.\n`);
-    console.log('Verse 1:', verses[0] || '(missing)');
-    console.log('Verse 22:', verses[21] || '(missing)');
-    console.log('\nDetected "next chapter" link:', nextUrl || '(none found)');
-    console.log('Expect something ending in TOB02.htm.\n');
-    console.log('If verse count, verse 1, or the next-chapter link look wrong,');
-    console.log('open the real page in a browser, view source, and adjust the');
-    console.log('regexes in parseChapterPage() / the nextLinkMatch pattern above');
-    console.log('to match what you actually see — then re-run --smoke-test.');
+    const tobitVerses = parseChapterVerses(tobit.html);
+    console.log(`Tobit 1: parsed ${tobitVerses.length} verses (expect 22).`);
+    console.log('  Verse 1:', tobitVerses[0] || '(missing)');
+    console.log('  Verse 22:', tobitVerses[21] || '(missing)');
+
+    const obadiah = await fetchChapter('OBA', 1);
+    if (!obadiah) {
+      console.error('\nFetch failed for Obadiah 1 — check your network connection and the URL pattern.');
+      process.exit(1);
+    }
+    const obadiahVerses = parseChapterVerses(obadiah.html);
+    console.log(`\nObadiah 1 (no footnotes — the case that broke before): parsed ${obadiahVerses.length} verses (expect 21).`);
+    console.log('  Verse 1:', obadiahVerses[0] || '(missing)');
+    console.log('  Verse 21:', obadiahVerses[20] || '(missing)');
+
+    console.log('\nIf either count or any printed verse looks wrong, open the real');
+    console.log('page in a browser, view source, and adjust parseChapterVerses()');
+    console.log('above to match what you actually see — then re-run --smoke-test.');
     return;
   }
 
