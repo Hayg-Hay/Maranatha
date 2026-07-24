@@ -36,7 +36,8 @@ import { fileURLToPath } from 'node:url';
 const dir = path.dirname(fileURLToPath(import.meta.url));
 const canonPath = path.join(dir, '..', 'data', 'canon.js');
 const canonSrc = fs.readFileSync(canonPath, 'utf8');
-const canon = JSON.parse(canonSrc.slice('window.MARANATHA_CANON='.length, -2));
+const canonJson = canonSrc.slice('window.MARANATHA_CANON='.length).trim();
+const canon = JSON.parse(canonJson.endsWith(';') ? canonJson.slice(0, -1) : canonJson);
 const canonById = Object.fromEntries(canon.books.map(b => [b.id, b]));
 
 const target = process.argv[2];

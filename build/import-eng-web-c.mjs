@@ -74,9 +74,54 @@ function chapterFile(code, chapterNum) {
 
 async function fetchChapter(code, chapterNum) {
   const url = `http://ebible.org/eng-web-c/${chapterFile(code, chapterNum)}`;
-  const res = await fetch(url);
-  if (!res.ok) return null;
-  return { url, html: await res.text() };
+  const maxAttempts = 5;
+  let attempt = 0;
+  let lastErr = null;
+
+  function isTransientError(err, res) {
+    if (res) {
+      if (res.status === 404) return false;
+      // 5xx server errors are likely transient
+      if (res.status >= 500) return true;
+      return false;
+    }
+    if (!err) return false;
+    const msg = String(err.message || err);
+    const code = err.code || (err.cause && err.cause.code) || '';
+    if (code === 'ECONNRESET' || msg.includes('ECONNRESET') || msg.includes('fetch failed') || msg.includes('ETIMEDOUT') || msg.includes('timeout')) return true;
+    return false;
+  }
+
+  while (++attempt <= maxAttempts) {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) {
+        if (res.status === 404) return null;
+        if (isTransientError(null, res)) {
+          lastErr = new Error(`HTTP ${res.status}`);
+        } else {
+          // Non-transient HTTP error — fail fast
+          throw new Error(`HTTP ${res.status} when fetching ${url}`);
+        }
+      } else {
+        return { url, html: await res.text() };
+      }
+    } catch (err) {
+      // Network/transport errors may throw; treat transient ones specially
+      if (!isTransientError(err, null)) throw err;
+      lastErr = err;
+    }
+
+    if (attempt < maxAttempts) {
+      // Backoff before retrying (exponential)
+      const waitMs = REQUEST_DELAY_MS * Math.pow(2, attempt - 1);
+      await sleep(waitMs);
+    }
+  }
+
+  // All retries failed — print clear message and throw
+  console.error(`Failed to fetch book code ${code}, chapter ${chapterNum} after ${maxAttempts} attempts:` , lastErr);
+  throw lastErr || new Error(`Failed to fetch ${url}`);
 }
 
 // Extracts the plain verse-numbered text of one chapter page.
@@ -129,6 +174,10 @@ function parseChapterVerses(html) {
       .trim();
   }
 
+  function stripTrailingNavigationAnchors(html) {
+    return html.replace(/(?:\s*<a\b[^>]*>[\s\S]*?<\/a>)+\s*$/gi, '');
+  }
+
   while ((match = markerRegex.exec(region)) !== null) {
     const verseNum = Number(match[3]);
     if (Number.isNaN(verseNum)) continue;
@@ -144,10 +193,25 @@ function parseChapterVerses(html) {
     scriptureEnd = footerMatch.index;
   }
 
+  const navContainerRegex = /<ul\b[^>]*\bclass=(['"])(?:(?!\1).)*\btnav\b(?:(?!\1).)*\1[^>]*>/gi;
+  const lastMarkerEnd = markers[markers.length - 1].end;
+  let navContainerMatch;
+  let nextNavContainer;
+  while ((navContainerMatch = navContainerRegex.exec(region)) !== null) {
+    if (navContainerMatch.index > lastMarkerEnd) {
+      nextNavContainer = navContainerMatch;
+      break;
+    }
+  }
+  if (nextNavContainer && nextNavContainer.index < scriptureEnd) {
+    scriptureEnd = nextNavContainer.index;
+  }
+
   for (let i = 0; i < markers.length; i++) {
     const start = markers[i].end;
     const end = i + 1 < markers.length ? markers[i + 1].index : scriptureEnd;
-    verses.push(normalizeVerseText(region.slice(start, end)));
+    const verseHtml = stripTrailingNavigationAnchors(region.slice(start, end));
+    verses.push(normalizeVerseText(verseHtml));
   }
 
   return verses;
