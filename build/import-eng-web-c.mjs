@@ -110,29 +110,39 @@ function parseChapterVerses(html) {
   // from the step above, so this can't accidentally eat those instead.)
   region = region.replace(/<a\b[^>]*>(.{0,3})<\/a>/gs, '');
 
-  const text = region
-    .replace(/<sup[^>]*>.*?<\/sup>/gs, '')
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/&#8217;|&rsquo;/g, '\u2019')
-    .replace(/&#8216;|&lsquo;/g, '\u2018')
-    .replace(/&#8220;|&ldquo;/g, '\u201c')
-    .replace(/&#8221;|&rdquo;/g, '\u201d')
-    .replace(/&amp;/g, '&')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-
-  // Split on verse-number markers: a digit run preceded by whitespace/start
-  // and followed by whitespace. WEB spells out numbers in running text
-  // ("forty days", not "40 days"), so a bare "<digits><space>" run is
-  // reliably a verse marker in practice — but this is a heuristic, not a
-  // guarantee. validate.mjs's verse-count check against canon.js is the
-  // real safety net; spot-check a sample of chapters by eye too, especially
-  // ones with genealogies or long lists.
-  const parts = text.split(/(?:^|\s)(\d+)\s/).slice(1);
+  const markerRegex = /<span\b[^>]*\bclass=["']verse["'][^>]*\bid=["']V(\d+)["'][^>]*>.*?<\/span>|<span\b[^>]*\bid=["']V(\d+)["'][^>]*\bclass=["']verse["'][^>]*>.*?<\/span>/gs;
   const verses = [];
-  for (let i = 0; i < parts.length; i += 2) {
-    verses.push(parts[i + 1].trim());
+  let lastVerseEnd = 0;
+  let hasVerse = false;
+  let match;
+
+  function normalizeVerseText(text) {
+    return text
+      .replace(/<sup[^>]*>.*?<\/sup>/gs, '')
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/&#8217;|&rsquo;/g, '\u2019')
+      .replace(/&#8216;|&lsquo;/g, '\u2018')
+      .replace(/&#8220;|&ldquo;/g, '\u201c')
+      .replace(/&#8221;|&rdquo;/g, '\u201d')
+      .replace(/&amp;/g, '&')
+      .replace(/&nbsp;/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  while ((match = markerRegex.exec(region)) !== null) {
+    const verseNum = Number(match[1] || match[2]);
+    if (Number.isNaN(verseNum)) continue;
+
+    if (hasVerse) {
+      verses.push(normalizeVerseText(region.slice(lastVerseEnd, match.index)));
+    }
+    hasVerse = true;
+    lastVerseEnd = markerRegex.lastIndex;
+  }
+
+  if (hasVerse) {
+    verses.push(normalizeVerseText(region.slice(lastVerseEnd)));
   }
   return verses;
 }
