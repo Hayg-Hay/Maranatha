@@ -235,3 +235,50 @@ in the data itself rather than filled in from training-data recall.
 Human contributions: defining the canon and translation scope, the
 architectural continuity with YaQuB, deciding what's in v1 vs. deferred, and
 everything from here on (git init, GitHub repo creation, review).
+
+## Milestone: Official WEB Catholic Edition Import
+Objective
+
+Replace the legacy 66-book WEB dataset with the official World English Bible Catholic Edition (WEB-C) from eBible.org.
+
+Why
+
+The existing web.json originated from an older WEB revision and contained only the Protestant 66-book canon.
+
+Simply grafting the seven deuterocanonical books onto that dataset would have mixed two different revisions of the same translation under one "WEB" label.
+
+Instead, the project now imports the complete official WEB Catholic Edition directly from its original source.
+
+Decisions
+Use eBible.org as the authoritative source.
+Replace the entire WEB dataset instead of merging.
+Discover chapter counts by requesting chapters until HTTP 404.
+Use stable canon IDs internally.
+Preserve parser independence from provisional canon metadata.
+Technical work completed
+Implemented build/import-eng-web-c.mjs.
+Automatic fetching of all 73 books.
+Automatic chapter discovery.
+HTML verse extraction.
+Removal of:
+navigation links
+footnote references
+page footer
+copyright text
+Added smoke-test mode.
+Validated against Tobit and Obadiah edge cases.
+Validation
+
+Result:
+
+73 / 73 books imported
+0 validation errors
+5 expected provisional warnings
+
+The remaining warnings correspond to provisional canon metadata (EST, BAR, DAN) rather than importer failures.
+
+Outcome
+
+Maranatha now has a reproducible import pipeline capable of regenerating the official WEB Catholic Edition directly from the original source.
+
+That fits perfectly with your documentation philosophy.
