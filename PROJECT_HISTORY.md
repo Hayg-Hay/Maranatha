@@ -281,4 +281,6 @@ Outcome
 
 Maranatha now has a reproducible import pipeline capable of regenerating the official WEB Catholic Edition directly from the original source.
 
+The browser runtime payload `data/web.js` is regenerated from `data/web.json`, so the offline app now loads the full WEB-C text for the Catholic deuterocanonical books.
+
 That fits perfectly with your documentation philosophy.
