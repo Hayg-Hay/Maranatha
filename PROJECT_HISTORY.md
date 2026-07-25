@@ -236,51 +236,122 @@ Human contributions: defining the canon and translation scope, the
 architectural continuity with YaQuB, deciding what's in v1 vs. deferred, and
 everything from here on (git init, GitHub repo creation, review).
 
-## Milestone: Official WEB Catholic Edition Import
-Objective
+## Phase 4.5 — Official WEB Catholic Edition Import (milestone-webc-import)
 
-Replace the legacy 66-book WEB dataset with the official World English Bible Catholic Edition (WEB-C) from eBible.org.
+**Git tag:** `milestone-webc-import` (commit `a48df1b`, 5 commits total:
+`685b999` → `9e43118` → `c7144aa` → `b889334` → `a48df1b`).
 
-Why
+**Objective:** Replace the legacy 66-book WEB dataset (from
+scrollmapper/bible_databases) with the official World English Bible
+Catholic Edition (WEB-C) from eBible.org, covering all 73 Catholic books.
 
-The existing web.json originated from an older WEB revision and contained only the Protestant 66-book canon.
+**Why:** The existing `web.json` originated from an older WEB revision and
+contained only the Protestant 66-book canon. Grafting the seven
+deuterocanonical books onto that dataset would have mixed two different
+revisions of the same translation under one "WEB" label. Instead, the
+project imports the complete official WEB Catholic Edition directly from
+its original source.
 
-Simply grafting the seven deuterocanonical books onto that dataset would have mixed two different revisions of the same translation under one "WEB" label.
+**Technical work:**
+- Implemented `build/import-eng-web-c.mjs`.
+- Automatic fetching of all 73 books via eBible.org's chapter-numbered
+  URLs, discovering chapter counts by requesting until HTTP 404.
+- HTML verse extraction with removal of navigation links, footnote
+  references, page footer, and copyright text.
+- Smoke-test mode validated against Tobit and Obadiah edge cases.
+- `data/web.js` regenerated from `data/web.json`; the offline app now
+  loads the full WEB-C text for all 73 Catholic books.
 
-Instead, the project now imports the complete official WEB Catholic Edition directly from its original source.
+**Validation result:** 73/73 books imported, 0 validation errors, 5
+expected provisional warnings (EST, BAR, DAN — these books had provisional
+canon metadata from the pre-WEB-C era; see Phase 5.5).
 
-Decisions
-Use eBible.org as the authoritative source.
-Replace the entire WEB dataset instead of merging.
-Discover chapter counts by requesting chapters until HTTP 404.
-Use stable canon IDs internally.
-Preserve parser independence from provisional canon metadata.
-Technical work completed
-Implemented build/import-eng-web-c.mjs.
-Automatic fetching of all 73 books.
-Automatic chapter discovery.
-HTML verse extraction.
-Removal of:
-navigation links
-footnote references
-page footer
-copyright text
-Added smoke-test mode.
-Validated against Tobit and Obadiah edge cases.
-Validation
+**Impact on provisional books:** The WEB-C import provided real verse text
+for Esther (Greek additions expand chapters 4 and 10), Baruch (chapter 6,
+the Letter of Jeremiah, now present as 73 verses), and Daniel (Greek
+additions: Susanna as chapter 13, Bel and the Dragon as chapter 14, and
+Daniel 3 expanded to 97 verses including the Prayer of Azariah and the
+Song of the Three). These counts were not reflected in `canon.computed.json`
+at the time of import — that was addressed in Phase 5.5.
 
-Result:
+## Phase 5 — Byzantine Majority Text (Greek NT) added
 
-73 / 73 books imported
-0 validation errors
-5 expected provisional warnings
+**Source:** `byztxt/byzantine-majority-text` (GitHub), Robinson-Pierpont edition,
+`csv-unicode/ccat/no-variants/` — 29 CSV files (27 NT books + 2 variant readings).
+License: Unlicense (public domain dedication), confirmed directly from LICENSE.txt.
 
-The remaining warnings correspond to provisional canon metadata (EST, BAR, DAN) rather than importer failures.
+The importer (`build/import-byz.mjs`) parses 27 CSV files into the standard
+`data/byz.json` / `data/byz.js` format. Source files use Latin abbreviations
+(MAR → MRK, JOH → JHN, JAM → JAS, 1JO/2JO/3JO → 1JN/2JN/3JN) — all maps
+verified against canon.js directly, not assumed.
 
-Outcome
+**ACT24.csv and PA.csv:** The source ships two extra CSV files containing
+alternate readings of disputed passages. Inspection confirmed that the main
+ACT.csv already contains Acts 24:6-9 (shorter reading) and JOH.csv already
+contains John 7:53-8:11 (Pericope Adulterae, verses 53 and 1-11) natively
+in the Byzantine tradition. The extra files are variant-form readings of the
+same passages, not additional verse content. They are intentionally skipped
+during import — no merge, no deletion, just documented non-import.
 
-Maranatha now has a reproducible import pipeline capable of regenerating the official WEB Catholic Edition directly from the original source.
+**Validation:** `validate.mjs` reports 1 error: Romans 16 has 24 verses in
+the Byzantine text vs. 25 in canon.js. This is a genuine textual difference —
+the Byzantine text ends Romans at verse 24 (doxology), while the KJV/WEB-based
+canon.js expects 25. Not a data defect; the importer faithfully represents the
+source text. The 46 missing OT books are informational (expected — this is
+an NT-only translation).
 
-The browser runtime payload `data/web.js` is regenerated from `data/web.json`, so the offline app now loads the full WEB-C text for the Catholic deuterocanonical books.
+**Smoke test:** Matthew 1:1 and John 1:1 verified with jsdom (same approach as
+WEB/KJV), rendering clean polytonic Greek with correct accents and breathing
+marks in both multi-column and multi-row layouts.
 
-That fits perfectly with your documentation philosophy.
+## Phase 5.5 — Canon re-baselining and verse-count fix
+
+**Background:** Phase 4.5 (WEB-C import) replaced the 66-book WEB data with
+the full 73-book WEB Catholic Edition, but the original `canon.computed.json`
+was never updated to reflect the new WEB-C data — it still contained
+chapter/verse counts computed from the old Scrollmapper source. Phase 5
+(Byzantine NT) added a third translation, further widening the gap between
+real data and the stored canon.
+
+**Changes to the canon-generation rule:**
+
+1. **Verse counting:** A chapter's verse count in canon.js is now the
+   maximum across all imported translations (WEB, KJV, Byzantine), where
+   trailing empty-string slots in a chapter's verse array are trimmed before
+   counting. This replaces the old rule that counted the raw array length,
+   which had allowed WEB's padded empty slot at Romans 16:25 to be recorded
+   as a real verse and the old WEB-C importer's occasional trailing
+   empty-string padding (e.g. Sirach 23:28) to inflate counts.
+
+2. **Chapter counting:** A book's chapter count is now the maximum across
+   all imported translations, with trailing zero-count chapters trimmed.
+   This pruned four phantom chapters from Sirach (chapters 52–55) that the
+   old `canon.computed.json` contained but no translation had data for.
+
+**Specific changes (46 chapter counts, 6 books):**
+
+| Book | Key changes |
+|------|-------------|
+| **EST** | ch4: 17→46, ch10: 3→14 (WEB-C Greek additions) |
+| **SIR** | 37 chapter counts updated; ch52–55 removed (no translation data) |
+| **BAR** | ch6: 0→73 (Letter of Jeremiah from WEB-C) |
+| **DAN** | ch3: 30→97 (Prayer of Azariah + Song of the Three), ch13: 0→64 (Susanna), ch14: 0→42 (Bel and the Dragon) — all from WEB-C |
+| **ROM** | ch14: 23→26 (max across all three translations), ch16: 25→27 (KJV's longer doxology at v25-27; WEB and Byzantine both have shorter endings) |
+
+**Provisional book status:** EST, BAR, and DAN remain `provisional: true`
+because their counts are computed from a single translation (WEB-C) rather
+than verified against multiple independent sources — the same standard the
+core 66 books and the NT satisfy by having both KJV and (for NT) Byzantine
+cross-validation.
+
+**Romans 16:25-27 — textual variant, not data defect:** KJV has the longer
+doxology (27 verses total, matching the Textus Receptus). WEB (25 array
+slots, 24 real verses) and Byzantine (24 verses) follow the shorter
+Alexandrian/Westcott-Hort ending. The canon records 27 (max), and the
+existing `missing-verse` UI state in `cellFor()` / `fillCell()` correctly
+shows "(not available)" for verses 25-27 in WEB and Byzantine.
+
+**New script:** `build/update-canon-counts.mjs` — re-reads all three
+translation JSON files and regenerates `canon.computed.json` with the
+corrected counting rule. Run this after importing any new translation to
+update the canon to match the data on disk.

@@ -9,8 +9,8 @@ thin `app.js` + `index.html` + `style.css` front end with no framework.
 
 ## Status
 
-**Two real translations are live: World English Bible (WEB) and King James
-Version (KJV), both public domain, 66 standard books each.** Open
+**Three real translations are live: World English Bible (WEB-C), King James
+Version (KJV), and Byzantine Majority Text (Greek NT), all 27 NT books.** Open
 `index.html`, both checkboxes are on by default, pick a book/chapter, and
 you'll see both side by side. The 7 Catholic deuterocanonical books (Tobit,
 Judith, Wisdom, Sirach, Baruch, 1–2 Maccabees) don't have a translation yet
@@ -25,10 +25,14 @@ What works:
 - `data/locales/en.json` (+ `en.js`) — English display names, kept separate
   from `canon.js` so a future locale (e.g. Armenian) can be added without
   touching the canon file.
-- `data/web.json` (+ `web.js`), `data/kjv.json` (+ `kjv.js`) — real text for
-  the 66 standard books each, built by `build/import-web.mjs` /
-  `build/import-kjv.mjs` from verified structured sources. Both validate with
-  0 errors against `canon.js`.
+- `data/web.json` (+ `web.js`), `data/kjv.json` (+ `kjv.js`), `data/byz.json`
+  (+ `byz.js`) — real text for the 66 standard books (WEB/KJV) and 27 NT
+  books (Byzantine Greek NT), built by `build/import-web.mjs` /
+  `build/import-kjv.mjs` / `build/import-byz.mjs` from verified structured
+  sources. WEB and KJV validate with 0 errors against `canon.js`. The
+  Byzantine NT has 1 known textual difference (Romans 16:24 vs. 25 verses
+  in canon.js — the Byzantine text ends at v. 24) documented in
+  `PROJECT_HISTORY.md`.
 - `index.html` — book/chapter navigation, translation checkboxes (multi-select,
   renders side by side), and real verse rendering. Translation data loads via
   a dynamically created `<script>` tag when its checkbox is selected — never
@@ -51,21 +55,28 @@ source, and any translation at all for the 7 deuterocanonical books. NKJV was
 considered and rejected as a second English translation — it's copyrighted
 (Thomas Nelson), unlike WEB/KJV/DRB, all public domain.
 
-## Two known data gaps
+## Known data gaps
 
-`data/canon.js` marks two books `provisional: true`:
+`data/canon.js` marks three books `provisional: true`:
 
-1. **Baruch** — recorded with 5 chapters. Catholic Baruch has 6; chapter 6 is
-   the Letter of Jeremiah, for which no source of real verse text was
-   reachable when this was built.
-2. **Esther** and **Daniel** — recorded with their standard (non-expanded)
-   structure. The WEB Catholic Edition retranslates both from the Greek
-   Septuagint with the deuterocanonical additions integrated, which changes
-   their real chapter/verse layout. That hasn't been measured yet.
+1. **Esther** — chapters 4 and 10 are expanded (46 and 14 verses
+   respectively, vs. the standard 17 and 3) from the Greek additions
+   provided by WEB-C. Chapter 9 has 30 verses in WEB-C but canon
+   currently expects 32 — this gap needs reconciliation.
 
-Both are flagged in the data itself (`provisional: true` per book) and in
-`build/build-canon.mjs`'s header comment, and `validate.mjs` treats mismatches
-against these two as warnings rather than errors for exactly this reason.
+2. **Baruch** — chapter 6 (the Letter of Jeremiah, 73 verses) was
+   recovered from WEB-C and is now part of the canon. The chapter count
+   matches real Catholic Bibles (6 chapters).
+
+3. **Daniel** — chapters 3 (97 verses, including the Prayer of Azariah
+   and Song of the Three), 13 (Susanna, 64 verses), and 14 (Bel and the
+   Dragon, 42 verses) are now backed by real WEB-C text. The chapter
+   count (14 chapters) matches the expanded Greek Septuagint edition.
+
+These provisional designations remain because the chapter/verse counts
+were computed from a single translation (WEB-C) rather than verified
+against multiple independent sources. `validate.mjs` treats mismatches
+against provisional books as warnings, not errors.
 
 ## Running it
 
@@ -86,11 +97,17 @@ circulation actually contain. No medieval/apocryphal additions beyond the
 standard Catholic Deuterocanon (3 Corinthians, Testaments of the Twelve
 Patriarchs, etc. are explicitly out of scope).
 
-## Translations (planned, v1)
+## Translations (live, v1)
 
-- World English Bible, Catholic Edition (public domain) — base translation
-- Douay-Rheims (public domain)
-- King James Version (public domain in the US)
+- World English Bible, Catholic Edition (public domain) — covers all 73 books
+- King James Version (public domain in the US) — 66 standard books
+- Byzantine Majority Text, Robinson-Pierpont (Unlicense / public domain) —
+  27 NT books in Koine Greek, imported via `build/import-byz.mjs` from
+  `byztxt/byzantine-majority-text` (GitHub). The source includes Acts 24:6-8
+  and John 7:53-8:11 (Pericope Adulterae) in the main text, as per the
+  Byzantine manuscript tradition. Two extra CSV files (ACT24.csv and PA.csv)
+  are alternate readings of these same passages and are not imported — see
+  `PROJECT_HISTORY.md`.
 
 RSV-CE is explicitly excluded: copyrighted by the National Council of
 Churches, not freely redistributable.
