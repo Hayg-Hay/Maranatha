@@ -528,7 +528,7 @@ function init() {
     const head = document.createElement('div');
     head.className = 'result-head';
     let verseLabel;
-    if (exactVerses) {
+    if (contextEnabled && exactVerses) {
       const exactCount = exactVerses.size;
       const shownCount = verses.length;
       verseLabel = shownCount === verseCount
@@ -586,12 +586,12 @@ function init() {
       const verseCount = book.chapters[group.chapter - 1];
       const exactVerses = versesForGroup(group, verseCount);
 
+      const exactSet = new Set(exactVerses);
+
       let displayVerses = exactVerses;
-      let exactSet = null;
       if (contextEnabled) {
         const expanded = expandWithContext(exactVerses, verseCount);
         displayVerses = expanded.verses;
-        exactSet = expanded.exact;
       }
 
       appendResultBlock({
