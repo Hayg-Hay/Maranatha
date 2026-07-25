@@ -43,7 +43,7 @@ th, td { border:1px solid var(--line); padding:9px; vertical-align:top; text-ali
 th { background:var(--panel); }
 tbody tr:nth-child(even) td { background:var(--alt); }
 .reference { width:64px; white-space:nowrap; font-variant-numeric:tabular-nums; }
-.translation-label { width:135px; font-weight:bold; white-space:nowrap; }
+.translation-label { width:135px; font-weight:bold; white-space:normal; word-break:break-word; }
 .verse-placeholder { color:#8a7660; font-style:italic; }
 
 .empty { padding:18px; background:#fff; border:1px solid var(--line); }
