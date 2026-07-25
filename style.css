@@ -20,7 +20,7 @@ header img {
     flex-shrink: 0;
 }
 .panel { border:1px solid var(--line); background:var(--panel); padding:16px; margin:14px 0; } h2 { font-size:1.1rem; margin:0 0 10px; }
-.nav-row { display:flex; flex-wrap:wrap; gap:8px; align-items:end; }
+.nav-row { display:flex; flex-wrap:wrap; gap:14px; align-items:end; }
 .nav-row label { display:grid; gap:4px; font-size:.9rem; }
 select, button { padding:8px 10px; font:inherit; color:inherit; border:1px solid #8a7660; background:white; cursor:pointer; }
 
@@ -28,7 +28,7 @@ button:hover { background:#fbf6ef; }
 .hint { margin:.6rem 0 0; font-size:.9rem; }
 .toolbar { display:flex; flex-wrap:wrap; align-items:end; gap:14px; margin-top:14px; }
 .toolbar label { display:grid; gap:4px; font-size:.9rem; }
-fieldset { border:0; padding:0; margin:0; display:flex; flex-wrap:wrap; gap:6px 12px; } legend { font-size:.9rem; padding:0; }
+fieldset { border:0; padding:0; margin:10px 0 0; display:flex; flex-wrap:wrap; gap:6px 12px; } legend { font-size:.9rem; padding:0; }
 .version { white-space:nowrap; font-size:.9rem; }
 .message { min-height:1.4em; margin:12px 0; color:#8a2636; } .message:empty { display:none; }
 .notice { background:#fff8e6; border:1px solid #e0c67a; padding:10px 14px; margin:14px 0; font-size:.92rem; }
@@ -76,3 +76,33 @@ footer { text-align:center; padding:0 18px 28px; color:#5a4f45; font-size:.85rem
     white-space: nowrap;
 }
 @media (max-width:650px) { .shell { margin:12px auto; padding:0 10px; } .translation-label { width:95px; } th,td { padding:7px; } }
+
+/* ----------------------------------------------------------
+   Context toggle
+---------------------------------------------------------- */
+#context-toggle {
+    margin-top: 8px;
+    padding: 8px 16px;
+    font-size: .9rem;
+}
+/* ----------------------------------------------------------
+   Verse highlighting
+---------------------------------------------------------- */
+.highlighted-verse td {
+    background: #fdf3e0;
+}
+.context-verse td {
+    color: #5a524c;
+}
+/* Override zebra stripe so highlight and context render consistently
+   regardless of row position */
+#results tbody tr.highlighted-verse td,
+#results tbody tr.context-verse td {
+    background: inherit;
+}
+#results tbody tr.highlighted-verse td {
+    background: #fdf3e0;
+}
+#results tbody tr.context-verse td {
+    background: #f8f7f5;
+}

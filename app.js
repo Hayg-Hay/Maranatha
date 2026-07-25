@@ -158,6 +158,7 @@ class ReferenceParser {
 
 (() => {
   'use strict';
+  const CONTEXT_RADIUS = 3;
   const parser = new ReferenceParser(
     MARANATHA_CANON,
     MARANATHA_LOCALE_EN
@@ -194,6 +195,7 @@ const refs = {
     results: q('#results'),
     message: q('#message'),
     translations: q('#translations'),
+    contextBtn: q('#context-toggle'),
 };
   const loaded = new Set();   // translation ids whose <script> has finished loading
   const loading = new Set();  // translation ids whose <script> is in flight
@@ -209,6 +211,8 @@ const refs = {
   // ("Mark 14:2,6-9;Matthew 26:26-31") reuse exactly the same rendering
   // path as "John 3:16" instead of needing a third mode.
   // ---------------------------------------------------------------------
+  let contextEnabled = false;
+
   const viewState = {
     mode: 'browse',     // 'browse' | 'reference'
     groups: null,       // populated only when mode === 'reference'
@@ -217,11 +221,14 @@ const refs = {
   function setBrowseMode() {
     viewState.mode = 'browse';
     viewState.groups = null;
+    contextEnabled = false;
+    refs.contextBtn.style.display = 'none';
   }
 
   function setReferenceMode(groups) {
     viewState.mode = 'reference';
     viewState.groups = groups;
+    refs.contextBtn.style.display = '';
   }
 
   init();
@@ -287,6 +294,11 @@ function init() {
     });
 
     refs.layout.addEventListener('change', () => {
+        render();
+    });
+
+    refs.contextBtn.addEventListener('click', () => {
+        contextEnabled = !contextEnabled;
         render();
     });
 
@@ -391,6 +403,20 @@ function init() {
     }
   }
 
+  // Expands a list of exact-match verse numbers outward by CONTEXT_RADIUS
+  // verses on each side, clamped to [1, verseCount]. Returns the expanded
+  // array and a Set of exact verses so the renderer can distinguish matched
+  // verses from context verses. This is purely a presentation-layer concern.
+  function expandWithContext(exactVerses, verseCount) {
+    const min = Math.min(...exactVerses);
+    const max = Math.max(...exactVerses);
+    const start = Math.max(1, min - CONTEXT_RADIUS);
+    const end = Math.min(verseCount, max + CONTEXT_RADIUS);
+    const allVerses = [];
+    for (let v = start; v <= end; v++) allVerses.push(v);
+    return { verses: allVerses, exact: new Set(exactVerses) };
+  }
+
   // Flattens a group's ranges (possibly discontiguous, e.g. "2,6-9") into
   // a sorted, de-duplicated list of verse numbers. A group with no ranges
   // (ranges === null, e.g. "1 Corinthians 13") means "the whole chapter".
@@ -409,7 +435,7 @@ function init() {
   // translation, side by side. Takes an explicit verse-number list (not a
   // start/end pair) so it can render discontiguous verses like "2,6-9"
   // just as easily as a full chapter.
-  function multiColumn(bookId, chapterNum, verses, translations, { highlight = false, anchorFirst = false } = {}) {
+  function multiColumn(bookId, chapterNum, verses, translations, { highlight = false, anchorFirst = false, exactVerses = null } = {}) {
     const table = document.createElement('table');
     const head = document.createElement('thead');
     const headRow = document.createElement('tr');
@@ -420,14 +446,24 @@ function init() {
 
     const body = document.createElement('tbody');
 
+    let anchorPlaced = false;
+    const firstExact = anchorFirst && exactVerses ? verses.find(v => exactVerses.has(v)) : null;
+
     verses.forEach((v, i) => {
       const tr = document.createElement('tr');
       const ref = document.createElement('td');
       ref.className = 'reference';
       ref.textContent = `${chapterNum}:${v}`;
       if (highlight) {
-        tr.classList.add('highlighted-verse');
-        if (anchorFirst && i === 0) tr.id = 'current-reference';
+        if (exactVerses && exactVerses.has(v)) {
+          tr.classList.add('highlighted-verse');
+          if (anchorFirst && !anchorPlaced && v === firstExact) {
+            tr.id = 'current-reference';
+            anchorPlaced = true;
+          }
+        } else {
+          tr.classList.add('context-verse');
+        }
       }
       tr.append(ref);
       translations.forEach(t => {
@@ -444,7 +480,7 @@ function init() {
   // Ported from YaQuB's local/app.js multiRow(): one table, each verse's
   // translations listed as consecutive rows underneath it. Better than
   // multi-column when many translations are selected at once.
-  function multiRow(bookId, chapterNum, verses, translations, { highlight = false, anchorFirst = false } = {}) {
+  function multiRow(bookId, chapterNum, verses, translations, { highlight = false, anchorFirst = false, exactVerses = null } = {}) {
     const table = document.createElement('table');
     const head = document.createElement('thead');
     head.innerHTML = '<tr><th class="reference">Verse</th><th class="translation-label">Translation</th><th>Text</th></tr>';
@@ -452,12 +488,22 @@ function init() {
 
     const body = document.createElement('tbody');
 
+    let anchorPlaced = false;
+    const firstExact = anchorFirst && exactVerses ? verses.find(v => exactVerses.has(v)) : null;
+
     verses.forEach((v, i) => {
       translations.forEach((t, j) => {
         const tr = document.createElement('tr');
         if (highlight) {
-          tr.classList.add('highlighted-verse');
-          if (anchorFirst && i === 0 && j === 0) tr.id = 'current-reference';
+          if (exactVerses && exactVerses.has(v)) {
+            tr.classList.add('highlighted-verse');
+          } else {
+            tr.classList.add('context-verse');
+          }
+        }
+        if (anchorFirst && !anchorPlaced && v === firstExact && j === 0) {
+          tr.id = 'current-reference';
+          anchorPlaced = true;
         }
         const ref = document.createElement('td');
         ref.className = 'reference';
@@ -478,18 +524,27 @@ function init() {
   // Builds one heading + table block and appends it to #results. Shared by
   // both browse mode (a single block, the whole chapter, unhighlighted) and
   // reference mode (one block per group, restricted verses, highlighted).
-  function appendResultBlock({ bookId, chapterNum, name, verseCount, verses, translations, layout, highlight, anchorFirst }) {
+  function appendResultBlock({ bookId, chapterNum, name, verseCount, verses, translations, layout, highlight, anchorFirst, exactVerses = null }) {
     const head = document.createElement('div');
     head.className = 'result-head';
-    const verseLabel = verses.length === verseCount
-      ? `${verseCount} verses`
-      : `${verses.length} of ${verseCount} verses`;
+    let verseLabel;
+    if (exactVerses) {
+      const exactCount = exactVerses.size;
+      const shownCount = verses.length;
+      verseLabel = shownCount === verseCount
+        ? `\u00b1${CONTEXT_RADIUS} \u00b7 ${shownCount} verses (full chapter)`
+        : `\u00b1${CONTEXT_RADIUS} \u00b7 ${shownCount} of ${verseCount} verses`;
+    } else {
+      verseLabel = verses.length === verseCount
+        ? `${verseCount} verses`
+        : `${verses.length} of ${verseCount} verses`;
+    }
     head.innerHTML = `<h2>${name} ${chapterNum} <small>(${verseLabel}, ${layout === 'multicolumn' ? 'multi-column' : 'multi-row'})</small></h2>`;
     refs.results.appendChild(head);
 
     const table = layout === 'multicolumn'
-      ? multiColumn(bookId, chapterNum, verses, translations, { highlight, anchorFirst })
-      : multiRow(bookId, chapterNum, verses, translations, { highlight, anchorFirst });
+      ? multiColumn(bookId, chapterNum, verses, translations, { highlight, anchorFirst, exactVerses })
+      : multiRow(bookId, chapterNum, verses, translations, { highlight, anchorFirst, exactVerses });
     refs.results.appendChild(table);
   }
 
@@ -529,18 +584,27 @@ function init() {
       const book = canon.books.find(b => b.id === group.bookId);
       const name = (locale.books[book.id] && locale.books[book.id].name) || book.id;
       const verseCount = book.chapters[group.chapter - 1];
-      const verses = versesForGroup(group, verseCount);
+      const exactVerses = versesForGroup(group, verseCount);
+
+      let displayVerses = exactVerses;
+      let exactSet = null;
+      if (contextEnabled) {
+        const expanded = expandWithContext(exactVerses, verseCount);
+        displayVerses = expanded.verses;
+        exactSet = expanded.exact;
+      }
 
       appendResultBlock({
         bookId: book.id,
         chapterNum: group.chapter,
         name,
         verseCount,
-        verses,
+        verses: displayVerses,
         translations,
         layout,
         highlight: true,
         anchorFirst: index === 0,
+        exactVerses: exactSet,
       });
     });
   }
@@ -568,6 +632,9 @@ function init() {
     } else {
       renderBrowseChapter(translations, layout);
     }
+
+    // Update the context button label to reflect current state
+    refs.contextBtn.textContent = contextEnabled ? 'Hide context' : `Show context (\u00b1${CONTEXT_RADIUS})`;
 
     const target = document.getElementById('current-reference');
     if (target) {
