@@ -96,10 +96,10 @@ footer { text-align:center; padding:0 18px 28px; color:#5a4f45; font-size:.85rem
    Verse highlighting
 ---------------------------------------------------------- */
 .highlighted-verse td {
-    background: #fdf3e0;
+    background: var(--panel);
 }
 .context-verse td {
-    color: #5a524c;
+    opacity: 0.72;
 }
 /* Override zebra stripe so highlight and context render consistently
    regardless of row position */
@@ -108,8 +108,8 @@ footer { text-align:center; padding:0 18px 28px; color:#5a4f45; font-size:.85rem
     background: inherit;
 }
 #results tbody tr.highlighted-verse td {
-    background: #fdf3e0;
+    background: var(--panel);
 }
 #results tbody tr.context-verse td {
-    background: #f8f7f5;
+    background: var(--alt);
 }
