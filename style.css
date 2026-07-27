@@ -98,11 +98,11 @@ footer { text-align:center; padding:0 18px 28px; color:#5a4f45; font-size:.85rem
 .highlighted-verse td {
     background: var(--panel);
 }
-.context-verse td {
-    opacity: 0.72;
-}
-/* Override zebra stripe so highlighted verse renders consistently
-   regardless of row position. Context verses keep normal zebra stripes. */
+/* Highlighted verse always gets the theme panel colour.
+   Context verses always get a plain white background, overriding zebra stripe. */
 #results tbody tr.highlighted-verse td {
     background: var(--panel);
+}
+#results tbody tr.context-verse td {
+    background: var(--paper);
 }
