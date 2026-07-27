@@ -101,15 +101,8 @@ footer { text-align:center; padding:0 18px 28px; color:#5a4f45; font-size:.85rem
 .context-verse td {
     opacity: 0.72;
 }
-/* Override zebra stripe so highlight and context render consistently
-   regardless of row position */
-#results tbody tr.highlighted-verse td,
-#results tbody tr.context-verse td {
-    background: inherit;
-}
+/* Override zebra stripe so highlighted verse renders consistently
+   regardless of row position. Context verses keep normal zebra stripes. */
 #results tbody tr.highlighted-verse td {
     background: var(--panel);
-}
-#results tbody tr.context-verse td {
-    background: var(--alt);
 }
