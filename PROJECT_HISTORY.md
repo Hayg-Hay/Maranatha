@@ -392,3 +392,143 @@ checking the actual pushed commit stat rather than trusting the terminal
 output at face value, and corrected via `git commit --amend` +
 `git push --force-with-lease` (safe here — solo repo, no one else pulling from
 it) so the commit message matches what it actually contains.
+
+## Hebrew Source Investigation
+
+### Source Selection
+
+We investigated possible Hebrew Bible sources for Maranatha and reached the
+following confirmed decisions:
+
+- **BibleHub was examined only to identify its underlying source.**
+  BibleHub displays the Westminster Leningrad Codex (WLC) as its Hebrew text,
+  crediting it to tanach.us. BibleHub will not be used as an import source —
+  the legally clean path is to obtain the text from its primary distribution
+  point, not from a downstream website.
+
+- **The selected upstream candidate is the Open Scriptures Hebrew Bible (OSHB).**
+  Repository: https://github.com/openscriptures/morphhb. The OSHB is a digital
+  transcription of the Westminster Leningrad Codex with full morphological
+  tagging, distributed in OSIS XML format.
+
+- **License verification was performed independently against the repository.**
+  We did not rely on AI summaries — the repository's LICENSE file and the
+  `<rights>` element in the XML header both state the license is **Creative
+  Commons Attribution 4.0 International (CC BY 4.0)**. The XML header also
+  states the underlying Westminster Leningrad Codex is public domain. CC BY
+  4.0 permits redistribution, adaptation, and commercial use, requiring only
+  attribution.
+
+- **Required attribution** (from LICENSE.md):
+  > Open Scriptures Hebrew Bible
+  > https://github.com/openscriptures/morphhb
+  > Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+
+  The import script records this in the `source` field of `data/he.json`,
+  along with a note that morphological markup was stripped and that the
+  translation covers only the 39 protocanonical OT books.
+
+### Technical Evaluation
+
+We inspected the actual XML files (`wlc/Gen.xml`, `wlc/1Chr.xml`, and others)
+and confirmed:
+
+- **OSIS book/chapter/verse structure.** Each book is a `<div type="book">`
+  containing `<chapter>` elements containing `<verse>` elements, with stable
+  `osisID` attributes (e.g., `Gen.1.1`). This maps directly onto Maranatha's
+  existing `{ books: { "GEN": [[verse,...], ...] } }` data model.
+
+- **UTF-8 Hebrew.** All text is valid UTF-8, matching Maranatha's existing
+  `<meta charset="utf-8">` declaration and the proven ability to render Greek
+  polytonic text (Byzantine Majority Text) without issues.
+
+- **Niqqud (vowel pointing).** Full Tiberian vowel marks (U+05B0–U+05BB)
+  present throughout, e.g., בְּרֵאשִׁית (dagesh + sheva on bet, tsere on resh).
+
+- **Cantillation marks (te'amim).** Full cantillation marks (U+0591–U+05AF)
+  present, e.g., בְּרֵאשִׁ֖ית (tipeha on shin), בָּרָ֣א (munah on resh),
+  אֱלֹהִ֑ים (atnah on he).
+
+- **Maqaf and sof pasuq.** The maqaf hyphen (־ U+05BE) and sof pasuq
+  colon (׃ U+05C3) are encoded as `<seg type="x-maqqef">` and
+  `<seg type="x-sof-pasuq">` elements respectively, alongside paseq (׀ U+05C0)
+  as `<seg type="x-paseq">`. These require word-order-sensitive extraction
+  that preserves document order between `<w>` and `<seg>` elements.
+
+- **Lemma and morphology metadata.** Every `<w>` element carries `@lemma`,
+  `@morph`, and often `@n` (Strong's number) attributes. For v1, this
+  metadata is stripped — only the surface text (consonants, niqqud,
+  cantillation) is retained. The raw XML is preserved in `build/sources/oshb/`
+  for a future v2 feature that could expose morphology/interlinear data.
+
+- **High-quality structured XML suitable for deterministic importing.**
+  Unlike plain-text or PDF sources, the XML structure removes ambiguity:
+  book/chapter/verse boundaries are explicit, and each word is individually
+  tagged with its morphological analysis.
+
+### Archival Decision: 39-Book Hebrew
+
+OSHB covers the 39 protocanonical Old Testament books only. The 7 Catholic
+deuterocanonical books (Tobit, Judith, Wisdom, Sirach, Baruch, 1-2 Maccabees)
+were originally composed in Greek and have no Hebrew text in the OSHB.
+Additionally, the Hebrew Esther and Daniel do not include the deuterocanonical
+Greek additions (the Hebrew canon excludes them). This is the same pattern as
+the Byzantine Majority Text, which covers only the 27 NT books — the UI
+already handles missing books via the "(not available in this translation)"
+placeholder in `app.js`.
+
+### Versification Investigation
+
+An initial assumption — that simple front-trimming of Masoretic verses would
+resolve all versification differences between the OSHB and Maranatha's canon.js
+(which uses Christian verse numbering) — was tested by running the import
+script and then `validate.mjs`. The result was 35 validator errors plus 3
+provisional warnings.
+
+Each of the 35 errors was individually verified against the OSHB XML source.
+The investigation identified three distinct categories:
+
+1.  **Chapter boundary shifts (30 chapters).** The Masoretic Text splits
+    chapter boundaries at different points than the Christian canon. For
+    example, OSHB Gen.32:1 corresponds to KJV Gen.31:55 — one verse at the
+    head of a Masoretic chapter belongs to the tail of the previous Christian
+    chapter. These shifts affect Genesis, Exodus, Leviticus, Numbers,
+    Deuteronomy, 1 Samuel, 2 Samuel, 1 Kings, 2 Kings, 2 Chronicles, Nehemiah,
+    Job, Ecclesiastes, Song of Solomon, Isaiah, Jeremiah, Ezekiel, Hosea,
+    Joel, Jonah, Micah, Nahum, and Zechariah.
+
+2.  **Different chapter count (2 books).** Joel has 4 chapters in the
+    Masoretic Text but 3 in the Christian canon; Malachi has 3 chapters in
+    the Masoretic Text but 4 in the Christian canon. These are not
+    front-trimming cases — they require cross-chapter redistribution.
+
+3.  **Genuine verse-count differences (2 chapters).** Nehemiah 7 (72 vs. 73
+    verses) and Isaiah 64 (11 vs. 12 verses) have known MT/Christian
+    versification differences that cannot be fixed by moving verses between
+    chapters. These are the same category as existing entries in
+    `data/known-variants.js`.
+
+**Critical finding:** Most of these mappings are not manually invented — the
+OSHB XML files contain **2,027 `<note>KJV:...>` annotations** embedded in the
+verse data. Chapter-boundary shifts are documented by `<note>` elements on the
+first verse of the affected Masoretic chapter, e.g.:
+```
+<verse osisID="Gen.32.1">
+  <note>KJV:Gen.31.55</note>
+```
+
+This means the versification mapping can be derived **algorithmically from
+the source data itself** rather than maintained as a large hand-written
+remapping table. Only the Joel (4→3) and Malachi (3→4) chapter-count
+differences and the two genuine verse-count differences would require
+special-case handling.
+
+### Current Status
+
+- The Hebrew source investigation is **complete**.
+- The import script (`build/import-oshb.mjs`) correctly extracts surface text
+  and handles Psalm superscription trimming and the 1 Chronicles 5/6 boundary,
+  but does not yet implement full algorithmic versification via KJV notes.
+- No final implementation has been accepted yet.
+- Import implementation remains pending until the versification strategy is
+  finalized.

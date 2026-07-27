@@ -45,5 +45,11 @@ window.MARANATHA_KNOWN_VARIANTS = [
     "chapter": 16,
     "reason": "The closing doxology (Romans 16:25-27) appears at the end of this chapter in the KJV/Textus Receptus tradition, rather than at the end of chapter 14 as in the Byzantine/WEB tradition. Confirmed directly against data/web.json, data/kjv.json, data/byz.json. 24 = WEB/Byzantine (doxology is in ch14, not here). 27 = KJV/Textus Receptus (doxology is here, not in ch14).",
     "acceptedCounts": [24, 27]
+  },
+  {
+    "book": "PSA",
+    "chapter": 13,
+    "reason": "Psalm 13 has 5 substantive verses in the Masoretic Text (plus a superscription counted as verse 1). The KJV/WEB Christian canon counts 6 substantive verses. Confirmed by direct comparison of OSHB Ps.13 (6 OSHB verses = 1 superscription + 5 content verses) against KJV Ps.13 (6 verses, no superscription). The MT's 5 substantive verses are not an importer defect — the source text simply does not contain a sixth substantive verse.",
+    "acceptedCounts": [5]
   }
 ];
