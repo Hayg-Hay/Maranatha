@@ -1,4 +1,3 @@
-
 class ReferenceParser {
 
     constructor(canon, locale) {
@@ -215,6 +214,12 @@ const refs = {
   // ---------------------------------------------------------------------
   let contextEnabled = false;
 
+  // Per-block context overrides.  Each key is "${bookId}-${chapterNum}".
+  // When a block has an entry here, its value overrides the global
+  // contextEnabled for that block alone.  The global toggle clears this
+  // map so that every block returns to following the global flag.
+  const blockContextOverrides = new Map();
+
   const viewState = {
     mode: 'browse',     // 'browse' | 'reference'
     groups: null,       // populated only when mode === 'reference'
@@ -224,6 +229,7 @@ const refs = {
     viewState.mode = 'browse';
     viewState.groups = null;
     contextEnabled = false;
+    blockContextOverrides.clear();
     refs.contextBtn.style.display = 'none';
   }
 
@@ -301,6 +307,7 @@ function init() {
 
     refs.contextBtn.addEventListener('click', () => {
         contextEnabled = !contextEnabled;
+        blockContextOverrides.clear();
         render();
     });
 
@@ -438,6 +445,15 @@ function init() {
     return [...set].sort((a, b) => a - b);
   }
 
+  // Returns the effective context-enabled state for a single result block.
+  // If the block has its own per-block override that wins; otherwise the
+  // global contextEnabled flag is used.
+  function blockContext(blockKey) {
+    return blockContextOverrides.has(blockKey)
+      ? blockContextOverrides.get(blockKey)
+      : contextEnabled;
+  }
+
   // Ported from YaQuB's local/app.js multiColumn(): one table, a column per
   // translation, side by side. Takes an explicit verse-number list (not a
   // start/end pair) so it can render discontiguous verses like "2,6-9"
@@ -531,11 +547,13 @@ function init() {
   // Builds one heading + table block and appends it to #results. Shared by
   // both browse mode (a single block, the whole chapter, unhighlighted) and
   // reference mode (one block per group, restricted verses, highlighted).
-  function appendResultBlock({ bookId, chapterNum, name, verseCount, verses, translations, layout, highlight, anchorFirst, exactVerses = null }) {
+  // When exactVerses is provided (reference mode) an individual per-block
+  // context-toggle button is added beside the heading.
+  function appendResultBlock({ bookId, chapterNum, name, verseCount, verses, translations, layout, highlight, anchorFirst, exactVerses = null, showContext = false }) {
     const head = document.createElement('div');
     head.className = 'result-head';
     let verseLabel;
-    if (contextEnabled && exactVerses) {
+    if (showContext && exactVerses) {
       const exactCount = exactVerses.size;
       const shownCount = verses.length;
       verseLabel = shownCount === verseCount
@@ -548,6 +566,20 @@ function init() {
     }
     head.innerHTML = `<h2>${name} ${chapterNum} <small>(${verseLabel}, ${layout === 'multicolumn' ? 'multi-column' : 'multi-row'})</small></h2>`;
     refs.results.appendChild(head);
+
+    // Per-block context toggle — only shown when exactVerses is set (reference mode)
+    if (exactVerses) {
+      const blockKey = `${bookId}-${chapterNum}`;
+      const toggleBtn = document.createElement('button');
+      toggleBtn.className = 'context-toggle-btn';
+      toggleBtn.textContent = showContext ? 'Hide context' : `Show context (\u00b1${CONTEXT_RADIUS})`;
+      toggleBtn.addEventListener('click', () => {
+        const current = blockContext(blockKey);
+        blockContextOverrides.set(blockKey, !current);
+        render();
+      });
+      head.appendChild(toggleBtn);
+    }
 
     const table = layout === 'multicolumn'
       ? multiColumn(bookId, chapterNum, verses, translations, { highlight, anchorFirst, exactVerses })
@@ -594,9 +626,11 @@ function init() {
       const exactVerses = versesForGroup(group, verseCount);
 
       const exactSet = new Set(exactVerses);
+      const blockKey = `${book.id}-${group.chapter}`;
+      const effectiveContext = blockContext(blockKey);
 
       let displayVerses = exactVerses;
-      if (contextEnabled) {
+      if (effectiveContext) {
         const expanded = expandWithContext(exactVerses, verseCount);
         displayVerses = expanded.verses;
       }
@@ -612,6 +646,7 @@ function init() {
         highlight: true,
         anchorFirst: index === 0,
         exactVerses: exactSet,
+        showContext: effectiveContext,
       });
     });
   }
