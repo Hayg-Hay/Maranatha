@@ -33,6 +33,29 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+// Ported from build/update-canon-counts.mjs. Some translation source data
+// pads a chapter's verse array (or a book's chapter array) with trailing
+// empty strings / empty chapters to a common length during import. That
+// padding is not real content, so raw .length comparisons against canon.js
+// produce false mismatches (e.g. WEB SIR 23 has a raw array length of 28
+// but only 27 real verses). canon.js's own counts are already computed
+// with this same trimming (see update-canon-counts.mjs), so validate.mjs
+// must trim the same way to compare like with like.
+function trimTrailing(arr) {
+  let end = arr.length;
+  while (end > 0 && !arr[end - 1]) end--;
+  return end;
+}
+
+// A chapter is "real" if it has at least one real (non-padding) verse.
+// Trailing all-empty chapters at the end of a book's chapter list are
+// padding, the same way trailing empty strings within a chapter are.
+function realChapterCount(chapters) {
+  let end = chapters.length;
+  while (end > 0 && (!Array.isArray(chapters[end - 1]) || trimTrailing(chapters[end - 1]) === 0)) end--;
+  return end;
+}
+
 const dir = path.dirname(fileURLToPath(import.meta.url));
 const canonPath = path.join(dir, '..', 'data', 'canon.js');
 const canonSrc = fs.readFileSync(canonPath, 'utf8');
@@ -75,15 +98,16 @@ for (const book of canon.books) {
   const severity = book.provisional ? 'WARN ' : 'ERROR';
   const bump = () => (book.provisional ? warnings++ : errors++);
 
-  if (chapters.length !== book.chapters.length) {
-    console.error(`${severity}  ${book.id}: ${chapters.length} chapters, canon expects ${book.chapters.length}` + (book.provisional ? ' (canon entry is provisional)' : ''));
+  const realChapters = realChapterCount(chapters);
+  if (realChapters !== book.chapters.length) {
+    console.error(`${severity}  ${book.id}: ${realChapters} chapters, canon expects ${book.chapters.length}` + (book.provisional ? ' (canon entry is provisional)' : ''));
     bump();
     continue;
   }
-  chapters.forEach((verses, i) => {
+  chapters.slice(0, realChapters).forEach((verses, i) => {
     const expected = book.chapters[i];
-    if (!Array.isArray(verses) || verses.length !== expected) {
-      const got = Array.isArray(verses) ? verses.length : typeof verses;
+    const got = Array.isArray(verses) ? trimTrailing(verses) : typeof verses;
+    if (got !== expected) {
       console.error(`${severity}  ${book.id} ${i + 1}: ${got} verses, canon expects ${expected}` + (book.provisional ? ' (canon entry is provisional)' : ''));
       bump();
     }
