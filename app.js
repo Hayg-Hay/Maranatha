@@ -394,9 +394,14 @@ function init() {
     return text ? { state: 'text', text } : { state: 'missing-verse' };
   }
 
-  function fillCell(td, cell) {
+  function fillCell(td, cell, tId) {
     if (cell.state === 'text') {
       td.textContent = cell.text;
+      if (tId === 'he') {
+        td.dir = 'rtl';
+        td.lang = 'he';
+        td.classList.add('hebrew-verse');
+      }
     } else {
       td.className = 'verse-placeholder';
       td.textContent = cell.state === 'loading' ? '(loading…)'
@@ -470,7 +475,7 @@ function init() {
       tr.append(ref);
       translations.forEach(t => {
         const td = document.createElement('td');
-        fillCell(td, cellFor(t, bookId, chapterNum, v));
+        fillCell(td, cellFor(t, bookId, chapterNum, v), t.id);
         tr.append(td);
       });
       body.append(tr);
@@ -514,7 +519,7 @@ function init() {
         label.className = 'translation-label';
         label.textContent = t.label;
         const td = document.createElement('td');
-        fillCell(td, cellFor(t, bookId, chapterNum, v));
+        fillCell(td, cellFor(t, bookId, chapterNum, v), t.id);
         tr.append(ref, label, td);
         body.append(tr);
       });

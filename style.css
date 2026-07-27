@@ -45,6 +45,7 @@ tbody tr:nth-child(even) td { background:var(--alt); }
 .reference { width:64px; white-space:nowrap; font-variant-numeric:tabular-nums; }
 .translation-label { width:135px; font-weight:bold; white-space:normal; word-break:break-word; }
 .verse-placeholder { color:#8a7660; font-style:italic; }
+.hebrew-verse { text-align:right; font-size:1.25rem; line-height:1.7; }
 
 .empty { padding:18px; background:#fff; border:1px solid var(--line); }
 footer { text-align:center; padding:0 18px 28px; color:#5a4f45; font-size:.85rem; } code { font-family:Consolas, monospace; }
