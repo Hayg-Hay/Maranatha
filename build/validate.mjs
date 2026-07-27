@@ -63,6 +63,26 @@ const canonJson = canonSrc.slice('window.MARANATHA_CANON='.length).trim();
 const canon = JSON.parse(canonJson.endsWith(';') ? canonJson.slice(0, -1) : canonJson);
 const canonById = Object.fromEntries(canon.books.map(b => [b.id, b]));
 
+// Known cross-translation textual variants (see data/known-variants.js for
+// what qualifies and why). Loaded the same way as canon.js. Missing file is
+// tolerated — treated as "no known variants recorded yet" — rather than a
+// hard failure, since validate.mjs's core structural check doesn't depend
+// on it.
+const variantsPath = path.join(dir, '..', 'data', 'known-variants.js');
+let knownVariants = [];
+if (fs.existsSync(variantsPath)) {
+  const variantsSrc = fs.readFileSync(variantsPath, 'utf8');
+  const marker = 'window.MARANATHA_KNOWN_VARIANTS =';
+  const markerIndex = variantsSrc.indexOf(marker);
+  if (markerIndex === -1) {
+    console.error(`Could not find "${marker}" in ${variantsPath}`);
+    process.exit(1);
+  }
+  const variantsJson = variantsSrc.slice(markerIndex + marker.length).trim();
+  knownVariants = JSON.parse(variantsJson.endsWith(';') ? variantsJson.slice(0, -1) : variantsJson);
+}
+const variantsByKey = new Map(knownVariants.map(v => [`${v.book}:${v.chapter}`, v]));
+
 const target = process.argv[2];
 if (!target) {
   console.error('Usage: node build/validate.mjs <path-to-translation.json>');
@@ -77,6 +97,7 @@ if (!translation.id || !translation.books || typeof translation.books !== 'objec
 
 let errors = 0;
 let warnings = 0;
+let info = 0;
 const missingBooks = [];
 const presentBooks = [];
 
@@ -105,12 +126,23 @@ for (const book of canon.books) {
     continue;
   }
   chapters.slice(0, realChapters).forEach((verses, i) => {
+    const chapterNum = i + 1;
     const expected = book.chapters[i];
     const got = Array.isArray(verses) ? trimTrailing(verses) : typeof verses;
-    if (got !== expected) {
-      console.error(`${severity}  ${book.id} ${i + 1}: ${got} verses, canon expects ${expected}` + (book.provisional ? ' (canon entry is provisional)' : ''));
-      bump();
+    if (got === expected) return;
+
+    const variant = variantsByKey.get(`${book.id}:${chapterNum}`);
+    if (variant && variant.acceptedCounts.includes(got)) {
+      console.log(`INFO   ${book.id} ${chapterNum}: ${got} verses (known variant — ${variant.reason})`);
+      info++;
+      return;
     }
+
+    const variantNote = variant
+      ? ` (does not match any known variant reading: ${variant.acceptedCounts.join(' or ')} — see data/known-variants.js)`
+      : '';
+    console.error(`${severity}  ${book.id} ${chapterNum}: ${got} verses, canon expects ${expected}${variantNote}` + (book.provisional ? ' (canon entry is provisional)' : ''));
+    bump();
   });
 }
 
@@ -119,6 +151,6 @@ console.log(`${translation.id}: ${presentBooks.length}/${canon.books.length} boo
 if (missingBooks.length) {
   console.log(`Missing books (expected to be OK — UI must handle this): ${missingBooks.join(', ')}`);
 }
-console.log(`${errors} error(s), ${warnings} warning(s)`);
+console.log(`${errors} error(s), ${warnings} warning(s), ${info} known-variant info note(s)`);
 
 process.exit(errors > 0 ? 1 : 0);
