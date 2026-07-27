@@ -1,0 +1,124 @@
+{
+  "source": "https://raw.githubusercontent.com/byztxt/byzantine-majority-text/master/csv-unicode/ccat/no-variants/",
+  "license": "Unlicense (public domain)",
+  "files": {
+    "MAT.csv": {
+      "lines": 1072,
+      "size": 122181
+    },
+    "MAR.csv": {
+      "lines": 679,
+      "size": 76884
+    },
+    "LUK.csv": {
+      "lines": 1151,
+      "size": 130106
+    },
+    "JOH.csv": {
+      "lines": 880,
+      "size": 97829
+    },
+    "ACT.csv": {
+      "lines": 1005,
+      "size": 126071
+    },
+    "ACT24.csv": {
+      "lines": 4,
+      "size": 354
+    },
+    "ROM.csv": {
+      "lines": 434,
+      "size": 46487
+    },
+    "1CO.csv": {
+      "lines": 438,
+      "size": 44638
+    },
+    "2CO.csv": {
+      "lines": 258,
+      "size": 29606
+    },
+    "GAL.csv": {
+      "lines": 150,
+      "size": 14907
+    },
+    "EPH.csv": {
+      "lines": 156,
+      "size": 16028
+    },
+    "PHP.csv": {
+      "lines": 105,
+      "size": 10708
+    },
+    "COL.csv": {
+      "lines": 96,
+      "size": 10547
+    },
+    "1TH.csv": {
+      "lines": 90,
+      "size": 9819
+    },
+    "2TH.csv": {
+      "lines": 48,
+      "size": 5370
+    },
+    "1TI.csv": {
+      "lines": 114,
+      "size": 11689
+    },
+    "2TI.csv": {
+      "lines": 84,
+      "size": 8648
+    },
+    "TIT.csv": {
+      "lines": 47,
+      "size": 4880
+    },
+    "PHM.csv": {
+      "lines": 26,
+      "size": 2176
+    },
+    "HEB.csv": {
+      "lines": 304,
+      "size": 34577
+    },
+    "JAM.csv": {
+      "lines": 109,
+      "size": 11758
+    },
+    "1PE.csv": {
+      "lines": 106,
+      "size": 12008
+    },
+    "2PE.csv": {
+      "lines": 62,
+      "size": 7800
+    },
+    "1JO.csv": {
+      "lines": 106,
+      "size": 12778
+    },
+    "2JO.csv": {
+      "lines": 14,
+      "size": 1551
+    },
+    "3JO.csv": {
+      "lines": 15,
+      "size": 1470
+    },
+    "JUD.csv": {
+      "lines": 26,
+      "size": 3264
+    },
+    "REV.csv": {
+      "lines": 405,
+      "size": 60756
+    },
+    "PA.csv": {
+      "lines": 13,
+      "size": 1090
+    }
+  },
+  "totalSize": 915980,
+  "fileCount": 29
+}

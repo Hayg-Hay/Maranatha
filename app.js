@@ -180,6 +180,7 @@ class ReferenceParser {
   const TRANSLATIONS = [
     { id: 'web', label: 'World English Bible', src: 'data/web.js' },
     { id: 'kjv', label: 'King James Version', src: 'data/kjv.js' },
+    { id: 'byz', label: 'Byzantine Majority Text (Greek NT)', src: 'data/byz.js' },
   ];
 
   const canon = window.MARANATHA_CANON;

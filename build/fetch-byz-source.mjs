@@ -29,9 +29,9 @@ function fetchRaw(url) {
   return new Promise((resolve, reject) => {
     https.get(url, { headers: { 'User-Agent': 'Maranatha-Builder' }, timeout: 30000 }, res => {
       if (res.statusCode === 302 && res.headers.location) return fetchRaw(res.headers.location).then(resolve, reject);
-      let d = '';
-      res.on('data', c => d += c);
-      res.on('end', () => resolve(d));
+      const chunks = [];
+      res.on('data', c => chunks.push(c));
+      res.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
     }).on('error', reject);
   });
 }
