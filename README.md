@@ -9,13 +9,13 @@ thin `app.js` + `index.html` + `style.css` front end with no framework.
 
 ## Status
 
-**Three real translations are live: World English Bible (WEB-C), King James
-Version (KJV), and Byzantine Majority Text (Greek NT), all 27 NT books.** Open
-`index.html`, both checkboxes are on by default, pick a book/chapter, and
-you'll see both side by side. The 7 Catholic deuterocanonical books (Tobit,
-Judith, Wisdom, Sirach, Baruch, 1–2 Maccabees) don't have a translation yet
-in either — they show a clear "not available" placeholder per book, which is
-expected, not a bug.
+**Four real translations are live: World English Bible (WEB-C), King James
+Version (KJV), Byzantine Majority Text (Greek NT, 27 books), and Hebrew
+(OSHB, 39 protocanonical OT books).** Open `index.html`, checkboxes are on by
+default, pick a book/chapter, and you'll see translations side by side. The 7
+Catholic deuterocanonical books (Tobit, Judith, Wisdom, Sirach, Baruch, 1–2
+Maccabees) show a "not available" placeholder in translations that don't cover
+them — this is expected, not a bug.
 
 What works:
 
@@ -31,8 +31,19 @@ What works:
   `build/import-kjv.mjs` / `build/import-byz.mjs` from verified structured
   sources. WEB and KJV validate with 0 errors against `canon.js`. The
   Byzantine NT has 1 known textual difference (Romans 16:24 vs. 25 verses
-  in canon.js — the Byzantine text ends at v. 24) documented in
-  `PROJECT_HISTORY.md`.
+  in canon.js — the Byzantine text ends at v. 24), and Hebrew (OSHB) has
+  3 provisional warnings + 1 known-variant note (see below), all documented
+  in `PROJECT_HISTORY.md`.
+- `data/he.json` (+ `data/he.js`) — real Hebrew text for the 39
+  protocanonical OT books, built by `build/import-oshb.mjs` from
+  `openscriptures/morphhb` (CC BY 4.0). Covers only the protocanonical OT —
+  no NT and no deuterocanon (same "not available" placeholder pattern as
+  Byzantine). Uses an algorithmic verse-placement engine driven by 2,027
+  embedded `<note>KJV:…</note>` annotations in the source XML to map
+  Masoretic versification onto the Christian canon. `validate.mjs` result:
+  0 errors, 3 warnings (EST 4, EST 10, DAN — all against provisional canon
+  entries), 1 known-variant info note (PSA 13, Masoretic vs Christian verse
+  count).
 - `index.html` — book/chapter navigation, translation checkboxes (multi-select,
   renders side by side), and real verse rendering. Translation data loads via
   a dynamically created `<script>` tag when its checkbox is selected — never
@@ -108,6 +119,12 @@ Patriarchs, etc. are explicitly out of scope).
   Byzantine manuscript tradition. Two extra CSV files (ACT24.csv and PA.csv)
   are alternate readings of these same passages and are not imported — see
   `PROJECT_HISTORY.md`.
+- Hebrew (OSHB), Open Scriptures Hebrew Bible (CC BY 4.0) — 39
+  protocanonical OT books only, imported via `build/import-oshb.mjs` from
+  `openscriptures/morphhb` (GitHub). License requires attribution:
+  "Open Scriptures Hebrew Bible, https://github.com/openscriptures/morphhb".
+  Morphological markup stripped during import; only surface text
+  (consonants, niqqud, cantillation) retained.
 
 RSV-CE is explicitly excluded: copyrighted by the National Council of
 Churches, not freely redistributable.

@@ -525,10 +525,60 @@ special-case handling.
 
 ### Current Status
 
-- The Hebrew source investigation is **complete**.
-- The import script (`build/import-oshb.mjs`) correctly extracts surface text
-  and handles Psalm superscription trimming and the 1 Chronicles 5/6 boundary,
-  but does not yet implement full algorithmic versification via KJV notes.
-- No final implementation has been accepted yet.
-- Import implementation remains pending until the versification strategy is
-  finalized.
+The Hebrew source investigation is **complete** and the import has shipped.
+
+### Implementation shipped
+
+The import was completed and committed (`f809d6f`, `ffc4df7`, plus follow-up
+font/readability commits `9400dbf`, `96318e7`, `b1148ee`). It is registered
+in `app.js`'s `TRANSLATIONS` array as `{ id: 'he', label: 'Hebrew (OSHB)' }`.
+
+Contrary to the earlier plan (which considered a simple front-trimming
+approach and tabled algorithmic versification), the shipped importer
+(`build/import-oshb.mjs`) **does** implement full algorithmic versification
+driven by the 2,027 `<note>KJV:…</note>` annotations embedded in the OSHB XML
+source. The placement engine uses a PLACE/REPLACE/MERGE/SPLIT dispatch: empty
+slots are filled directly (PLACE), Psalm superscriptions and 1 Chronicles
+numbering cascades are overwritten by their note-bearing successors (REPLACE),
+consecutive Masoretic verses that belong to a single Christian verse are
+concatenated with a space (MERGE), and mid-verse KJV notes that split
+one OSHB verse into two Christian destinations are handled by extracting
+the text before and after the note tag separately (SPLIT). The only
+remaining manual special case is the Psalm title/superscription trimming that
+was present from v1.
+
+Final `validate.mjs` result:
+
+```
+0 errors
+3 warnings (provisional): EST 4 (1 verses), EST 10 (1 verses), DAN (1 chapters)
+1 info (known variant): PSA 13 (Masoretic vs. Christian verse count)
+```
+
+The warnings are all against provisional canon entries (Esther and Daniel
+chapter/verse counts were computed from WEB-C alone and not yet verified
+against multiple independent sources — see Phase 5.5). The known-variant
+note for Psalm 13 records the Masoretic/Christian verse-count difference
+in `data/known-variants.js`.
+
+## Phase 7 — Multi-reference search and per-block context toggles
+
+Commits: `5ba5699`, `1c150fa`, `1bd7d6c`.
+
+The single-reference verse lookup from Phase 4 was extended to support
+YaQuB-style multi-reference queries (`"Mark 14:2,6-9;Matthew 26:26-31"`),
+rendering each `;`-separated group as its own headed table block within
+one result set. A global "Show context (±3)" button beneath the search bar
+expands every block to show surrounding verses. Each block now also has its
+own individual context-toggle button beside its heading, so a user can
+expand or collapse context per block independently without affecting the
+others. The global button still expands or collapses every block
+simultaneously, clearing any per-block overrides. State is managed through
+two layers: a global `contextEnabled` boolean plus a `blockContextOverrides`
+Map keyed by `"bookId-chapterNum"` — per-block overrides win when present,
+otherwise the global flag applies. Prior to this, context verses had
+inherited the zebra-stripe row background, making them visually
+indistinguishable from matched verses — `1c150fa` fixed that by applying
+a consistent white (`var(--paper)`) background to context-verse rows and
+reserving the theme panel colour (`var(--panel)`) for highlighted matched
+verses.
