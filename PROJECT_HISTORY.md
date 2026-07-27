@@ -355,3 +355,40 @@ shows "(not available)" for verses 25-27 in WEB and Byzantine.
 translation JSON files and regenerates `canon.computed.json` with the
 corrected counting rule. Run this after importing any new translation to
 update the canon to match the data on disk.
+
+## Phase 6 — Byzantine wired into the browser, then a real data-corruption bug found and fixed
+
+Byzantine Majority Text data existed (validated, 0 errors) but was never added to
+app.js's TRANSLATIONS registry, so it didn't appear in the UI at all. Fixed with
+one line — `{ id: 'byz', label: 'Byzantine Majority Text (Greek NT)', src:
+'data/byz.js' }` — no other code changes needed, since app.js's existing
+missing-book handling (already exercised by KJV's 7 missing deuterocanon books)
+covers Byzantine's 27-of-73 book coverage without modification.
+
+A visual check after wiring it in surfaced garbled Greek text — e.g. Matthew
+1:7's "Ἀβιά" rendering as "βιά" (a literal U+FFFD replacement character).
+Root-caused to build/fetch-byz-source.mjs: fetchRaw() concatenated raw HTTPS
+response Buffer chunks as strings one at a time (`d += c`). Buffer chunks split
+at arbitrary byte boundaries, not character boundaries — when a multi-byte
+UTF-8 character (Greek diacritics are 3-byte sequences) straddled a chunk
+split, each half decoded as invalid UTF-8 independently and silently became
+U+FFFD. Confirmed the real upstream source (byztxt/byzantine-majority-text) had
+zero corruption, then reproduced the exact failure live by re-fetching with the
+buggy chunking logic before trusting the diagnosis — ruling out the
+possibility the corruption was already present upstream. Fixed by collecting
+chunks into an array and decoding once via `Buffer.concat(...).toString('utf8')`.
+
+This also closed a related gap: build/sources/byz/ had never been committed,
+unlike sources/web/, sources/kjv/, sources/douay-rheims/ — breaking this
+project's own reproducibility principle. The re-fetch populated it for the
+first time; all 29 source CSVs are now cached in the repo.
+
+One git-hygiene slip during this: the intended two separate commits (UI
+registration vs. corruption fix) didn't split as planned — a failed pathspec
+in one `git add` didn't stop the following `git commit` from sweeping up
+everything already staged, so the corruption fix ended up committed under a
+message that only mentioned the stray-file removal and registration. Caught by
+checking the actual pushed commit stat rather than trusting the terminal
+output at face value, and corrected via `git commit --amend` +
+`git push --force-with-lease` (safe here — solo repo, no one else pulling from
+it) so the commit message matches what it actually contains.
