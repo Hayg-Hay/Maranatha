@@ -162,7 +162,7 @@ consecutive rows. The "book not available in this translation" and
 "translation still loading" states were also carried over into the new
 shared-table cells and re-verified, since the old per-translation-block
 version handled those differently.
-
+Phase 3+ — validate.mjs padding-trim fix and known-variants.js. validate.mjs was comparing raw array lengths against canon.js, which produced false errors (e.g. WEB SIR 23: raw length 28 vs. 27 real verses) whenever import padding trailed a chapter or verse array. Fixed by porting the same trim logic already used in update-canon-counts.mjs. Separately, added data/known-variants.js to record genuine cross-translation textual variants (e.g. the Romans 16:25-27 doxology, placed at the end of ch14 in the Byzantine/WEB tradition vs. ch16 in the KJV/Textus Receptus tradition) as structured data validate.mjs checks against — a count matching a documented variant reading is reported as informational, one matching neither still flags as a real error. Both changes verified against the real data/web.json, kjv.json, byz.json files before committing.
 ## Phase 4 — Verse reference lookup and explicit view modes
 
 Goal: let a user type a single reference (`Genesis 1:1`, `John 3:16`,
