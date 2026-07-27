@@ -181,6 +181,7 @@ class ReferenceParser {
     { id: 'web', label: 'World English Bible', src: 'data/web.js' },
     { id: 'kjv', label: 'King James Version', src: 'data/kjv.js' },
     { id: 'byz', label: 'Byzantine Majority Text (Greek NT)', src: 'data/byz.js' },
+    { id: 'he', label: 'Hebrew (OSHB)', src: 'data/he.js' },
   ];
 
   const canon = window.MARANATHA_CANON;
