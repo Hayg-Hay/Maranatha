@@ -191,6 +191,7 @@ const refs = {
     book: q('#book'),
     chapter: q('#chapter'),
     theme: q('#theme'),
+    reading: q('#reading'),
     layout: q('#layout'),
     go: q('#go-button'),
     results: q('#results'),
@@ -301,6 +302,10 @@ function init() {
         setTheme();
     });
 
+    refs.reading.addEventListener('change', () => {
+        setReading();
+    });
+
     refs.layout.addEventListener('change', () => {
         render();
     });
@@ -313,10 +318,13 @@ function init() {
 
     populateChapters();
     setTheme();
+    setReading();
     render();
 }
 
   function setTheme() { document.documentElement.dataset.theme = refs.theme.value; }
+
+  function setReading() { document.documentElement.dataset.reading = refs.reading.value; }
 
   function populateBooks() {
     refs.book.innerHTML = '';

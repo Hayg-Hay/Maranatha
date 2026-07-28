@@ -8,6 +8,27 @@
 :root[data-theme="blue"] { --ink:#172c45; --accent:#2b5f92; --panel:#edf5ff; --alt:#dfeeff; --line:#a8c5e5; }
 :root[data-theme="indigo"] { --ink:#201a45; --accent:#3f3492; --panel:#f0eeff; --alt:#e1ddff; --line:#b6ace3; }
 :root[data-theme="violet"] { --ink:#3a1745; --accent:#7a3392; --panel:#f8edff; --alt:#efdbff; --line:#d3a8e3; }
+
+/* Reading-comfort presets — re-define the same five variables for reduced eye strain */
+:root[data-reading="warm"] {
+  --ink: #4a3423;
+  --accent: #8a5a2e;
+  --paper: #fbf3e3;
+  --panel: #f5e8cf;
+  --alt: #efdcb8;
+  --line: #d9bb8c;
+}
+:root[data-reading="warm"] body { background: #f1e4c9; }
+
+:root[data-reading="low-contrast"] {
+  --ink: #5c5c5c;
+  --accent: #6e6e6e;
+  --paper: #f7f7f5;
+  --panel: #eeeeec;
+  --alt: #e5e5e2;
+  --line: #cfcfcb;
+}
+:root[data-reading="low-contrast"] body { background: #eeeeeb; }
 * { box-sizing:border-box; }
 body { margin:0; background:#f3f1ee; color:var(--ink); font:16px/1.45 Georgia, serif; }
 .shell { max-width:1200px; margin:24px auto; padding:0 18px; }
