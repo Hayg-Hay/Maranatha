@@ -62,7 +62,9 @@ fieldset { border:0; padding:0; margin:10px 0 0; display:flex; flex-wrap:wrap; g
 #results table { border-collapse:collapse; width:100%; table-layout:fixed; background:var(--paper); margin-bottom:20px; }
 th, td { border:1px solid var(--line); padding:9px; vertical-align:top; text-align:left; }
 th { background:var(--panel); }
-tbody tr:nth-child(even) td { background:var(--alt); }
+tbody td {
+    background: var(--panel);
+}
 .reference { width:64px; white-space:nowrap; font-variant-numeric:tabular-nums; }
 .translation-label { width:135px; font-weight:bold; white-space:normal; word-break:break-word; }
 .verse-placeholder { color:#8a7660; font-style:italic; }
