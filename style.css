@@ -128,3 +128,5 @@ footer { text-align:center; padding:0 18px 28px; color:#5a4f45; font-size:.85rem
 #results tbody tr.context-verse td {
     background: var(--paper);
 }
+
+.chapter-nav-bottom { display:flex; justify-content:space-between; margin-top:14px; }

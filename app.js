@@ -198,6 +198,8 @@ const refs = {
     message: q('#message'),
     translations: q('#translations'),
     contextBtn: q('#context-toggle'),
+    prevChapter: q('#prev-chapter-button'),
+    nextChapter: q('#next-chapter-button'),
 };
   const loaded = new Set();   // translation ids whose <script> has finished loading
   const loading = new Set();  // translation ids whose <script> is in flight
@@ -266,6 +268,14 @@ function init() {
     refs.go.addEventListener('click', () => {
         setBrowseMode();
         render();
+    });
+
+    refs.prevChapter.addEventListener('click', () => {
+        goToAdjacentChapter(-1);
+    });
+
+    refs.nextChapter.addEventListener('click', () => {
+        goToAdjacentChapter(1);
     });
 
     refs.referenceGo.addEventListener('click', () => {
@@ -394,6 +404,35 @@ function init() {
       opt.textContent = `Chapter ${i + 1}`;
       refs.chapter.appendChild(opt);
     });
+  }
+
+  // Moves to the next/previous chapter, crossing into the next/previous
+  // book at chapter boundaries. direction is +1 (next) or -1 (previous).
+  // No-ops silently at the very start (Genesis 1) or very end (last
+  // chapter of the last book in canon.books) rather than wrapping around.
+  function goToAdjacentChapter(direction) {
+    const book = currentBook();
+    if (!book) return;
+    const currentChapter = Number(refs.chapter.value);
+    const targetChapter = currentChapter + direction;
+
+    if (targetChapter >= 1 && targetChapter <= book.chapters.length) {
+      setBrowseMode();
+      refs.chapter.value = String(targetChapter);
+      render();
+      return;
+    }
+
+    const bookIndex = canon.books.findIndex(b => b.id === book.id);
+    const targetBookIndex = bookIndex + direction;
+    const targetBook = canon.books[targetBookIndex];
+    if (!targetBook) return; // at the very start or very end of the canon
+
+    setBrowseMode();
+    refs.book.value = targetBook.id;
+    populateChapters();
+    refs.chapter.value = direction > 0 ? '1' : String(targetBook.chapters.length);
+    render();
   }
 
   // Looks up a cell's display state for one translation/verse: 'loading',
@@ -620,6 +659,24 @@ function init() {
       highlight: false,
       anchorFirst: false,
     });
+
+    const bottomNav = document.createElement('div');
+    bottomNav.className = 'chapter-nav-bottom';
+
+    const bottomPrev = document.createElement('button');
+    bottomPrev.type = 'button';
+    bottomPrev.id = 'prev-chapter-button-bottom';
+    bottomPrev.textContent = '\u2190 Previous chapter';
+    bottomPrev.addEventListener('click', () => goToAdjacentChapter(-1));
+
+    const bottomNext = document.createElement('button');
+    bottomNext.type = 'button';
+    bottomNext.id = 'next-chapter-button-bottom';
+    bottomNext.textContent = 'Next chapter \u2192';
+    bottomNext.addEventListener('click', () => goToAdjacentChapter(1));
+
+    bottomNav.append(bottomPrev, bottomNext);
+    refs.results.appendChild(bottomNav);
   }
 
   // One block per group, in query order, so "Mark 14:2,6-9;Matthew 26:26-31"
