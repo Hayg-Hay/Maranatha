@@ -29,8 +29,13 @@
   --line: #cfcfcb;
 }
 :root[data-reading="low-contrast"] body { background: #eeeeeb; }
+:root { --font-size-base: 16px; }
+:root[data-fontsize="large"]   { --font-size-base: 18px; }
+:root[data-fontsize="larger"]  { --font-size-base: 20px; }
+:root[data-fontsize="largest"] { --font-size-base: 23px; }
+html { font-size: var(--font-size-base); }
 * { box-sizing:border-box; }
-body { margin:0; background:#f3f1ee; color:var(--ink); font:16px/1.45 Georgia, serif; }
+body { margin:0; background:#f3f1ee; color:var(--ink); font:1rem/1.45 Georgia, serif; }
 .shell { max-width:1200px; margin:24px auto; padding:0 18px; }
 header { display:flex; gap:16px; align-items:center; margin-bottom:18px; }
 h1 { margin:0; font-size:1.55rem; } header p { margin:.15rem 0 0; color:#5a4f45; }

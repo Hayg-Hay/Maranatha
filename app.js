@@ -200,6 +200,7 @@ const refs = {
     contextBtn: q('#context-toggle'),
     prevChapter: q('#prev-chapter-button'),
     nextChapter: q('#next-chapter-button'),
+    fontsize: q('#fontsize'),
 };
   const loaded = new Set();   // translation ids whose <script> has finished loading
   const loading = new Set();  // translation ids whose <script> is in flight
@@ -316,6 +317,10 @@ function init() {
         setReading();
     });
 
+    refs.fontsize.addEventListener('change', () => {
+        setFontSize();
+    });
+
     refs.layout.addEventListener('change', () => {
         render();
     });
@@ -329,12 +334,15 @@ function init() {
     populateChapters();
     setTheme();
     setReading();
+    setFontSize();
     render();
 }
 
   function setTheme() { document.documentElement.dataset.theme = refs.theme.value; }
 
   function setReading() { document.documentElement.dataset.reading = refs.reading.value; }
+
+  function setFontSize() { document.documentElement.dataset.fontsize = refs.fontsize.value; }
 
   function populateBooks() {
     refs.book.innerHTML = '';
