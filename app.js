@@ -428,6 +428,7 @@ function init() {
       setBrowseMode();
       refs.chapter.value = String(targetChapter);
       render();
+      scrollToTop();
       return;
     }
 
@@ -441,6 +442,18 @@ function init() {
     populateChapters();
     refs.chapter.value = direction > 0 ? '1' : String(targetBook.chapters.length);
     render();
+    scrollToTop();
+  }
+
+  // Called after prev/next chapter navigation (top and bottom buttons
+  // alike, since both funnel through goToAdjacentChapter). Without this,
+  // clicking "Next chapter" from the bottom button on a long chapter left
+  // you scrolled deep into the page, staring at the tail end of the new
+  // chapter's text with no controls in view — awkward on any screen, and
+  // especially disorienting on iPad/mobile where you can't just glance up
+  // at a toolbar sitting in a fixed sidebar.
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   // Looks up a cell's display state for one translation/verse: 'loading',
