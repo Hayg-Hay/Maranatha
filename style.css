@@ -1,11 +1,11 @@
-:root { --ink:#2c1f17; --accent:#7a4a24; --paper:#fff; --panel:#f9f0e6; --alt:#f0e2d0; --line:#d3b995; }
-:root[data-theme="rose"] { --ink:#43222d; --accent:#985266; --panel:#fff0f3; --alt:#ffe2e8; --line:#e6b2c0; }
+:root { --ink:#2c1f17; --accent:#7a4a24; --paper:#f7f3ec; --panel:#f9f0e6; --alt:#f0e2d0; --line:#d3b995; }
+:root[data-theme="rose"] { --ink:#43222d; --accent:#985266; --paper:#faf4f5; --panel:#fff0f3; --alt:#ffe2e8; --line:#e6b2c0; }
 /* Rainbow themes — Genesis 9:13, the sign of the covenant God gave Noah */
 :root[data-theme="red"] { --ink:#4a1414; --accent:#a3312f; --panel:#fdecea; --alt:#fad9d6; --line:#e3a29c; }
 :root[data-theme="orange"] { --ink:#4a2a10; --accent:#c1651a; --panel:#fdf0e2; --alt:#fadfc2; --line:#e3b78a; }
 :root[data-theme="yellow"] { --ink:#4a3f0a; --accent:#b8960f; --panel:#fdf8e0; --alt:#faf0bd; --line:#e0cc7a; }
 :root[data-theme="green"] { --ink:#17312c; --accent:#286354; --panel:#eef9ef; --alt:#dff0e1; --line:#a9c9b0; }
-:root[data-theme="blue"] { --ink:#172c45; --accent:#2b5f92; --panel:#edf5ff; --alt:#dfeeff; --line:#a8c5e5; }
+:root[data-theme="blue"] { --ink:#172c45; --accent:#2b5f92; --paper:#f4f7fb; --panel:#edf5ff; --alt:#dfeeff; --line:#a8c5e5; }
 :root[data-theme="indigo"] { --ink:#201a45; --accent:#3f3492; --panel:#f0eeff; --alt:#e1ddff; --line:#b6ace3; }
 :root[data-theme="violet"] { --ink:#3a1745; --accent:#7a3392; --panel:#f8edff; --alt:#efdbff; --line:#d3a8e3; }
 
@@ -48,9 +48,9 @@ header img {
 .panel { border:1px solid var(--line); background:var(--panel); padding:16px; margin:14px 0; } h2 { font-size:1.1rem; margin:0 0 10px; }
 .nav-row { display:flex; flex-wrap:wrap; gap:14px; align-items:end; }
 .nav-row label { display:grid; gap:4px; font-size:.9rem; }
-select, button { padding:8px 10px; font:inherit; color:inherit; border:1px solid #8a7660; background:white; cursor:pointer; }
+select, button { padding:8px 10px; font:inherit; color:inherit; border:1px solid #8a7660; background:var(--paper); cursor:pointer; }
 
-button:hover { background:#fbf6ef; }
+button:hover { background:var(--panel); }
 .hint { margin:.6rem 0 0; font-size:.9rem; }
 .toolbar { display:flex; flex-wrap:wrap; align-items:end; gap:14px; margin-top:14px; }
 .toolbar label { display:grid; gap:4px; font-size:.9rem; }
@@ -76,7 +76,7 @@ tbody td {
 .hebrew-verse { text-align:right; font-size:1.25rem; line-height:1.7; }
 
 tbody td:not(.reference):not(.translation-label):not(.verse-placeholder) { color:#4a3c35; }
-.empty { padding:18px; background:#fff; border:1px solid var(--line); }
+.empty { padding:18px; background:var(--paper); border:1px solid var(--line); }
 footer { text-align:center; padding:0 18px 28px; color:#5a4f45; font-size:.85rem; } code { font-family:Consolas, monospace; }
 /* ----------------------------------------------------------
    Reference lookup (YaQuB-style)
@@ -104,7 +104,7 @@ footer { text-align:center; padding:0 18px 28px; color:#5a4f45; font-size:.85rem
     font: inherit;
     color: inherit;
     border: 1px solid #8a7660;
-    background: white;
+    background: var(--paper);
 }
 
 .reference-row button {
