@@ -1,4 +1,9 @@
-:root { --ink:#2c1f17; --accent:#7a4a24; --paper:#f7f3ec; --panel:#f9f0e6; --alt:#f0e2d0; --line:#d3b995; }
+:root {
+  color-scheme: light;
+  --ink:#2c1f17; --accent:#7a4a24; --paper:#f7f3ec; --panel:#f9f0e6; --alt:#f0e2d0; --line:#d3b995;
+  --body-bg:#f3f1ee; --muted:#5a4f45; --border:#8a7660; --placeholder:#8a7660; --verse-ink:#4a3c35;
+  --error:#8a2636; --notice-bg:#fff8e6; --notice-border:#e0c67a; --hover:rgba(0,0,0,0.03);
+}
 :root[data-theme="rose"] { --ink:#43222d; --accent:#985266; --paper:#faf4f5; --panel:#fff0f3; --alt:#ffe2e8; --line:#e6b2c0; }
 /* Rainbow themes — Genesis 9:13, the sign of the covenant God gave Noah */
 :root[data-theme="red"] { --ink:#4a1414; --accent:#a3312f; --panel:#fdecea; --alt:#fad9d6; --line:#e3a29c; }
@@ -17,8 +22,8 @@
   --panel: #f5e8cf;
   --alt: #efdcb8;
   --line: #d9bb8c;
+  --body-bg: #f1e4c9;
 }
-:root[data-reading="warm"] body { background: #f1e4c9; }
 
 :root[data-reading="low-contrast"] {
   --ink: #5c5c5c;
@@ -27,18 +32,18 @@
   --panel: #eeeeec;
   --alt: #e5e5e2;
   --line: #cfcfcb;
+  --body-bg: #eeeeeb;
 }
-:root[data-reading="low-contrast"] body { background: #eeeeeb; }
 :root { --font-size-base: 16px; }
 :root[data-fontsize="large"]   { --font-size-base: 18px; }
 :root[data-fontsize="larger"]  { --font-size-base: 20px; }
 :root[data-fontsize="largest"] { --font-size-base: 23px; }
 html { font-size: var(--font-size-base); }
 * { box-sizing:border-box; }
-body { margin:0; background:#f3f1ee; color:var(--ink); font:1rem/1.45 Georgia, serif; }
+body { margin:0; background:var(--body-bg); color:var(--ink); font:1rem/1.45 Georgia, serif; }
 .shell { max-width:1200px; margin:24px auto; padding:0 18px; }
 header { display:flex; gap:16px; align-items:center; margin-bottom:18px; }
-h1 { margin:0; font-size:1.55rem; } header p { margin:.15rem 0 0; color:#5a4f45; }
+h1 { margin:0; font-size:1.55rem; } header p { margin:.15rem 0 0; color:var(--muted); }
 header img {
     height: 50px;
     width: auto;
@@ -48,7 +53,7 @@ header img {
 .panel { border:1px solid var(--line); background:var(--panel); padding:16px; margin:14px 0; } h2 { font-size:1.1rem; margin:0 0 10px; }
 .nav-row { display:flex; flex-wrap:wrap; gap:14px; align-items:end; }
 .nav-row label { display:grid; gap:4px; font-size:.9rem; }
-select, button { padding:8px 10px; font:inherit; color:inherit; border:1px solid #8a7660; background:var(--paper); cursor:pointer; }
+select, button { padding:8px 10px; font:inherit; color:inherit; border:1px solid var(--border); background:var(--paper); cursor:pointer; }
 
 button:hover { background:var(--panel); }
 .hint { margin:.6rem 0 0; font-size:.9rem; }
@@ -56,11 +61,11 @@ button:hover { background:var(--panel); }
 .toolbar label { display:grid; gap:4px; font-size:.9rem; }
 fieldset { border:0; padding:0; margin:10px 0 0; display:flex; flex-wrap:wrap; gap:6px 12px; } legend { font-size:.9rem; padding:0; }
 .version { white-space:nowrap; font-size:.9rem; }
-.message { min-height:1.4em; margin:12px 0; color:#8a2636; } .message:empty { display:none; }
-.notice { background:#fff8e6; border:1px solid #e0c67a; padding:10px 14px; margin:14px 0; font-size:.92rem; }
+.message { min-height:1.4em; margin:12px 0; color:var(--error); } .message:empty { display:none; }
+.notice { background:var(--notice-bg); border:1px solid var(--notice-border); padding:10px 14px; margin:14px 0; font-size:.92rem; }
 .notice summary { cursor:pointer; font-weight:bold; padding:2px 0; border-radius:2px; user-select:none; }
-.notice summary::marker { color:#7a4a24; font-size:.85em; }
-.notice summary:hover { background:rgba(0,0,0,0.03); }
+.notice summary::marker { color:var(--accent); font-size:.85em; }
+.notice summary:hover { background:var(--hover); }
 .notice summary:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:2px; }
 .notice[open] summary { margin-bottom:8px; }
 .result-head { display:flex; justify-content:space-between; gap:12px; align-items:baseline; margin:20px 0 8px; } .result-head h2 { margin:0; }
@@ -72,12 +77,12 @@ tbody td {
 }
 .reference { width:4rem; white-space:nowrap; font-variant-numeric:tabular-nums; }
 .translation-label { width:8.5rem; font-weight:bold; white-space:normal; word-break:break-word; }
-.verse-placeholder { color:#8a7660; font-style:italic; }
+.verse-placeholder { color:var(--placeholder); font-style:italic; }
 .hebrew-verse { text-align:right; font-size:1.25rem; line-height:1.7; }
 
-tbody td:not(.reference):not(.translation-label):not(.verse-placeholder) { color:#4a3c35; }
+tbody td:not(.reference):not(.translation-label):not(.verse-placeholder) { color:var(--verse-ink); }
 .empty { padding:18px; background:var(--paper); border:1px solid var(--line); }
-footer { text-align:center; padding:0 18px 28px; color:#5a4f45; font-size:.85rem; } code { font-family:Consolas, monospace; }
+footer { text-align:center; padding:0 18px 28px; color:var(--muted); font-size:.85rem; } code { font-family:Consolas, monospace; }
 /* ----------------------------------------------------------
    Reference lookup (YaQuB-style)
 ---------------------------------------------------------- */
@@ -103,7 +108,7 @@ footer { text-align:center; padding:0 18px 28px; color:#5a4f45; font-size:.85rem
     padding: 8px 10px;
     font: inherit;
     color: inherit;
-    border: 1px solid #8a7660;
+    border: 1px solid var(--border);
     background: var(--paper);
 }
 
@@ -137,3 +142,46 @@ footer { text-align:center; padding:0 18px 28px; color:#5a4f45; font-size:.85rem
 }
 
 .chapter-nav-bottom { display:flex; justify-content:space-between; margin-top:14px; }
+
+/* ----------------------------------------------------------
+   Dark appearance — same hue palette architecture, light-on-dark
+---------------------------------------------------------- */
+:root[data-mode="dark"] {
+  color-scheme: dark;
+  --ink:#efe3d2; --accent:#d19a63; --paper:#28221c; --panel:#332b23; --alt:#3e3429; --line:#5d4c39;
+  --body-bg:#201b16; --muted:#b4a48e; --border:#8a7660; --placeholder:#9c8b77; --verse-ink:#d8cbbc;
+  --error:#e59a9a; --notice-bg:#332b1a; --notice-border:#c9a94e; --hover:rgba(255,255,255,0.06);
+}
+:root[data-mode="dark"][data-theme="rose"] {
+  --ink:#f2dde3; --accent:#d49aae; --paper:#2b2326; --panel:#362b2f; --alt:#413338; --line:#6b4f59;
+}
+:root[data-mode="dark"][data-theme="red"] {
+  --ink:#f2dcd9; --accent:#d98b86; --paper:#2a2221; --panel:#352a28; --alt:#40312f; --line:#6d4d49;
+}
+:root[data-mode="dark"][data-theme="orange"] {
+  --ink:#f2e2d1; --accent:#dd9c5e; --paper:#2b241d; --panel:#372c22; --alt:#423527; --line:#6e5940;
+}
+:root[data-mode="dark"][data-theme="yellow"] {
+  --ink:#f0e7cf; --accent:#d3b64e; --paper:#2a271d; --panel:#36311f; --alt:#423a25; --line:#6d6139;
+}
+:root[data-mode="dark"][data-theme="green"] {
+  --ink:#dcebe3; --accent:#7fb39a; --paper:#202722; --panel:#2a342d; --alt:#333f36; --line:#4e6555;
+}
+:root[data-mode="dark"][data-theme="blue"] {
+  --ink:#d9e6f2; --accent:#7fa8d6; --paper:#1f242b; --panel:#2a323c; --alt:#333e4a; --line:#4d6070;
+}
+:root[data-mode="dark"][data-theme="indigo"] {
+  --ink:#e2def2; --accent:#9b92d6; --paper:#232029; --panel:#2d2a37; --alt:#373343; --line:#59506d;
+}
+:root[data-mode="dark"][data-theme="violet"] {
+  --ink:#eee0f2; --accent:#c48ade; --paper:#2a2129; --panel:#362a37; --alt:#423345; --line:#6c4f70;
+}
+:root[data-mode="dark"][data-reading="warm"] {
+  --ink:#ead8bb; --accent:#c89a62; --paper:#2c251a; --panel:#362c1e; --alt:#433527; --line:#64523a;
+  --body-bg:#251f15;
+}
+:root[data-mode="dark"][data-reading="low-contrast"] {
+  --ink:#b9b9b9; --accent:#a0a0a0; --paper:#232323; --panel:#2b2b2b; --alt:#333333; --line:#4a4a4a;
+  --body-bg:#1e1e1e;
+}
+:root[data-mode="dark"] header img { filter: invert(1); }

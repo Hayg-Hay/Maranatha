@@ -192,6 +192,7 @@ const refs = {
     chapter: q('#chapter'),
     theme: q('#theme'),
     reading: q('#reading'),
+    appearance: q('#appearance'),
     layout: q('#layout'),
     go: q('#go-button'),
     results: q('#results'),
@@ -204,6 +205,7 @@ const refs = {
 };
   const loaded = new Set();   // translation ids whose <script> has finished loading
   const loading = new Set();  // translation ids whose <script> is in flight
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
 
   // ---------------------------------------------------------------------
   // View state
@@ -317,6 +319,10 @@ function init() {
         setReading();
     });
 
+    refs.appearance.addEventListener('change', () => {
+        setAppearance();
+    });
+
     refs.fontsize.addEventListener('change', () => {
         setFontSize();
     });
@@ -331,7 +337,13 @@ function init() {
         render();
     });
 
+    prefersDark.addEventListener('change', () => {
+        applyAppearance();
+    });
+
     populateChapters();
+    restoreAppearance();
+    setAppearance();
     setTheme();
     setReading();
     setFontSize();
@@ -343,6 +355,37 @@ function init() {
   function setReading() { document.documentElement.dataset.reading = refs.reading.value; }
 
   function setFontSize() { document.documentElement.dataset.fontsize = refs.fontsize.value; }
+
+  function getStoredAppearance() {
+      try {
+          return localStorage.getItem('maranatha-appearance');
+      } catch (error) {
+          return null;
+      }
+  }
+
+  function restoreAppearance() {
+      const stored = getStoredAppearance();
+      if (stored === 'light' || stored === 'dark' || stored === 'system') {
+          refs.appearance.value = stored;
+      }
+  }
+
+  function applyAppearance() {
+      const choice = refs.appearance.value;
+      const dark = choice === 'dark' || (choice === 'system' && prefersDark.matches);
+      document.documentElement.dataset.mode = dark ? 'dark' : 'light';
+  }
+
+  function setAppearance() {
+      const choice = refs.appearance.value;
+      try {
+          localStorage.setItem('maranatha-appearance', choice);
+      } catch (error) {
+          // Storage unavailable (e.g. strict file:// contexts) — appearance still applies for this session.
+      }
+      applyAppearance();
+  }
 
   function populateBooks() {
     refs.book.innerHTML = '';
