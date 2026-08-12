@@ -416,8 +416,9 @@ function init() {
 
   // Moves to the next/previous chapter, crossing into the next/previous
   // book at chapter boundaries. direction is +1 (next) or -1 (previous).
-  // No-ops silently at the very start (Genesis 1) or very end (last
-  // chapter of the last book in canon.books) rather than wrapping around.
+  // Wraps around at the very start and end of the canon: Previous from
+  // Genesis 1 goes to the last chapter of the last book (Revelation 22),
+  // and Next from Revelation 22 goes to Genesis 1.
   function goToAdjacentChapter(direction) {
     const book = currentBook();
     if (!book) return;
@@ -433,9 +434,8 @@ function init() {
     }
 
     const bookIndex = canon.books.findIndex(b => b.id === book.id);
-    const targetBookIndex = bookIndex + direction;
+    const targetBookIndex = (bookIndex + direction + canon.books.length) % canon.books.length;
     const targetBook = canon.books[targetBookIndex];
-    if (!targetBook) return; // at the very start or very end of the canon
 
     setBrowseMode();
     refs.book.value = targetBook.id;
