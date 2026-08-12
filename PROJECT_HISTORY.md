@@ -582,3 +582,61 @@ indistinguishable from matched verses — `1c150fa` fixed that by applying
 a consistent white (`var(--paper)`) background to context-verse rows and
 reserving the theme panel colour (`var(--panel)`) for highlighted matched
 verses.
+
+## 2026-08-12 — DeepSeek Flash coding agent, wrap-around navigation, appearance modes
+
+### Codex + DeepSeek V4 Flash integration
+
+Codex was configured to use `deepseek-v4-flash` as the model through the
+DeepSeek API, via the DeepSeek provider with API-key authentication. The
+Codex CLI was initially on 0.144.6 for this setup and was then updated to
+0.147.0. The configuration was verified end to end: the CLI actually
+launched with `deepseek-v4-flash` at high reasoning effort, and the same
+configuration worked from the VS Code Codex integration, even though the
+UI displayed the provider as "Custom". A read-only repository inspection
+confirmed the agent could inspect Maranatha's architecture and project
+files. DeepSeek V4 Flash is now used as an additional coding agent for
+implementation and repository work.
+
+### Wrap-around chapter navigation
+
+Branch `feature/wrap-around-navigation`; commit `b743146`, which modified
+only `app.js`.
+
+`goToAdjacentChapter()` now wraps at canon boundaries: Previous from
+Genesis 1 goes to Revelation 22, and Next from Revelation 22 goes to
+Genesis 1. Normal adjacent-book navigation is unchanged. The change was
+manually tested successfully, then committed, merged into `main`, and
+pushed to GitHub.
+
+### Light / Dark / System appearance mode
+
+Branch `feature/light-dark-system-mode`; commit `3e849c3`, which touched
+only `app.js`, `index.html`, and `style.css`.
+
+An Appearance selector was added with System / Light / Dark options.
+Complete dark variants were added for every existing color palette while
+preserving the palette architecture and each palette's accent hue; the
+previously hard-coded light colors were converted into semantic CSS
+custom properties where necessary, so every UI element participates in
+dark mode. `color-scheme` handling was added so native controls and
+scrollbars follow the mode, and the appearance choice is persisted in
+`localStorage`. System mode follows `prefers-color-scheme` and responds
+to OS preference changes live. The Armenian cross image is inverted in
+dark mode so it stays visible. Translation data, canon data, the build
+pipeline, and the rendering architecture were all left untouched, and
+automated behavioral validation passed 16/16 checks. The feature was
+then manually inspected in the browser across the dark palettes and
+reading presets, confirmed visually correct, committed, and pushed.
+
+### Development workflow observation
+
+Maranatha now uses feature branches for isolated changes, with local
+testing and diff review before committing and merging. Mechanical Git
+operations such as commit and push are performed manually when no agent
+reasoning is needed, conserving coding-agent usage.
+
+The first real-world DeepSeek Flash coding-agent tests were successful:
+it handled both a small surgical JavaScript change (wrap-around chapter
+navigation) and a broader HTML/CSS/JS appearance feature (Light / Dark /
+System modes) while respecting scope and verifying its work.
