@@ -636,7 +636,7 @@ testing and diff review before committing and merging. Mechanical Git
 operations such as commit and push are performed manually when no agent
 reasoning is needed, conserving coding-agent usage.
 
-The first real-world DeepSeek Flash coding-agent tests were successful:
+The first real-world DeepSeek Flash coding-agent tests werpe successful:
 it handled both a small surgical JavaScript change (wrap-around chapter
 navigation) and a broader HTML/CSS/JS appearance feature (Light / Dark /
 System modes) while respecting scope and verifying its work.
