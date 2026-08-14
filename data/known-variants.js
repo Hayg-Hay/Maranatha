@@ -37,13 +37,13 @@ window.MARANATHA_KNOWN_VARIANTS = [
   {
     "book": "ROM",
     "chapter": 14,
-    "reason": "The closing doxology (Romans 16:25-27) appears at the end of chapter 14 in the Byzantine/WEB textual tradition, rather than at the end of chapter 16 as in the KJV/Textus Receptus tradition. Confirmed directly against data/web.json, data/kjv.json, data/byz.json. 23 = KJV/Textus Receptus (doxology is in ch16, not here). 26 = WEB/Byzantine (doxology is here, not in ch16).",
+    "reason": "The closing doxology (Romans 16:25-27) appears at the end of chapter 14 in the Byzantine/WEB textual tradition, rather than at the end of chapter 16 as in the KJV/Textus Receptus tradition. Confirmed directly against data/web.json, data/kjv.json, data/byz.json, data/armwestern.json. The armwestern evidence is the strongest single signal for its textual family: 1 John 5:7 (Comma Johanneum) is present — a TR/Vulgate-only reading essentially absent from Byzantine Majority mss — alongside the other TR-family markers confirmed in data/armwestern.json (Mark 16:9-20 long ending, John 7:53-8:11, Acts 8:37, Romans 16:24). 23 = KJV/Textus Receptus (doxology is in ch16, not here). 26 = WEB/Byzantine (doxology is here, not in ch16).",
     "acceptedCounts": [23, 26]
   },
   {
     "book": "ROM",
     "chapter": 16,
-    "reason": "The closing doxology (Romans 16:25-27) appears at the end of this chapter in the KJV/Textus Receptus tradition, rather than at the end of chapter 14 as in the Byzantine/WEB tradition. Confirmed directly against data/web.json, data/kjv.json, data/byz.json. 24 = WEB/Byzantine (doxology is in ch14, not here). 27 = KJV/Textus Receptus (doxology is here, not in ch14).",
+    "reason": "The closing doxology (Romans 16:25-27) appears at the end of this chapter in the KJV/Textus Receptus tradition, rather than at the end of chapter 14 as in the Byzantine/WEB tradition. Confirmed directly against data/web.json, data/kjv.json, data/byz.json, data/armwestern.json. 24 = WEB/Byzantine (doxology is in ch14, not here). 27 = KJV/Textus Receptus (doxology is here, not in ch14).",
     "acceptedCounts": [24, 27]
   },
   {

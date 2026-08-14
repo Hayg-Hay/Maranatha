@@ -179,6 +179,7 @@ class ReferenceParser {
   const TRANSLATIONS = [
     { id: 'web', label: 'World English Bible', src: 'data/web.js' },
     { id: 'kjv', label: 'King James Version', src: 'data/kjv.js' },
+    { id: 'armwestern', label: 'Western Armenian NT (1853)', src: 'data/armwestern.js' },
     { id: 'byz', label: 'Byzantine Majority Text (Greek NT)', src: 'data/byz.js' },
     { id: 'he', label: 'Hebrew (OSHB)', src: 'data/he.js' },
   ];

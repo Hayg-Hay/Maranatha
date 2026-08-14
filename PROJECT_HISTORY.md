@@ -163,7 +163,47 @@ consecutive rows. The "book not available in this translation" and
 shared-table cells and re-verified, since the old per-translation-block
 version handled those differently.
 Phase 3+ — validate.mjs padding-trim fix and known-variants.js. validate.mjs was comparing raw array lengths against canon.js, which produced false errors (e.g. WEB SIR 23: raw length 28 vs. 27 real verses) whenever import padding trailed a chapter or verse array. Fixed by porting the same trim logic already used in update-canon-counts.mjs. Separately, added data/known-variants.js to record genuine cross-translation textual variants (e.g. the Romans 16:25-27 doxology, placed at the end of ch14 in the Byzantine/WEB tradition vs. ch16 in the KJV/Textus Receptus tradition) as structured data validate.mjs checks against — a count matching a documented variant reading is reported as informational, one matching neither still flags as a real error. Both changes verified against the real data/web.json, kjv.json, byz.json files before committing.
-## Phase 4 — Verse reference lookup and explicit view modes
+## Phase 4 — Western Armenian NT
+
+Added the first non-English Bible translation: the 1853 Western Armenian New
+Testament, from the CrossWire SWORD module **"ArmWestern"** (mods.d/armwestern.conf,
+DistributionLicense=Public Domain, TextSource="Slavic Bible via
+http://unbound.biola.edu"). The module ships **NT only — 27 books, no OT data at
+all**. Because SWORD zText is a binary format (compressed + block-indexed), it was
+decoded once with the Python `pysword` library and cached as plain JSON at
+`build/sources/armwestern/armwestern.source.json`; `build/import-armwestern.mjs`
+then normalizes that cache into `data/armwestern.json` / `data/armwestern.js`
+exactly like the other importers.
+
+**The "???Missing???" convention.** 10 of the source module's 7,957 verses are
+genuinely blank at the raw SWORD data level (Matt 17:27, Mark 9:50, Acts 7:60,
+Acts 14:28, Acts 19:41, 2Cor 2:1, 2Cor 6:1, 2Cor 13:14, 1Thess 4:18, Heb 13:25),
+confirmed directly from the module's byte offsets rather than assumed from
+decode output. The importer writes these through as the literal text
+`???Missing???` — deliberate, echoing YaQuB's own `numbering.html` convention
+for the same kind of source gap — instead of silently dropping the verse or
+guessing wording from context. A real fix requires a second, independently
+produced Western Armenian NT source to cross-check and patch those 10 verses.
+
+**TR vs. Byzantine textual tradition.** The text is Textus Receptus-family, not
+Byzantine Majority (unlike this project's `byz` translation). All confirmed
+directly in `data/armwestern.json`: Mark 16:9-20 (long ending), John 7:53-8:11
+(pericope adulterae), 1 John 5:7 (Comma Johanneum — the strongest signal, a
+TR/Vulgate-only reading essentially absent from Byzantine Majority mss),
+Acts 8:37, Romans 16:24, and Romans 14 with 23 verses rather than 26 (the
+doxology sits at the end of ch16, TR-style, not ch14, Byzantine/WEB-style).
+Recorded in `data/known-variants.js` following the existing schema, and
+`validate.mjs` reports the Romans 14 difference as its known-variant info note
+(0 errors, 0 warnings).
+
+**Open decision, not resolved here:** this is NT-only in the Western Armenian
+register. Pairing it later with a full Armenian OT requires either a matching
+Western Armenian OT source, or accepting a register mismatch against the
+Classical/Grabar Zohrab 1805 OT candidate — Western Armenian is a different
+register from Classical Armenian, so the two cannot be merged into one
+"Armenian" edition by default.
+
+## Phase 5 — Verse reference lookup and explicit view modes
 
 Goal: let a user type a single reference (`Genesis 1:1`, `John 3:16`,
 `Mark 1:3-6`, `1 Corinthians 13`) into the new reference search bar and have
@@ -218,7 +258,7 @@ them. Both are small, contained fixes (mirror the two lines already present
 in `multiRow()`, and restore the `scrollIntoView` call at the end of
 `render()`) and are next up before this phase is considered fully closed.
 
-## Phase 4+ (remaining)
+## Phase 5+ (remaining)
 
 Fix the multi-column highlight/scroll gap noted above. Still ahead beyond
 that: mobile responsiveness pass, full YaQuB-style multi-reference parsing
@@ -236,7 +276,7 @@ Human contributions: defining the canon and translation scope, the
 architectural continuity with YaQuB, deciding what's in v1 vs. deferred, and
 everything from here on (git init, GitHub repo creation, review).
 
-## Phase 4.5 — Official WEB Catholic Edition Import (milestone-webc-import)
+## Phase 5.5 — Official WEB Catholic Edition Import (milestone-webc-import)
 
 **Git tag:** `milestone-webc-import` (commit `a48df1b`, 5 commits total:
 `685b999` → `9e43118` → `c7144aa` → `b889334` → `a48df1b`).
@@ -264,7 +304,7 @@ its original source.
 
 **Validation result:** 73/73 books imported, 0 validation errors, 5
 expected provisional warnings (EST, BAR, DAN — these books had provisional
-canon metadata from the pre-WEB-C era; see Phase 5.5).
+canon metadata from the pre-WEB-C era; see Phase 6.5).
 
 **Impact on provisional books:** The WEB-C import provided real verse text
 for Esther (Greek additions expand chapters 4 and 10), Baruch (chapter 6,
@@ -272,9 +312,9 @@ the Letter of Jeremiah, now present as 73 verses), and Daniel (Greek
 additions: Susanna as chapter 13, Bel and the Dragon as chapter 14, and
 Daniel 3 expanded to 97 verses including the Prayer of Azariah and the
 Song of the Three). These counts were not reflected in `canon.computed.json`
-at the time of import — that was addressed in Phase 5.5.
+at the time of import — that was addressed in Phase 6.5.
 
-## Phase 5 — Byzantine Majority Text (Greek NT) added
+## Phase 6 — Byzantine Majority Text (Greek NT) added
 
 **Source:** `byztxt/byzantine-majority-text` (GitHub), Robinson-Pierpont edition,
 `csv-unicode/ccat/no-variants/` — 29 CSV files (27 NT books + 2 variant readings).
@@ -304,12 +344,12 @@ an NT-only translation).
 WEB/KJV), rendering clean polytonic Greek with correct accents and breathing
 marks in both multi-column and multi-row layouts.
 
-## Phase 5.5 — Canon re-baselining and verse-count fix
+## Phase 6.5 — Canon re-baselining and verse-count fix
 
-**Background:** Phase 4.5 (WEB-C import) replaced the 66-book WEB data with
+**Background:** Phase 5.5 (WEB-C import) replaced the 66-book WEB data with
 the full 73-book WEB Catholic Edition, but the original `canon.computed.json`
 was never updated to reflect the new WEB-C data — it still contained
-chapter/verse counts computed from the old Scrollmapper source. Phase 5
+chapter/verse counts computed from the old Scrollmapper source. Phase 6
 (Byzantine NT) added a third translation, further widening the gap between
 real data and the stored canon.
 
@@ -356,7 +396,7 @@ translation JSON files and regenerates `canon.computed.json` with the
 corrected counting rule. Run this after importing any new translation to
 update the canon to match the data on disk.
 
-## Phase 6 — Byzantine wired into the browser, then a real data-corruption bug found and fixed
+## Phase 7 — Byzantine wired into the browser, then a real data-corruption bug found and fixed
 
 Byzantine Majority Text data existed (validated, 0 errors) but was never added to
 app.js's TRANSLATIONS registry, so it didn't appear in the UI at all. Fixed with
@@ -557,15 +597,15 @@ Final `validate.mjs` result:
 
 The warnings are all against provisional canon entries (Esther and Daniel
 chapter/verse counts were computed from WEB-C alone and not yet verified
-against multiple independent sources — see Phase 5.5). The known-variant
+against multiple independent sources — see Phase 6.5). The known-variant
 note for Psalm 13 records the Masoretic/Christian verse-count difference
 in `data/known-variants.js`.
 
-## Phase 7 — Multi-reference search and per-block context toggles
+## Phase 8 — Multi-reference search and per-block context toggles
 
 Commits: `5ba5699`, `1c150fa`, `1bd7d6c`.
 
-The single-reference verse lookup from Phase 4 was extended to support
+The single-reference verse lookup from Phase 5 was extended to support
 YaQuB-style multi-reference queries (`"Mark 14:2,6-9;Matthew 26:26-31"`),
 rendering each `;`-separated group as its own headed table block within
 one result set. A global "Show context (±3)" button beneath the search bar
