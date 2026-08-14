@@ -90,7 +90,16 @@ function extractVerseTextFromXML(verseXml) {
     const content = match[3];
 
     if (tag === 'w') {
-      let text = content.replace(/\//g, '').replace(/\s+/g, ' ').trim();
+      // Flatten nested <seg> elements (OSHB's x-large/x-small enlarged or
+      // reduced letters, x-suspended letters) into their inner text before
+      // the slash/whitespace cleanup. Without this, the raw markup leaks into
+      // the surface text — and the slash-strip below turns the closing </seg>
+      // into a literal <seg>.
+      let text = content
+        .replace(/<[^>]+>/g, '')
+        .replace(/\//g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
       if (!text) continue;
 
       if (tokens.length > 0 && !lastWasMaqaf) {
