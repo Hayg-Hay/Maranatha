@@ -1092,3 +1092,25 @@ merged into `main`. `.search-hit` changed from a `<button>` to a focusable
 `<div role="button">` so the nested compare button is valid HTML, and
 `buildComparePanel()` reuses `appendHighlighted()` for per-translation
 highlighting. `CACHE_VERSION` bumped `v8` → `v9`.
+
+## 2026-09-10 — Search-in labels and mobile row overflow
+
+The Search field's "Search in" `<select>` overflowed the viewport on phones: a
+`<select>` sizes to its widest `<option>`, and the options were the full
+translation labels; combined with a non-wrapping flex row whose items default
+to `min-width:auto`, the row was pushed past the right edge.
+
+- `TRANSLATIONS` entries gained a `short` label — WEB, KJV, Western Armenian,
+  Byzantine Greek, Hebrew (OSHB). Each keeps its version/register qualifier so
+  a future LXX, Grabar or Eastern Armenian entry will not collide.
+  `populateSearchTranslations()` uses `short` for the select only; the full
+  labels remain on the checkboxes, the search heading and the compare panel.
+- `.reference-row` (shared by Reference and Search) now wraps, and its inputs
+  and selects get `min-width:0; max-width:100%`; under `max-width:700px` the
+  input takes its own line with the select and button beneath it. Neither row
+  can overflow a small screen now.
+- `CACHE_VERSION` bumped `v9` → `v10`.
+
+Verified headless: at a phone-ish width the document does not scroll
+horizontally, the input is on its own line and select + button sit below it; at
+desktop width the row is unchanged (one line).
