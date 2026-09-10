@@ -4,6 +4,7 @@
   --body-bg:#f3f1ee; --muted:#5a4f45; --border:#8a7660; --placeholder:#8a7660; --verse-ink:#4a3c35;
   --error:#8a2636; --notice-bg:#fff8e6; --notice-border:#e0c67a; --hover:rgba(0,0,0,0.03);
   --warm-tint: rgba(255,172,64,0.14);
+  --mark-bg: #ffe9a8;
 }
 :root[data-theme="rose"] { --ink:#43222d; --accent:#985266; --paper:#faf4f5; --panel:#fff0f3; --alt:#ffe2e8; --line:#e6b2c0; }
 /* Rainbow themes — Genesis 9:13, the sign of the covenant God gave Noah */
@@ -124,6 +125,33 @@ footer { text-align:center; padding:0 18px 28px; color:var(--muted); font-size:.
 .reference-row button {
     white-space: nowrap;
 }
+
+/* ----------------------------------------------------------
+   Text search
+---------------------------------------------------------- */
+.search-results {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+.search-hit {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+.search-hit:hover { background: var(--panel); }
+.search-ref { display: block; font-weight: bold; font-size: .85rem; color: var(--accent); margin-bottom: 2px; }
+.search-text { display: block; }
+.search-text mark { background: var(--mark-bg); color: inherit; }
+.search-more { color: var(--muted); font-size: .9rem; }
+
 @media (max-width:700px) {
   .shell { margin:12px auto; padding:0 10px; }
   .reference { width:4rem; }
@@ -168,6 +196,7 @@ footer { text-align:center; padding:0 18px 28px; color:var(--muted); font-size:.
   --body-bg:#201b16; --muted:#b4a48e; --border:#8a7660; --placeholder:#9c8b77; --verse-ink:#d8cbbc;
   --error:#e59a9a; --notice-bg:#332b1a; --notice-border:#c9a94e; --hover:rgba(255,255,255,0.06);
   --warm-tint: rgba(255,160,60,0.07);
+  --mark-bg: #6b5a1f;
 }
 :root[data-mode="dark"][data-theme="rose"] {
   --ink:#f2dde3; --accent:#d49aae; --paper:#2b2326; --panel:#362b2f; --alt:#413338; --line:#6b4f59;

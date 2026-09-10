@@ -258,6 +258,9 @@ const refs = {
     message: q('#message'),
     translations: q('#translations'),
     contextBtn: q('#context-toggle'),
+    search: q('#search'),
+    searchGo: q('#search-go'),
+    searchTranslation: q('#search-translation'),
     prevChapter: q('#prev-chapter-button'),
     nextChapter: q('#next-chapter-button'),
     fontsize: q('#fontsize'),
@@ -287,13 +290,17 @@ const refs = {
   const blockContextOverrides = new Map();
 
   const viewState = {
-    mode: 'browse',     // 'browse' | 'reference'
-    groups: null,       // populated only when mode === 'reference'
+    mode: 'browse',       // 'browse' | 'reference' | 'search'
+    groups: null,         // populated only when mode === 'reference'
+    highlightVerse: null, // {bookId, chapter, verse} to highlight in browse mode
+    search: null,         // populated only when mode === 'search'
   };
 
-  function setBrowseMode() {
+  function setBrowseMode(highlightVerse = null) {
     viewState.mode = 'browse';
     viewState.groups = null;
+    viewState.highlightVerse = highlightVerse;
+    viewState.search = null;
     contextEnabled = false;
     blockContextOverrides.clear();
     refs.contextBtn.style.display = 'none';
@@ -302,6 +309,8 @@ const refs = {
   function setReferenceMode(groups) {
     viewState.mode = 'reference';
     viewState.groups = groups;
+    viewState.highlightVerse = null;
+    viewState.search = null;
     refs.contextBtn.style.display = '';
   }
 
@@ -379,6 +388,17 @@ function init() {
 
         render();
 
+    });
+
+    refs.searchGo.addEventListener('click', () => {
+        performSearch();
+    });
+
+    refs.search.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            performSearch();
+        }
     });
 
     refs.theme.addEventListener('change', () => {
@@ -780,7 +800,7 @@ function init() {
   // reference mode (one block per group, restricted verses, highlighted).
   // When exactVerses is provided (reference mode) an individual per-block
   // context-toggle button is added beside the heading.
-  function appendResultBlock({ bookId, chapterNum, name, verseCount, verses, translations, layout, highlight, anchorFirst, exactVerses = null, showContext = false }) {
+  function appendResultBlock({ bookId, chapterNum, name, verseCount, verses, translations, layout, highlight, anchorFirst, exactVerses = null, showContext = false, showContextToggle = false }) {
     const head = document.createElement('div');
     head.className = 'result-head';
     let verseLabel;
@@ -798,8 +818,8 @@ function init() {
     head.innerHTML = `<h2>${name} ${chapterNum} <small>(${verseLabel}, ${layout === 'multicolumn' ? 'multi-column' : 'multi-row'})</small></h2>`;
     refs.results.appendChild(head);
 
-    // Per-block context toggle — only shown when exactVerses is set (reference mode)
-    if (exactVerses) {
+    // Per-block context toggle — reference mode only (not browse-highlight)
+    if (showContextToggle) {
       const blockKey = `${bookId}-${chapterNum}`;
       const toggleBtn = document.createElement('button');
       toggleBtn.className = 'context-toggle-btn';
@@ -832,6 +852,11 @@ function init() {
       refs.results.appendChild(notice);
     }
 
+    const hv = viewState.highlightVerse;
+    const highlightSet = (hv && hv.bookId === book.id && hv.chapter === chapterNum)
+      ? new Set([hv.verse])
+      : null;
+
     appendResultBlock({
       bookId: book.id,
       chapterNum,
@@ -840,8 +865,9 @@ function init() {
       verses: Array.from({ length: verseCount }, (_, i) => i + 1),
       translations,
       layout,
-      highlight: false,
-      anchorFirst: false,
+      highlight: !!highlightSet,
+      anchorFirst: !!highlightSet,
+      exactVerses: highlightSet,
     });
 
     const bottomNav = document.createElement('div');
@@ -896,8 +922,201 @@ function init() {
         anchorFirst: index === 0,
         exactVerses: exactSet,
         showContext: effectiveContext,
+        showContextToggle: true,
       });
     });
+  }
+
+  // ---------------------------------------------------------------------
+  // Text search
+  //
+  // One translation at a time, phrase substring, case- and diacritic-
+  // insensitive: Hebrew niqqud/te'amim and Greek/Latin combining marks are
+  // ignored on both sides. No index file — a full linear scan of a
+  // translation is a few tens of milliseconds, so results are computed
+  // fresh on each search and nothing extra is stored.
+  // ---------------------------------------------------------------------
+
+  function normalizeSearchText(text) {
+    let out = '';
+    for (const ch of text) {
+      out += ch.normalize('NFD').replace(/[\u0300-\u036f\u0591-\u05c7]/g, '').toLowerCase();
+    }
+    return out;
+  }
+
+  // Normalized form plus a map from each normalized character back to its
+  // index in the original text, so a match can be highlighted in the original
+  // (diacritics intact).
+  function buildSearchForm(text) {
+    let form = '';
+    const map = [];
+    for (let i = 0; i < text.length; i++) {
+      const kept = text[i].normalize('NFD').replace(/[\u0300-\u036f\u0591-\u05c7]/g, '').toLowerCase();
+      for (let k = 0; k < kept.length; k++) {
+        form += kept[k];
+        map.push(i);
+      }
+    }
+    return { form, map };
+  }
+
+  function searchVerses(data, query) {
+    const needle = normalizeSearchText(query);
+    const matches = [];
+    if (!needle) return { matches, total: 0 };
+
+    for (const book of canon.books) {
+      const chapters = data.books[book.id];
+      if (!chapters) continue;
+      for (let ci = 0; ci < chapters.length; ci++) {
+        const chapter = chapters[ci];
+        if (!Array.isArray(chapter)) continue;
+        for (let vi = 0; vi < chapter.length; vi++) {
+          const text = chapter[vi];
+          if (text && normalizeSearchText(text).includes(needle)) {
+            matches.push({ bookId: book.id, chapter: ci + 1, verse: vi + 1, text });
+          }
+        }
+      }
+    }
+    return { matches, total: matches.length };
+  }
+
+  // Appends `text` to `container`, wrapping each occurrence of `query` in
+  // <mark>. Uses text nodes only (never innerHTML), so user input is safe.
+  function appendHighlighted(container, text, query) {
+    const needle = normalizeSearchText(query);
+    const { form, map } = buildSearchForm(text);
+    let from = 0;
+    let lastEnd = 0;
+    let found = false;
+    while (needle) {
+      const idx = form.indexOf(needle, from);
+      if (idx === -1) break;
+      const start = map[idx];
+      const end = map[idx + needle.length - 1] + 1;
+      if (!(start < end)) { from = idx + needle.length; continue; }
+      container.appendChild(document.createTextNode(text.slice(lastEnd, start)));
+      const mark = document.createElement('mark');
+      mark.textContent = text.slice(start, end);
+      container.appendChild(mark);
+      lastEnd = end;
+      found = true;
+      from = idx + needle.length;
+    }
+    if (!found) {
+      container.textContent = text;
+      return;
+    }
+    container.appendChild(document.createTextNode(text.slice(lastEnd)));
+  }
+
+  const SEARCH_RESULT_CAP = 300;
+
+  function performSearch() {
+    const query = refs.search.value.trim();
+    if (!query) {
+      setMessage('Enter a word or phrase to search for.');
+      return;
+    }
+    const t = TRANSLATIONS.find(x => x.id === refs.searchTranslation.value);
+    const data = t && window.MARANATHA_TRANSLATIONS[t.id];
+    if (!t || !data) {
+      setMessage('Select a loaded translation to search.');
+      return;
+    }
+    setMessage('');
+    const { matches, total } = searchVerses(data, query);
+    viewState.mode = 'search';
+    viewState.groups = null;
+    viewState.highlightVerse = null;
+    viewState.search = { query, translationId: t.id, translationLabel: t.label, matches, total };
+    refs.contextBtn.style.display = 'none';
+    render();
+  }
+
+  function renderSearchResults() {
+    const s = viewState.search;
+    if (!s) return;
+
+    const head = document.createElement('div');
+    head.className = 'result-head';
+    const h2 = document.createElement('h2');
+    h2.append('Search: \u201c');
+    h2.append(s.query);
+    h2.append('\u201d ');
+    const small = document.createElement('small');
+    small.textContent = `(${s.total} ${s.total === 1 ? 'match' : 'matches'} in ${s.translationLabel})`;
+    h2.appendChild(small);
+    head.appendChild(h2);
+    refs.results.appendChild(head);
+
+    if (!s.total) {
+      const empty = document.createElement('p');
+      empty.className = 'empty';
+      empty.textContent = 'No matches.';
+      refs.results.appendChild(empty);
+      return;
+    }
+
+    const list = document.createElement('div');
+    list.className = 'search-results';
+    for (const m of s.matches.slice(0, SEARCH_RESULT_CAP)) {
+      const hit = document.createElement('button');
+      hit.type = 'button';
+      hit.className = 'search-hit';
+
+      const ref = document.createElement('span');
+      ref.className = 'search-ref';
+      const bookName = (locale.books[m.bookId] && locale.books[m.bookId].name) || m.bookId;
+      ref.textContent = `${bookName} ${m.chapter}:${m.verse}`;
+
+      const body = document.createElement('span');
+      body.className = 'search-text';
+      appendHighlighted(body, m.text, s.query);
+
+      hit.append(ref, body);
+      hit.addEventListener('click', () => jumpToVerse(m.bookId, m.chapter, m.verse));
+      list.appendChild(hit);
+    }
+    refs.results.appendChild(list);
+
+    if (s.total > SEARCH_RESULT_CAP) {
+      const more = document.createElement('p');
+      more.className = 'search-more';
+      more.textContent = `Showing the first ${SEARCH_RESULT_CAP} of ${s.total} matches.`;
+      refs.results.appendChild(more);
+    }
+  }
+
+  // Jumps from a search hit to the chapter in browse mode, with that verse
+  // highlighted (render() scrolls it into view via #current-reference).
+  function jumpToVerse(bookId, chapter, verse) {
+    setBrowseMode({ bookId, chapter, verse });
+    refs.book.value = bookId;
+    populateChapters();
+    refs.chapter.value = String(chapter);
+    render();
+  }
+
+  // "Search in" options are the checked translations that have actually
+  // finished loading (search needs their data in memory). The current
+  // selection is preserved when it is still available.
+  function populateSearchTranslations() {
+    const previous = refs.searchTranslation.value;
+    refs.searchTranslation.innerHTML = '';
+    const available = selectedTranslations()
+      .filter(t => loaded.has(t.id) && window.MARANATHA_TRANSLATIONS[t.id]);
+    for (const t of available) {
+      const opt = document.createElement('option');
+      opt.value = t.id;
+      opt.textContent = t.label;
+      refs.searchTranslation.appendChild(opt);
+    }
+    if (available.some(t => t.id === previous)) {
+      refs.searchTranslation.value = previous;
+    }
   }
 
   function render() {
@@ -910,6 +1129,7 @@ function init() {
       return;
     }
     setMessage('');
+    populateSearchTranslations();
 
     // Automatic layout: multi-row once more than 5 translations are selected
     // (multi-column gets too wide to read past that — same rule as YaQuB),
@@ -922,6 +1142,8 @@ function init() {
 
     if (viewState.mode === 'reference') {
       renderReferenceGroups(viewState.groups, translations, layout);
+    } else if (viewState.mode === 'search') {
+      renderSearchResults();
     } else {
       renderBrowseChapter(translations, layout);
     }
