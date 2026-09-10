@@ -72,7 +72,8 @@ th { background:var(--panel); }
 tbody td {
     background: var(--panel);
 }
-.reference { width:4rem; font-variant-numeric:tabular-nums; }
+.reference { width:4.75rem; font-variant-numeric:tabular-nums; }
+th.reference { white-space:nowrap; }
 .translation-label { width:8.5rem; font-weight:bold; white-space:normal; word-break:break-word; }
 .verse-placeholder { color:var(--placeholder); font-style:italic; }
 @font-face {
@@ -125,7 +126,7 @@ footer { text-align:center; padding:0 18px 28px; color:var(--muted); font-size:.
 }
 @media (max-width:700px) {
   .shell { margin:12px auto; padding:0 10px; }
-  .reference { width:3.25rem; }
+  .reference { width:4rem; }
   .translation-label { width:90px; }
   th, td { padding:7px; }
   .hebrew-verse { font-size:1.15rem; }
