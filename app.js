@@ -207,6 +207,7 @@ const refs = {
   const loaded = new Set();   // translation ids whose <script> has finished loading
   const loading = new Set();  // translation ids whose <script> is in flight
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+  const narrowScreen = window.matchMedia('(max-width: 700px)');
 
   // ---------------------------------------------------------------------
   // View state
@@ -340,6 +341,13 @@ function init() {
 
     prefersDark.addEventListener('change', () => {
         applyAppearance();
+    });
+
+    // Automatic layout also depends on viewport width (see render()), so
+    // re-render when the screen crosses that breakpoint — phone rotation, or
+    // resizing a desktop window. Only relevant in Automatic mode.
+    narrowScreen.addEventListener('change', () => {
+        if (refs.layout.value === 'auto') render();
     });
 
     populateChapters();
@@ -795,11 +803,13 @@ function init() {
     }
     setMessage('');
 
-    // Same rule as YaQuB: automatic mode uses multi-row once more than 5
-    // translations are selected (multi-column gets too wide to read past
-    // that), multi-column otherwise.
+    // Automatic layout: multi-row once more than 5 translations are selected
+    // (multi-column gets too wide to read past that — same rule as YaQuB),
+    // and also on narrow screens, where side-by-side columns would each be
+    // too cramped and long words could collide across columns. Manual layout
+    // choices (the Layout dropdown) are always respected.
     const layout = refs.layout.value === 'auto'
-      ? (translations.length > 5 ? 'multirow' : 'multicolumn')
+      ? ((translations.length > 5 || narrowScreen.matches) ? 'multirow' : 'multicolumn')
       : refs.layout.value;
 
     if (viewState.mode === 'reference') {

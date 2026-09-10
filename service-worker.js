@@ -28,7 +28,7 @@
 // old caches are deleted. Keeping the two versions separate means a routine
 // shell tweak does not force already-cached translations to re-download.
 
-const CACHE_VERSION = 'v1';       // bump when shell files change
+const CACHE_VERSION = 'v2';       // bump when shell files change
 const DATA_CACHE_VERSION = 'v1';  // bump when translation data changes
 
 const SHELL_CACHE = `maranatha-shell-${CACHE_VERSION}`;
