@@ -81,6 +81,12 @@ tbody td {
   font-display: swap;
 }
 .hebrew-verse { font-family:'Ezra SIL','SBL Hebrew',serif; text-align:right; font-size:1.25rem; line-height:1.7; }
+@font-face {
+  font-family: 'Cardo';
+  src: url('fonts/Cardo-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+.greek-verse { font-family:'Cardo','Gentium Plus',serif; font-size:1.2rem; line-height:1.7; }
 
 tbody td:not(.reference):not(.translation-label):not(.verse-placeholder) { color:var(--verse-ink); }
 .empty { padding:18px; background:var(--paper); border:1px solid var(--line); }

@@ -520,6 +520,9 @@ function init() {
         td.dir = 'rtl';
         td.lang = 'he';
         td.classList.add('hebrew-verse');
+      } else if (tId === 'byz') {
+        td.lang = 'el';
+        td.classList.add('greek-verse');
       }
     } else {
       td.className = 'verse-placeholder';
