@@ -1007,3 +1007,16 @@ given `white-space:nowrap` (the short header always fits now, so nowrap cannot
 overflow), and the `max-width:700px` override raised `3.25rem` → `4rem`.
 Verified headless with Chrome (`--dump-dom`): `th.reference` measures 76px and
 now renders on a single line. `CACHE_VERSION` bumped `v4` → `v5` (shell file).
+
+## 2026-09-10 — Armenian testament labels in the Book dropdown
+
+The Book dropdown's `optgroup` labels ("Old Testament" / "New Testament") were
+hardcoded English in `app.js`. The locale files now carry a `testaments`
+object — English as before, Armenian as `Հին Կտակարան` / `Նոր Կտակարան`,
+taken verbatim from the Ararat structure's `testament` field — and
+`populateBooks()` reads `locale.testaments[testament]`, falling back to the
+English strings if a locale omits them. `build/build-locale.mjs` emits the new
+field for every locale (which also added it to `en.json`/`en.js`). Verified
+headless with Chrome: with Armenian selected, the groups read
+`Հին Կտակարան` (first book `Ծննդոց`) and `Նոր Կտակարան` (first `Մատթէոս`).
+`CACHE_VERSION` bumped `v5` → `v6`.
