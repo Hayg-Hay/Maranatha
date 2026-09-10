@@ -1043,3 +1043,34 @@ headless with Chrome: with Armenian selected, the groups read
 
 Armenian references keep working unchanged (`Ծննդոց 1:1`, `Սաղմոս 23:1-`,
 `Ա Թագաւորաց 3:1`, …). `CACHE_VERSION` bumped `v6` → `v7` (shell change).
+
+## 2026-09-10 — Text search (Part B)
+
+Added text search with the agreed v1 scope: a separate Search field; one
+translation at a time (a "Search in" select populated from checked
+translations that have finished loading); phrase substring matching, case- and
+diacritic-insensitive; full verse text with the match highlighted; clicking a
+result jumps to that chapter in browse mode with the verse highlighted; up to
+300 results rendered, with the total match count shown.
+
+Implementation:
+
+- `viewState` gained a `'search'` mode and a `highlightVerse` used for the
+  browse-mode jump. `appendResultBlock`'s per-block context toggle is now gated
+  by an explicit `showContextToggle` flag (reference mode only), so a
+  browse-highlight row does not get a context button.
+- Pure helpers in `app.js`: `normalizeSearchText` (NFD, drop combining marks
+  `U+0300–U+036F` and Hebrew niqqud/te'amim `U+0591–U+05C7`, lowercase),
+  `buildSearchForm` (normalized string plus an index map back to the original
+  text, so the match is highlighted with diacritics intact), and `searchVerses`
+  (linear scan in canon order — no index file; full scans measured at 12–69 ms
+  per translation). `appendHighlighted` builds `<mark>` from text nodes only,
+  never `innerHTML`, so user input is safe.
+- Search is entirely local and fetches nothing; it works from `file://`.
+
+Verified headless with Chrome (`--dump-dom`): WEB "God created" → 10 matches,
+first "Genesis 1:1" with `God created` marked; clicking it jumps to Genesis 1
+with verse 1 highlighted; a no-match query shows "No matches."; a Hebrew query
+`בראשית` (no niqqud) matches niqqud text with `בְּרֵאשִׁ֖ית` marked; a Greek
+query `λογος` (no accents) matches 67 `λόγος` occurrences in the Byzantine
+text. `CACHE_VERSION` bumped `v7` → `v8`.
