@@ -233,13 +233,16 @@ class ReferenceParser {
   // constraint was violated and had to be reverted.
 
   // Registry of available translations. Adding a new one (once its data/<id>.js
-  // exists) means adding one line here — no other change needed.
+  // exists) means adding one line here — no other change needed. `short` is the
+  // compact, still-distinguishing label used in compact UI (the search-in
+  // select); it keeps the version/register qualifier so a future LXX, Grabar or
+  // Eastern Armenian entry does not collide.
   const TRANSLATIONS = [
-    { id: 'web', label: 'World English Bible', src: 'data/web.js' },
-    { id: 'kjv', label: 'King James Version', src: 'data/kjv.js' },
-    { id: 'armwestern', label: 'Western Armenian NT (1853)', src: 'data/armwestern.js' },
-    { id: 'byz', label: 'Byzantine Majority Text (Greek NT)', src: 'data/byz.js' },
-    { id: 'he', label: 'Hebrew (OSHB)', src: 'data/he.js' },
+    { id: 'web', label: 'World English Bible', short: 'WEB', src: 'data/web.js' },
+    { id: 'kjv', label: 'King James Version', short: 'KJV', src: 'data/kjv.js' },
+    { id: 'armwestern', label: 'Western Armenian NT (1853)', short: 'Western Armenian', src: 'data/armwestern.js' },
+    { id: 'byz', label: 'Byzantine Majority Text (Greek NT)', short: 'Byzantine Greek', src: 'data/byz.js' },
+    { id: 'he', label: 'Hebrew (OSHB)', short: 'Hebrew (OSHB)', src: 'data/he.js' },
   ];
 
   const canon = window.MARANATHA_CANON;
@@ -1193,7 +1196,7 @@ function init() {
     for (const t of available) {
       const opt = document.createElement('option');
       opt.value = t.id;
-      opt.textContent = t.label;
+      opt.textContent = t.short || t.label;
       refs.searchTranslation.appendChild(opt);
     }
     if (available.some(t => t.id === previous)) {

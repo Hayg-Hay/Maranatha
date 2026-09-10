@@ -109,8 +109,17 @@ footer { text-align:center; padding:0 18px 28px; color:var(--muted); font-size:.
 
 .reference-row {
     display: flex;
+    flex-wrap: wrap;
     gap: 8px;
     align-items: stretch;
+}
+
+/* Allow inputs/selects to shrink instead of forcing the row wider than the
+   viewport (a <select> otherwise sizes to its widest <option>). */
+.reference-row input,
+.reference-row select {
+    min-width: 0;
+    max-width: 100%;
 }
 
 .reference-row input {
@@ -180,6 +189,8 @@ footer { text-align:center; padding:0 18px 28px; color:var(--muted); font-size:.
 
 @media (max-width:700px) {
   .compare-row { grid-template-columns: 1fr; }
+  /* Stack: input on its own line, then any select/button beneath it. */
+  .reference-row input { flex: 1 1 100%; }
   .shell { margin:12px auto; padding:0 10px; }
   .reference { width:4rem; }
   .translation-label { width:90px; }
