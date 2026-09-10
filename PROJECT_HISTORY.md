@@ -681,7 +681,7 @@ it handled both a small surgical JavaScript change (wrap-around chapter
 navigation) and a broader HTML/CSS/JS appearance feature (Light / Dark /
 System modes) while respecting scope and verifying its work.
 
-## 2026-09-10 — Hebrew font wiring, reading-preset cascade fix, repo hygiene
+## 2026-09-10 — Hebrew and Greek font wiring, reading-preset cascade fix, repo hygiene
 
 ### Hebrew (Ezra SIL) font wired to verse rendering
 
@@ -700,6 +700,33 @@ needed — `app.js` already tags Hebrew cells with `dir="rtl"`, `lang="he"`,
 and the `hebrew-verse` class. The point is to make Hebrew rendering
 deterministic (niqqud and cantillation included) instead of depending on the
 host OS, with graceful fallbacks.
+
+### Greek (Cardo) font wired to verse rendering
+
+Parallel to the Hebrew/Ezra SIL work: BibleHub's own font guidance uses Cardo
+for Greek and Ezra SIL for Hebrew, so Cardo is the matching choice for
+Maranatha's Greek text. Cardo is a Unicode font by David J. Perry intended for
+Biblical/Classical scholarship, with strong polytonic Greek coverage (the
+accents and breathing marks the Koine text needs).
+
+License verified against the upstream `google/fonts` repository (`ofl/cardo/`)
+rather than assumed: `METADATA.pb` declares `license: "OFL"`, and the OFL 1.1
+statement plus the copyright "Copyright (c) 2002-2011, David J. Perry
+(hospes02@scholarsfonts.net)" are embedded in the TTF name table itself — the
+same distribution condition the Ezra SIL file already satisfies. Upstream source
+repo is `github.com/googlefonts/CardoFont`; font subsets include `greek` and
+`greek-ext`.
+
+Commit `3091346` adds `fonts/Cardo-Regular.ttf` (regular weight only, mirroring
+the single-file Hebrew font; bold/italic are synthesized by the browser), an
+`@font-face` for family "Cardo", and `.greek-verse
+{ font-family:'Cardo','Gentium Plus',serif; font-size:1.2rem; line-height:1.7 }`.
+`app.js`'s `fillCell()` now tags Byzantine cells with `lang="el"` and the
+`greek-verse` class, alongside the existing `hebrew-verse` tagging. Only `byz`
+is tagged because it is currently the only live Greek translation; a future LXX
+translation needs one added clause (`|| tId === 'lxx'`) in the same `fillCell()`
+branch. No `index.html` change was needed, and the font loads via the same
+relative-path `file://` mechanism already confirmed working for Ezra SIL.
 
 ### Warm / Low-contrast reading presets were silently cancelling the color schemes
 
