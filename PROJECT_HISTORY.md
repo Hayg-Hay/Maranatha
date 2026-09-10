@@ -1074,3 +1074,21 @@ with verse 1 highlighted; a no-match query shows "No matches."; a Hebrew query
 `בראשית` (no niqqud) matches niqqud text with `בְּרֵאשִׁ֖ית` marked; a Greek
 query `λογος` (no accents) matches 67 `λόγος` occurrences in the Byzantine
 text. `CACHE_VERSION` bumped `v7` → `v8`.
+
+## 2026-09-10 — Per-verse "compare translations" in search results
+
+Search results now support inline comparison. Each hit has a "Compare
+translations" button (shown only when at least one other translation is
+loaded) that expands the same verse in every other loaded translation. The
+search term is highlighted wherever it actually appears — an English query
+marks in WEB/KJV but is left un-highlighted in Hebrew, Greek or Armenian — and
+a book/verse a translation does not cover shows "(not available in this
+translation)". Clicking the verse body still jumps to the chapter with the
+verse highlighted; the compare button stops propagation so it does not
+navigate.
+
+Built as an experiment on branch `feature/verse-compare` (commit `bb6d7b9`) and
+merged into `main`. `.search-hit` changed from a `<button>` to a focusable
+`<div role="button">` so the nested compare button is valid HTML, and
+`buildComparePanel()` reuses `appendHighlighted()` for per-translation
+highlighting. `CACHE_VERSION` bumped `v8` → `v9`.
