@@ -680,3 +680,97 @@ The first real-world DeepSeek Flash coding-agent tests werpe successful:
 it handled both a small surgical JavaScript change (wrap-around chapter
 navigation) and a broader HTML/CSS/JS appearance feature (Light / Dark /
 System modes) while respecting scope and verifying its work.
+
+## 2026-09-10 — Hebrew font wiring, reading-preset cascade fix, repo hygiene
+
+### Hebrew (Ezra SIL) font wired to verse rendering
+
+The OSHB Hebrew import (shipped `f809d6f`, `ffc4df7`) rendered through
+`.hebrew-verse`, which set only `text-align:right; font-size:1.25rem;
+line-height:1.7` and relied on whatever Hebrew font the operating system
+happened to provide. `fonts/SILEOT.ttf` — Ezra SIL 2.51 (SIL Open Font
+License 1.1, with MIT/X11-licensed Hebrew layout intelligence) — had been
+committed earlier in `2c18aad` ("Add debug log and fonts folder") but was
+never actually referenced by any rule, so the committed font did nothing.
+
+Commit `88703b5` wires it up: an `@font-face` declaring the family "Ezra SIL"
+from `fonts/SILEOT.ttf`, and `.hebrew-verse` now resolves
+`font-family:'Ezra SIL','SBL Hebrew',serif`. No JavaScript or HTML change was
+needed — `app.js` already tags Hebrew cells with `dir="rtl"`, `lang="he"`,
+and the `hebrew-verse` class. The point is to make Hebrew rendering
+deterministic (niqqud and cantillation included) instead of depending on the
+host OS, with graceful fallbacks.
+
+### Warm / Low-contrast reading presets were silently cancelling the color schemes
+
+Symptom: choosing "Warm / Sepia" (or "Low contrast") under Reading made the
+Color scheme selector appear to stop working entirely — changing it had no
+visible effect.
+
+Root cause: both presets were implemented as *palettes*, redefining the same
+CSS custom properties the themes use (`--ink`, `--accent`, `--paper`,
+`--panel`, `--alt`, `--line`, plus `--body-bg`). The theme rules
+(`:root[data-theme="…"]`) and the reading rules (`:root[data-reading="…"]`)
+have identical specificity — `:root` (0,1,0) plus one attribute (0,1,0) =
+(0,2,0) — and on a specificity tie the later source-order rule wins. The
+reading presets sat *after* the themes in `style.css`, so they overrode every
+theme variable. The JavaScript was correct the whole time: `setReading()` and
+`setTheme()` both fire and both attributes coexist on `<html>`; the CSS simply
+never let them compose. Dark mode had the same problem, with the dark reading
+rules placed after the dark theme rules.
+
+Commit `018fe6d` removes the competing palette blocks (light and dark) and
+re-implements the presets as layers that compose with whatever scheme is
+active:
+
+- **Warm** is now a full-viewport amber tint — the f.lux / Night-Shift model,
+  which is what an "eye-saver filter" actually is:
+  `:root[data-reading="warm"] body::after { position:fixed; inset:0;
+  pointer-events:none; background:var(--warm-tint); z-index:9999; }`, with
+  `--warm-tint` at `rgba(255,172,64,0.14)` in light mode and a subtler
+  `rgba(255,160,60,0.07)` in dark (full-strength amber washes out dark
+  panels).
+- **Low contrast** genuinely needs to reduce contrast of what is underneath,
+  so it is applied as `:root[data-reading="low-contrast"] body
+  { filter: contrast(0.82) saturate(0.85); }` rather than a tint.
+
+Design decisions recorded: the tint covers the whole viewport (header and
+controls included), because restricting it to reading text would make it feel
+like a text-color setting rather than a filter. Plain alpha was chosen over a
+blend mode (`multiply`/`soft-light`) specifically because there are eight
+themes × light/dark × the tint; a blend mode would look different against
+every combination and require eyeballing all of them, while alpha is
+predictable regardless of what is underneath. `data-reading` is
+single-valued, so warm's `body::after` and low-contrast's `body { filter }`
+are never active at the same time — no containing-block collision between the
+two. No `app.js`/`index.html` change was required.
+
+### Verified closed: OSHB nested `<seg>` markup leak
+
+`extractVerseTextFromXML()` in `build/import-oshb.mjs` had once treated `<w>`
+element content as pre-cleaned text, so nested `<seg>` elements (OSHB's
+x-large/x-small enlarged letters) survived into the surface text; the
+slash-strip then turned the closing `</seg>` into a literal `<seg>`. This was
+already fixed in `7c8a23c` (flatten inner tags inside `<w>` before the
+slash/whitespace cleanup, then rebuild `data/he.json`/`data/he.js`).
+Re-verified during this review rather than assumed: `data/he.json` Deut 6:4
+(the Shema, whose source contains `שְׁמַ֖<seg type="x-large">ע</seg>`) is clean,
+and a full-corpus scan of all 39 books found zero verses containing `<` or `>`
+or any literal `<w>`/`<seg>`/`<note>` tag. Closed.
+
+### Repository hygiene
+
+- `.codewhale/state/subagents.v1.lock` — coding-agent tool state that should
+  never have been tracked. Removed, and `.codewhale/` added to `.gitignore`
+  (commit `ed9b298`).
+- `debug.log` — Chromium/Electron crashpad noise ("CreateFile: Accès refusé"),
+  accidentally swept into `2c18aad` alongside the font. Removed and
+  `debug.log` added to `.gitignore` (commit `4bd9f19`).
+- `armenian-cross.png` — orphaned; `index.html` references
+  `Armenian-cross_2.png`. Confirmed unreferenced by grep, then removed
+  (commit `dda2dee`).
+- `index.html` — removed the stale top-of-page "Available translations"
+  `<details>` notice, which claimed only two translations (WEB-C and KJV)
+  while five are registered in `app.js` (commit `04a6d9f`).
+
+All of the above was committed and pushed to `origin/main`.
