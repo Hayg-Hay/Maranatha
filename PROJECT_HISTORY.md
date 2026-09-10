@@ -905,6 +905,23 @@ cache. This closes the original complaint: the previous home-screen icon was
 only a bookmark to the GitHub Pages URL, so with no network there was nothing
 to load.
 
+### Update prompt (user-driven, not silent)
+
+The service worker no longer calls `self.skipWaiting()` in its install handler.
+A newly deployed worker now waits, and the page detects it — either
+`registration.waiting` on load, or `updatefound` → `statechange === 'installed'`
+with an existing controller — and shows a small "A new version of Maranatha is
+available." banner with Reload / Later buttons. Reload posts
+`{ type: 'SKIP_WAITING' }`; the waiting worker activates (message handler added
+to `service-worker.js`) and the page reloads into the new shell through a
+`controllerchange` listener. The reload is gated on the user actually pressing
+Reload, so the first-install `clients.claim()` does not cause a spurious
+refresh. `CACHE_VERSION` was bumped to `v3`.
+
+One-time rollout note: the shell that was live when this shipped (v2) predates
+the banner code, so the very first v3 update still required one full close and
+reopen of the app. From then on the banner appears for every update.
+
 Files: `manifest.json`, `service-worker.js`, `icons/` (four PNGs), and the
 `index.html` head/registration changes.
 
