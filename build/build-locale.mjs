@@ -39,7 +39,20 @@ function readNamesSource(language) {
   for (const [id, name] of Object.entries(source.names)) {
     books[id] = { name };
   }
-  return { books, testaments: source.testaments || {} };
+  return { books, testaments: source.testaments || {}, aliases: source.aliases || {} };
+}
+
+function readAliases(language) {
+  const sourcePath = path.join(dir, 'sources', `locale-${language}.aliases.json`);
+  if (!fs.existsSync(sourcePath)) return {};
+  return JSON.parse(fs.readFileSync(sourcePath, 'utf8')).aliases || {};
+}
+
+function attachAliases(books, aliases) {
+  for (const [id, list] of Object.entries(aliases)) {
+    if (books[id]) books[id].aliases = list;
+  }
+  return books;
 }
 
 // English: names live alongside the structure in canon.computed.json.
@@ -47,8 +60,10 @@ const enBooks = {};
 for (const b of computed.books) {
   enBooks[b.id] = { name: b.name };
 }
+attachAliases(enBooks, readAliases('en'));
 writeLocale('en', 'English', enBooks, { OT: 'Old Testament', NT: 'New Testament' });
 
 // Armenian: names sourced separately (see build/sources/locale-hy.names.json).
 const hy = readNamesSource('hy');
+attachAliases(hy.books, hy.aliases);
 writeLocale('hy', 'Հայերէն', hy.books, hy.testaments);

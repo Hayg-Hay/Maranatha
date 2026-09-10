@@ -1,5 +1,20 @@
 class ReferenceParser {
 
+    // Normalizes a book name/alias for lookup: lowercases; turns a leading
+    // Roman numeral prefix (I/II/III) into 1/2/3 and drops a leading ordinal
+    // suffix (1st/2nd/3rd/4th); removes periods, apostrophes, hyphens and all
+    // whitespace. This is what lets "I Cor.", "1Cor", "1 cor" and "1st
+    // Corinthians" all resolve to the same book without a separate alias.
+    static normalizeKey(value) {
+        return String(value)
+            .toLowerCase()
+            .replace(/^(\d+)(?:st|nd|rd|th)\b/, '$1')
+            .replace(/^(i{1,3})(?=\s|\b)/, (m) => String(m.length))
+            .replace(/[.'’\u2019-]/g, '')
+            .replace(/\s+/g, '')
+            .trim();
+    }
+
     constructor(canon, locale) {
 
         this.canon = canon;
@@ -13,17 +28,16 @@ class ReferenceParser {
                 continue;
 
             this.bookMap.set(
-                info.name.toLowerCase(),
+                ReferenceParser.normalizeKey(info.name),
                 book
             );
 
-            // Reserve a place for future aliases
             if (info.aliases) {
 
                 for (const alias of info.aliases) {
 
                     this.bookMap.set(
-                        alias.toLowerCase(),
+                        ReferenceParser.normalizeKey(alias),
                         book
                     );
 
@@ -42,19 +56,22 @@ class ReferenceParser {
     //                                         carries over the previous
     //                                         group's book)
     //   "1 Corinthians 13"                  (whole chapter, no verse spec)
+    //   "Psalm 23:1-"                       (open-ended) or "Psalm 119:1-8,11"
+    //   "I Cor. 13" / "1Cor 13" / "Jude"    (aliases, Roman numerals, whole book)
     //
     // Returns an array of group objects:
     //   { bookId, chapter, ranges }
     // where ranges is either null (render the whole chapter) or an array
     // of { start, end } verse ranges (a bare verse like "6" becomes
-    // { start: 6, end: 6 }).
+    // { start: 6, end: 6 }; "20-" becomes { start: 20, end: <last verse> }).
     //
-    // Throws an Error with a human-readable message on any malformed or
-    // out-of-range group — the caller is expected to catch it and show
-    // error.message to the user rather than let it propagate.
+    // Throws an Error with a human-readable message listing every malformed or
+    // out-of-range group in the query (not just the first) — the caller shows
+    // error.message to the user.
     parseMulti(input) {
 
         const groups = [];
+        const errors = [];
         let lastBookId = null;
 
         // "<book name> <chapter>[:<verseSpec>]" — requires whitespace
@@ -74,80 +91,112 @@ class ReferenceParser {
 
         for (const part of parts) {
 
-            let bookId;
-            let chapterText;
-            let verseSpec;
+            try {
 
-            const bareMatch = part.match(chapterOnly);
+                let bookId;
+                let chapterText;
+                let verseSpec;
 
-            if (bareMatch) {
+                const bareMatch = part.match(chapterOnly);
 
-                if (!lastBookId)
-                    throw new Error(`"${part}" has no book name, and there is no earlier reference to carry one over from.`);
+                if (bareMatch) {
 
-                bookId = lastBookId;
-                [, chapterText, verseSpec] = bareMatch;
+                    if (!lastBookId)
+                        throw new Error(`"${part}" has no book name, and there is no earlier reference to carry one over from.`);
 
-            } else {
+                    bookId = lastBookId;
+                    [, chapterText, verseSpec] = bareMatch;
 
-                const fullMatch = part.match(withBook);
+                } else {
 
-                if (!fullMatch)
-                    throw new Error(`"${part}" is not a valid reference.`);
+                    const fullMatch = part.match(withBook);
 
-                const [, bookText, chapterMatch, verseSpecMatch] = fullMatch;
-                const book = this.bookMap.get(bookText.trim().toLowerCase());
+                    if (fullMatch) {
 
-                if (!book)
-                    throw new Error(`Unknown book "${bookText.trim()}".`);
+                        const [, bookText, chapterMatch, verseSpecMatch] = fullMatch;
+                        const book = this.bookMap.get(ReferenceParser.normalizeKey(bookText));
 
-                bookId = book.id;
-                chapterText = chapterMatch;
-                verseSpec = verseSpecMatch;
+                        if (!book)
+                            throw new Error(`Unknown book "${bookText.trim()}".`);
+
+                        bookId = book.id;
+                        chapterText = chapterMatch;
+                        verseSpec = verseSpecMatch;
+
+                    } else {
+
+                        // No chapter given: treat it as a whole-book reference
+                        // and show the first chapter, the way "Jude" or
+                        // "Genesis" behaves elsewhere.
+                        const book = this.bookMap.get(ReferenceParser.normalizeKey(part));
+
+                        if (!book)
+                            throw new Error(`"${part}" is not a valid reference.`);
+
+                        groups.push({ bookId: book.id, chapter: 1, ranges: null });
+                        lastBookId = book.id;
+                        continue;
+
+                    }
+
+                }
+
+                const book = this.canon.books.find(b => b.id === bookId);
+                const chapter = Number(chapterText);
+
+                if (!Number.isInteger(chapter) || chapter < 1 || chapter > book.chapters.length)
+                    throw new Error(`"${part}" — chapter ${chapterText} does not exist in this book.`);
+
+                const verseCount = book.chapters[chapter - 1];
+                let ranges = null;
+
+                if (verseSpec) {
+
+                    ranges = verseSpec
+                        .split(',')
+                        .map(item => item.replace(/\s+/g, ''))
+                        .filter(Boolean)
+                        .map(item => {
+
+                            // "6", "6-9", or open-ended "6-" (through the end)
+                            const rangeMatch = item.match(/^(\d+)(?:-(\d*))?$/);
+
+                            if (!rangeMatch)
+                                throw new Error(`"${item}" in "${part}" is not a valid verse or verse range.`);
+
+                            const start = Number(rangeMatch[1]);
+                            const end = rangeMatch[2] === undefined ? start
+                                : rangeMatch[2] === '' ? verseCount
+                                : Number(rangeMatch[2]);
+
+                            if (start < 1 || start > verseCount)
+                                throw new Error(`"${item}" in "${part}" is outside this chapter's ${verseCount} verses.`);
+
+                            if (end < start)
+                                throw new Error(`"${item}" in "${part}" has a reversed range — end comes before start.`);
+
+                            if (end > verseCount)
+                                throw new Error(`"${item}" in "${part}" is outside this chapter's ${verseCount} verses.`);
+
+                            return { start, end };
+
+                        });
+
+                }
+
+                groups.push({ bookId, chapter, ranges });
+                lastBookId = bookId;
+
+            } catch (error) {
+
+                errors.push(error.message);
 
             }
-
-            const book = this.canon.books.find(b => b.id === bookId);
-            const chapter = Number(chapterText);
-
-            if (!Number.isInteger(chapter) || chapter < 1 || chapter > book.chapters.length)
-                throw new Error(`"${part}" — chapter ${chapterText} does not exist in this book.`);
-
-            const verseCount = book.chapters[chapter - 1];
-            let ranges = null;
-
-            if (verseSpec) {
-
-                ranges = verseSpec
-                    .split(',')
-                    .map(item => item.trim())
-                    .filter(Boolean)
-                    .map(item => {
-
-                        const rangeMatch = item.match(/^(\d+)(?:-(\d+))?$/);
-
-                        if (!rangeMatch)
-                            throw new Error(`"${item}" in "${part}" is not a valid verse or verse range.`);
-
-                        const start = Number(rangeMatch[1]);
-                        const end = rangeMatch[2] ? Number(rangeMatch[2]) : start;
-
-                        if (end < start)
-                            throw new Error(`"${item}" in "${part}" has a reversed range — end comes before start.`);
-
-                        if (start < 1 || end > verseCount)
-                            throw new Error(`"${item}" in "${part}" is outside this chapter's ${verseCount} verses.`);
-
-                        return { start, end };
-
-                    });
-
-            }
-
-            groups.push({ bookId, chapter, ranges });
-            lastBookId = bookId;
 
         }
+
+        if (errors.length)
+            throw new Error(errors.join(' '));
 
         return groups;
 
