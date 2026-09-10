@@ -907,3 +907,36 @@ to load.
 
 Files: `manifest.json`, `service-worker.js`, `icons/` (four PNGs), and the
 `index.html` head/registration changes.
+
+## 2026-09-10 — Mobile layout fix: translations no longer overlap on narrow screens
+
+On the phone, side-by-side (multi-column) translations overlapped while
+reading. Root cause: `#results table` uses `table-layout:fixed; width:100%`,
+so on a narrow screen each translation column is tiny, and any content wider
+than its cell overflows into the next column instead of wrapping — long
+polytonic Greek and Hebrew words, long translation header labels, and the
+verse-reference cell (`119:176`-style) which additionally had
+`white-space:nowrap` and could bleed into the first translation column.
+
+Fix (`style.css`, `app.js`):
+
+- `th, td` gained `overflow-wrap:break-word`, so long words wrap instead of
+  spilling across cells. This is the core overlap fix.
+- `.reference` lost its `white-space:nowrap`, so the verse number can no longer
+  overflow into the first translation column.
+- `.result-head` gained `flex-wrap:wrap`, so a long heading and the per-block
+  context-toggle button do not collide on a narrow width.
+- The mobile media query (now `max-width:700px`) narrows the reference and
+  translation-label columns, tightens padding, and slightly reduces the Greek
+  and Hebrew font sizes.
+- Automatic layout now also selects multi-row on screens ≤700px — previously
+  it only did so when more than 5 translations were selected (the YaQuB rule).
+  This is driven by `window.matchMedia('(max-width: 700px)')` plus a `change`
+  listener that re-renders when the breakpoint is crossed (phone rotation, or a
+  resized desktop window), and only when the Layout dropdown is set to
+  Automatic. A manual Layout choice is still respected.
+
+`CACHE_VERSION` in `service-worker.js` was bumped `v1` → `v2` in the same
+change: `app.js` and `style.css` are shell files, so without the bump the
+phone would have kept serving the old cached shell (see the cache versioning
+note above).
