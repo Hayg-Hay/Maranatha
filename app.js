@@ -256,6 +256,7 @@ const refs = {
     appearance: q('#appearance'),
     language: q('#language'),
     layout: q('#layout'),
+    interlinear: q('#interlinear'),
     go: q('#go-button'),
     results: q('#results'),
     message: q('#message'),
@@ -285,6 +286,11 @@ const refs = {
   // path as "John 3:16" instead of needing a third mode.
   // ---------------------------------------------------------------------
   let contextEnabled = false;
+
+  // Greek interlinear view: a reading override (not a viewState mode) driven
+  // by the checkbox. Its data is large, so it is lazily loaded on first use.
+  let interlinearEnabled = false;
+  let interlinearStatus = 'idle'; // 'idle' | 'loading' | 'loaded'
 
   // Per-block context overrides.  Each key is "${bookId}-${chapterNum}".
   // When a block has an entry here, its value overrides the global
@@ -422,6 +428,22 @@ function init() {
 
     refs.layout.addEventListener('change', () => {
         render();
+    });
+
+    refs.interlinear.addEventListener('change', () => {
+        interlinearEnabled = refs.interlinear.checked;
+        if (!interlinearEnabled) {
+            render();
+            return;
+        }
+        if (interlinearStatus === 'loaded') {
+            render();
+        } else if (interlinearStatus !== 'loading') {
+            setMessage('Loading Greek interlinear…');
+            loadInterlinearData(() => {
+                render();
+            });
+        }
     });
 
     refs.contextBtn.addEventListener('click', () => {
@@ -1204,10 +1226,168 @@ function init() {
     }
   }
 
+  // ---------------------------------------------------------------------
+  // Greek interlinear
+  //
+  // Loads data/byz-interlinear.js (per-word surface + Strong's + morphology,
+  // aligned to the accented Byzantine text) and data/strongs-greek.js
+  // (numbered Strong's -> concise gloss). Both are only fetched when the
+  // Interlinear checkbox is first ticked.
+  // ---------------------------------------------------------------------
+
+  function loadInterlinearData(onReady) {
+    interlinearStatus = 'loading';
+    const sources = ['data/byz-interlinear.js', 'data/strongs-greek.js'];
+    let remaining = sources.length;
+    let failed = false;
+    for (const src of sources) {
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = () => {
+        if (--remaining === 0 && !failed) {
+          interlinearStatus = 'loaded';
+          onReady();
+        }
+      };
+      script.onerror = () => {
+        failed = true;
+        interlinearStatus = 'idle';
+        setMessage(`Could not load ${src}.`);
+      };
+      document.head.appendChild(script);
+    }
+  }
+
+  // Greek -> Latin transliteration of the (accented) surface form. Diacritics
+  // and breathing marks are dropped; a rough breathing adds a leading "h".
+  function transliterateGreek(text) {
+    const decomposed = text.normalize('NFD');
+    const rough = decomposed.includes('\u0314');
+    const base = decomposed.replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    const digraphs = {
+      'ου': 'ou', 'αι': 'ai', 'ει': 'ei', 'οι': 'oi', 'υι': 'ui',
+      'αυ': 'au', 'ευ': 'eu', 'ηυ': '\u0113u', 'γγ': 'ng', 'γκ': 'nk',
+      'γχ': 'nch', 'γξ': 'nx', 'μπ': 'mp', 'ντ': 'nt',
+    };
+    const singles = {
+      'α': 'a', 'β': 'b', 'γ': 'g', 'δ': 'd', 'ε': 'e', 'ζ': 'z', 'η': '\u0113',
+      'θ': 'th', 'ι': 'i', 'κ': 'k', 'λ': 'l', 'μ': 'm', 'ν': 'n', 'ξ': 'x',
+      'ο': 'o', 'π': 'p', 'ρ': 'r', 'σ': 's', 'ς': 's', 'τ': 't', 'υ': 'y',
+      'φ': 'ph', 'χ': 'ch', 'ψ': 'ps', 'ω': '\u014d',
+    };
+    let out = '';
+    for (let i = 0; i < base.length; i++) {
+      const two = base.slice(i, i + 2);
+      if (digraphs[two]) { out += digraphs[two]; i++; }
+      else { out += singles[base[i]] || base[i]; }
+    }
+    return (rough ? 'h' : '') + out;
+  }
+
+  function renderInterlinear(translations) {
+    const book = currentBook();
+    if (!book) return;
+    const chapterNum = Number(refs.chapter.value);
+    const name = (locale.books[book.id] && locale.books[book.id].name) || book.id;
+    const data = window.MARANATHA_INTERLINEAR_BYZ;
+    const glosses = (window.MARANATHA_STRONGS_GREEK && window.MARANATHA_STRONGS_GREEK.glosses) || {};
+
+    const head = document.createElement('div');
+    head.className = 'result-head';
+    const h2 = document.createElement('h2');
+    h2.append(`${name} ${chapterNum} `);
+    const small = document.createElement('small');
+    small.textContent = '(Greek interlinear)';
+    h2.appendChild(small);
+    head.appendChild(h2);
+    refs.results.appendChild(head);
+
+    const verses = data && data.books[book.id] && data.books[book.id][chapterNum - 1];
+    if (!verses) {
+      const empty = document.createElement('p');
+      empty.className = 'empty';
+      empty.textContent = 'Interlinear data is available for the Greek New Testament only.';
+      refs.results.appendChild(empty);
+      return;
+    }
+
+    // First selected translation, if any, supplies the verse caption.
+    const translation = translations[0];
+    for (let v = 0; v < verses.length; v++) {
+      const tokens = verses[v];
+      if (!tokens || !tokens.length) continue;
+      const verseNum = v + 1;
+
+      const block = document.createElement('div');
+      block.className = 'interlinear-verse';
+
+      const ref = document.createElement('div');
+      ref.className = 'interlinear-ref';
+      ref.textContent = `${name} ${chapterNum}:${verseNum}`;
+      block.appendChild(ref);
+
+      if (translation) {
+        const tv = window.MARANATHA_TRANSLATIONS[translation.id];
+        const tch = tv && tv.books[book.id] && tv.books[book.id][chapterNum - 1];
+        const ttext = tch && tch[verseNum - 1];
+        if (ttext) {
+          const caption = document.createElement('div');
+          caption.className = 'interlinear-caption';
+          caption.textContent = ttext;
+          block.appendChild(caption);
+        }
+      }
+
+      const words = document.createElement('div');
+      words.className = 'interlinear-words';
+      for (const [surface, strongs, morph] of tokens) {
+        const card = document.createElement('span');
+        card.className = 'iw';
+
+        const greek = document.createElement('span');
+        greek.className = 'iw-greek';
+        greek.textContent = surface;
+
+        const translit = document.createElement('span');
+        translit.className = 'iw-translit';
+        translit.textContent = transliterateGreek(surface);
+
+        const gloss = document.createElement('span');
+        gloss.className = 'iw-gloss';
+        gloss.textContent = glosses[strongs] || '';
+        const glossTitle = [strongs ? 'G' + strongs : '', glosses[strongs] || '', morph].filter(Boolean).join(' \u00b7 ');
+        if (glossTitle) gloss.title = glossTitle;
+
+        const meta = document.createElement('span');
+        meta.className = 'iw-meta';
+        meta.textContent = strongs ? 'G' + strongs : '';
+
+        card.append(greek, translit, gloss, meta);
+        words.appendChild(card);
+      }
+      block.appendChild(words);
+      refs.results.appendChild(block);
+    }
+
+    const note = document.createElement('p');
+    note.className = 'interlinear-source';
+    note.textContent = 'Greek text: Robinson-Pierpont Byzantine (Unlicense) \u00b7 glosses: Strong\'s, Open Scriptures (CC-BY-SA).';
+    refs.results.appendChild(note);
+  }
+
   function render() {
     const translations = selectedTranslations();
 
     refs.results.innerHTML = '';
+
+    // Interlinear overrides the normal reading view (works even with no
+    // translation selected — a selected one is used only as a caption).
+    if (interlinearEnabled) {
+      setMessage('');
+      refs.contextBtn.style.display = 'none';
+      renderInterlinear(translations);
+      return;
+    }
 
     if (!translations.length) {
       setMessage('Select at least one translation to display.');
