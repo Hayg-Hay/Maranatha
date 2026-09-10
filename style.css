@@ -193,3 +193,27 @@ footer { text-align:center; padding:0 18px 28px; color:var(--muted); font-size:.
   --ink:#eee0f2; --accent:#c48ade; --paper:#2a2129; --panel:#362a37; --alt:#423345; --line:#6c4f70;
 }
 :root[data-mode="dark"] header img { filter: invert(1); }
+
+/* ----------------------------------------------------------
+   PWA update prompt
+---------------------------------------------------------- */
+.update-banner {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  max-width: calc(100% - 24px);
+  padding: 10px 14px;
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+  font-size: .9rem;
+  z-index: 10000;
+}
+.update-banner button { padding: 6px 12px; }

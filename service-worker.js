@@ -27,8 +27,15 @@
 // DATA_CACHE_VERSION when the translation data files change. On activation the
 // old caches are deleted. Keeping the two versions separate means a routine
 // shell tweak does not force already-cached translations to re-download.
+//
+// A newly deployed worker deliberately does NOT call skipWaiting() on install
+// — it waits. The page detects the waiting worker and shows an "update
+// available" banner; clicking Reload posts { type: 'SKIP_WAITING' } (handled
+// below), letting the new worker activate, after which the page reloads into
+// the new shell. The update is therefore user-driven, not a silent replacement
+// mid-read.
 
-const CACHE_VERSION = 'v2';       // bump when shell files change
+const CACHE_VERSION = 'v3';       // bump when shell files change
 const DATA_CACHE_VERSION = 'v1';  // bump when translation data changes
 
 const SHELL_CACHE = `maranatha-shell-${CACHE_VERSION}`;
@@ -63,12 +70,17 @@ function isTranslationFile(pathname) {
 }
 
 self.addEventListener('install', (event) => {
+  // Precache the new shell, but do not activate yet — see the update note at
+  // the top of this file. The page triggers activation via SKIP_WAITING.
   event.waitUntil(
-    caches
-      .open(SHELL_CACHE)
-      .then((cache) => cache.addAll(SHELL_FILES))
-      .then(() => self.skipWaiting())
+    caches.open(SHELL_CACHE).then((cache) => cache.addAll(SHELL_FILES))
   );
+});
+
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });
 
 self.addEventListener('activate', (event) => {
