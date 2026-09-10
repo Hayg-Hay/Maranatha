@@ -1063,9 +1063,10 @@ function init() {
     const list = document.createElement('div');
     list.className = 'search-results';
     for (const m of s.matches.slice(0, SEARCH_RESULT_CAP)) {
-      const hit = document.createElement('button');
-      hit.type = 'button';
+      const hit = document.createElement('div');
       hit.className = 'search-hit';
+      hit.tabIndex = 0;
+      hit.setAttribute('role', 'button');
 
       const ref = document.createElement('span');
       ref.className = 'search-ref';
@@ -1077,7 +1078,42 @@ function init() {
       appendHighlighted(body, m.text, s.query);
 
       hit.append(ref, body);
-      hit.addEventListener('click', () => jumpToVerse(m.bookId, m.chapter, m.verse));
+
+      const openHit = () => jumpToVerse(m.bookId, m.chapter, m.verse);
+      hit.addEventListener('click', openHit);
+      hit.addEventListener('keydown', (event) => {
+        if (event.target !== hit) return;
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          openHit();
+        }
+      });
+
+      // Per-verse comparison: only when at least one other translation is
+      // loaded. The toggle must not trigger the hit's own jump.
+      const others = selectedTranslations().filter((t) =>
+        t.id !== s.translationId && loaded.has(t.id) && window.MARANATHA_TRANSLATIONS[t.id]);
+      if (others.length) {
+        const toggle = document.createElement('button');
+        toggle.type = 'button';
+        toggle.className = 'compare-toggle';
+        toggle.textContent = 'Compare translations';
+        toggle.setAttribute('aria-expanded', 'false');
+        let panel = null;
+        toggle.addEventListener('click', (event) => {
+          event.stopPropagation();
+          if (!panel) {
+            panel = buildComparePanel(m, s.query, s.translationId);
+            panel.hidden = true;
+            hit.appendChild(panel);
+          }
+          panel.hidden = !panel.hidden;
+          toggle.setAttribute('aria-expanded', String(!panel.hidden));
+          toggle.textContent = panel.hidden ? 'Compare translations' : 'Hide translations';
+        });
+        hit.appendChild(toggle);
+      }
+
       list.appendChild(hit);
     }
     refs.results.appendChild(list);
@@ -1088,6 +1124,52 @@ function init() {
       more.textContent = `Showing the first ${SEARCH_RESULT_CAP} of ${s.total} matches.`;
       refs.results.appendChild(more);
     }
+  }
+
+  // Builds the "other translations" panel for one search hit: the same verse
+  // in every other loaded translation. The query is highlighted wherever it
+  // actually appears (e.g. English "God" marks in WEB/KJV but not in Hebrew,
+  // Greek or Armenian) and is simply left unhighlighted elsewhere.
+  function buildComparePanel(match, query, excludeId) {
+    const panel = document.createElement('div');
+    panel.className = 'compare-panel';
+
+    const others = selectedTranslations().filter((t) =>
+      t.id !== excludeId && loaded.has(t.id) && window.MARANATHA_TRANSLATIONS[t.id]);
+
+    for (const t of others) {
+      const row = document.createElement('div');
+      row.className = 'compare-row';
+
+      const label = document.createElement('span');
+      label.className = 'compare-label';
+      label.textContent = t.label;
+
+      const text = document.createElement('span');
+      text.className = 'compare-text';
+      const data = window.MARANATHA_TRANSLATIONS[t.id];
+      const chapter = data.books[match.bookId] && data.books[match.bookId][match.chapter - 1];
+      const verseText = chapter && chapter[match.verse - 1];
+
+      if (verseText) {
+        if (t.id === 'he') {
+          text.dir = 'rtl';
+          text.lang = 'he';
+          text.classList.add('hebrew-verse');
+        } else if (t.id === 'byz') {
+          text.lang = 'el';
+          text.classList.add('greek-verse');
+        }
+        appendHighlighted(text, verseText, query);
+      } else {
+        text.classList.add('verse-placeholder');
+        text.textContent = '(not available in this translation)';
+      }
+
+      row.append(label, text);
+      panel.appendChild(row);
+    }
+    return panel;
   }
 
   // Jumps from a search hit to the chapter in browse mode, with that verse
