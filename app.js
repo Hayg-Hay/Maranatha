@@ -461,7 +461,8 @@ function init() {
       if (book.testament !== currentTestament) {
         currentTestament = book.testament;
         const group = document.createElement('optgroup');
-        group.label = currentTestament === 'OT' ? 'Old Testament' : 'New Testament';
+        const testamentName = locale.testaments && locale.testaments[currentTestament];
+        group.label = testamentName || (currentTestament === 'OT' ? 'Old Testament' : 'New Testament');
         group.dataset.testament = currentTestament;
         refs.book.appendChild(group);
       }

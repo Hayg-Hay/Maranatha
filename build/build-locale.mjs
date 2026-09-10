@@ -20,8 +20,8 @@ import { fileURLToPath } from 'node:url';
 const dir = path.dirname(fileURLToPath(import.meta.url));
 const computed = JSON.parse(fs.readFileSync(path.join(dir, 'sources', 'canon.computed.json'), 'utf8'));
 
-function writeLocale(language, label, books) {
-  const output = { language, label, books };
+function writeLocale(language, label, books, testaments) {
+  const output = { language, label, testaments, books };
   const jsonPath = path.join(dir, '..', 'data', 'locales', `${language}.json`);
   fs.writeFileSync(jsonPath, JSON.stringify(output, null, 2) + '\n');
   console.log(`Wrote ${jsonPath}: ${Object.keys(books).length} book names`);
@@ -39,7 +39,7 @@ function readNamesSource(language) {
   for (const [id, name] of Object.entries(source.names)) {
     books[id] = { name };
   }
-  return books;
+  return { books, testaments: source.testaments || {} };
 }
 
 // English: names live alongside the structure in canon.computed.json.
@@ -47,7 +47,8 @@ const enBooks = {};
 for (const b of computed.books) {
   enBooks[b.id] = { name: b.name };
 }
-writeLocale('en', 'English', enBooks);
+writeLocale('en', 'English', enBooks, { OT: 'Old Testament', NT: 'New Testament' });
 
 // Armenian: names sourced separately (see build/sources/locale-hy.names.json).
-writeLocale('hy', 'Հայերէն', readNamesSource('hy'));
+const hy = readNamesSource('hy');
+writeLocale('hy', 'Հայերէն', hy.books, hy.testaments);

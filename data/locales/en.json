@@ -1,6 +1,10 @@
 {
   "language": "en",
   "label": "English",
+  "testaments": {
+    "OT": "Old Testament",
+    "NT": "New Testament"
+  },
   "books": {
     "GEN": {
       "name": "Genesis"

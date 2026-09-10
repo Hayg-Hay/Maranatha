@@ -10,6 +10,11 @@
     "2MA"
   ],
   "_unverifiedNote": "Absent from the Ararat structure; standard Armenian forms used, pending confirmation.",
+  "_testamentsProvenance": "Old/New Testament labels taken verbatim from the Ararat structure's testament field.",
+  "testaments": {
+    "OT": "Հին Կտակարան",
+    "NT": "Նոր Կտակարան"
+  },
   "names": {
     "GEN": "Ծննդոց",
     "EXO": "Ելից",
