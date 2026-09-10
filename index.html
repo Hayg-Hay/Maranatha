@@ -5,6 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Maranatha — Offline Bible Browser</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#f3f1ee" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#201b16" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Maranatha">
 </head>
 <body>
   <main class="shell">
@@ -72,5 +81,21 @@
   <script src="data/canon.js"></script>
   <script src="data/locales/en.js"></script>
   <script src="app.js"></script>
+  <script>
+    // Register the service worker for offline use, but ONLY over http(s).
+    // Opening index.html directly from disk (file://) must keep working with
+    // no server; a service worker cannot run there anyway, so the protocol
+    // check keeps the desktop workflow untouched and error-free.
+    if (
+      'serviceWorker' in navigator &&
+      (location.protocol === 'https:' || location.protocol === 'http:')
+    ) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js').catch((error) => {
+          console.warn('Service worker registration failed:', error);
+        });
+      });
+    }
+  </script>
 </body>
 </html>
