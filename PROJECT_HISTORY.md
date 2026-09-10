@@ -1114,3 +1114,40 @@ to `min-width:auto`, the row was pushed past the right edge.
 Verified headless: at a phone-ish width the document does not scroll
 horizontally, the input is on its own line and select + button sit below it; at
 desktop width the row is unchanged (one line).
+
+## 2026-09-10 — Greek interlinear reader
+
+Added the first interlinear view, for the Greek New Testament, inspired by
+BibleHub's interlinear.
+
+**Sources.**
+- Tagged Greek text: `byztxt/byzantine-majority-text`,
+  `csv-unicode/strongs/with-parsing/*.csv` — Robinson-Pierpont Byzantine text
+  with Strong's numbers and morphology per word, **Unlicense** (public domain,
+  the same source family as the `byz` translation). Cached in
+  `build/sources/byz-strongs/`.
+- Glosses: `openscriptures/strongs` `greek/strongs-greek-dictionary.js` —
+  Strong's definitions, **CC-BY-SA**. This is the first data source in the
+  project that is not public-domain/permissive; it is isolated in its own file
+  (`data/strongs-greek.*`) and attributed in the view. The underlying Strong's
+  1890 is public domain.
+
+**Pipeline.** `build/import-byz-interlinear.mjs` parses the CSVs into
+`[surface, Strong's, morphology]` tokens, aligning the surface form to the
+accented text already in `data/byz.json` when word counts match (all 7,953
+verses aligned, 0 fallbacks), and emits `data/byz-interlinear.{json,js}` and
+`data/strongs-greek.{json,js}`. 140,149 tokens, 100% gloss coverage.
+
+**UI.** An "Interlinear (Greek)" checkbox in the nav row. When ticked, the
+current chapter renders as per-verse word cards (Greek / transliteration /
+gloss / Strong's number, morphology in the tooltip), with the first selected
+translation as a caption. Transliteration is algorithmic (Greek → Latin; a
+rough breathing adds a leading "h"). The data (~4.3 MB + 160 KB) is lazily
+loaded via `<script>` tags on first use, so it works from `file://` and is
+runtime-cached by the service worker; only the Greek NT has data, so OT books
+show a notice. `CACHE_VERSION` bumped `v10` → `v11`.
+
+Built on branch `feature/greek-interlinear` (commit `0af6a04`) and merged into
+`main`. Known v1 rough edges: glosses are Strong's `kjv_def` lists (clamped to
+two lines, full text in the tooltip) rather than curated concise glosses, and
+the transliteration is approximate.
