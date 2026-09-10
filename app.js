@@ -158,10 +158,19 @@ class ReferenceParser {
 (() => {
   'use strict';
   const CONTEXT_RADIUS = 3;
-  const parser = new ReferenceParser(
-    MARANATHA_CANON,
-    MARANATHA_LOCALE_EN
-);
+
+  // UI locales: display names for the 73 books, used by the Book dropdown,
+  // the result headings, and the reference parser. Book IDs and canon order
+  // live in canon.js and never change with the locale, and translation text
+  // is unaffected. Adding a locale means adding its data/locales/<id>.js
+  // global to this list plus a matching <script> tag in index.html.
+  const LOCALES = [
+    { id: 'en', label: 'English', global: 'MARANATHA_LOCALE_EN' },
+    { id: 'hy', label: 'Հայերէն', global: 'MARANATHA_LOCALE_HY' },
+  ];
+
+  let locale = window.MARANATHA_LOCALE_EN;
+  let parser = new ReferenceParser(MARANATHA_CANON, locale);
 
 
   // MARANATHA_CANON is provided by data/canon.js (structure only: ids, testament,
@@ -185,7 +194,6 @@ class ReferenceParser {
   ];
 
   const canon = window.MARANATHA_CANON;
-  const locale = window.MARANATHA_LOCALE_EN;
 const refs = {
     reference: q('#reference'),
     referenceGo: q('#reference-go'),
@@ -194,6 +202,7 @@ const refs = {
     theme: q('#theme'),
     reading: q('#reading'),
     appearance: q('#appearance'),
+    language: q('#language'),
     layout: q('#layout'),
     go: q('#go-button'),
     results: q('#results'),
@@ -256,8 +265,18 @@ function init() {
         return;
     }
 
+    populateLanguages();
+    const startLocale = restoreLocale();
+    locale = localeById(startLocale);
+    parser = new ReferenceParser(canon, locale);
+    refs.language.value = startLocale;
+
     populateBooks();
     populateTranslationCheckboxes();
+
+    refs.language.addEventListener('change', () => {
+        setLocale(refs.language.value);
+    });
 
     refs.book.addEventListener('change', () => {
         setBrowseMode();
@@ -394,6 +413,45 @@ function init() {
           // Storage unavailable (e.g. strict file:// contexts) — appearance still applies for this session.
       }
       applyAppearance();
+  }
+
+  function localeById(id) {
+    const entry = LOCALES.find((l) => l.id === id);
+    return (entry && window[entry.global]) || window.MARANATHA_LOCALE_EN;
+  }
+
+  function populateLanguages() {
+    refs.language.innerHTML = '';
+    LOCALES.forEach((l) => {
+      if (!window[l.global]) return;
+      const opt = document.createElement('option');
+      opt.value = l.id;
+      opt.textContent = l.label;
+      refs.language.appendChild(opt);
+    });
+  }
+
+  function getStoredLocale() {
+    try { return localStorage.getItem('maranatha-locale'); } catch (error) { return null; }
+  }
+
+  function restoreLocale() {
+    const stored = getStoredLocale();
+    return LOCALES.some((l) => l.id === stored) ? stored : 'en';
+  }
+
+  // Switches the UI locale: rebuilds the reference parser (so book names are
+  // recognised in the new language), repopulates the Book dropdown, and
+  // re-renders headings. Canon structure and translation text are untouched.
+  function setLocale(id) {
+    const entry = LOCALES.find((l) => l.id === id);
+    if (!entry || !window[entry.global]) return;
+    locale = window[entry.global];
+    parser = new ReferenceParser(canon, locale);
+    refs.language.value = entry.id;
+    try { localStorage.setItem('maranatha-locale', entry.id); } catch (error) {}
+    populateBooks();
+    render();
   }
 
   function populateBooks() {

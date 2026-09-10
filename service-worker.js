@@ -35,7 +35,7 @@
 // the new shell. The update is therefore user-driven, not a silent replacement
 // mid-read.
 
-const CACHE_VERSION = 'v3';       // bump when shell files change
+const CACHE_VERSION = 'v4';       // bump when shell files change
 const DATA_CACHE_VERSION = 'v1';  // bump when translation data changes
 
 const SHELL_CACHE = `maranatha-shell-${CACHE_VERSION}`;
@@ -52,6 +52,7 @@ const SHELL_FILES = [
   './app.js',
   './data/canon.js',
   './data/locales/en.js',
+  './data/locales/hy.js',
   './manifest.json',
   './Armenian-cross_2.png',
   './fonts/SILEOT.ttf',
