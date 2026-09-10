@@ -801,3 +801,100 @@ or any literal `<w>`/`<seg>`/`<note>` tag. Closed.
   while five are registered in `app.js` (commit `04a6d9f`).
 
 All of the above was committed and pushed to `origin/main`.
+
+## 2026-09-10 — PWA offline support for the GitHub Pages deployment
+
+The desktop workflow has always been offline-first: opening `index.html`
+from disk needs no server and no network. On the phone, access had been a
+home-screen bookmark to the GitHub Pages URL, which is only a shortcut — with
+no connection there is nothing to load, so it fails. The goal was to give the
+phone the same offline behavior as the desktop.
+
+The app is now a Progressive Web App: `manifest.json`, a `service-worker.js`
+next to `index.html`, and a guarded registration snippet in `index.html`.
+Icons (`icons/icon-192.png`, `icon-512.png`, `apple-touch-icon.png`,
+`favicon-32.png`) were generated once from the existing 1024×1024
+`Armenian-cross_2.png` with Pillow (build-time tooling only; the generated PNGs
+are what is committed). `<head>` gained the manifest link, favicon,
+`apple-touch-icon`, Apple PWA meta tags, and a light/dark `theme-color` pair.
+
+### The service worker is gated to http/https only
+
+Service workers require a secure context and simply do not run under
+`file://` — but the registration script would still *execute* on desktop and
+throw a console error if it ran unguarded. So registration is wrapped in
+`if ('serviceWorker' in navigator && (location.protocol === 'https:' ||
+location.protocol === 'http:'))`, and `.register()` is also `.catch()`-ed.
+This is deliberate, not incidental: the guard is what keeps the phone feature
+from ever touching the desktop path. It should not be "simplified" away.
+Registration happens on `window`'s `load` event so it never competes with the
+initial render.
+
+### file:// desktop support must never be broken
+
+This is the load-bearing constraint of the whole project and predates the PWA
+work: `index.html` must open by bare double-click with zero server and zero
+network. It is the reason translation data is loaded through dynamically
+created `<script>` tags rather than `fetch()` — a decision already violated
+once and reverted (see Phase 2). The PWA addition preserves it exactly:
+because the browser never runs a service worker on `file://`, and because the
+registration is protocol-gated, the desktop experience is byte-for-byte
+unchanged. Any future change to the service worker or the registration snippet
+must be checked against this: desktop `file://` support is not negotiable.
+
+### Translation files are runtime-cached, not precached
+
+The total app is ~18.3 MB, and ~17.8 MB of that is the five large
+`data/*.js` translation files (`web`, `kjv`, `byz`, `he`, `armwestern`). Only
+the small application shell is precached on install — `index.html`,
+`style.css`, `app.js`, `data/canon.js`, `data/locales/en.js`, `manifest.json`,
+the two fonts, the four icons, and the header image (`Armenian-cross_2.png`,
+which the generic shell list omitted but which the header needs to render
+offline). That keeps first install small (~2 MB, mostly the header image)
+instead of downloading ~18 MB up front and re-downloading it on every cache
+version bump.
+
+The translation files are instead cached at **runtime, cache-first**: the
+first time the app actually loads one (when its checkbox is selected, or
+automatically for `web`, which is on by default), it is fetched over the
+network and stored, and is thereafter served from cache — including offline. A
+translation that is never opened while online is not available offline; this
+is the deliberate trade-off. `isTranslationFile()` matches `data/<id>.js` but
+excludes `data/canon.js` and `data/locales/en.js`, so those shell files are
+served from the shell cache rather than the runtime cache (without that
+exclusion, `canon.js` would be routed to an empty runtime cache and miss while
+offline even though it was precached).
+
+### Why the service worker's fetch() is not a violation of the no-fetch rule
+
+The service worker uses `fetch()` internally to populate its caches. That is
+an ordinary HTTPS request to GitHub Pages, and is unrelated to the project's
+absolute rule that `app.js` must never `fetch()` *local* data files under
+`file://`. A service worker cannot run under `file://` at all, so the two
+contexts can never meet. This note exists so a future reader does not "fix"
+the service worker by removing its `fetch()`, or relax the desktop rule on
+the mistaken belief that the two are connected.
+
+### Cache versioning and updates
+
+Two independent version constants exist: `CACHE_VERSION` for the shell and
+`DATA_CACHE_VERSION` for translation data. Keeping them separate means a
+routine shell tweak (CSS, `app.js`) does not force already-cached translations
+to re-download. `install` calls `self.skipWaiting()`; `activate` deletes any
+`maranatha-` cache not in the current keep-set and calls `self.clients.claim()`.
+After any deploy the relevant constant must be bumped, or the phone may keep
+serving the previous shell/data. GitHub Pages/CDN can also cache
+`service-worker.js` itself for a few minutes, so a new version may need a
+reload or two to be picked up.
+
+### Caveats to verify on the actual device
+
+- iOS has historically evicted PWA caches after periods of disuse and had
+  bugs with service workers on home-screen-installed PWAs; offline should work
+  but is not assumed permanent, and an occasional online open refreshes it.
+- None of this can be tested from `file://`; it only exists over HTTPS, so it
+  must be tested via the GitHub Pages URL (DevTools → Application → Service
+  Workers / Cache Storage) and then on the phone in airplane mode.
+
+Files: `manifest.json`, `service-worker.js`, `icons/` (four PNGs), and the
+`index.html` head/registration changes.
