@@ -1020,3 +1020,26 @@ field for every locale (which also added it to `en.json`/`en.js`). Verified
 headless with Chrome: with Armenian selected, the groups read
 `Հին Կտակարան` (first book `Ծննդոց`) and `Նոր Կտակարան` (first `Մատթէոս`).
 `CACHE_VERSION` bumped `v5` → `v6`.
+
+## 2026-09-10 — Reference parser upgrades
+
+`ReferenceParser` (`app.js`) gained four things:
+
+- **Book aliases.** The reserved `aliases` slot the constructor already read
+  was empty; English abbreviations/alternates now come from
+  `build/sources/locale-en.aliases.json` (158 aliases) and are merged into
+  `data/locales/en.json`/`en.js` by `build-locale.mjs`. `ReferenceParser.normalizeKey`
+  normalizes both the map keys and the user input — lowercase, leading Roman
+  numerals I/II/III → 1/2/3, leading 1st/2nd/3rd/4th dropped, periods /
+  apostrophes / hyphens / whitespace removed — so `I Cor.`, `1Cor`, `1 cor`
+  and `1st Corinthians` all resolve without a separate alias. Verified 0 key
+  collisions across 224 map keys.
+- **Open-ended ranges.** `Psalm 23:1-` now means "through the last verse"
+  (the range regex accepts a missing end and clamps it to the chapter length).
+- **Whole-book references.** A group with no chapter (`Jude`, `Genesis`)
+  resolves to the book's first chapter.
+- **All errors at once.** A multi-group query reports every malformed group in
+  one message instead of aborting on the first.
+
+Armenian references keep working unchanged (`Ծննդոց 1:1`, `Սաղմոս 23:1-`,
+`Ա Թագաւորաց 3:1`, …). `CACHE_VERSION` bumped `v6` → `v7` (shell change).
