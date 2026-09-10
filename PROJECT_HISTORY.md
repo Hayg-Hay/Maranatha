@@ -991,3 +991,19 @@ to the service-worker shell precache; `CACHE_VERSION` bumped `v3` → `v4`.
 `Ա Թագաւորաց 1:1`, `Երգ Երգոց`, and multi-word Pauline titles (e.g.
 `Թուղթ Առ Հռովմայեցիս 8`), and English still resolves under `en`. All 73 IDs
 are present in both locales with no duplicate names.
+
+## 2026-09-10 — Table "Verse" header was wrapping
+
+On a laptop, the results table's top-left header rendered as "Vers" / "e" on
+two lines instead of "Verse". The `.reference` column was `4rem` wide, which
+after the 1px borders and 18px padding left only ~44px of content — just under
+the rendered width of the word "Verse", so it wrapped. (The earlier mobile
+overlap fix had removed `white-space:nowrap` from `.reference` to stop verse
+numbers spilling into the next column; that is why the header was free to
+wrap.)
+
+Fix in `style.css`: `.reference` widened `4rem` → `4.75rem`, `th.reference`
+given `white-space:nowrap` (the short header always fits now, so nowrap cannot
+overflow), and the `max-width:700px` override raised `3.25rem` → `4rem`.
+Verified headless with Chrome (`--dump-dom`): `th.reference` measures 76px and
+now renders on a single line. `CACHE_VERSION` bumped `v4` → `v5` (shell file).
