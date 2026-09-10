@@ -896,5 +896,14 @@ reload or two to be picked up.
   must be tested via the GitHub Pages URL (DevTools → Application → Service
   Workers / Cache Storage) and then on the phone in airplane mode.
 
+### Confirmed on iOS
+
+Verified on the actual iPhone: after one online load and re-adding the
+home-screen icon, Maranatha opens and works with the phone in airplane mode —
+the app shell and the default WEB translation served from the service-worker
+cache. This closes the original complaint: the previous home-screen icon was
+only a bookmark to the GitHub Pages URL, so with no network there was nothing
+to load.
+
 Files: `manifest.json`, `service-worker.js`, `icons/` (four PNGs), and the
 `index.html` head/registration changes.
