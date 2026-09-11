@@ -1249,3 +1249,69 @@ blocks, first card `בְּרֵאשִׁ֖ית` → `bereʾshit` → gloss → `H7
 in the tooltip, RTL confirmed; the Hebrew-only notice appears on Matthew 1;
 Greek still renders (Matthew 1 first card `Βίβλος`/`G976`); with both boxes
 ticked, Genesis renders Hebrew and John renders Greek; 0 JS errors.
+
+## 2026-09-11 — Interlinear Read/Study modes (Hebrew, then Greek)
+
+The interlinear word cards were reworked so each language offers two display
+modes, chosen from a small dropdown that appears under that language's checkbox:
+**Reading — Interlinear** (the new default) and **Study — Interlinear** (the
+original dense card). BibleHub-style balance: reading first, lexical detail on
+demand.
+
+**Read mode** renders each word as an accessible `<button>` disclosure — word,
+transliteration, and a one-line short gloss, with a caret. Tapping/clicking it
+reveals a detail panel below the word row holding the definition, the KJV
+renderings, the Strong's number and the morphology. Multiple cards can be open
+at once (no accordion). The interaction is a real button with `aria-expanded`
+and `aria-controls`, so it is keyboard-, touch- and screen-reader-friendly, and
+the detail panels stack in word order so the RTL reading line never reflows.
+**Study mode** keeps the original four-part dense card (surface, transliteration,
+gloss, Strong's number) exactly as before.
+
+The mode is per-language, persisted in `localStorage`
+(`maranatha-interlinear-<key>-mode`) and defaults to reading. Hebrew shipped
+first (`feature/interlinear-hebrew-ui`, commit `919ade0`); Greek followed
+(`feature/interlinear-greek-ui`, commit `9adce80`), at which point the mode
+plumbing was generalised into `restoreInterlinearMode()`,
+`syncInterlinearModeVisibility()` and `setInterlinearMode()`, driven by
+`config.toggleRef` / `config.modeRef`, so a future interlinear opts in with
+`disclosure: true` plus those two refs. `CACHE_VERSION` bumped `v13` → `v15`
+across the two changes. Both branches were merged to `main` and deleted.
+
+Initial Read-mode glosses were derived from the first KJV `kjv_def` sense, which
+surfaced misleading glosses (`choose` for *bara'*, `common` for *erets*); that
+drove the definition fix recorded next.
+
+## 2026-09-11 — Interlinear glosses use the Strong's definition, not KJV renderings
+
+Read mode exposed a data-quality problem: *mayim* (H4325) rendered as `piss`.
+The gloss was the Strong's **`kjv_def`** field — not a definition but the
+alphabetical list of every way the KJV translators rendered the word ("piss"
+appears in 2 Kings 18:27 / Isaiah 36:12) — and the short-gloss heuristic took
+its first item.
+
+The importers now emit two maps per Strong's number in `data/strongs-hebrew.*`
+and `data/strongs-greek.*`: **`definitions`** (the neutral `strongs_def`, used
+for the Read gloss and the detail panel) and **`renderings`** (the `kjv_def`
+list, kept for Study mode and the detail panel). A handful of Greek entries
+split the definition across `derivation`/`strongs_def`; the importer rejoins
+them, so G2316 *theos* reads "a deity, …" rather than the continuation
+"figuratively, a magistrate…". The app's `shortGloss()` now works from the
+definition, skipping bare grammatical qualifiers ("properly", "figuratively",
+"by euphemism", …) and stripping parentheticals and surrounding quotes; the
+detail panel gained **Definition** and **KJV** rows.
+
+While regenerating, a latent bug surfaced: `build/import-byz-interlinear.mjs`
+split the CSVs on `\n` only, so on a CRLF checkout the line regex failed and it
+produced an **empty** Greek interlinear. The split is now `/\r?\n/`. With that
+fix the regenerated `byz-interlinear` and `he-interlinear` outputs are
+byte-identical to the committed ones — only the two Strong's files changed.
+
+Built on `fix/interlinear-gloss-definition` (commit `85a5811`), merged to `main`
+and deleted. `CACHE_VERSION` bumped `v15` → `v16` and `DATA_CACHE_VERSION`
+`v1` → `v2` (gloss data changed). Verified headless via jsdom: H4325 short gloss
+"water" with the full definition and the KJV list in the panel; *bara'* → "to
+create", G1722 → "in", G2316 → "a deity"; Study mode still shows the KJV list,
+and the Greek/Hebrew mode dropdowns and persistence work. One limitation
+remains: a few definitions resolve to a verbose first sense (H430 → "gods in the
+ordinary sense"); improving that needs a curated gloss mapping we do not have.
