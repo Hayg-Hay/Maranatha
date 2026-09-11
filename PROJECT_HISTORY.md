@@ -265,6 +265,46 @@ that: mobile responsiveness pass, full YaQuB-style multi-reference parsing
 (`5:20-` open-ended ranges, `;`-separated multiple references in one query),
 text search, richer navigation, and GitHub Pages deployment.
 
+## Phase 4 — Armenian interlinear: investigated, blocked on licensing
+
+Following the Greek and Hebrew interlinear work, an Armenian interlinear was
+investigated. One tagged source was found:
+`bible.armeniancathedral.org` (MWeb Studio / Arak29), presenting the 1895
+Bagratuni Classical Armenian text with per-word lemma, morphology, English
+gloss, and a custom numeric lexicon ID — structurally equivalent to the
+Greek/Hebrew interlinear data already in use, and covering the full Bible
+including the extended Armenian deuterocanon (3 Maccabees, 1 Esdras).
+
+The underlying 1895 text is public domain, but the word-level tagging and
+lexicon work is the site's own editorial contribution and is marked "All
+Rights Reserved" in its footer copyright notice. That conflicts with this
+project's standing rule of using only public-domain or permissively licensed
+sources (the single named exception being Open Scriptures' CC-BY-SA Strong's
+numbers). No free or openly licensed alternative with comparable tagging was
+found; several untagged Armenian text repositories exist (SWORD `ArmWestern`,
+`ArmEastern`, a few GitHub mirrors) but none carry morphology or gloss data.
+
+Secondary findings, relevant if permission is ever granted: the text is
+Classical/Grabar, not Western Armenian, so it would not merge with the
+existing `armwestern` NT and would need to stand alone; its lexicon uses a
+custom ID scheme rather than Strong's numbers, which fits the existing
+interlinear renderer as a distinct key prefix rather than requiring a new
+abstraction; and its book list and deuterocanon ordering differ from
+`canon.js` and would need the same kind of canonical-placement work OSHB
+required.
+
+The UI/data integration itself was scoped and found to be config-only within
+the existing `INTERLINEARS` abstraction (a new entry, a new
+`interlinearState` flag, one new checkbox, a transliteration helper, an
+`@font-face`, a service-worker cache bump) — no new architecture needed, just
+a source.
+
+Decision: do not build against this source. A permission request was sent to
+the contact address published in the site's footer, asking whether the
+tagging could be reused under a permissive or CC license, or exported
+specifically for this project. Outcome pending; this entry will be updated
+once a reply is received either way.
+
 ## Role of AI
 
 This project, like YaQuB before it, is AI-assisted. Claude built the canon
