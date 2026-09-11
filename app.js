@@ -258,6 +258,7 @@ const refs = {
     layout: q('#layout'),
     interlinear: q('#interlinear'),
     interlinearHe: q('#interlinear-he'),
+    interlinearGreekMode: q('#interlinear-greek-mode'),
     interlinearHeMode: q('#interlinear-he-mode'),
     go: q('#go-button'),
     results: q('#results'),
@@ -311,7 +312,11 @@ const refs = {
       sourceNote: 'Greek text: Robinson-Pierpont Byzantine (Unlicense) \u00b7 glosses: Strong\'s, Open Scriptures (CC-BY-SA).',
       surfaceClass: 'iw-greek',
       rtl: false,
+      lang: 'el',
       transliterate: transliterateGreek,
+      disclosure: true,
+      toggleRef: 'interlinear',
+      modeRef: 'interlinearGreekMode',
     },
     hebrew: {
       key: 'hebrew',
@@ -329,10 +334,12 @@ const refs = {
       lang: 'he',
       transliterate: transliterateHebrew,
       disclosure: true,
+      toggleRef: 'interlinearHe',
+      modeRef: 'interlinearHeMode',
     },
   };
   const interlinearState = {
-    greek: { enabled: false, status: 'idle' },  // 'idle' | 'loading' | 'loaded'
+    greek: { enabled: false, status: 'idle', mode: 'read' },  // mode: 'read' | 'study'
     hebrew: { enabled: false, status: 'idle', mode: 'read' },  // mode: 'read' | 'study'
   };
 
@@ -475,16 +482,21 @@ function init() {
     });
 
     refs.interlinear.addEventListener('change', () => {
+        syncInterlinearModeVisibility(INTERLINEARS.greek);
         onInterlinearToggle(INTERLINEARS.greek, refs.interlinear.checked);
     });
 
+    refs.interlinearGreekMode.addEventListener('change', () => {
+        setInterlinearMode(INTERLINEARS.greek, refs.interlinearGreekMode.value);
+    });
+
     refs.interlinearHe.addEventListener('change', () => {
-        syncHebrewModeVisibility();
+        syncInterlinearModeVisibility(INTERLINEARS.hebrew);
         onInterlinearToggle(INTERLINEARS.hebrew, refs.interlinearHe.checked);
     });
 
     refs.interlinearHeMode.addEventListener('change', () => {
-        setHebrewMode(refs.interlinearHeMode.value);
+        setInterlinearMode(INTERLINEARS.hebrew, refs.interlinearHeMode.value);
     });
 
     refs.contextBtn.addEventListener('click', () => {
@@ -510,8 +522,10 @@ function init() {
     setTheme();
     setReading();
     setFontSize();
-    restoreHebrewMode();
-    syncHebrewModeVisibility();
+    restoreInterlinearMode(INTERLINEARS.greek);
+    restoreInterlinearMode(INTERLINEARS.hebrew);
+    syncInterlinearModeVisibility(INTERLINEARS.greek);
+    syncInterlinearModeVisibility(INTERLINEARS.hebrew);
     render();
 }
 
@@ -552,38 +566,39 @@ function init() {
       applyAppearance();
   }
 
-  // Hebrew interlinear display mode: 'read' uses progressive-disclosure cards,
-  // 'study' uses the original dense lexicon cards. Hebrew-only for this
-  // experiment; the Greek path never consults this. Preference is persisted
-  // like the other settings and defaults to 'read'.
-  function getStoredHebrewMode() {
+  // Interlinear display mode, shared by Greek and Hebrew: 'read' uses
+  // progressive-disclosure cards, 'study' uses the original dense lexicon
+  // cards. Preference is persisted like the other settings and defaults to
+  // 'read'. A newly added interlinear opts in by setting `disclosure` and the
+  // toggle/mode element refs on its config.
+  function getStoredInterlinearMode(key) {
       try {
-          return localStorage.getItem('maranatha-interlinear-hebrew-mode') === 'study' ? 'study' : 'read';
+          return localStorage.getItem(`maranatha-interlinear-${key}-mode`) === 'study' ? 'study' : 'read';
       } catch (error) {
           return 'read';
       }
   }
 
-  function restoreHebrewMode() {
-      const mode = getStoredHebrewMode();
-      interlinearState.hebrew.mode = mode;
-      refs.interlinearHeMode.value = mode;
+  function restoreInterlinearMode(config) {
+      const mode = getStoredInterlinearMode(config.key);
+      interlinearState[config.key].mode = mode;
+      refs[config.modeRef].value = mode;
   }
 
-  function syncHebrewModeVisibility() {
-      refs.interlinearHeMode.hidden = !refs.interlinearHe.checked;
+  function syncInterlinearModeVisibility(config) {
+      refs[config.modeRef].hidden = !refs[config.toggleRef].checked;
   }
 
-  function setHebrewMode(mode) {
+  function setInterlinearMode(config, mode) {
       const value = mode === 'study' ? 'study' : 'read';
-      interlinearState.hebrew.mode = value;
-      refs.interlinearHeMode.value = value;
+      interlinearState[config.key].mode = value;
+      refs[config.modeRef].value = value;
       try {
-          localStorage.setItem('maranatha-interlinear-hebrew-mode', value);
+          localStorage.setItem(`maranatha-interlinear-${config.key}-mode`, value);
       } catch (error) {
           // Storage unavailable — the choice still applies for this session.
       }
-      if (interlinearState.hebrew.enabled) render();
+      if (interlinearState[config.key].enabled) render();
   }
 
   function localeById(id) {
@@ -1433,7 +1448,7 @@ function init() {
     return out;
   }
 
-  // Collapsed Hebrew cards show a single short gloss rather than the full
+  // Collapsed Read-mode cards show a single short gloss rather than the full
   // KJV-era Strong's definition. This derives that short form from the same
   // gloss string already in the data ("angels, [idiom] exceeding, God (gods)
   // ..." -> "angels") without altering the stored lexicon. Falls back to the
@@ -1450,11 +1465,11 @@ function init() {
     return cleaned || full;
   }
 
-  // Hebrew-only experiment: an accessible disclosure card. The button is the
-  // always-visible reading surface (word, transliteration, short gloss); the
-  // full gloss, Strong's id and morphology live in a detail panel that the
-  // button reveals. Independent per card (no accordion), keyboard/touch/SR
-  // friendly. Not used by the Greek path.
+  // Read-mode experiment (Greek and Hebrew): an accessible disclosure card.
+  // The button is the always-visible reading surface (word, transliteration,
+  // short gloss); the full gloss, Strong's id and morphology live in a detail
+  // panel that the button reveals. Independent per card (no accordion),
+  // keyboard/touch/SR friendly. Study mode does not use this builder.
   function buildDisclosureWord(config, surface, strongs, morph, gloss, detailId) {
     const button = document.createElement('button');
     button.type = 'button';

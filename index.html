@@ -76,8 +76,14 @@
         <button id="prev-chapter-button" type="button">&larr; Previous chapter</button>
         <button id="next-chapter-button" type="button">Next chapter &rarr;</button>
         <button id="go-button" type="button">Show</button>
-        <label class="inline-check"><input type="checkbox" id="interlinear"> Interlinear (Greek)</label>
-        <span class="interlinear-he-stack">
+        <span class="interlinear-mode-stack">
+          <label class="inline-check"><input type="checkbox" id="interlinear"> Interlinear (Greek)</label>
+          <select id="interlinear-greek-mode" aria-label="Greek interlinear mode" hidden>
+            <option value="read">Reading &mdash; Interlinear</option>
+            <option value="study">Study &mdash; Interlinear</option>
+          </select>
+        </span>
+        <span class="interlinear-mode-stack">
           <label class="inline-check"><input type="checkbox" id="interlinear-he"> Interlinear (Hebrew)</label>
           <select id="interlinear-he-mode" aria-label="Hebrew interlinear mode" hidden>
             <option value="read">Reading &mdash; Interlinear</option>

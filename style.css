@@ -259,8 +259,8 @@ footer { text-align:center; padding:0 18px 28px; color:var(--muted); font-size:.
 }
 .iw-detail-list dd { margin: 0; font-size: .82rem; color: var(--verse-ink); overflow-wrap: anywhere; }
 .nav-row label.inline-check { display: inline-flex; align-items: center; gap: 6px; }
-.interlinear-he-stack { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 4px; }
-.interlinear-he-stack select { align-self: stretch; }
+.interlinear-mode-stack { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.interlinear-mode-stack select { align-self: stretch; }
 
 @media (max-width:700px) {
   .compare-row { grid-template-columns: 1fr; }
