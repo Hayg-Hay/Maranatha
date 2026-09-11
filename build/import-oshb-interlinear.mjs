@@ -104,20 +104,28 @@ function main() {
   };
   writeData('he-interlinear', 'MARANATHA_INTERLINEAR_HE', interlinear);
 
-  // Strong's gloss dictionary (numbered Strong's -> concise gloss).
+  // Strong's gloss dictionary. Two maps per number: the neutral definition
+  // (`strongs_def`) used for the Read-mode gloss, and the KJV rendering list
+  // (`kjv_def`) kept for Study mode / expanded detail. Keeping them separate
+  // stops a KJV rendering such as "piss" (the alphabetical first item for
+  // H4325 mayim) from being shown as the word's definition.
   const dict = require(path.join(sourceDir, '..', 'strongs', 'strongs-hebrew-dictionary.js'));
-  const glosses = {};
+  const definitions = {};
+  const renderings = {};
   for (const [key, entry] of Object.entries(dict)) {
     const num = String(key).replace(/^H/, '');
-    const gloss = (entry.kjv_def || entry.strongs_def || '').trim();
-    if (gloss) glosses[num] = gloss;
+    const definition = (entry.strongs_def || '').trim();
+    const rendering = (entry.kjv_def || '').trim();
+    if (definition) definitions[num] = definition;
+    if (rendering) renderings[num] = rendering;
   }
   const strongsData = {
     source: 'openscriptures/strongs hebrew/strongs-hebrew-dictionary.js — Strong\'s definitions. Copyright 2009 Open Scriptures, CC-BY-SA.',
-    glosses,
+    definitions,
+    renderings,
   };
   writeData('strongs-hebrew', 'MARANATHA_STRONGS_HEBREW', strongsData);
-  console.log(`  glosses: ${Object.keys(glosses).length}`);
+  console.log(`  definitions: ${Object.keys(definitions).length}, renderings: ${Object.keys(renderings).length}`);
 }
 
 main();

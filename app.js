@@ -1448,29 +1448,37 @@ function init() {
     return out;
   }
 
-  // Collapsed Read-mode cards show a single short gloss rather than the full
-  // KJV-era Strong's definition. This derives that short form from the same
-  // gloss string already in the data ("angels, [idiom] exceeding, God (gods)
-  // ..." -> "angels") without altering the stored lexicon. Falls back to the
-  // full string if the first sense is empty after cleanup.
-  function shortGloss(full) {
-    if (!full) return '';
-    const first = full.split(/[,;]/)[0];
-    const cleaned = first
-      .replace(/\[[^\]]*\]/g, ' ')   // [idiom] and similar tags
-      .replace(/\([^)]*\)/g, ' ')    // parenthetical qualifiers
-      .replace(/^[\s\-–—.]+|[\s\-–—.]+$/g, '')
-      .replace(/\s+/g, ' ')
-      .trim();
-    return cleaned || full;
+  // Collapsed Read-mode cards show a single short gloss derived from the
+  // neutral Strong's definition, not the KJV rendering list. The definition
+  // often opens with a grammatical qualifier ("properly, ...", "figuratively,
+  // ..."), so the first sense that is not a bare qualifier is used — e.g.
+  // H4325 -> "water" rather than the KJV rendering "piss". Falls back to the
+  // full string if nothing usable is found.
+  function shortGloss(definition) {
+    if (!definition) return '';
+    const qualifier = /^(and|or|but|properly|literally|figuratively|by implication|by extension|by euphemism|by analogy|by Hebraism|specially|specifically|generally|especially|partitively|i\.e\.|that is|in a|used|compare)\b/i;
+    // Strip bracketed/parenthetical asides first: they can contain commas, so
+    // splitting before this would leave an unbalanced fragment.
+    const stripped = definition
+      .replace(/\([^)]*\)/g, ' ')
+      .replace(/\[[^\]]*\]/g, ' ');
+    for (const part of stripped.split(/[;,]/)) {
+      const cleaned = part
+        .replace(/^[\s"'\u2018\u2019\u201C\u201D\-–—.]+|[\s"'\u2018\u2019\u201C\u201D\-–—.]+$/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+      if (cleaned && !qualifier.test(cleaned)) return cleaned;
+    }
+    return definition;
   }
 
   // Read-mode experiment (Greek and Hebrew): an accessible disclosure card.
   // The button is the always-visible reading surface (word, transliteration,
-  // short gloss); the full gloss, Strong's id and morphology live in a detail
-  // panel that the button reveals. Independent per card (no accordion),
-  // keyboard/touch/SR friendly. Study mode does not use this builder.
-  function buildDisclosureWord(config, surface, strongs, morph, gloss, detailId) {
+  // short gloss); the neutral definition, KJV renderings, Strong's id and
+  // morphology live in a detail panel that the button reveals. Independent per
+  // card (no accordion), keyboard/touch/SR friendly. Study mode does not use
+  // this builder.
+  function buildDisclosureWord(config, surface, strongs, morph, definition, rendering, detailId) {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'iw iw-toggle';
@@ -1488,7 +1496,7 @@ function init() {
 
     const shortGlossEl = document.createElement('span');
     shortGlossEl.className = 'iw-gloss-short';
-    shortGlossEl.textContent = shortGloss(gloss);
+    shortGlossEl.textContent = shortGloss(definition);
 
     const caret = document.createElement('span');
     caret.className = 'iw-caret';
@@ -1511,7 +1519,8 @@ function init() {
     detail.appendChild(heading);
 
     const rows = [];
-    if (gloss) rows.push(['Gloss', gloss]);
+    if (definition) rows.push(['Definition', definition]);
+    if (rendering) rows.push(['KJV', rendering]);
     if (strongs) rows.push(['Strong\u2019s', config.strongsPrefix + strongs]);
     if (morph) rows.push(['Morphology', morph]);
     const dl = document.createElement('dl');
@@ -1541,9 +1550,15 @@ function init() {
     const chapterNum = Number(refs.chapter.value);
     const name = (locale.books[book.id] && locale.books[book.id].name) || book.id;
     const data = window[config.dataGlobal];
-    const glosses = (window[config.glossGlobal] && window[config.glossGlobal].glosses) || {};
-    // Progressive disclosure is a Hebrew experiment; study mode falls back to
-    // the original dense cards. Greek has no disclosure flag and is unaffected.
+    const strongsData = window[config.glossGlobal] || {};
+    // `definitions` is the neutral Strong's definition (Read-mode gloss and
+    // detail); `renderings` is the KJV rendering list (Study-mode card and the
+    // detail panel). The `glosses` fallback keeps an older cached data file
+    // working (both maps then resolve to the KJV list, as before).
+    const definitions = strongsData.definitions || strongsData.glosses || {};
+    const renderings = strongsData.renderings || strongsData.glosses || {};
+    // Progressive disclosure applies to the interlinears that opt in via
+    // `config.disclosure`; Study mode falls back to the original dense cards.
     const disclosure = !!config.disclosure && interlinearState[config.key].mode !== 'study';
 
     const head = document.createElement('div');
@@ -1600,11 +1615,12 @@ function init() {
       if (details) details.className = 'interlinear-details';
       for (let t = 0; t < tokens.length; t++) {
         const [surface, strongs, morph] = tokens[t];
-        const fullGloss = glosses[strongs] || '';
+        const definition = definitions[strongs] || '';
+        const rendering = renderings[strongs] || '';
 
         if (disclosure) {
           const detailId = `iw-detail-${book.id}-${chapterNum}-${verseNum}-${t}`;
-          const { button, detail } = buildDisclosureWord(config, surface, strongs, morph, fullGloss, detailId);
+          const { button, detail } = buildDisclosureWord(config, surface, strongs, morph, definition, rendering, detailId);
           words.appendChild(button);
           details.appendChild(detail);
           continue;
@@ -1623,8 +1639,8 @@ function init() {
 
         const gloss = document.createElement('span');
         gloss.className = 'iw-gloss';
-        gloss.textContent = fullGloss;
-        const glossTitle = [strongs ? config.strongsPrefix + strongs : '', fullGloss, morph].filter(Boolean).join(' \u00b7 ');
+        gloss.textContent = rendering;
+        const glossTitle = [strongs ? config.strongsPrefix + strongs : '', rendering, morph].filter(Boolean).join(' \u00b7 ');
         if (glossTitle) gloss.title = glossTitle;
 
         const meta = document.createElement('span');

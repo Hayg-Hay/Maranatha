@@ -86,7 +86,7 @@ function main() {
     const canonId = BOOK_MAP[base];
     if (!canonId) throw new Error(`Unmapped interlinear file: ${file}`);
 
-    const lines = fs.readFileSync(path.join(sourceDir, file), 'utf8').split('\n').filter(Boolean);
+    const lines = fs.readFileSync(path.join(sourceDir, file), 'utf8').split(/\r?\n/).filter(Boolean);
     if (!lines[0].startsWith('chapter,verse,text')) throw new Error(`${file}: unexpected header`);
 
     const chapters = [];
@@ -128,20 +128,44 @@ function main() {
   writeData('byz-interlinear', 'MARANATHA_INTERLINEAR_BYZ', interlinear);
   console.log(`  aligned to accented byz text: ${alignedVerses} verses; fallback (unaccented): ${fallbackVerses}`);
 
-  // Strong's gloss dictionary (numbered Strong's -> concise gloss).
+  // Strong's gloss dictionary. Two maps per number: the neutral definition
+  // (`strongs_def`) used for the Read-mode gloss, and the KJV rendering list
+  // (`kjv_def`) kept for Study mode / expanded detail. Keeping them separate
+  // stops a KJV rendering from being shown as the word's definition.
   const dict = require(path.join(sourceDir, '..', 'strongs', 'strongs-greek-dictionary.js'));
-  const glosses = {};
+  const definitions = {};
+  const renderings = {};
   for (const [key, entry] of Object.entries(dict)) {
     const num = String(key).replace(/^G/, '');
-    const gloss = (entry.kjv_def || entry.strongs_def || '').trim();
-    if (gloss) glosses[num] = gloss;
+    const definition = greekDefinition(entry);
+    const rendering = (entry.kjv_def || '').trim();
+    if (definition) definitions[num] = definition;
+    if (rendering) renderings[num] = rendering;
   }
   const strongsData = {
     source: 'openscriptures/strongs greek/strongs-greek-dictionary.js — Strong\'s definitions. Copyright 2009 Open Scriptures, CC-BY-SA.',
-    glosses,
+    definitions,
+    renderings,
   };
   writeData('strongs-greek', 'MARANATHA_STRONGS_GREEK', strongsData);
-  console.log(`  glosses: ${Object.keys(glosses).length}`);
+  console.log(`  definitions: ${Object.keys(definitions).length}, renderings: ${Object.keys(renderings).length}`);
+}
+
+// Open Scriptures splits a few Greek entries across fields: `derivation` holds
+// the etymology and, for a handful of words (e.g. G2316 theos), the opening of
+// the definition, which `strongs_def` then continues. Rejoin those so the
+// primary gloss reads "a deity..." rather than the continuation
+// "figuratively, a magistrate...".
+function greekDefinition(entry) {
+  const sd = (entry.strongs_def || '').trim();
+  const deriv = (entry.derivation || '').trim();
+  let lead = '';
+  const semi = deriv.indexOf(';');
+  if (semi !== -1 && /^(from|of)\b/i.test(deriv.slice(0, semi))) {
+    lead = deriv.slice(semi + 1).trim();
+  }
+  const combined = `${lead} ${sd}`.replace(/\s+/g, ' ').trim();
+  return combined || (entry.kjv_def || '').trim();
 }
 
 function writeData(id, globalName, data) {
