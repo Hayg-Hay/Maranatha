@@ -257,6 +257,7 @@ const refs = {
     language: q('#language'),
     layout: q('#layout'),
     interlinear: q('#interlinear'),
+    interlinearHe: q('#interlinear-he'),
     go: q('#go-button'),
     results: q('#results'),
     message: q('#message'),
@@ -287,10 +288,50 @@ const refs = {
   // ---------------------------------------------------------------------
   let contextEnabled = false;
 
-  // Greek interlinear view: a reading override (not a viewState mode) driven
-  // by the checkbox. Its data is large, so it is lazily loaded on first use.
-  let interlinearEnabled = false;
-  let interlinearStatus = 'idle'; // 'idle' | 'loading' | 'loaded'
+  // Interlinear views: reading overrides (not viewState modes) driven by the
+  // "Interlinear (Greek)" / "Interlinear (Hebrew)" checkboxes. Each one's data
+  // is large, so it is lazily loaded on first use. Both may be enabled at the
+  // same time — render() picks whichever matches the current book's testament
+  // (Greek for the NT, Hebrew for the OT). All three interlinear and the two
+  // Strong's dictionaries are loaded through dynamically created <script>
+  // tags, never fetch(), so they work under file:// and are runtime-cached by
+  // the service worker.
+  const INTERLINEARS = {
+    greek: {
+      key: 'greek',
+      loadingLabel: 'Greek',
+      dataGlobal: 'MARANATHA_INTERLINEAR_BYZ',
+      glossGlobal: 'MARANATHA_STRONGS_GREEK',
+      dataSources: ['data/byz-interlinear.js', 'data/strongs-greek.js'],
+      strongsPrefix: 'G',
+      testament: 'NT',
+      label: '(Greek interlinear)',
+      unavailable: 'Interlinear data is available for the Greek New Testament only.',
+      sourceNote: 'Greek text: Robinson-Pierpont Byzantine (Unlicense) \u00b7 glosses: Strong\'s, Open Scriptures (CC-BY-SA).',
+      surfaceClass: 'iw-greek',
+      rtl: false,
+      transliterate: transliterateGreek,
+    },
+    hebrew: {
+      key: 'hebrew',
+      loadingLabel: 'Hebrew',
+      dataGlobal: 'MARANATHA_INTERLINEAR_HE',
+      glossGlobal: 'MARANATHA_STRONGS_HEBREW',
+      dataSources: ['data/he-interlinear.js', 'data/strongs-hebrew.js'],
+      strongsPrefix: 'H',
+      testament: 'OT',
+      label: '(Hebrew interlinear)',
+      unavailable: 'Interlinear data is available for the Old Testament (Hebrew) only.',
+      sourceNote: 'Hebrew text: Open Scriptures Hebrew Bible (CC BY 4.0) \u00b7 glosses: Strong\'s, Open Scriptures (CC-BY-SA).',
+      surfaceClass: 'iw-hebrew',
+      rtl: true,
+      transliterate: transliterateHebrew,
+    },
+  };
+  const interlinearState = {
+    greek: { enabled: false, status: 'idle' },  // 'idle' | 'loading' | 'loaded'
+    hebrew: { enabled: false, status: 'idle' },
+  };
 
   // Per-block context overrides.  Each key is "${bookId}-${chapterNum}".
   // When a block has an entry here, its value overrides the global
@@ -431,19 +472,11 @@ function init() {
     });
 
     refs.interlinear.addEventListener('change', () => {
-        interlinearEnabled = refs.interlinear.checked;
-        if (!interlinearEnabled) {
-            render();
-            return;
-        }
-        if (interlinearStatus === 'loaded') {
-            render();
-        } else if (interlinearStatus !== 'loading') {
-            setMessage('Loading Greek interlinear…');
-            loadInterlinearData(() => {
-                render();
-            });
-        }
+        onInterlinearToggle(INTERLINEARS.greek, refs.interlinear.checked);
+    });
+
+    refs.interlinearHe.addEventListener('change', () => {
+        onInterlinearToggle(INTERLINEARS.hebrew, refs.interlinearHe.checked);
     });
 
     refs.contextBtn.addEventListener('click', () => {
@@ -1235,23 +1268,41 @@ function init() {
   // Interlinear checkbox is first ticked.
   // ---------------------------------------------------------------------
 
-  function loadInterlinearData(onReady) {
-    interlinearStatus = 'loading';
-    const sources = ['data/byz-interlinear.js', 'data/strongs-greek.js'];
-    let remaining = sources.length;
+  // Toggle handler shared by the two interlinear checkboxes.
+  function onInterlinearToggle(config, checked) {
+    const state = interlinearState[config.key];
+    state.enabled = checked;
+    if (!checked) {
+      render();
+      return;
+    }
+    if (state.status === 'loaded') {
+      render();
+    } else if (state.status !== 'loading') {
+      setMessage(`Loading ${config.loadingLabel} interlinear\u2026`);
+      loadInterlinearData(config, () => {
+        render();
+      });
+    }
+  }
+
+  function loadInterlinearData(config, onReady) {
+    const state = interlinearState[config.key];
+    state.status = 'loading';
+    let remaining = config.dataSources.length;
     let failed = false;
-    for (const src of sources) {
+    for (const src of config.dataSources) {
       const script = document.createElement('script');
       script.src = src;
       script.onload = () => {
         if (--remaining === 0 && !failed) {
-          interlinearStatus = 'loaded';
+          state.status = 'loaded';
           onReady();
         }
       };
       script.onerror = () => {
         failed = true;
-        interlinearStatus = 'idle';
+        state.status = 'idle';
         setMessage(`Could not load ${src}.`);
       };
       document.head.appendChild(script);
@@ -1284,20 +1335,74 @@ function init() {
     return (rough ? 'h' : '') + out;
   }
 
-  function renderInterlinear(translations) {
+  // Hebrew -> Latin transliteration of the (pointed) surface form. Cantillation
+  // and meteg are dropped, niqqud becomes vowels, and dagesh / shin-dot /
+  // sin-dot change the consonant. Vav + dagesh is read as shureq (u) and vav +
+  // holam as o. Approximate, like the Greek transliteration above.
+  function transliterateHebrew(text) {
+    const consonants = {
+      '\u05D0': '\u02be', '\u05D1': 'b', '\u05D2': 'g', '\u05D3': 'd',
+      '\u05D4': 'h', '\u05D5': 'v', '\u05D6': 'z', '\u05D7': '\u1E25',
+      '\u05D8': 't', '\u05D9': 'y', '\u05DB': 'k', '\u05DA': 'k',
+      '\u05DC': 'l', '\u05DE': 'm', '\u05DD': 'm', '\u05E0': 'n',
+      '\u05DF': 'n', '\u05E1': 's', '\u05E2': '\u02BF', '\u05E4': 'p',
+      '\u05E3': 'p', '\u05E6': 'ts', '\u05E5': 'ts', '\u05E7': 'q',
+      '\u05E8': 'r', '\u05E9': 'sh', '\u05EA': 't',
+    };
+    const vowels = {
+      '\u05B0': 'e', '\u05B1': 'e', '\u05B2': 'a', '\u05B3': 'o',
+      '\u05B4': 'i', '\u05B5': 'e', '\u05B6': 'e', '\u05B7': 'a',
+      '\u05B8': 'a', '\u05B9': 'o', '\u05BB': 'u', '\u05C7': 'a',
+    };
+    const isMark = (ch) => ch >= '\u0591' && ch <= '\u05C7';
+    const chars = [...text.replace(/[\u0591-\u05AF\u05BD]/g, '')];
+    let out = '';
+    for (let i = 0; i < chars.length; i++) {
+      const ch = chars[i];
+      if (!consonants[ch]) {
+        if (vowels[ch]) out += vowels[ch];
+        else if (!isMark(ch)) out += ch;
+        continue;
+      }
+      let cluster = '';
+      while (i + 1 < chars.length && isMark(chars[i + 1])) cluster += chars[++i];
+
+      const dagesh = cluster.includes('\u05BC');
+      if (ch === '\u05D5' && dagesh) { out += 'u'; continue; }       // shureq
+      if (ch === '\u05D5' && cluster.includes('\u05B9')) { out += 'o'; continue; }
+      // A yod with no vowel point and no dagesh is a mater lectionis (the
+      // preceding letter already supplies the vowel), so it is not sounded.
+      if (ch === '\u05D9' && !dagesh && ![...cluster].some((m) => vowels[m])) continue;
+
+      let consonant = consonants[ch];
+      if (ch === '\u05E9') consonant = cluster.includes('\u05C2') ? 's' : 'sh';
+      else if (ch === '\u05D1') consonant = dagesh ? 'b' : 'v';
+      else if (ch === '\u05DB' || ch === '\u05DA') consonant = dagesh ? 'k' : 'kh';
+      else if (ch === '\u05E4' || ch === '\u05E3') consonant = dagesh ? 'p' : 'f';
+
+      let vowel = '';
+      for (const m of cluster) {
+        if (vowels[m]) { vowel = vowels[m]; break; }
+      }
+      out += consonant + vowel;
+    }
+    return out;
+  }
+
+  function renderInterlinear(config, translations) {
     const book = currentBook();
     if (!book) return;
     const chapterNum = Number(refs.chapter.value);
     const name = (locale.books[book.id] && locale.books[book.id].name) || book.id;
-    const data = window.MARANATHA_INTERLINEAR_BYZ;
-    const glosses = (window.MARANATHA_STRONGS_GREEK && window.MARANATHA_STRONGS_GREEK.glosses) || {};
+    const data = window[config.dataGlobal];
+    const glosses = (window[config.glossGlobal] && window[config.glossGlobal].glosses) || {};
 
     const head = document.createElement('div');
     head.className = 'result-head';
     const h2 = document.createElement('h2');
     h2.append(`${name} ${chapterNum} `);
     const small = document.createElement('small');
-    small.textContent = '(Greek interlinear)';
+    small.textContent = config.label;
     h2.appendChild(small);
     head.appendChild(h2);
     refs.results.appendChild(head);
@@ -1306,7 +1411,7 @@ function init() {
     if (!verses) {
       const empty = document.createElement('p');
       empty.className = 'empty';
-      empty.textContent = 'Interlinear data is available for the Greek New Testament only.';
+      empty.textContent = config.unavailable;
       refs.results.appendChild(empty);
       return;
     }
@@ -1333,6 +1438,7 @@ function init() {
         if (ttext) {
           const caption = document.createElement('div');
           caption.className = 'interlinear-caption';
+          caption.dir = 'auto';
           caption.textContent = ttext;
           block.appendChild(caption);
         }
@@ -1340,29 +1446,30 @@ function init() {
 
       const words = document.createElement('div');
       words.className = 'interlinear-words';
+      if (config.rtl) words.dir = 'rtl';
       for (const [surface, strongs, morph] of tokens) {
         const card = document.createElement('span');
         card.className = 'iw';
 
-        const greek = document.createElement('span');
-        greek.className = 'iw-greek';
-        greek.textContent = surface;
+        const surfaceSpan = document.createElement('span');
+        surfaceSpan.className = config.surfaceClass;
+        surfaceSpan.textContent = surface;
 
         const translit = document.createElement('span');
         translit.className = 'iw-translit';
-        translit.textContent = transliterateGreek(surface);
+        translit.textContent = config.transliterate(surface);
 
         const gloss = document.createElement('span');
         gloss.className = 'iw-gloss';
         gloss.textContent = glosses[strongs] || '';
-        const glossTitle = [strongs ? 'G' + strongs : '', glosses[strongs] || '', morph].filter(Boolean).join(' \u00b7 ');
+        const glossTitle = [strongs ? config.strongsPrefix + strongs : '', glosses[strongs] || '', morph].filter(Boolean).join(' \u00b7 ');
         if (glossTitle) gloss.title = glossTitle;
 
         const meta = document.createElement('span');
         meta.className = 'iw-meta';
-        meta.textContent = strongs ? 'G' + strongs : '';
+        meta.textContent = strongs ? config.strongsPrefix + strongs : '';
 
-        card.append(greek, translit, gloss, meta);
+        card.append(surfaceSpan, translit, gloss, meta);
         words.appendChild(card);
       }
       block.appendChild(words);
@@ -1371,8 +1478,21 @@ function init() {
 
     const note = document.createElement('p');
     note.className = 'interlinear-source';
-    note.textContent = 'Greek text: Robinson-Pierpont Byzantine (Unlicense) \u00b7 glosses: Strong\'s, Open Scriptures (CC-BY-SA).';
+    note.textContent = config.sourceNote;
     refs.results.appendChild(note);
+  }
+
+  // Which interlinear, if any, should be shown for the current book. When both
+  // checkboxes are ticked the current book's testament decides.
+  function activeInterlinear() {
+    const book = currentBook();
+    const isNT = !!(book && book.testament === 'NT');
+    if (interlinearState.greek.enabled && interlinearState.hebrew.enabled) {
+      return isNT ? INTERLINEARS.greek : INTERLINEARS.hebrew;
+    }
+    if (interlinearState.greek.enabled) return INTERLINEARS.greek;
+    if (interlinearState.hebrew.enabled) return INTERLINEARS.hebrew;
+    return null;
   }
 
   function render() {
@@ -1380,12 +1500,14 @@ function init() {
 
     refs.results.innerHTML = '';
 
-    // Interlinear overrides the normal reading view (works even with no
-    // translation selected — a selected one is used only as a caption).
-    if (interlinearEnabled) {
+    // An interlinear overrides the normal reading view (works even with no
+    // translation selected — a selected one is used only as a caption). If
+    // both checkboxes are ticked, the current book's testament decides.
+    const interlinear = activeInterlinear();
+    if (interlinear) {
       setMessage('');
       refs.contextBtn.style.display = 'none';
-      renderInterlinear(translations);
+      renderInterlinear(interlinear, translations);
       return;
     }
 

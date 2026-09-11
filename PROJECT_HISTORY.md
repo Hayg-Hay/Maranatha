@@ -1151,3 +1151,61 @@ Built on branch `feature/greek-interlinear` (commit `0af6a04`) and merged into
 `main`. Known v1 rough edges: glosses are Strong's `kjv_def` lists (clamped to
 two lines, full text in the tooltip) rather than curated concise glosses, and
 the transliteration is approximate.
+
+## 2026-09-11 — Silence CSS validator warning from the interlinear gloss clamp
+
+The Greek interlinear's `.iw-gloss` rule (added in `0af6a04`) used
+`-webkit-line-clamp` without the now-standardized `line-clamp`, which made
+VS Code's built-in CSS language service flag `style.css` with one warning
+("Also define the standard property 'line-clamp' for compatibility"). Added
+`line-clamp: 2;` alongside the `-webkit-` fallback so the warning clears while
+WebKit/Bink still use the prefixed form. Behaviour is unchanged. `style.css` is
+a shell file, so `CACHE_VERSION` bumped `v11` → `v12`.
+
+## 2026-09-11 — Hebrew interlinear reader
+
+Added the Hebrew counterpart to the Greek interlinear, covering the 39
+protocanonical Old Testament books. Built on branch `feature/hebrew-interlinear`
+(uncommitted as of this entry).
+
+**Source.** Per-word tagging already exists in the OSHB OSIS XML the `he`
+translation is built from: every `<w>` carries `@lemma`, `@morph`, and often
+`@n`. `build/import-oshb.mjs`'s `extractVerseTextFromXML()` became
+`extractVersePartsFromXML()`, which returns `{ text, tokens }` in one pass —
+`text` is exactly what `he` displays, `tokens` is one
+`[surface, Strong's, morphology]` entry per `<w>` in document order. The old
+function is kept as a thin wrapper for the existing callers. Strong's is the
+single numeric lemma component (`b/7225` → `7225`, `1254 a` → `1254`); `<seg>`
+punctuation (maqaf, sof pasuq, paseq) contributes to `text` but is never a
+token, so a maqaf-joined pair stays two cards.
+
+**Pipeline.** `build/import-oshb-interlinear.mjs` reuses the exact versification
+engine in `import-oshb.mjs` (`collectVerses` → `placeAllVerses` →
+`buildOutput`, now exported) instead of re-implementing the Masoretic →
+Christian mapping, so the interlinear tokens land in the same slots as
+`data/he.json` — the two outputs share one source of truth. `placeAllVerses()`
+writes text and tokens in lockstep through every branch (PLACE, REPLACE, MERGE,
+and the reverse-order cross-chapter merge). Output: `data/he-interlinear.{json,js}`
+(11.4 MB; 39 books, 23,143 verses, 306,271 tokens) and
+`data/strongs-hebrew.{json,js}`, from the cached
+`build/sources/strongs/strongs-hebrew-dictionary.js` (Open Scriptures, CC-BY-SA;
+8,674 glosses). `font` and rendering data are otherwise unchanged.
+
+**UI.** A second "Interlinear (Hebrew)" checkbox. The two interlinear views are
+now a table (`INTERLINEARS.greek` / `INTERLINEARS.hebrew`) plus
+`interlinearState`, so `render()` calls one shared `renderInterlinear(config, …)`.
+When both boxes are ticked the current book's testament decides
+(`activeInterlinear()`): Hebrew for the OT, Greek for the NT. Hebrew cells use
+`.iw-hebrew` (Ezra SIL), the word list is `dir="rtl"`, and a new
+`transliterateHebrew()` maps the pointed surface form to Latin (dagesh changes
+bet/kaf/pe, shin/sin dot changes shin, vav+dagesh is shureq `u`, vav+holam is
+`o`, and a vowel-less yod is treated as a mater lectionis). The data
+(~11.6 MB + 314 KB) is lazily loaded via `<script>` tags on first use, so it
+works from `file://` and is runtime-cached by the service worker; an OT-only
+notice shows on NT books and vice versa. `CACHE_VERSION` bumped `v12` → `v13`.
+
+**Verified** headless with Chrome (`--dump-dom`): Genesis 1 renders 31 verse
+blocks, first card `בְּרֵאשִׁ֖ית` → `bereʾshit` → gloss → `H7225` with `HR/Ncfsa`
+in the tooltip, RTL confirmed; the Hebrew-only notice appears on Matthew 1;
+Greek still renders (Matthew 1 first card `Βίβλος`/`G976`); with both boxes
+ticked, Genesis renders Hebrew and John renders Greek; 0 JS errors.

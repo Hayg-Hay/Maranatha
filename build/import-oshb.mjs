@@ -38,7 +38,7 @@ const dir = path.dirname(fileURLToPath(import.meta.url));
 const sourceDir = path.join(dir, 'sources', 'oshb');
 
 // OSIS book filename (without .xml) → Maranatha canon ID
-const OSIS_TO_CANON = {
+export const OSIS_TO_CANON = {
   'Gen':   'GEN', 'Exod':  'EXO', 'Lev':   'LEV', 'Num':   'NUM',
   'Deut':  'DEU', 'Josh':  'JOS', 'Judg':  'JDG', 'Ruth':  'RUT',
   '1Sam':  '1SA', '2Sam':  '2SA', '1Kgs':  '1KI', '2Kgs':  '2KI',
@@ -54,7 +54,7 @@ const OSIS_TO_CANON = {
 // KJV book abbreviation → Maranatha canon ID.
 // Built from import-kjv.mjs's BOOK_ORDER. The KJV notes in OSHB XML use
 // KJV abbreviations which differ from OSIS abbreviations.
-const KJV_TO_CANON = {
+export const KJV_TO_CANON = {
   'Gen':   'GEN', 'Exod':  'EXO', 'Lev':   'LEV', 'Num':   'NUM',
   'Deut':  'DEU', 'Josh':  'JOS', 'Judg':  'JDG', 'Ruth':  'RUT',
   '1Sam':  '1SA', '2Sam':  '2SA', '1Kgs':  '1KI', '2Kgs':  '2KI',
@@ -75,9 +75,22 @@ const EXPECTED_FILES = 39;
 
 /**
  * Given the raw XML string content of a single <verse> element (including its
- * opening and closing tags), extract the reconstructed surface text.
+ * opening and closing tags), extract the reconstructed surface text AND the
+ * per-word interlinear tokens in one pass.
+ *
+ * Returns { text, tokens }:
+ *   text   — the verse text the `he` translation displays (maqaf/sof-pasuq/
+ *            paseq punctuation included, each <w>'s internal "/" removed).
+ *   tokens — one [surface, strongs, morph] entry per <w> element, in document
+ *            order. strongs is the single numeric lemma component (OSHB lemmas
+ *            carry at most one number, e.g. "b/7225" → "7225", "1254 a" →
+ *            "1254") or '' when the word has none (prefix+pronoun forms such
+ *            as ל֔וֹ). morph is the raw parsing code (e.g. "HR/Ncfsa"). The
+ *            <seg> punctuation is part of `text` but never a token, so a
+ *            maqaf-joined pair stays two cards.
  */
-function extractVerseTextFromXML(verseXml) {
+export function extractVersePartsFromXML(verseXml) {
+  const textTokens = [];
   const tokens = [];
   let lastWasMaqaf = false;
 
@@ -95,48 +108,62 @@ function extractVerseTextFromXML(verseXml) {
       // the slash/whitespace cleanup. Without this, the raw markup leaks into
       // the surface text — and the slash-strip below turns the closing </seg>
       // into a literal <seg>.
-      let text = content
+      const surface = content
         .replace(/<[^>]+>/g, '')
         .replace(/\//g, '')
         .replace(/\s+/g, ' ')
         .trim();
-      if (!text) continue;
+      if (!surface) continue;
 
-      if (tokens.length > 0 && !lastWasMaqaf) {
-        tokens.push(' ');
+      if (textTokens.length > 0 && !lastWasMaqaf) {
+        textTokens.push(' ');
       }
 
-      tokens.push(text);
+      textTokens.push(surface);
       lastWasMaqaf = false;
+
+      const lemma = (attrs.match(/lemma="([^"]*)"/) || [])[1] || '';
+      const numMatch = lemma.match(/\d+/);
+      const strongs = numMatch ? numMatch[0] : '';
+      const morph = (attrs.match(/morph="([^"]*)"/) || [])[1] || '';
+      tokens.push([surface, strongs, morph]);
     } else if (tag === 'seg') {
       const typeMatch = attrs.match(/type\s*=\s*"([^"]*)"/);
       const type = typeMatch ? typeMatch[1] : '';
       let segText = content.replace(/\s+/g, ' ').trim();
 
       if (type === 'x-maqqef') {
-        tokens.push(segText);
+        textTokens.push(segText);
         lastWasMaqaf = true;
       } else if (type === 'x-sof-pasuq') {
-        tokens.push(segText);
+        textTokens.push(segText);
         lastWasMaqaf = false;
       } else if (type === 'x-paseq') {
-        if (tokens.length > 0) tokens.push(' ');
-        tokens.push(segText);
-        tokens.push(' ');
+        if (textTokens.length > 0) textTokens.push(' ');
+        textTokens.push(segText);
+        textTokens.push(' ');
         lastWasMaqaf = false;
       } else if (type === 'x-pe' || type === 'x-samekh') {
         // paragraph markers — skip
       } else {
         if (segText) {
-          if (tokens.length > 0 && !lastWasMaqaf) tokens.push(' ');
-          tokens.push(segText);
+          if (textTokens.length > 0 && !lastWasMaqaf) textTokens.push(' ');
+          textTokens.push(segText);
           lastWasMaqaf = false;
         }
       }
     }
   }
 
-  return tokens.join('').replace(/\s{2,}/g, ' ').trim();
+  return {
+    text: textTokens.join('').replace(/\s{2,}/g, ' ').trim(),
+    tokens,
+  };
+}
+
+/** Text-only wrapper (pre-existing callers). */
+export function extractVerseTextFromXML(verseXml) {
+  return extractVersePartsFromXML(verseXml).text;
 }
 
 // ==========================================================================
@@ -148,7 +175,7 @@ function extractVerseTextFromXML(verseXml) {
  * Each verse object: { osisBook, osisChapter, osisVerse, text, kjvNote, osisID }
  * where kjvNote is null or { book, chapter, verse }.
  */
-function collectVerses(xmlContent, osisBook) {
+export function collectVerses(xmlContent, osisBook) {
   const parser = new XMLParser({
     ignoreAttributes: false,
     attributeNamePrefix: '@_',
@@ -207,9 +234,9 @@ function collectVerses(xmlContent, osisBook) {
       if (!verseParts) continue;
       const verseNum = parseInt(verseParts[1]);
 
-      // Extract Hebrew text
-      const text = extractVerseTextFromXML(verseXml);
-      if (!text) continue;
+      // Extract Hebrew text and interlinear tokens in one pass.
+      const parts = extractVersePartsFromXML(verseXml);
+      if (!parts.text) continue;
 
       // Parse KJV note if present
       let kjvNote = null;
@@ -248,28 +275,30 @@ function collectVerses(xmlContent, osisBook) {
         const beforeXml = verseBody.substring(0, noteStart);
         const afterXml = verseBody.substring(noteEnd);
 
-        const beforeText = extractVerseTextFromXML(beforeXml);
-        const afterText = extractVerseTextFromXML(afterXml);
+        const beforeParts = extractVersePartsFromXML(beforeXml);
+        const afterParts = extractVersePartsFromXML(afterXml);
 
         // Verse object 1: text before the note — no KJV note, maps 1:1
-        if (beforeText) {
+        if (beforeParts.text) {
           allVerses.push({
             osisBook,
             osisChapter: chapterNum,
             osisVerse: verseNum,
-            text: beforeText,
+            text: beforeParts.text,
+            tokens: beforeParts.tokens,
             kjvNote: null,
             osisID: verseID + ' (before split)',
           });
         }
 
         // Verse object 2: text after the note — goes to KJV destination
-        if (afterText) {
+        if (afterParts.text) {
           allVerses.push({
             osisBook,
             osisChapter: chapterNum,
             osisVerse: verseNum,
-            text: afterText,
+            text: afterParts.text,
+            tokens: afterParts.tokens,
             kjvNote: kjvNote,
             osisID: verseID + ' (after split)',
           });
@@ -280,7 +309,8 @@ function collectVerses(xmlContent, osisBook) {
           osisBook,
           osisChapter: chapterNum,
           osisVerse: verseNum,
-          text,
+          text: parts.text,
+          tokens: parts.tokens,
           kjvNote,
           osisID: verseID,
         });
@@ -338,11 +368,14 @@ function slotKey(canonBook, chapter, verse) {
  *
  * Returns { books: { canonBookId: { chapterNum: [verseText, ...] } }, errors: [...] }
  */
-function placeAllVerses(allVerses) {
-  // output: { canonBookId: { chapterNum: [verseText, ...] } }
-  // Stored as sparse objects during placement for slot-level access
+export function placeAllVerses(allVerses) {
+  // output: { canonBookId: { chapterNum: [verseText | tokens, ...] } }
+  // `books` holds text (what the `he` translation displays); `bookTokens`
+  // holds the parallel sparse [surface, strongs, morph] arrays for the Hebrew
+  // interlinear. Both are written in lockstep so their slot keys always agree.
   const books = {};
-  // Track metadata for each slot: { text, hasKJVNote, osisID }
+  const bookTokens = {};
+  // Track metadata for each slot: { text, tokens, hasKJVNote, osisID }
   const slotMeta = {}; // key → metadata
   const errors = [];
 
@@ -358,21 +391,28 @@ function placeAllVerses(allVerses) {
     // Ensure output structures exist
     if (!books[dest.canonBook]) books[dest.canonBook] = {};
     if (!books[dest.canonBook][dest.chapter]) books[dest.canonBook][dest.chapter] = [];
+    if (!bookTokens[dest.canonBook]) bookTokens[dest.canonBook] = {};
+    if (!bookTokens[dest.canonBook][dest.chapter]) bookTokens[dest.canonBook][dest.chapter] = [];
 
     const key = slotKey(dest.canonBook, dest.chapter, dest.verse);
-    // Helper: write text into the books structure
-    function storeVerse(canonBook, chapter, verseNum, text) {
+    // Helper: write text and tokens into the parallel books structure
+    function storeVerse(canonBook, chapter, verseNum, text, tokens) {
       const arr = books[canonBook][chapter];
       // Expand array if needed (verseNum is 1-indexed)
       while (arr.length < verseNum) arr.push('');
       arr[verseNum - 1] = text;
+
+      const tarr = bookTokens[canonBook][chapter];
+      while (tarr.length < verseNum) tarr.push(null);
+      tarr[verseNum - 1] = tokens || [];
     }
 
     if (!slotMeta[key]) {
       // PLACE — slot is empty
-      storeVerse(dest.canonBook, dest.chapter, dest.verse, verse.text);
+      storeVerse(dest.canonBook, dest.chapter, dest.verse, verse.text, verse.tokens);
       slotMeta[key] = {
         text: verse.text,
+        tokens: verse.tokens || [],
         hasKJVNote: !!verse.kjvNote,
         osisID: verse.osisID,
         osisBook: verse.osisBook,
@@ -407,9 +447,11 @@ function placeAllVerses(allVerses) {
         if (sameBook && crossChapterSuccessor) {
           // Reverse-order cross-chapter merge
           const mergedText = existing.text + ' ' + verse.text;
-          storeVerse(dest.canonBook, dest.chapter, dest.verse, mergedText);
+          const mergedTokens = (existing.tokens || []).concat(verse.tokens || []);
+          storeVerse(dest.canonBook, dest.chapter, dest.verse, mergedText, mergedTokens);
           slotMeta[key] = {
             text: mergedText,
+            tokens: mergedTokens,
             hasKJVNote: true,
             osisID: existing.osisID + '+' + verse.osisID,
             osisBook: existing.osisBook,
@@ -419,9 +461,10 @@ function placeAllVerses(allVerses) {
           merged++;
         } else {
           // REPLACE — no merge relationship, just superscription/cascade
-          storeVerse(dest.canonBook, dest.chapter, dest.verse, verse.text);
+          storeVerse(dest.canonBook, dest.chapter, dest.verse, verse.text, verse.tokens);
           slotMeta[key] = {
             text: verse.text,
+            tokens: verse.tokens || [],
             hasKJVNote: true,
             osisID: verse.osisID,
             osisBook: verse.osisBook,
@@ -450,9 +493,11 @@ function placeAllVerses(allVerses) {
         if (sameBook && consecutiveVerses) {
           // MERGE — concatenate the successor text
           const mergedText = existing.text + ' ' + verse.text;
-          storeVerse(dest.canonBook, dest.chapter, dest.verse, mergedText);
+          const mergedTokens = (existing.tokens || []).concat(verse.tokens || []);
+          storeVerse(dest.canonBook, dest.chapter, dest.verse, mergedText, mergedTokens);
           slotMeta[key] = {
             text: mergedText,
+            tokens: mergedTokens,
             hasKJVNote: true,
             osisID: existing.osisID + '+' + verse.osisID,
             osisBook: existing.osisBook,
@@ -483,7 +528,7 @@ function placeAllVerses(allVerses) {
     }
   }
 
-  return { books, slotMeta, errors, stats: { placed, replaced, merged, errors: errors.length } };
+  return { books, bookTokens, slotMeta, errors, stats: { placed, replaced, merged, errors: errors.length } };
 }
 
 // ==========================================================================
@@ -494,7 +539,7 @@ function placeAllVerses(allVerses) {
  * Convert sparse slot storage to Maranatha's array-of-arrays format
  * expected by writeTranslation: books[canonId] = [[chapter1verses], ...]
  */
-function buildOutput(books, slotMeta, canonById) {
+export function buildOutput(books, slotMeta, canonById) {
   const outputBooks = {};
 
   for (const [canonBookId, chapterData] of Object.entries(books)) {
@@ -620,4 +665,9 @@ function main() {
   console.log(`\nDone. Next: node build/validate.mjs data/he.json`);
 }
 
-main();
+// Run only when executed directly (`node build/import-oshb.mjs`). When this
+// module is imported by the Hebrew interlinear importer, the pure engine
+// functions above are reused without regenerating data/he.json.
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  main();
+}

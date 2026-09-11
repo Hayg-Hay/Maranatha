@@ -209,10 +209,12 @@ footer { text-align:center; padding:0 18px 28px; color:var(--muted); font-size:.
   border: 1px solid var(--line);
 }
 .iw-greek { font-family: 'Cardo', 'Gentium Plus', serif; font-size: 1.15rem; line-height: 1.4; }
+.iw-hebrew { font-family: 'Ezra SIL', 'SBL Hebrew', serif; font-size: 1.1rem; line-height: 1.5; }
+.interlinear-words[dir="rtl"] { direction: rtl; }
 .iw-translit { font-style: italic; font-size: .8rem; color: var(--muted); }
 .iw-gloss {
   font-size: .78rem; color: var(--verse-ink); text-align: center;
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  display: -webkit-box; line-clamp: 2; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
 .iw-meta { font-size: .68rem; color: var(--placeholder); }
 .interlinear-source { color: var(--muted); font-size: .8rem; margin-top: 10px; }
