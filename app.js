@@ -258,6 +258,7 @@ const refs = {
     layout: q('#layout'),
     interlinear: q('#interlinear'),
     interlinearHe: q('#interlinear-he'),
+    interlinearHeMode: q('#interlinear-he-mode'),
     go: q('#go-button'),
     results: q('#results'),
     message: q('#message'),
@@ -325,12 +326,14 @@ const refs = {
       sourceNote: 'Hebrew text: Open Scriptures Hebrew Bible (CC BY 4.0) \u00b7 glosses: Strong\'s, Open Scriptures (CC-BY-SA).',
       surfaceClass: 'iw-hebrew',
       rtl: true,
+      lang: 'he',
       transliterate: transliterateHebrew,
+      disclosure: true,
     },
   };
   const interlinearState = {
     greek: { enabled: false, status: 'idle' },  // 'idle' | 'loading' | 'loaded'
-    hebrew: { enabled: false, status: 'idle' },
+    hebrew: { enabled: false, status: 'idle', mode: 'read' },  // mode: 'read' | 'study'
   };
 
   // Per-block context overrides.  Each key is "${bookId}-${chapterNum}".
@@ -476,7 +479,12 @@ function init() {
     });
 
     refs.interlinearHe.addEventListener('change', () => {
+        syncHebrewModeVisibility();
         onInterlinearToggle(INTERLINEARS.hebrew, refs.interlinearHe.checked);
+    });
+
+    refs.interlinearHeMode.addEventListener('change', () => {
+        setHebrewMode(refs.interlinearHeMode.value);
     });
 
     refs.contextBtn.addEventListener('click', () => {
@@ -502,6 +510,8 @@ function init() {
     setTheme();
     setReading();
     setFontSize();
+    restoreHebrewMode();
+    syncHebrewModeVisibility();
     render();
 }
 
@@ -540,6 +550,40 @@ function init() {
           // Storage unavailable (e.g. strict file:// contexts) — appearance still applies for this session.
       }
       applyAppearance();
+  }
+
+  // Hebrew interlinear display mode: 'read' uses progressive-disclosure cards,
+  // 'study' uses the original dense lexicon cards. Hebrew-only for this
+  // experiment; the Greek path never consults this. Preference is persisted
+  // like the other settings and defaults to 'read'.
+  function getStoredHebrewMode() {
+      try {
+          return localStorage.getItem('maranatha-interlinear-hebrew-mode') === 'study' ? 'study' : 'read';
+      } catch (error) {
+          return 'read';
+      }
+  }
+
+  function restoreHebrewMode() {
+      const mode = getStoredHebrewMode();
+      interlinearState.hebrew.mode = mode;
+      refs.interlinearHeMode.value = mode;
+  }
+
+  function syncHebrewModeVisibility() {
+      refs.interlinearHeMode.hidden = !refs.interlinearHe.checked;
+  }
+
+  function setHebrewMode(mode) {
+      const value = mode === 'study' ? 'study' : 'read';
+      interlinearState.hebrew.mode = value;
+      refs.interlinearHeMode.value = value;
+      try {
+          localStorage.setItem('maranatha-interlinear-hebrew-mode', value);
+      } catch (error) {
+          // Storage unavailable — the choice still applies for this session.
+      }
+      if (interlinearState.hebrew.enabled) render();
   }
 
   function localeById(id) {
@@ -1389,6 +1433,93 @@ function init() {
     return out;
   }
 
+  // Collapsed Hebrew cards show a single short gloss rather than the full
+  // KJV-era Strong's definition. This derives that short form from the same
+  // gloss string already in the data ("angels, [idiom] exceeding, God (gods)
+  // ..." -> "angels") without altering the stored lexicon. Falls back to the
+  // full string if the first sense is empty after cleanup.
+  function shortGloss(full) {
+    if (!full) return '';
+    const first = full.split(/[,;]/)[0];
+    const cleaned = first
+      .replace(/\[[^\]]*\]/g, ' ')   // [idiom] and similar tags
+      .replace(/\([^)]*\)/g, ' ')    // parenthetical qualifiers
+      .replace(/^[\s\-–—.]+|[\s\-–—.]+$/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    return cleaned || full;
+  }
+
+  // Hebrew-only experiment: an accessible disclosure card. The button is the
+  // always-visible reading surface (word, transliteration, short gloss); the
+  // full gloss, Strong's id and morphology live in a detail panel that the
+  // button reveals. Independent per card (no accordion), keyboard/touch/SR
+  // friendly. Not used by the Greek path.
+  function buildDisclosureWord(config, surface, strongs, morph, gloss, detailId) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'iw iw-toggle';
+    button.setAttribute('aria-expanded', 'false');
+    button.setAttribute('aria-controls', detailId);
+
+    const surfaceSpan = document.createElement('span');
+    surfaceSpan.className = config.surfaceClass;
+    if (config.lang) surfaceSpan.lang = config.lang;
+    surfaceSpan.textContent = surface;
+
+    const translit = document.createElement('span');
+    translit.className = 'iw-translit';
+    translit.textContent = config.transliterate(surface);
+
+    const shortGlossEl = document.createElement('span');
+    shortGlossEl.className = 'iw-gloss-short';
+    shortGlossEl.textContent = shortGloss(gloss);
+
+    const caret = document.createElement('span');
+    caret.className = 'iw-caret';
+    caret.setAttribute('aria-hidden', 'true');
+    caret.textContent = '\u25be';
+
+    button.append(surfaceSpan, translit, shortGlossEl, caret);
+
+    const detail = document.createElement('div');
+    detail.className = 'iw-detail';
+    detail.id = detailId;
+    detail.hidden = true;
+
+    const heading = document.createElement('div');
+    heading.className = 'iw-detail-head';
+    const headingWord = document.createElement('span');
+    if (config.lang) headingWord.lang = config.lang;
+    headingWord.textContent = surface;
+    heading.append(headingWord, ` \u00b7 ${config.transliterate(surface)}`);
+    detail.appendChild(heading);
+
+    const rows = [];
+    if (gloss) rows.push(['Gloss', gloss]);
+    if (strongs) rows.push(['Strong\u2019s', config.strongsPrefix + strongs]);
+    if (morph) rows.push(['Morphology', morph]);
+    const dl = document.createElement('dl');
+    dl.className = 'iw-detail-list';
+    for (const [term, value] of rows) {
+      const dt = document.createElement('dt');
+      dt.textContent = term;
+      const dd = document.createElement('dd');
+      dd.textContent = value;
+      dl.append(dt, dd);
+    }
+    detail.appendChild(dl);
+
+    button.addEventListener('click', () => {
+      const expanded = button.getAttribute('aria-expanded') === 'true';
+      button.setAttribute('aria-expanded', String(!expanded));
+      button.classList.toggle('is-expanded', !expanded);
+      detail.hidden = expanded;
+    });
+
+    return { button, detail };
+  }
+
   function renderInterlinear(config, translations) {
     const book = currentBook();
     if (!book) return;
@@ -1396,6 +1527,9 @@ function init() {
     const name = (locale.books[book.id] && locale.books[book.id].name) || book.id;
     const data = window[config.dataGlobal];
     const glosses = (window[config.glossGlobal] && window[config.glossGlobal].glosses) || {};
+    // Progressive disclosure is a Hebrew experiment; study mode falls back to
+    // the original dense cards. Greek has no disclosure flag and is unaffected.
+    const disclosure = !!config.disclosure && interlinearState[config.key].mode !== 'study';
 
     const head = document.createElement('div');
     head.className = 'result-head';
@@ -1447,7 +1581,20 @@ function init() {
       const words = document.createElement('div');
       words.className = 'interlinear-words';
       if (config.rtl) words.dir = 'rtl';
-      for (const [surface, strongs, morph] of tokens) {
+      const details = disclosure ? document.createElement('div') : null;
+      if (details) details.className = 'interlinear-details';
+      for (let t = 0; t < tokens.length; t++) {
+        const [surface, strongs, morph] = tokens[t];
+        const fullGloss = glosses[strongs] || '';
+
+        if (disclosure) {
+          const detailId = `iw-detail-${book.id}-${chapterNum}-${verseNum}-${t}`;
+          const { button, detail } = buildDisclosureWord(config, surface, strongs, morph, fullGloss, detailId);
+          words.appendChild(button);
+          details.appendChild(detail);
+          continue;
+        }
+
         const card = document.createElement('span');
         card.className = 'iw';
 
@@ -1461,8 +1608,8 @@ function init() {
 
         const gloss = document.createElement('span');
         gloss.className = 'iw-gloss';
-        gloss.textContent = glosses[strongs] || '';
-        const glossTitle = [strongs ? config.strongsPrefix + strongs : '', glosses[strongs] || '', morph].filter(Boolean).join(' \u00b7 ');
+        gloss.textContent = fullGloss;
+        const glossTitle = [strongs ? config.strongsPrefix + strongs : '', fullGloss, morph].filter(Boolean).join(' \u00b7 ');
         if (glossTitle) gloss.title = glossTitle;
 
         const meta = document.createElement('span');
@@ -1473,6 +1620,7 @@ function init() {
         words.appendChild(card);
       }
       block.appendChild(words);
+      if (details) block.appendChild(details);
       refs.results.appendChild(block);
     }
 

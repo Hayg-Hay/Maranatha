@@ -218,7 +218,49 @@ footer { text-align:center; padding:0 18px 28px; color:var(--muted); font-size:.
 }
 .iw-meta { font-size: .68rem; color: var(--placeholder); }
 .interlinear-source { color: var(--muted); font-size: .8rem; margin-top: 10px; }
+
+/* Hebrew interlinear experiment: reading-first disclosure cards. The button
+   is the collapsed reading surface; the detail panel below reveals the full
+   Strong's entry. Greek keeps the original static cards above. */
+.iw-toggle {
+  position: relative;
+  text-align: center;
+  padding-bottom: 15px;
+  border-color: var(--line);
+}
+.iw-toggle:hover,
+.iw-toggle:focus-visible,
+.iw-toggle.is-expanded { border-color: var(--accent); }
+.iw-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.iw-gloss-short {
+  font-size: .78rem; color: var(--verse-ink); text-align: center;
+  max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.iw-caret {
+  position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
+  font-size: .6rem; line-height: 1; color: var(--placeholder);
+  transition: transform .15s ease;
+}
+.iw-toggle.is-expanded .iw-caret { transform: translateX(-50%) rotate(180deg); }
+.interlinear-details { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+.iw-detail {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-inline-start: 3px solid var(--accent);
+  padding: 8px 10px;
+}
+.iw-detail-head { font-size: .85rem; color: var(--accent); margin-bottom: 6px; }
+.iw-detail-list {
+  margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 2px 10px;
+}
+.iw-detail-list dt {
+  margin: 0; font-size: .68rem; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .04em;
+}
+.iw-detail-list dd { margin: 0; font-size: .82rem; color: var(--verse-ink); overflow-wrap: anywhere; }
 .nav-row label.inline-check { display: inline-flex; align-items: center; gap: 6px; }
+.interlinear-he-stack { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.interlinear-he-stack select { align-self: stretch; }
 
 @media (max-width:700px) {
   .compare-row { grid-template-columns: 1fr; }
