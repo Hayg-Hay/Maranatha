@@ -143,6 +143,75 @@ by default and render side by side, confirmed with a jsdom smoke test
 selecting both. Still open: a clean Douay-Rheims source, and any translation
 at all for the 7 deuterocanonical books.
 
+### Phase 2, take four — French: FreCrampon rejected, Segond 1910 blocked on licensing
+
+French was scoped as the next translation after WEB/KJV. It is a nearer-term
+goal than Armenian, but the same cultural logic motivates both: Ulysse's
+Armenian background is the eventual target, and French is the practical
+stepping stone toward it. Two French sources were investigated — the Catholic
+Crampon (73-book target) and the Protestant Segond 1910 (66-book stopgap).
+Neither shipped.
+
+**FreCrampon (Catholic, 73-book target) — rejected, not shipped.** The source
+was the CrossWire SWORD module FreCrampon v3.4, via `scrollmapper/bible_databases`'
+SWORD-to-JSON extraction. Its typography problems (straight apostrophes,
+NBSP/guillemet spacing, a few misoriented guillemets) were minor and largely
+already fixed upstream by v3.4 — not the blocker. The blocker was structural:
+**962 canonical verse slots are empty at the binary `.bzv`/`.bzs` level**,
+because the upstream Wikisource-derived text merged verse ranges into single
+records. Baruch is the worst case: the real Letter of Jeremiah text is misfiled
+under the key Baruch 5:9, real Baruch 5 is swallowed into Baruch 4:37, and
+Baruch 6 itself is 72 empty verse slots. This is the same failure category as
+the Douay-Rheims rejection above — chapter/verse-boundary corruption confirmed
+directly in the source — so it was not shipped and not patched by guessing at
+wording. Not yet tried: the same Crampon translation via a different
+digitization (abbaye-saint-benoit.ch, or direct Wikisource page markup), since
+the corruption appears to originate in the SWORD build step rather than
+necessarily in the underlying text. Logged as a real open option, not pursued
+yet.
+
+**Segond 1910 (Protestant, 66-book stopgap) — audited, clean, not imported;
+blocked on licensing.** Two candidates were compared: the CrossWire SWORD module
+`FreSegond1910` (Candidate A) and concordance.bible's Sg1910 CSV/OSIS export
+(Candidate B). B is the current upstream artifact of A — A's own conf file sets
+its `TextSource` to B's download URL — and the two texts are effectively
+identical. (B's page, in turn, credits CrossWire's FreSegond as its base, so the
+two are the same lineage; as published today, A points at B.) Structural result
+for both: **66 books, 1,189 chapters, 31,170 verses, 0 real empty verse slots.**
+27,122 verses are byte-identical between A and B; the remaining 4,048 differ
+only by a `U+2009` thin-space artifact in A (leaking from empty Strong's-number
+placeholders) that B's CSV export does not have. Encoding in B's CSV
+specifically is clean — proper curly apostrophes, correct French NBSP /
+narrow-NBSP spacing around punctuation and guillemets, no replacement
+characters, no BOM. B's OSIS/USX exports still carry the same `U+2009` artifact
+as A; only the CSV `v11n` variant is fully clean. No deuterocanonical books
+appear in either candidate (expected — Segond is Protestant canon; this is a
+stopgap for canon completeness, not a solution to it).
+
+**Blocker: license unresolved, not merely unverified.** CrossWire's conf file
+for Candidate A states `DistributionLicense=Copyrighted`. Candidate B's download
+page states that the text itself is public domain, but B's own generic legal
+notice states that reproduction of site data is prohibited without
+authorization, and every actual downloadable file bundles Strong's numbers
+under a separate attribution-required license — there is no untagged
+plain-text file to point to as the clean public-domain artifact. The underlying
+1910 translation is public domain (Segond died in 1885); the specific digitized
+file is not confirmed clear for redistribution. Decision: do not import, and do
+not represent as public domain, until an independent untagged plain-text source
+is found and audited. The open next step is to check Wikisource for a Segond
+1910 text, rather than writing to concordance.bible / CTB to request
+public-domain confirmation.
+
+**Flagged for later:** Segond's versification differs materially from the
+KJV/WEB-based `canon.js` (e.g. Psalms +66 verses, differing Joel and Malachi
+chapter counts, plus the chapter-boundary shifts already catalogued against
+canon.js for OSHB), so it will need the same reconciliation treatment the OSHB
+Hebrew import received before it can populate canon.js-shaped data.
+
+**Status:** no French translation has shipped. FreCrampon and Segond 1910 both
+remain open, for different reasons — structural corruption versus licensing.
+Nothing in `data/` or `build/` changed as a result of this investigation.
+
 ### Phase 3 (early) — side-by-side layout, ported properly from YaQuB
 
 A gap got caught before it went further: translation checkboxes worked, but
