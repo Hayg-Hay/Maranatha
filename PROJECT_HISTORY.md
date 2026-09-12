@@ -1384,3 +1384,36 @@ create", G1722 → "in", G2316 → "a deity"; Study mode still shows the KJV lis
 and the Greek/Hebrew mode dropdowns and persistence work. One limitation
 remains: a few definitions resolve to a verbose first sense (H430 → "gods in the
 ordinary sense"); improving that needs a curated gloss mapping we do not have.
+
+## 2026-09-12 — Interlinear view ignored reference-mode verse scoping
+
+Searching a specific verse or range (e.g. "John 3:16" or "John 3:16-18") and
+then turning on either interlinear checkbox rendered the *entire chapter*
+instead of the requested verse(s). `renderInterlinear()` had never been wired
+into `viewState`: it always read the book/chapter straight off the
+`#book`/`#chapter` dropdowns and looped over every verse in that chapter,
+regardless of whether the user had gotten there by searching or by browsing.
+The normal reading view (`renderReferenceGroups()`) already handled this
+correctly via `viewState.groups` and the `versesForGroup()` helper — the
+interlinear renderer just never used them.
+
+Fixed by splitting `renderInterlinear()` into a dispatcher and a new
+`renderInterlinearGroup(config, data, definitions, renderings, disclosure,
+translation, group)` that renders one book/chapter block, optionally
+restricted to a `Set` of verse numbers built from `versesForGroup()`. In
+reference mode the dispatcher loops `viewState.groups` (so a multi-book query
+like "Mark 14:2,6-9;Matthew 26:26-31" gets an interlinear block per group,
+same as the normal reading view); in browse mode it synthesizes a single
+`{ bookId, chapter, ranges: null }` group from the current dropdowns, which
+`versesForGroup()` already treats as "whole chapter" — so browsing behavior
+is unchanged.
+
+Built on `fix/interlinear-reference-verses`, merged to `main`. `CACHE_VERSION`
+bumped `v16` → `v17` (app.js is a shell file); `DATA_CACHE_VERSION` unchanged,
+no translation data was touched. Verified two ways: a jsdom smoke test
+against a stubbed control run confirmed the old code returned all 36 verses
+of John 3 for both a single-verse and a range search, and the fixed code
+returned exactly 1 and exactly 3 respectively, with browse mode still
+showing all 36; a second, independent jsdom harness driving the real UI
+controls against the real committed data files (not stubs) reproduced the
+same three pass results.
