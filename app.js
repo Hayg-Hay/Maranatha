@@ -1545,10 +1545,6 @@ function init() {
   }
 
   function renderInterlinear(config, translations) {
-    const book = currentBook();
-    if (!book) return;
-    const chapterNum = Number(refs.chapter.value);
-    const name = (locale.books[book.id] && locale.books[book.id].name) || book.id;
     const data = window[config.dataGlobal];
     const strongsData = window[config.glossGlobal] || {};
     // `definitions` is the neutral Strong's definition (Read-mode gloss and
@@ -1560,6 +1556,36 @@ function init() {
     // Progressive disclosure applies to the interlinears that opt in via
     // `config.disclosure`; Study mode falls back to the original dense cards.
     const disclosure = !!config.disclosure && interlinearState[config.key].mode !== 'study';
+    // First selected translation, if any, supplies the verse caption.
+    const translation = translations[0];
+
+    // In reference mode (the user searched a verse/passage) restrict each
+    // group to the verses actually requested, same as renderReferenceGroups()
+    // does for the normal reading view, instead of always dumping the whole
+    // chapter. Browse mode keeps showing the whole current chapter.
+    const groups = viewState.mode === 'reference'
+      ? viewState.groups
+      : [{ bookId: currentBook().id, chapter: Number(refs.chapter.value), ranges: null }];
+
+    groups.forEach(group => {
+      renderInterlinearGroup(config, data, definitions, renderings, disclosure, translation, group);
+    });
+
+    const note = document.createElement('p');
+    note.className = 'interlinear-source';
+    note.textContent = config.sourceNote;
+    refs.results.appendChild(note);
+  }
+
+  // Renders one book/chapter block of an interlinear view, optionally
+  // restricted to a group's verse ranges (null ranges = whole chapter).
+  function renderInterlinearGroup(config, data, definitions, renderings, disclosure, translation, group) {
+    const book = canon.books.find(b => b.id === group.bookId);
+    if (!book) return;
+    const chapterNum = group.chapter;
+    const name = (locale.books[book.id] && locale.books[book.id].name) || book.id;
+    const verseCount = book.chapters[chapterNum - 1];
+    const verseFilter = group.ranges ? new Set(versesForGroup(group, verseCount)) : null;
 
     const head = document.createElement('div');
     head.className = 'result-head';
@@ -1580,12 +1606,11 @@ function init() {
       return;
     }
 
-    // First selected translation, if any, supplies the verse caption.
-    const translation = translations[0];
     for (let v = 0; v < verses.length; v++) {
+      const verseNum = v + 1;
+      if (verseFilter && !verseFilter.has(verseNum)) continue;
       const tokens = verses[v];
       if (!tokens || !tokens.length) continue;
-      const verseNum = v + 1;
 
       const block = document.createElement('div');
       block.className = 'interlinear-verse';
@@ -1654,11 +1679,6 @@ function init() {
       if (details) block.appendChild(details);
       refs.results.appendChild(block);
     }
-
-    const note = document.createElement('p');
-    note.className = 'interlinear-source';
-    note.textContent = config.sourceNote;
-    refs.results.appendChild(note);
   }
 
   // Which interlinear, if any, should be shown for the current book. When both
