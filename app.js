@@ -1452,24 +1452,162 @@ function init() {
   // neutral Strong's definition, not the KJV rendering list. The definition
   // often opens with a grammatical qualifier ("properly, ...", "figuratively,
   // ..."), so the first sense that is not a bare qualifier is used — e.g.
-  // H4325 -> "water" rather than the KJV rendering "piss". Falls back to the
-  // full string if nothing usable is found.
-  function shortGloss(definition) {
-    if (!definition) return '';
-    const qualifier = /^(and|or|but|properly|literally|figuratively|by implication|by extension|by euphemism|by analogy|by Hebraism|specially|specifically|generally|especially|partitively|i\.e\.|that is|in a|used|compare)\b/i;
-    // Strip bracketed/parenthetical asides first: they can contain commas, so
-    // splitting before this would leave an unbalanced fragment.
-    const stripped = definition
-      .replace(/\([^)]*\)/g, ' ')
-      .replace(/\[[^\]]*\]/g, ' ');
-    for (const part of stripped.split(/[;,]/)) {
-      const cleaned = part
-        .replace(/^[\s"'\u2018\u2019\u201C\u201D\-–—.]+|[\s"'\u2018\u2019\u201C\u201D\-–—.]+$/g, '')
-        .replace(/\s+/g, ' ')
-        .trim();
-      if (cleaned && !qualifier.test(cleaned)) return cleaned;
+  // H4325 -> "water" rather than the KJV rendering "piss". A final "i.e."/
+  // "that is" clause is the source's own paraphrase, so it is preferred when
+  // present even though it is itself prefixed by a qualifier — e.g. G3778 ->
+  // "this or that" instead of "the he". Falls back to the full string if
+  // nothing usable is found.
+  const GLOSS_QUALIFIER = /^(and|or|but|properly|literally|figuratively|by implication|by extension|by euphemism|by analogy|by Hebraism|specially|specifically|generally|especially|partitively|i\.e\.|that is|in a|used|compare)\b/i;
+
+  // Removes balanced (...) and [...] asides. Unlike the old /\([^)]*\)/g this
+  // tracks nesting, so a parenthetical containing its own parentheses (common
+  // in the Strong's source, e.g. G3004) is removed whole instead of leaving an
+  // unbalanced fragment behind.
+  function stripGlossNesting(text) {
+    let out = '';
+    let depth = 0;
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      if (ch === '(' || ch === '[') { depth++; continue; }
+      if (ch === ')' || ch === ']') { if (depth > 0) depth--; continue; }
+      if (depth === 0) out += ch;
     }
-    return definition;
+    return out;
+  }
+
+  // Splits on the given separators only at nesting depth zero, so punctuation
+  // inside a parenthetical (e.g. the semicolon in G3004) never truncates.
+  function splitGlossTopLevel(text, separators) {
+    const parts = [];
+    let depth = 0;
+    let current = '';
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      if (ch === '(' || ch === '[') depth++;
+      else if (ch === ')' || ch === ']') { if (depth > 0) depth--; }
+      if (depth === 0 && separators.includes(ch)) {
+        parts.push(current);
+        current = '';
+        continue;
+      }
+      current += ch;
+    }
+    parts.push(current);
+    return parts;
+  }
+
+  function cleanGlossFragment(text) {
+    return text
+      .replace(/^[\s"'\u2018\u2019\u201C\u201D\-–—.]+|[\s"'\u2018\u2019\u201C\u201D\-–—.]+$/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  // Returns the first sense in `text` that is not a bare grammatical
+  // qualifier. Parenthetical/bracketed asides are removed with nesting
+  // awareness before each fragment is cleaned, so a nested aside never leaves
+  // a dangling ")" or a fragment of the aside behind.
+  function firstUsableGloss(text) {
+    for (const part of splitGlossTopLevel(text, [';', ','])) {
+      const cleaned = cleanGlossFragment(stripGlossNesting(part));
+      if (cleaned && !GLOSS_QUALIFIER.test(cleaned)) return cleaned;
+    }
+    return '';
+  }
+
+  // The "i.e."/"that is" clause is the source's own paraphrase of the sense,
+  // so its first usable segment is preferred over the literal gloss that
+  // precedes it — e.g. G3778 -> "this or that", not "the he". It may sit
+  // inside parentheses; scanning the raw string keeps it.
+  function ieClauseGloss(definition) {
+    const match = /(?:i\.e\.|that is)\s*/i.exec(definition);
+    if (!match) return '';
+    return firstUsableGloss(definition.slice(match.index + match[0].length));
+  }
+
+  function parsedGloss(definition) {
+    const ie = ieClauseGloss(definition);
+    if (ie) return ie;
+    return firstUsableGloss(definition) || definition;
+  }
+
+  // Robinson-Pierpont morphology drives a few high-frequency function words
+  // whose Strong's definition is too generic to read in a collapsed card. The
+  // handlers only fire for Greek morphology (Hebrew parses all start with "H")
+  // and return null when there is no morphology, so the definition parser above
+  // remains the fallback.
+  const GREEK_GLOSS_OVERRIDES = {
+    '2532': 'and',
+    '1161': 'but',
+    '3756': 'not',
+    '3361': 'not',
+    '3739': 'who/which',
+    '3754': 'that/because',
+  };
+
+  // eimi (G1510): V-tense voice mood[-person number | -case number gender].
+  function eimiGloss(morph) {
+    const match = /^V-([A-Z])([A-Z])([A-Z])(?:-([1-3])([SP])|-(N|G|D|A|V)([SP])([MFN]))?$/.exec(morph);
+    if (!match) return null;
+    const tense = match[1];
+    const mood = match[3];
+    const person = match[4];
+    const number = match[5] || match[7];
+    const singular = number === 'S';
+    if (mood === 'N') return 'to be';
+    if (mood === 'P') return tense === 'F' ? 'about to be' : 'being';
+    if (mood === 'S' || mood === 'O') return 'may be';
+    if (mood === 'D' || mood === 'M') return 'be';
+    if (tense === 'P') {
+      if (person === '1' && singular) return 'am';
+      if (person === '3' && singular) return 'is';
+      return 'are';
+    }
+    if (tense === 'I') return singular && person !== '2' ? 'was' : 'were';
+    if (tense === 'F') return 'will be';
+    if (tense === 'R') return 'have been';
+    if (tense === 'L') return 'had been';
+    return 'be';
+  }
+
+  // autos (G846): P-case number gender. Genitive renders as the possessive
+  // ("his"/"her"/"their"); the other cases as the object pronoun.
+  function autosGloss(morph) {
+    const match = /^P-([NGDAV])([SP])([MFN])$/.exec(morph);
+    if (!match) return null;
+    const greekCase = match[1];
+    const plural = match[2] === 'P';
+    const gender = match[3];
+    if (greekCase === 'N') {
+      if (plural) return 'they';
+      if (gender === 'F') return 'she';
+      if (gender === 'N') return 'it';
+      return 'he';
+    }
+    if (greekCase === 'G') {
+      if (plural) return 'their';
+      if (gender === 'F') return 'her';
+      if (gender === 'N') return 'its';
+      return 'his';
+    }
+    const object = gender === 'F' ? 'her' : gender === 'N' ? 'it' : 'him';
+    if (greekCase === 'D') return plural ? 'to them' : `to ${object}`;
+    if (greekCase === 'A') return plural ? 'them' : object;
+    return null;
+  }
+
+  function greekMorphGloss(strongs, morph) {
+    if (!morph || morph.charAt(0) === 'H') return null;
+    if (strongs === '1510') return eimiGloss(morph);
+    if (strongs === '846') return autosGloss(morph);
+    return GREEK_GLOSS_OVERRIDES[strongs] || null;
+  }
+
+  function shortGloss(definition, strongs, morph) {
+    const override = greekMorphGloss(strongs, morph);
+    if (override) return override;
+    if (!definition) return '';
+    return parsedGloss(definition);
   }
 
   // Read-mode experiment (Greek and Hebrew): an accessible disclosure card.
@@ -1496,7 +1634,7 @@ function init() {
 
     const shortGlossEl = document.createElement('span');
     shortGlossEl.className = 'iw-gloss-short';
-    shortGlossEl.textContent = shortGloss(definition);
+    shortGlossEl.textContent = shortGloss(definition, strongs, morph);
 
     const caret = document.createElement('span');
     caret.className = 'iw-caret';
