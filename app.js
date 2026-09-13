@@ -240,7 +240,7 @@ class ReferenceParser {
   const TRANSLATIONS = [
     { id: 'web', label: 'World English Bible', short: 'WEB', src: 'data/web.js' },
     { id: 'kjv', label: 'King James Version', short: 'KJV', src: 'data/kjv.js' },
-    { id: 'armwestern', label: 'Western Armenian NT (1853)', short: 'Western Armenian', src: 'data/armwestern.js' },
+    { id: 'armwestern', label: 'Western Armenian NT (1853)', short: 'Western Armenian', src: 'data/armwestern.js', note: 'under verse-boundary audit — see PROJECT_HISTORY.md' },
     { id: 'byz', label: 'Byzantine Majority Text (Greek NT)', short: 'Byzantine Greek', src: 'data/byz.js' },
     { id: 'he', label: 'Hebrew (OSHB)', short: 'Hebrew (OSHB)', src: 'data/he.js' },
   ];
@@ -667,12 +667,20 @@ function init() {
       const box = document.createElement('input');
       box.type = 'checkbox';
       box.value = t.id;
-      box.checked = i === 0; // first translation on by default
+      // First translation on by default. Audit-flagged translations are never
+      // auto-checked, regardless of where they sit in the registry.
+      box.checked = i === 0 && !t.note;
       box.addEventListener('change', () => {
         if (box.checked) loadTranslation(t, render);
         else render();
       });
       label.append(box, ' ', t.label);
+      if (t.note) {
+        const note = document.createElement('span');
+        note.className = 'notice';
+        note.textContent = t.note;
+        label.append(' ', note);
+      }
       refs.translations.appendChild(label);
       if (box.checked) loadTranslation(t, render);
     });

@@ -1417,3 +1417,137 @@ returned exactly 1 and exactly 3 respectively, with browse mode still
 showing all 36; a second, independent jsdom harness driving the real UI
 controls against the real committed data files (not stubs) reproduced the
 same three pass results.
+
+## 2026-09-13 — ArmWestern verse-boundary audit
+
+Triggered by a visual discrepancy in rendered John 6:50-53. WEB's 6:51 is a
+single verse ("I am the living bread… If anyone eats of this bread… the bread
+which I will give is my flesh"), but ArmWestern appeared shifted one verse
+late: Armenian 6:51 carried only WEB 6:51's first sentence, Armenian 6:52
+carried the rest of WEB 6:51, Armenian 6:53 carried WEB 6:52, and the offset
+continued from there.
+
+**Root cause.** `build/sources/armwestern/armwestern.source.json` — the
+cached, pre-extracted JSON, which is the only form of the source this repo
+has — contains verse-boundary defects. No OSIS/SWORD milestone markup
+survives in that cache (it is plain per-verse string arrays; a workspace
+`grep` for `osisID`/`milestone`/`sID`/`eID` matches only the OSHB Hebrew
+files), and the original pysword extraction script that produced it is not
+present anywhere in the repo or git history (`git log --all` for the
+armwestern path shows only the two JSONs, the importer, and its output). The
+defects are invisible to chapter-length validation because every occurrence
+is count-neutral, in one of two shapes:
+
+- **split→merge** — one WEB verse divided into two Armenian array slots (the
+  first short), with the +1 offset absorbed later in the same chapter by
+  combining two WEB verses into one Armenian slot. John 6 is the model: 6:51
+  splits into Armenian 6:51 (first sentence) + 6:52 (remainder), the offset
+  runs through the chapter, and WEB 6:70+6:71 are combined into Armenian
+  6:71; the array still has 71 entries, matching canon.js.
+- **merge→blank** — two WEB verses combined into one Armenian slot, with the
+  chapter ending in a `???Missing???` slot that holds no real gap (there is
+  no following WEB verse to place in it). Mark 9 is the model: WEB Mark 8:38
+  + 9:1 are merged into Armenian Mark 8:38, the offset runs through all of
+  Mark 9, and Armenian 9:50 is the false blank.
+
+**Methodology, including a heuristic that did not work.** A first-pass
+scanner computed each Armenian entry's character length against the WEB verse
+at the same position, took the ratio against that chapter's median ratio, and
+flagged a verse-pair when one side deviated more than 2.5x in one direction
+and the adjacent side more than 2.5x in the other. It produced six candidate
+pairs (Mark 9:39-40, 9:43-44, 9:44-45, 9:45-46, 9:46-47, Matthew 17:19-20)
+and did **not** flag John 6, the known positive control: the split half aligned
+with WEB 6:52 (ratio 1.46x, under the 2.5x threshold), and the compensating
+merge is length-neutral against its true content (Armenian 6:71 = 202
+characters vs WEB 6:70+6:71 = 192). The 2.5x-vs-median heuristic should not be
+trusted alone. Two more sensitive detectors were built and used together
+instead — a single-verse notch detector (per-verse Armenian/WEB ratio ≤0.4),
+which did surface John 6:51 at rank 1, and an adjacent-pair contrast detector
+(the ratio between neighboring positions ≥1.5 / ≤0.6). Every confirmed finding
+below was then individually content-verified by printing the full Armenian
+array beside the corresponding WEB verses and reading the boundary.
+
+**Confirmed findings (content-bisected, not inferred from length).**
+
+split→merge family, resynchronizing within the chapter:
+
+- **John 6** — split at 6:51, offset through 6:70, resyncs by merging WEB
+  6:70+6:71 into Armenian 6:71.
+- **James 4** — split at 4:14/4:15, resyncs at 4:16.
+- **Luke 4** — two regions: 4:18/4:19 split, resyncs at 4:20; 4:38/4:39 split,
+  offset through 4:43, resyncs by merging WEB 4:43+4:44 into Armenian 4:44.
+- **Luke 20** — two regions: 20:5/20:6 split, resyncs at 20:7; 20:16/20:17
+  split, resyncs at 20:18.
+- **Luke 9** — 9:42/9:43 split, resyncs at 9:45.
+- **Matthew 22** — two regions: 22:2/22:3 merge-then-short, resyncs at 22:4;
+  22:42/22:43 split, resyncs at 22:44.
+- **1 Corinthians 9** — 9:20/9:21 split, resyncs at 9:22.
+- **John 10** — two regions: 10:22/10:23 merge, resyncs at 10:24; 10:41/10:42
+  split, running to the chapter end at 10:42.
+- **Matthew 1** — four regions across the genealogy (1:7→1:9, 1:10→1:12,
+  1:12→1:15, 1:15→1:17); the Armenian genealogy divides the KJV verses one
+  generation out of phase, with content and count both preserved.
+
+merge→blank-tail family, chapter ending in a false `???Missing???`:
+
+- **Mark 9** — merge at the Mark 8:38/9:1 boundary, offset through the whole
+  chapter, false blank at 9:50.
+- **Matthew 17** — merge at 17:14, offset, false blank at 17:27.
+- **Acts 14** — merge plus duplication at 14:6, offset, false blank at 14:28.
+- **1 Thessalonians 4** — merge (the merged text duplicated verbatim) at
+  4:11, offset, false blank at 4:18.
+
+**The "10 genuinely blank verses" re-audit.** The Phase 4 writeup described 10
+verses as blank at the raw SWORD byte level. Checking each against the slot
+one position earlier shows 8 of the 10 are offset residue, not real gaps — the
+real WEB-equivalent text is present one array slot earlier, and in several
+cases duplicated verbatim across both slots:
+
+- Mark 9:50, Matthew 17:27, Acts 14:28, 1 Thessalonians 4:18 — the final-verse
+  blanks from the merge→blank family above.
+- Acts 7:60 — Armenian 7:59 carries WEB 7:60 (plus WEB 8:1a), duplicated.
+- Acts 19:41 — Armenian 19:40 carries WEB 19:40 + WEB 19:41, duplicated.
+- 2 Corinthians 13:14 — Armenian 13:13 carries WEB 13:14.
+- Hebrews 13:25 — Armenian 13:24 carries WEB 13:24 + WEB 13:25, duplicated.
+
+Only 2 are genuine transcription gaps: **2 Corinthians 2:1** and **2
+Corinthians 6:1**, the two non-final blanks. In both, the verse is absent with
+no neighboring displacement (Armenian 2:2 = WEB 2:2, Armenian 6:2 = WEB 6:2,
+no offset), so these are real missing verses — matching what the source JSON's
+own note claimed for those two.
+
+**Sample size and hit rate.** 13 of 13 individually bisected chapters were
+confirmed real defects, zero false positives. That set — the 9 chapters just
+listed plus John 6, Mark 9, Matthew 17, and Acts 14 — was drawn from the
+structural heuristic flags across all 27 NT books / 260 chapters, plus John 6
+from the initial visual report. Only those 13 have been content-verified. The
+remaining flagged candidates and all unflagged chapters have not been
+content-checked and are therefore unverified, not confirmed clean.
+
+**Separate, unrelated:** Romans 14 has a genuine truncation, not a boundary
+shift — its array stops at 23 entries, missing WEB Romans 14:24-26 (the
+doxology) outright. That is the TR-vs-Byzantine doxology placement already
+recorded in `data/known-variants.js`, not the split/merge defect.
+
+**Lesson learned — a count check is not an alignment check.** A translation
+can pass `validate.mjs`'s chapter/verse-count validation and still have
+per-verse content misaligned, because both defect families are count-neutral
+by construction: split→merge preserves the chapter's verse count exactly, and
+merge→blank preserves it by spending one slot on `???Missing???`. A clean
+count therefore proves only that no verse was added or lost, not that each
+verse number holds the right text. This is a known limitation of
+`validate.mjs` going forward, applying to every imported translation, not just
+ArmWestern — the same spirit as the standing rule against patching Scripture
+by guessing. A per-chapter content-alignment check (the detectors above are a
+starting point) would strengthen it; only individual chapter bisection is
+authoritative today.
+
+**Decision recorded.** ArmWestern is pulled from default display — its
+translation checkbox no longer checks by default and it carries an "under
+verse-boundary audit — see PROJECT_HISTORY.md" flag beside it in the
+Translations fieldset. Unlike Douay-Rheims, this is treated as recoverable: in
+every confirmed case the real Armenian text is present, just misindexed, so a
+future re-split/re-merge pass could fix it without inventing wording. But
+"recoverable in principle" is not being treated as "safe to serve" until it
+is verified chapter by chapter. No data file changed in this audit — the
+source cache, the importer, and `data/armwestern.*` are all untouched.

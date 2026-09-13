@@ -59,6 +59,7 @@ button:hover { background:var(--panel); }
 .toolbar label { display:grid; gap:4px; font-size:.9rem; }
 fieldset { border:0; padding:0; margin:10px 0 0; display:flex; flex-wrap:wrap; gap:6px 12px; } legend { font-size:.9rem; padding:0; }
 .version { white-space:nowrap; font-size:.9rem; }
+.version .notice { display:inline-block; padding:1px 6px; margin:0 0 0 4px; font-size:.78rem; white-space:normal; vertical-align:middle; }
 .message { min-height:1.4em; margin:12px 0; color:var(--error); } .message:empty { display:none; }
 .notice { background:var(--notice-bg); border:1px solid var(--notice-border); padding:10px 14px; margin:14px 0; font-size:.92rem; }
 .notice summary { cursor:pointer; font-weight:bold; padding:2px 0; border-radius:2px; user-select:none; }
