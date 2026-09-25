@@ -1589,3 +1589,12 @@ cache), and focus treatments are consistent across buttons, inputs, and
 selects. The static/file:// architecture and translation data are unchanged.
 `CACHE_VERSION` was bumped `v19` → `v20` because `index.html`, `style.css`,
 and `app.js` are shell files.
+
+**Visual refinement after review.** The information architecture and wording
+were retained, but the first styling pass felt too far removed from the
+original neutral interface. Orange-filled primary buttons were replaced with
+paper-coloured buttons using a restrained accent edge, and the newly added
+rounding was removed from the main panel, tool disclosures, controls, offline
+label, and audit label. This restores the original square, quiet visual
+language without losing the clearer hierarchy. `CACHE_VERSION` was bumped
+`v20` → `v21` for the stylesheet change.
