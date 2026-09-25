@@ -1598,3 +1598,13 @@ rounding was removed from the main panel, tool disclosures, controls, offline
 label, and audit label. This restores the original square, quiet visual
 language without losing the clearer hierarchy. `CACHE_VERSION` was bumped
 `v20` → `v21` for the stylesheet change.
+
+**Control separation after visual review.** A one-pixel top border on the
+chapter bar sat immediately below the lookup row. At some font sizes and in
+the lighter colour schemes it nearly aligned with the controls' bottom borders,
+creating the impression of a line physically connecting Open reference, the
+Search field, translation selector, and Search button. The divider was removed;
+spacing alone now separates lookup from chapter navigation. The lookup columns,
+their internal controls, and chapter actions also received wider gaps so each
+control reads independently. No colour or shape treatment was added.
+`CACHE_VERSION` was bumped `v21` → `v22` for the stylesheet change.
