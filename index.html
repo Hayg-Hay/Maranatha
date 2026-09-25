@@ -26,89 +26,110 @@
   </div>
 </header>
 
-    <section class="panel" aria-labelledby="lookup-heading">
-      <h2 id="lookup-heading">Browse</h2>
-      <div class="reference-search">
+    <section class="panel browse-panel" aria-labelledby="lookup-heading">
+      <div class="panel-heading">
+        <div>
+          <h2 id="lookup-heading">Find a passage</h2>
+          <p>Open a reference, search the text, or browse by chapter.</p>
+        </div>
+        <span class="offline-badge" aria-label="Works without an internet connection">Works offline</span>
+      </div>
 
-  <label for="reference">Reference</label>
+      <div class="lookup-grid">
+        <div class="reference-search">
+          <label for="reference">Reference</label>
+          <div class="reference-row">
+            <input
+              id="reference"
+              type="text"
+              placeholder="John 3:16, Genesis 1, Psalm 23"
+              autocomplete="off"
+              spellcheck="false"
+            >
+            <button id="reference-go" class="primary-action" type="button">Open reference</button>
+          </div>
+          <button id="context-toggle" type="button" hidden>Show context (±3)</button>
+        </div>
 
-      <div class="reference-row">
-
-    <input
-      id="reference"
-      type="text"
-      placeholder="Examples: John 3:16, Genesis 1, Psalm 23"
-      autocomplete="off"
-      spellcheck="false"
-    >
-
-    <button id="reference-go" type="button">Show</button>
-
-  </div>
-
-  <button id="context-toggle" type="button" style="display:none">Show context (±3)</button>
-
-</div>
-
-      <div class="reference-search">
-        <label for="search">Search</label>
-        <div class="reference-row">
-          <input
-            id="search"
-            type="text"
-            placeholder="Words or phrase to find…"
-            autocomplete="off"
-            spellcheck="false"
-          >
-          <select id="search-translation" aria-label="Search in translation"></select>
-          <button id="search-go" type="button">Search</button>
+        <div class="reference-search">
+          <label for="search">Search the text</label>
+          <div class="reference-row">
+            <input
+              id="search"
+              type="text"
+              placeholder="Words or phrase to find…"
+              autocomplete="off"
+              spellcheck="false"
+            >
+            <select id="search-translation" aria-label="Search in translation"></select>
+            <button id="search-go" class="primary-action" type="button">Search</button>
+          </div>
         </div>
       </div>
 
-      <div class="nav-row">
-     
+      <div class="chapter-bar" aria-label="Browse by chapter">
         <label for="book">Book
           <select id="book"></select>
         </label>
         <label for="chapter">Chapter
           <select id="chapter"></select>
         </label>
-        <button id="prev-chapter-button" type="button">&larr; Previous chapter</button>
-        <button id="next-chapter-button" type="button">Next chapter &rarr;</button>
-        <button id="go-button" type="button">Show</button>
-        <span class="interlinear-mode-stack">
-          <label class="inline-check"><input type="checkbox" id="interlinear"> Interlinear (Greek)</label>
-          <select id="interlinear-greek-mode" aria-label="Greek interlinear mode" hidden>
-            <option value="read">Reading &mdash; Interlinear</option>
-            <option value="study">Study &mdash; Interlinear</option>
-          </select>
-        </span>
-        <span class="interlinear-mode-stack">
-          <label class="inline-check"><input type="checkbox" id="interlinear-he"> Interlinear (Hebrew)</label>
-          <select id="interlinear-he-mode" aria-label="Hebrew interlinear mode" hidden>
-            <option value="read">Reading &mdash; Interlinear</option>
-            <option value="study">Study &mdash; Interlinear</option>
-          </select>
-        </span>
-        <label>Layout <select id="layout"><option value="auto">Automatic</option><option value="multicolumn">Multi-column</option><option value="multirow">Multi-row</option></select></label>
-        <label>Color scheme <select id="theme"><option value="">Default</option><option value="red">Red</option><option value="orange">Orange</option><option value="yellow">Yellow</option><option value="green">Green</option><option value="blue">Blue</option><option value="indigo">Indigo</option><option value="violet">Violet</option><option value="rose">Rose</option></select></label>
-        <label>Reading <select id="reading"><option value="">Default</option><option value="warm">Warm / Sepia</option><option value="low-contrast">Low contrast</option></select></label>
-        <label>Appearance <select id="appearance"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
-        <label>Language <select id="language"></select></label>
-        <label>Font size <select id="fontsize">
-  <option value="">Normal (default)</option>
-  <option value="large">Large</option>
-  <option value="larger">Larger</option>
-  <option value="largest">Largest</option>
-</select></label>
+        <div class="chapter-actions">
+          <button id="prev-chapter-button" type="button" aria-label="Previous chapter">&larr; Previous</button>
+          <button id="next-chapter-button" type="button" aria-label="Next chapter">Next &rarr;</button>
+          <button id="go-button" class="primary-action" type="button">Open chapter</button>
+        </div>
       </div>
-      <fieldset id="translations"><legend>Translations</legend></fieldset>
+
+      <div class="tool-sections">
+        <details class="tool-section translations-section" open>
+          <summary>Translations</summary>
+          <fieldset id="translations" aria-label="Translations"></fieldset>
+        </details>
+
+        <details class="tool-section">
+          <summary>Study tools</summary>
+          <div class="study-row">
+            <span class="interlinear-mode-stack">
+              <label class="inline-check"><input type="checkbox" id="interlinear"> Greek interlinear</label>
+              <select id="interlinear-greek-mode" aria-label="Greek interlinear mode" hidden>
+                <option value="read">Reading &mdash; Interlinear</option>
+                <option value="study">Study &mdash; Interlinear</option>
+              </select>
+            </span>
+            <span class="interlinear-mode-stack">
+              <label class="inline-check"><input type="checkbox" id="interlinear-he"> Hebrew interlinear</label>
+              <select id="interlinear-he-mode" aria-label="Hebrew interlinear mode" hidden>
+                <option value="read">Reading &mdash; Interlinear</option>
+                <option value="study">Study &mdash; Interlinear</option>
+              </select>
+            </span>
+          </div>
+        </details>
+
+        <details class="tool-section">
+          <summary>Reading settings</summary>
+          <div class="settings-row">
+            <label>Layout <select id="layout"><option value="auto">Automatic</option><option value="multicolumn">Multi-column</option><option value="multirow">Multi-row</option></select></label>
+            <label>Color scheme <select id="theme"><option value="">Default</option><option value="red">Red</option><option value="orange">Orange</option><option value="yellow">Yellow</option><option value="green">Green</option><option value="blue">Blue</option><option value="indigo">Indigo</option><option value="violet">Violet</option><option value="rose">Rose</option></select></label>
+            <label>Reading <select id="reading"><option value="">Default</option><option value="warm">Warm / Sepia</option><option value="low-contrast">Low contrast</option></select></label>
+            <label>Appearance <select id="appearance"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
+            <label>Language <select id="language"></select></label>
+            <label>Font size <select id="fontsize">
+              <option value="">Normal (default)</option>
+              <option value="large">Large</option>
+              <option value="larger">Larger</option>
+              <option value="largest">Largest</option>
+            </select></label>
+          </div>
+        </details>
+      </div>
     </section>
 
     <section id="message" class="message" aria-live="polite"></section>
     <section id="results" aria-live="polite"></section>
   </main>
-  <footer>Built for offline personal use. See PROJECT_HISTORY.md for how this was assembled.</footer>
+  <footer>Built for offline personal use. <a href="PROJECT_HISTORY.md">Read the project history</a>.</footer>
   <script src="data/canon.js"></script>
   <script src="data/locales/en.js"></script>
   <script src="data/locales/hy.js"></script>

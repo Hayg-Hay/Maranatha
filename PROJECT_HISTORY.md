@@ -1551,3 +1551,41 @@ future re-split/re-merge pass could fix it without inventing wording. But
 "recoverable in principle" is not being treated as "safe to serve" until it
 is verified chapter by chapter. No data file changed in this audit — the
 source cache, the importer, and `data/armwestern.*` are all untouched.
+
+## 2026-09-25 — Interface hierarchy and mobile reading redesign
+
+The browser's feature set had outgrown the original single-row control panel.
+Reference lookup, text search, chapter navigation, two interlinear modes, six
+reading preferences, and five translations had all accumulated in one visual
+plane. The result remained functional but made the controls more prominent
+than the Scripture and gave basic reading the same weight as advanced study.
+
+The Browse panel was reorganized around three levels of intent:
+
+- **Find and browse:** reference lookup and text search share a compact
+  two-column area on wide screens, followed by a dedicated Book/Chapter bar.
+  The two former `Show` buttons are now the explicit `Open reference` and
+  `Open chapter` actions, with primary-action styling. The Reference field now
+  submits on Enter, matching Search.
+- **Choose text:** Translations remains open by default because it directly
+  determines the reading surface. The Western Armenian audit notice is now a
+  compact `Under audit` disclosure with a plain-language explanation rather
+  than a long technical badge in the checkbox label.
+- **Study and customize:** Greek/Hebrew interlinear controls moved into a
+  collapsed Study tools disclosure. Layout, palette, reading preset,
+  appearance, language, and font size moved into collapsed Reading settings.
+
+Automatic layout on screens at or below 700px no longer forces the desktop
+three-column multi-row table into the viewport. It uses a dedicated stacked
+reading view: verse number beside the text for one translation, and labeled
+translation blocks within each verse when comparing several. Manual table
+layouts remain available. The audit disclosure and translation list can now
+shrink and wrap, eliminating the horizontal overflow caused by the former
+`white-space: nowrap` translation label.
+
+The header now includes a restrained `Works offline` status, the project
+history in the footer is an actual local link (and is included in the PWA shell
+cache), and focus treatments are consistent across buttons, inputs, and
+selects. The static/file:// architecture and translation data are unchanged.
+`CACHE_VERSION` was bumped `v19` → `v20` because `index.html`, `style.css`,
+and `app.js` are shell files.

@@ -240,7 +240,7 @@ class ReferenceParser {
   const TRANSLATIONS = [
     { id: 'web', label: 'World English Bible', short: 'WEB', src: 'data/web.js' },
     { id: 'kjv', label: 'King James Version', short: 'KJV', src: 'data/kjv.js' },
-    { id: 'armwestern', label: 'Western Armenian NT (1853)', short: 'Western Armenian', src: 'data/armwestern.js', note: 'under verse-boundary audit — see PROJECT_HISTORY.md' },
+    { id: 'armwestern', label: 'Western Armenian NT (1853)', short: 'Western Armenian', src: 'data/armwestern.js', note: 'This translation is available for research, but it is not selected by default while its verse boundaries are being checked. Read the project history for details.' },
     { id: 'byz', label: 'Byzantine Majority Text (Greek NT)', short: 'Byzantine Greek', src: 'data/byz.js' },
     { id: 'he', label: 'Hebrew (OSHB)', short: 'Hebrew (OSHB)', src: 'data/he.js' },
   ];
@@ -363,7 +363,7 @@ const refs = {
     viewState.search = null;
     contextEnabled = false;
     blockContextOverrides.clear();
-    refs.contextBtn.style.display = 'none';
+    refs.contextBtn.hidden = true;
   }
 
   function setReferenceMode(groups) {
@@ -371,7 +371,9 @@ const refs = {
     viewState.groups = groups;
     viewState.highlightVerse = null;
     viewState.search = null;
-    refs.contextBtn.style.display = '';
+    // A single result block already has its own context control beside its
+    // heading. The global control is useful only for multi-reference queries.
+    refs.contextBtn.hidden = groups.length < 2;
   }
 
   init();
@@ -448,6 +450,13 @@ function init() {
 
         render();
 
+    });
+
+    refs.reference.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            refs.referenceGo.click();
+        }
     });
 
     refs.searchGo.addEventListener('click', () => {
@@ -660,8 +669,10 @@ function init() {
   }
 
   function populateTranslationCheckboxes() {
-    refs.translations.innerHTML = '<legend>Translations</legend>';
+    refs.translations.innerHTML = '';
     TRANSLATIONS.forEach((t, i) => {
+      const option = document.createElement('div');
+      option.className = 'translation-option';
       const label = document.createElement('label');
       label.className = 'version';
       const box = document.createElement('input');
@@ -675,13 +686,18 @@ function init() {
         else render();
       });
       label.append(box, ' ', t.label);
+      option.append(label);
       if (t.note) {
-        const note = document.createElement('span');
-        note.className = 'notice';
+        const disclosure = document.createElement('details');
+        disclosure.className = 'translation-warning';
+        const summary = document.createElement('summary');
+        summary.textContent = 'Under audit';
+        const note = document.createElement('p');
         note.textContent = t.note;
-        label.append(' ', note);
+        disclosure.append(summary, note);
+        option.append(disclosure);
       }
-      refs.translations.appendChild(label);
+      refs.translations.appendChild(option);
       if (box.checked) loadTranslation(t, render);
     });
   }
@@ -920,6 +936,53 @@ function init() {
     return table;
   }
 
+  // Narrow-screen reading view. Tables remain useful for deliberate desktop
+  // comparison, but on a phone they spend too much width repeating column
+  // labels. These stacked cards keep the verse number and text prominent;
+  // translation labels appear only when there is something to compare.
+  function mobileReading(bookId, chapterNum, verses, translations, { highlight = false, anchorFirst = false, exactVerses = null } = {}) {
+    const list = document.createElement('div');
+    list.className = 'mobile-verses';
+
+    let anchorPlaced = false;
+    const firstExact = anchorFirst && exactVerses ? verses.find(v => exactVerses.has(v)) : null;
+
+    verses.forEach((v) => {
+      const article = document.createElement('article');
+      article.className = 'mobile-verse';
+      if (highlight) {
+        article.classList.add(exactVerses && exactVerses.has(v) ? 'highlighted-verse' : 'context-verse');
+      }
+      if (anchorFirst && !anchorPlaced && v === firstExact) {
+        article.id = 'current-reference';
+        anchorPlaced = true;
+      }
+
+      const ref = document.createElement('div');
+      ref.className = 'mobile-reference';
+      ref.textContent = `${chapterNum}:${v}`;
+      article.append(ref);
+
+      translations.forEach((t) => {
+        const row = document.createElement('div');
+        row.className = 'mobile-translation';
+        if (translations.length > 1) {
+          const label = document.createElement('div');
+          label.className = 'mobile-translation-label';
+          label.textContent = t.label;
+          row.append(label);
+        }
+        const text = document.createElement('div');
+        text.className = 'mobile-verse-text';
+        fillCell(text, cellFor(t, bookId, chapterNum, v), t.id);
+        row.append(text);
+        article.append(row);
+      });
+      list.append(article);
+    });
+    return list;
+  }
+
   // Builds one heading + table block and appends it to #results. Shared by
   // both browse mode (a single block, the whole chapter, unhighlighted) and
   // reference mode (one block per group, restricted verses, highlighted).
@@ -940,7 +1003,10 @@ function init() {
         ? `${verseCount} verses`
         : `${verses.length} of ${verseCount} verses`;
     }
-    head.innerHTML = `<h2>${name} ${chapterNum} <small>(${verseLabel}, ${layout === 'multicolumn' ? 'multi-column' : 'multi-row'})</small></h2>`;
+    const layoutLabel = layout === 'multicolumn' ? 'multi-column'
+      : layout === 'multirow' ? 'multi-row'
+      : 'reading view';
+    head.innerHTML = `<h2>${name} ${chapterNum} <small>(${verseLabel}, ${layoutLabel})</small></h2>`;
     refs.results.appendChild(head);
 
     // Per-block context toggle — reference mode only (not browse-highlight)
@@ -957,10 +1023,12 @@ function init() {
       head.appendChild(toggleBtn);
     }
 
-    const table = layout === 'multicolumn'
+    const content = layout === 'multicolumn'
       ? multiColumn(bookId, chapterNum, verses, translations, { highlight, anchorFirst, exactVerses })
-      : multiRow(bookId, chapterNum, verses, translations, { highlight, anchorFirst, exactVerses });
-    refs.results.appendChild(table);
+      : layout === 'multirow'
+        ? multiRow(bookId, chapterNum, verses, translations, { highlight, anchorFirst, exactVerses })
+        : mobileReading(bookId, chapterNum, verses, translations, { highlight, anchorFirst, exactVerses });
+    refs.results.appendChild(content);
   }
 
   function renderBrowseChapter(translations, layout) {
@@ -1157,7 +1225,7 @@ function init() {
     viewState.groups = null;
     viewState.highlightVerse = null;
     viewState.search = { query, translationId: t.id, translationLabel: t.label, matches, total };
-    refs.contextBtn.style.display = 'none';
+    refs.contextBtn.hidden = true;
     render();
   }
 
@@ -1851,7 +1919,7 @@ function init() {
     const interlinear = activeInterlinear();
     if (interlinear) {
       setMessage('');
-      refs.contextBtn.style.display = 'none';
+      refs.contextBtn.hidden = true;
       renderInterlinear(interlinear, translations);
       return;
     }
@@ -1863,13 +1931,11 @@ function init() {
     setMessage('');
     populateSearchTranslations();
 
-    // Automatic layout: multi-row once more than 5 translations are selected
-    // (multi-column gets too wide to read past that — same rule as YaQuB),
-    // and also on narrow screens, where side-by-side columns would each be
-    // too cramped and long words could collide across columns. Manual layout
-    // choices (the Layout dropdown) are always respected.
+    // Automatic layout: use the dedicated stacked reading view on narrow
+    // screens, and multi-row once more than 5 translations are selected on
+    // wider screens. Manual table layouts remain available for comparison.
     const layout = refs.layout.value === 'auto'
-      ? ((translations.length > 5 || narrowScreen.matches) ? 'multirow' : 'multicolumn')
+      ? (narrowScreen.matches ? 'mobile' : (translations.length > 5 ? 'multirow' : 'multicolumn'))
       : refs.layout.value;
 
     if (viewState.mode === 'reference') {
@@ -1881,7 +1947,7 @@ function init() {
     }
 
     // Update the context button label to reflect current state
-    refs.contextBtn.textContent = contextEnabled ? 'Hide context' : `Show context (\u00b1${CONTEXT_RADIUS})`;
+    refs.contextBtn.textContent = contextEnabled ? 'Hide context for all' : `Show context for all (\u00b1${CONTEXT_RADIUS})`;
 
     const target = document.getElementById('current-reference');
     if (target) {
