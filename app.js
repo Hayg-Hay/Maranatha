@@ -487,7 +487,7 @@ function init() {
     });
 
     refs.layout.addEventListener('change', () => {
-        render();
+        render({ scrollToReference: false });
     });
 
     refs.interlinear.addEventListener('change', () => {
@@ -518,11 +518,11 @@ function init() {
         applyAppearance();
     });
 
-    // Automatic layout also depends on viewport width (see render()), so
-    // re-render when the screen crosses that breakpoint — phone rotation, or
-    // resizing a desktop window. Only relevant in Automatic mode.
+    // Every layout uses the phone reading view below this breakpoint, so a
+    // rotation or desktop resize must re-render regardless of the selector's
+    // current value. Keep the reader's position during that visual refresh.
     narrowScreen.addEventListener('change', () => {
-        if (refs.layout.value === 'auto') render();
+        render({ scrollToReference: false });
     });
 
     populateChapters();
@@ -682,8 +682,9 @@ function init() {
       // auto-checked, regardless of where they sit in the registry.
       box.checked = i === 0 && !t.note;
       box.addEventListener('change', () => {
-        if (box.checked) loadTranslation(t, render);
-        else render();
+        const refreshInPlace = () => render({ scrollToReference: false });
+        if (box.checked) loadTranslation(t, refreshInPlace);
+        else refreshInPlace();
       });
       label.append(box, ' ', t.label);
       option.append(label);
@@ -711,7 +712,11 @@ function init() {
   // Loads data/<id>.js via a dynamically created <script> tag — not fetch().
   // Script tags work fine under file://; fetch() of local files does not.
   function loadTranslation(t, onReady) {
-    if (loaded.has(t.id) || loading.has(t.id)) return;
+    if (loaded.has(t.id)) {
+      onReady();
+      return;
+    }
+    if (loading.has(t.id)) return;
     loading.add(t.id);
     const script = document.createElement('script');
     script.src = t.src;
@@ -1908,7 +1913,7 @@ function init() {
     return null;
   }
 
-  function render() {
+  function render({ scrollToReference = true } = {}) {
     const translations = selectedTranslations();
 
     refs.results.innerHTML = '';
@@ -1931,12 +1936,14 @@ function init() {
     setMessage('');
     populateSearchTranslations();
 
-    // Automatic layout: use the dedicated stacked reading view on narrow
-    // screens, and multi-row once more than 5 translations are selected on
-    // wider screens. Manual table layouts remain available for comparison.
-    const layout = refs.layout.value === 'auto'
-      ? (narrowScreen.matches ? 'mobile' : (translations.length > 5 ? 'multirow' : 'multicolumn'))
-      : refs.layout.value;
+    // At phone widths every selector choice uses the dedicated stacked
+    // reading view. Multi-column and multi-row remain meaningful desktop
+    // choices, but compressing either table onto a phone is less readable.
+    const layout = narrowScreen.matches
+      ? 'mobile'
+      : refs.layout.value === 'auto'
+        ? (translations.length > 5 ? 'multirow' : 'multicolumn')
+        : refs.layout.value;
 
     if (viewState.mode === 'reference') {
       renderReferenceGroups(viewState.groups, translations, layout);
@@ -1950,7 +1957,7 @@ function init() {
     refs.contextBtn.textContent = contextEnabled ? 'Hide context for all' : `Show context for all (\u00b1${CONTEXT_RADIUS})`;
 
     const target = document.getElementById('current-reference');
-    if (target) {
+    if (scrollToReference && target) {
       target.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }

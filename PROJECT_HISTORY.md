@@ -1608,3 +1608,22 @@ spacing alone now separates lookup from chapter navigation. The lookup columns,
 their internal controls, and chapter actions also received wider gaps so each
 control reads independently. No colour or shape treatment was added.
 `CACHE_VERSION` was bumped `v21` → `v22` for the stylesheet change.
+
+## 2026-09-25 — Consistent phone reading layout and stable translation selection
+
+The dedicated phone reading cards were initially used only when Layout was
+set to Automatic. Explicit Multi-column or Multi-row choices still forced the
+desktop tables onto a narrow screen, even though the stacked cards were more
+readable there. The phone breakpoint now always selects the card renderer;
+the three Layout choices continue to control desktop rendering. Crossing the
+breakpoint through rotation or resizing re-renders for every selector value.
+
+Selecting a translation while viewing a reference also caused the page to
+jump from the Translations controls down to the verse. The renderer always
+called `scrollIntoView()` on `#current-reference`, even when it had been
+invoked merely because translation data finished loading. `render()` now has
+an explicit `scrollToReference` option: navigation keeps the existing jump,
+while translation changes, layout changes, and breakpoint changes refresh in
+place. Re-selecting an already loaded translation now also invokes its refresh
+callback instead of silently returning. `CACHE_VERSION` was bumped `v22` →
+`v23`; translation data itself is unchanged.
