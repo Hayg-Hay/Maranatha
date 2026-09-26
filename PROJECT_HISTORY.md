@@ -1638,4 +1638,7 @@ labels, and restrained row highlighting. Multi-column keeps its side-by-side
 translation columns with clear verse separators. Multi-row keeps its original
 Verse / Translation / Text shape, using dashed separators within a verse and a
 solid separator between verse groups. Automatic behavior and the phone card
-renderer are unchanged. `CACHE_VERSION` was bumped `v23` → `v24`.
+renderer are unchanged. After laptop visual review, the dashed separator between
+translations in Multi-row and the vertical translation boundaries in
+Multi-column were strengthened from the quiet theme line to the clearer neutral
+border colour. `CACHE_VERSION` was bumped `v23` → `v25` across the experiment.

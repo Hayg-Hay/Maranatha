@@ -228,11 +228,11 @@ code { font-family:Consolas, monospace; }
 
   .comparison-table-columns tbody tr:not(:last-child) td { border-bottom:1px solid var(--line); }
   .comparison-table-columns th + th,
-  .comparison-table-columns td + td { border-inline-start:1px solid var(--line); }
+  .comparison-table-columns td + td { border-inline-start:1px solid var(--border); }
 
   .comparison-table-rows th + th,
   .comparison-table-rows td + td { border-inline-start:1px solid var(--line); }
-  .comparison-table-rows tbody tr:not(.verse-group-end) td { border-bottom:1px dashed var(--line); }
+  .comparison-table-rows tbody tr:not(.verse-group-end) td { border-bottom:1px dashed var(--border); }
   .comparison-table-rows tbody tr.verse-group-end:not(:last-child) td { border-bottom:1px solid var(--line); }
   .comparison-table-rows .translation-label { color:var(--accent); font-size:.8rem; line-height:1.4; }
   .comparison-table-rows .verse-group-continuation td { padding-top:11px; }
