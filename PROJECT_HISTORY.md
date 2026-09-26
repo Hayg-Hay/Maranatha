@@ -1695,3 +1695,76 @@ deuterocanonical books, and — now that one more non-English translation is
 shipped — the French sourcing effort (see Phase 2, take four above) becomes
 the next real test of whether the architecture holds up for a second
 non-English translation option.
+
+## 2026-09-26 — Louis Segond 1910 (French) added, with versification reconciliation
+
+**Segond 1910 (fraLSG)** shipped as Maranatha's third non-English translation
+(after Western Armenian and Luther 1912) and the first modern translation whose
+source versification had to be reconciled to canon.js rather than used as-is.
+Source is eBible.org's `fraLSG` (Louis Segond 1910, abbreviation F10, translation
+ID fraLSG), public domain — eBible states it in both languages: "Cette Bible est
+dans le domaine public. Il n'est pas protégé par copyright. This Bible is in the
+Public Domain. It is not copyrighted." The BibleWorks VPL export
+(`fraLSG_vpl.zip`) was used, the same developer format as Luther 1912: flat
+`BOOK C:V text` rows. The raw source is cached under `build/sources/segond1910/`
+(VPL plus the USFM export kept for the Phase A versification check) with hashes
+and audit results in `source-info.json`.
+
+**Sourcing history.** An earlier concordance.bible CSV and a CrossWire SWORD
+module were both ruled out on unresolved licensing; the eBible.org text was
+chosen specifically because its public-domain status is stated on the source
+page itself (see Phase 2, take four). The VPL was audited before any cleanup:
+all 31,170 lines scanned — zero backslashes / `\"` over-escaping, zero malformed
+lines, zero duplicate refs, 66 book codes. One bracket-wrapped row (ACT 28:29)
+is a genuine verse the edition brackets as a textual variant, not a KJV
+`[]`-style placeholder, so no stray-row filter was added. French orthography is
+preserved verbatim (apostrophes consistently U+2019; no guillemets or NBSP;
+accents and the œ ligature kept).
+
+**Versification.** fraLSG follows a Hebrew-continental versification; a first
+validation pass reported 106 errors. Because Phase A confirmed the eBible USFM
+export declares no versification scheme and carries no `\va`/`\vp`
+alternate-numbering markers, reconciliation was derived structurally, not from
+source metadata. Design: `build/IMPORT-SEGOND1910-VERSIFICATION.md`; engine:
+`build/analyze-segond1910-versification.mjs`; full per-item pass/fail log:
+`build/sources/segond1910/versification-report.md`. The reviewed result:
+
+- **62 Psalm superscriptions** preserved as a `titles` map (not discarded, unlike
+  OSHB's Hebrew titles), including PSA 18 whose 204-char title is the longest in
+  the Psalter and parallels 2 Sam 22.
+- **16 chapter windows** re-drawn by order-preserving re-chunk: 15 adjacent pairs
+  (EXO 7/8, LEV 5/6, NUM 29/30, 1SA 23/24, 2CH 13/14, ECC 4/5, ECC 11/12,
+  SNG 6/7, ISA 8/9, EZK 20/21, HOS 1/2, HOS 11/12, JON 1/2, MIC 4/5, NAM 1/2)
+  plus the JOB 38–41 four-chapter cascade.
+- **6 MERGEs** (two source verses → one canon verse, safe concatenation):
+  1SA 20:42+43 (the same split OSHB documented), 1KI 22:43+44, MRK 9:50+51,
+  MRK 10:52+53, REV 12:18+13:1 (the one cross-chapter case), 3JN 1:14+15.
+- **4 SPLITs** (one source verse → two canon verses, applied only where the
+  sentence break is unambiguous): JOB 34:36, ISA 63:19 (cross-chapter into
+  64:1), 2CO 13:12, ACT 19:40.
+
+**The three prospective variants were re-tested, and all three were boundary
+artifacts.** 3JN 1:15, 2CO 13:13 and ACT 19:40 had been bucketed as suspected
+single-verse textual variants. Each was run through the same seam test used on
+JOB 34 and ISA 64 (full Segond verse beside KJV/WEB's two target verses) before
+any `known-variants.js` entry was written: in every case the content is
+identical and the seam is a real sentence break whose second half opens with the
+KJV/WEB continuation's word. 3JN is a MERGE (Segond splits canon 3 John 1:14
+into source 14 + 15, "…bouche à bouche." / "Que la paix…"), while 2CO 13
+("…saint baiser." / "Tous les saints…") and ACT 19 ("…attroupement." / "Après
+ces paroles…") are SPLITs where Segond merged two canon verses into one. A prior
+cross-check against `data/byz.json` had already shown MRK 9/10 were editorial
+final-verse splits, not the disputed 9:44/46 reading. Segond validation triggers
+only the pre-existing ROM 14 known-variant note; no new known-variants entries
+were needed. `node build/validate.mjs data/segond1910.json` reports **0 errors,
+3 warnings, 1 known-variant info note** — the 3 warnings are canon's provisional
+EST/DAN Greek-addition gaps. The jsdom smoke test renders John 3:16
+("Car Dieu a tant aimé le monde qu’il a donné son Fils unique…") matching
+eBible.org's own published sample.
+
+**Scope.** Standard 66-book Protestant canon, same as KJV/WEB/Luther 1912 — the
+7 Catholic deuterocanonical books are expected-missing, not stubbed. This is the
+first *modern* translation import whose source versification was reconciled to
+canon.js, and the second reconciliation project overall after the OSHB Hebrew
+import; unlike OSHB's embedded `<note>KJV:…>` annotations, the cross-reference
+had to be derived and verified structurally.

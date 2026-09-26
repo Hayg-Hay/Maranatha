@@ -244,6 +244,7 @@ class ReferenceParser {
     { id: 'byz', label: 'Byzantine Majority Text (Greek NT)', short: 'Byzantine Greek', src: 'data/byz.js' },
     { id: 'he', label: 'Hebrew (OSHB)', short: 'Hebrew (OSHB)', src: 'data/he.js' },
     { id: 'luther1912', label: 'Luther Bible 1912', short: 'Luther 1912', src: 'data/luther1912.js' },
+    { id: 'segond1910', label: 'Louis Segond (1910)', short: 'Segond 1910', src: 'data/segond1910.js' },
   ];
 
   const canon = window.MARANATHA_CANON;

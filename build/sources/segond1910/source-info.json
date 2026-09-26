@@ -1,0 +1,91 @@
+{
+  "source": "https://eBible.org/Scriptures/fraLSG_vpl.zip",
+  "translation": "Louis Segond 1910",
+  "translationId": "fraLSG",
+  "abbreviation": "F10",
+  "language": "fra",
+  "license": "Public Domain",
+  "licenseNote": "eBible.org states it in both languages: \"Cette Bible est dans le domaine public. Il n'est pas protégé par copyright. This Bible is in the Public Domain. It is not copyrighted.\"",
+  "format": "BibleWorks VPL (verse-per-line plain text). fraLSG_vpl.zip also contains fraLSG_vpl.sql and fraLSG_vpl.xml; the .txt is extracted and cached here.",
+  "detailsPage": "https://ebible.org/find/details.php?id=fraLSG",
+  "fetched": "2026-09-26",
+  "eBibleLastUpdated": "2026-08-08",
+  "file": {
+    "name": "fraLSG_vpl.txt",
+    "lines": 31170,
+    "size": 4604441,
+    "sha256": "c9a5ca9c81266fb4353767c619c79732c0530f709447d4903bc05485232de4cf"
+  },
+  "archive": {
+    "name": "fraLSG_vpl.zip",
+    "size": 4591510,
+    "sha256": "a78fef5c2264b277f993b17a1560904c29cc830047a02027667306c874f8f8c5"
+  },
+  "audit": {
+    "scannedVerses": 31170,
+    "distinctBookCodes": 66,
+    "malformedLines": 0,
+    "linesWithBackslash": 0,
+    "linesWithEscapedQuote": 0,
+    "linesWithCurlyBraces": 0,
+    "linesWithHtmlEntities": 0,
+    "emptyTexts": 0,
+    "bracketWrappedTexts": 1,
+    "bracketWrappedNote": "The single bracket-wrapped row is ACT 28:29, a genuine verse present in Segond's text and bracketed by the edition as a textual variant (\"[Lorsqu'il eut dit cela, les Juifs s'en allèrent, discutant vivement entre eux.]\"). It is NOT the KJV '[]'-at-3-John-1:15 empty-placeholder artifact class, so no stray-row filter is applied.",
+    "duplicateRefs": 0,
+    "asciiApostrophes": 0,
+    "curlyApostrophes": 22546,
+    "guillemets": 0,
+    "nbsp": 0,
+    "thinSpaces": 0,
+    "note": "French orthography was observed, not normalized: apostrophes are consistently U+2019 (curly); no U+0027, no guillemets, no NBSP/thin spaces, no HTML entities. Accented characters, the œ/Œ ligature, curly double quotes, ellipsis and en/em dashes appear as real text and are preserved verbatim."
+  },
+  "versificationFinding": {
+    "summary": "fraLSG's versification does NOT match the KJV/WEB-based canon.js in several books; this was already flagged in PROJECT_HISTORY.md ('Segond's versification differs materially ... e.g. Psalms +66 verses ... it will need the same reconciliation treatment the OSHB Hebrew import received before it can populate canon.js-shaped data'). The raw source is intact and was not altered; the mismatch is a canon.js reconciliation decision, not an import defect.",
+    "bookMismatches": [
+      "PSA: source 2527 verses vs canon 2461 (+66; Hebrew-style Psalm titles counted as verses, e.g. PSA 3:1 is the superscription)",
+      "3JN: source 15 verses vs canon 14 (final greeting split into v14 + v15)",
+      "MRK: source 680 vs canon 678",
+      "1SA: source 811 vs canon 810",
+      "1KI: source 817 vs canon 816",
+      "JOB: source 1069 vs canon 1070",
+      "ISA: source 1291 vs canon 1292",
+      "ACT: source 1006 vs canon 1007",
+      "ROM: source 433 vs canon 436 (doxology placement, matches the known-variants Romans entry)",
+      "2CO: source 256 vs canon 257",
+      "REV: source 405 vs canon 404",
+      "EST: source 167 vs canon 207 (canon provisional, has Greek additions)",
+      "DAN: source 357 vs canon 530 (canon provisional, has Greek additions)"
+    ]
+  },
+  "fraLSG_usfm": {
+    "source": "https://eBible.org/Scriptures/fraLSG_usfm.zip",
+    "cachedAt": "build/sources/segond1910/fraLSG_usfm/",
+    "format": "USFM (66 per-book files, plus copr.htm, keys.asc PGP key, latin.css)",
+    "fetched": "2026-09-26",
+    "archive": {
+      "name": "fraLSG_usfm.zip",
+      "size": 3467489,
+      "sha256": "3a0615e992ffd412b1afcaed50d146bba5ec8ae2378f04ca71459a4cd2d7cc33"
+    },
+    "combinedUsfmSha256": "966f86a172d090a9a0663a63727438ceae3d7c05c51f236f87ee841306511947",
+    "purpose": "Phase A versification-scheme check; NOT used by import-segond1910.mjs (which reads the VPL)."
+  },
+  "phaseA_versificationCheck": {
+    "result": "NO source-declared versification scheme found.",
+    "checked": [
+      "\\rem / \\ide / \\usfm / \\vrs / \\sts markers: 0 across all 66 USFM files",
+      "\\va (alternate verse) markers: 0",
+      "\\vp (published verse) markers: 0",
+      "\\ca (chapter alternate) / \\cp (chapter published) markers: 0",
+      "verse-range \\v n-m bridges: 0",
+      "chapter-range \\c n-m bridges: 0",
+      "scheme keyword lines (versification/synodal/vulgate/masoretic/LXX): only incidental French intro prose, not a declaration",
+      "no .ssf / .vrs / readme in the zip; only 66 .usfm + copr.htm + keys.asc (PGP public key) + latin.css",
+      "eBible fraLSG details page names no versification scheme"
+    ],
+    "idLine": "\\id GEN GENFLS1910.PTX, Louis Segond 1910, French, 31-10-2011, Moon Sun Kim. Updated for DBL by E. Canales, September 2012.",
+    "workedExample": "EXO 7 in the USFM itself runs to v29 then \\c 8, i.e. the source carries the same shifted chapter boundary as the VPL; there is no dual/alternate numbering to cross-reference.",
+    "conclusion": "The USFM export provides no authoritative per-verse cross-reference analogous to OSHB's <note>KJV:...> annotations. Phase B must be built from an external scholarly cross-reference rather than derived from this source."
+  }
+}

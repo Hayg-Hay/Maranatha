@@ -18,10 +18,10 @@
 //
 // Caching model:
 //   - The application SHELL (small) is precached on install.
-//   - The five large `data/*.js` translation files are deliberately NOT
+//   - The large `data/*.js` translation files are deliberately NOT
 //     precached. They are cached at runtime, cache-first, the first time the
 //     app actually loads each one (on checkbox selection), so first install
-//     stays small instead of downloading ~18 MB.
+//     stays small instead of downloading the full translation set.
 //
 // Updating: bump CACHE_VERSION whenever shell files change, and
 // DATA_CACHE_VERSION when the translation data files change. On activation the
@@ -35,7 +35,7 @@
 // the new shell. The update is therefore user-driven, not a silent replacement
 // mid-read.
 
-const CACHE_VERSION = 'v27';      // bump when shell files change
+const CACHE_VERSION = 'v28';      // bump when shell files change
 const DATA_CACHE_VERSION = 'v2';  // bump when translation data changes
 
 const SHELL_CACHE = `maranatha-shell-${CACHE_VERSION}`;
