@@ -1,0 +1,35 @@
+{
+  "source": "https://eBible.org/Scriptures/deu1912_vpl.zip",
+  "translation": "Lutherbibel 1912",
+  "translationId": "deu1912",
+  "abbreviation": "L1912",
+  "language": "deu",
+  "license": "Public Domain",
+  "format": "BibleWorks VPL (verse-per-line plain text). deu1912_vpl.zip also contains deu1912_vpl.sql and deu1912_vpl.xml; the .txt is extracted and cached here.",
+  "detailsPage": "https://ebible.org/find/details.php?id=deu1912",
+  "fetched": "2026-09-26",
+  "eBibleLastUpdated": "2025-12-29",
+  "file": {
+    "name": "deu1912_vpl.txt",
+    "lines": 31102,
+    "size": 4384884,
+    "sha256": "f6723776717b2e18e53dc81b0b7758aeb6ce969aee9cfb432d9b61006fa13dff"
+  },
+  "archive": {
+    "name": "deu1912_vpl.zip",
+    "size": 4541244,
+    "sha256": "62977ec165164def0f4815b846ca4af20fcd141fcc6c347ce791b59c2eca6678"
+  },
+  "audit": {
+    "scannedVerses": 31102,
+    "distinctBookCodes": 66,
+    "malformedLines": 0,
+    "linesWithBackslash": 0,
+    "linesWithEscapedQuote": 0,
+    "linesWithCurlyBraces": 0,
+    "linesWithHtmlEntities": 0,
+    "emptyTexts": 0,
+    "bracketPlaceholderTexts": 0,
+    "duplicateRefs": 0
+  }
+}

@@ -243,6 +243,7 @@ class ReferenceParser {
     { id: 'armwestern', label: 'Western Armenian NT (1853)', short: 'Western Armenian', src: 'data/armwestern.js', note: 'This translation is available for research, but it is not selected by default while its verse boundaries are being checked. Read the project history for details.' },
     { id: 'byz', label: 'Byzantine Majority Text (Greek NT)', short: 'Byzantine Greek', src: 'data/byz.js' },
     { id: 'he', label: 'Hebrew (OSHB)', short: 'Hebrew (OSHB)', src: 'data/he.js' },
+    { id: 'luther1912', label: 'Luther Bible 1912', short: 'Luther 1912', src: 'data/luther1912.js' },
   ];
 
   const canon = window.MARANATHA_CANON;
