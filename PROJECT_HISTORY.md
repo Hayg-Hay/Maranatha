@@ -1648,3 +1648,50 @@ edge and broke the visual continuation down the table. Comparison columns now
 use a physical left border so the divider remains continuous for both LTR and
 RTL translations. `CACHE_VERSION` was bumped `v23` → `v27` across the
 experiment.
+
+## 2026-09-26 — Luther Bible 1912 (German) added
+
+**Luther 1912:** shipped as Maranatha's first non-English translation to cover
+both Testaments (Western Armenian covers the NT only). Source is eBible.org's
+`deu1912` (Lutherbibel 1912, public domain), pulled in the BibleWorks VPL
+export rather than USFM or the plain-text "readaloud" export — VPL's flat
+`BOOK C:V text` rows match the same book/chapter/verse/text contract already
+used by `import-kjv.mjs`/`import-web.mjs`, where USFM would have needed
+Strong's-markup stripping and the readaloud export has no verse numbers to key
+off of. `build/import-luther1912.mjs` follows the established importer shape
+exactly; the only structural difference is book-code mapping, since eBible's
+VPL uses BibleWorks abbreviations (`EZE`, `JOE`, `JOH`, `MAR`, `NAH`, `PHI`,
+`SOL`, `JAM`, `1JO`/`2JO`/`3JO`) rather than the USFM codes KJV/WEB use —
+mapped explicitly by name rather than by position, and verified against the
+full 73-book `canon.js` list: all 66 protocanonical IDs covered, zero
+duplicates, zero accidental Deuterocanon inclusion.
+
+Audited before writing any cleanup step, same discipline as WEB/KJV: scanned
+all 31,102 lines of the raw VPL directly. Zero backslashes, zero `\"`
+sequences (no WEB-style SQL-dump over-escaping), zero malformed lines, zero
+`[]`-style placeholder rows, zero duplicate verse references — the KJV 3 John
+1:15 bogus-row case has no counterpart here, so no stray-row filter was
+needed. The importer's parser is strict (throws on any unmatched line or
+unmapped book code) rather than silently dropping data, so a clean 66/66
+mapped-books result is itself confirmation the source's actual codes matched
+what was hardcoded.
+
+**Scope:** standard 66-book Protestant canon, same reasoning as KJV/WEB —
+this source has no Deuterocanon, and grafting another translation's text into
+those 7 slots would misrepresent it as Luther 1912 when it isn't.
+`validate.mjs` reports 0 errors, 66/73 books present, TOB/JDT/1MA/2MA/WIS/SIR/BAR
+correctly flagged as expected-missing, plus the same three provisional-canon
+warnings (Esther 4, Esther 10, Daniel) already seen on KJV — not a
+Luther-specific issue, `canon.js`'s known gaps.
+
+`app.js`'s `TRANSLATIONS` registry gained one entry (`luther1912`, short
+label `Luther 1912`), with no other changes — the existing checkbox/load/
+render pipeline handled it generically. Smoke-tested rendering John 3:16
+("Also hat Gott die Welt geliebt, daß er seinen eingeborenen Sohn gab...")
+against eBible.org's own published sample text, confirmed identical.
+
+Still open: a clean Douay-Rheims source, any translation at all for the 7
+deuterocanonical books, and — now that one more non-English translation is
+shipped — the French sourcing effort (see Phase 2, take four above) becomes
+the next real test of whether the architecture holds up for a second
+non-English translation option.
