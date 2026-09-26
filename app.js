@@ -857,6 +857,7 @@ function init() {
   // just as easily as a full chapter.
   function multiColumn(bookId, chapterNum, verses, translations, { highlight = false, anchorFirst = false, exactVerses = null } = {}) {
     const table = document.createElement('table');
+    table.className = 'comparison-table comparison-table-columns';
     const head = document.createElement('thead');
     const headRow = document.createElement('tr');
     headRow.innerHTML = '<th class="reference">Verse</th>';
@@ -902,6 +903,7 @@ function init() {
   // multi-column when many translations are selected at once.
   function multiRow(bookId, chapterNum, verses, translations, { highlight = false, anchorFirst = false, exactVerses = null } = {}) {
     const table = document.createElement('table');
+    table.className = 'comparison-table comparison-table-rows';
     const head = document.createElement('thead');
     head.innerHTML = '<tr><th class="reference">Verse</th><th class="translation-label">Translation</th><th>Text</th></tr>';
     table.append(head);
@@ -914,6 +916,8 @@ function init() {
     verses.forEach((v, i) => {
       translations.forEach((t, j) => {
         const tr = document.createElement('tr');
+        tr.classList.add(j === 0 ? 'verse-group-start' : 'verse-group-continuation');
+        if (j === translations.length - 1) tr.classList.add('verse-group-end');
         if (highlight) {
           if (exactVerses && exactVerses.has(v)) {
             tr.classList.add('highlighted-verse');

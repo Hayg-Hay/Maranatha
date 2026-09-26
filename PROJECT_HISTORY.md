@@ -1627,3 +1627,15 @@ while translation changes, layout changes, and breakpoint changes refresh in
 place. Re-selecting an already loaded translation now also invokes its refresh
 callback instead of silently returning. `CACHE_VERSION` was bumped `v22` →
 `v23`; translation data itself is unchanged.
+
+## 2026-09-26 — Softer desktop comparison-table experiment
+
+The original laptop Multi-column and Multi-row structures were retained while
+their visual treatment was made calmer and closer to the phone reading view.
+Desktop comparison tables now use a single quiet outer frame instead of boxing
+every cell, more generous reading spacing, accent-colored verse and translation
+labels, and restrained row highlighting. Multi-column keeps its side-by-side
+translation columns with clear verse separators. Multi-row keeps its original
+Verse / Translation / Text shape, using dashed separators within a verse and a
+solid separator between verse groups. Automatic behavior and the phone card
+renderer are unchanged. `CACHE_VERSION` was bumped `v23` → `v24`.

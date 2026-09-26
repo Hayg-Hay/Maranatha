@@ -211,6 +211,34 @@ code { font-family:Consolas, monospace; }
 .mobile-verse.highlighted-verse { background:var(--panel); border-inline-start:3px solid var(--accent); }
 .mobile-verse.context-verse { background:var(--paper); }
 
+/* ----------------------------------------------------------
+   Desktop comparison tables
+
+   Keep the original column/row geometry, but reduce the spreadsheet effect:
+   one quiet outer frame, horizontal verse rhythm, mobile-style labels and
+   dashed separators only between translations belonging to the same verse.
+---------------------------------------------------------- */
+@media (min-width:701px) {
+  #results .comparison-table { border-collapse:separate; border-spacing:0; border:1px solid var(--line); background:var(--paper); }
+  .comparison-table th,
+  .comparison-table td { border:0; padding:13px 16px; line-height:1.55; background:var(--paper); }
+  .comparison-table thead th { padding-top:10px; padding-bottom:10px; border-bottom:1px solid var(--line); background:var(--panel); color:var(--accent); font-size:.8rem; font-weight:bold; }
+  .comparison-table tbody tr:hover td { background:var(--hover); }
+  .comparison-table td.reference { color:var(--accent); font-weight:bold; }
+
+  .comparison-table-columns tbody tr:not(:last-child) td { border-bottom:1px solid var(--line); }
+  .comparison-table-columns th + th,
+  .comparison-table-columns td + td { border-inline-start:1px solid var(--line); }
+
+  .comparison-table-rows th + th,
+  .comparison-table-rows td + td { border-inline-start:1px solid var(--line); }
+  .comparison-table-rows tbody tr:not(.verse-group-end) td { border-bottom:1px dashed var(--line); }
+  .comparison-table-rows tbody tr.verse-group-end:not(:last-child) td { border-bottom:1px solid var(--line); }
+  .comparison-table-rows .translation-label { color:var(--accent); font-size:.8rem; line-height:1.4; }
+  .comparison-table-rows .verse-group-continuation td { padding-top:11px; }
+  .comparison-table-rows .verse-group-end td { padding-bottom:14px; }
+}
+
 .compare-toggle {
   display: inline-block;
   margin-top: 6px;
