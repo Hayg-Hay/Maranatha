@@ -1642,4 +1642,9 @@ renderer are unchanged. After laptop visual review, vertical translation
 boundaries were retained in Multi-column, but both those boundaries and the
 dashed separator between translations in Multi-row use the same lighter theme
 line as the rest of the table rather than a sharper neutral border colour.
-`CACHE_VERSION` was bumped `v23` → `v26` across the experiment.
+The vertical separators originally used logical `border-inline-start`; Hebrew
+cells inherit right-to-left direction, which moved that border to the opposite
+edge and broke the visual continuation down the table. Comparison columns now
+use a physical left border so the divider remains continuous for both LTR and
+RTL translations. `CACHE_VERSION` was bumped `v23` → `v27` across the
+experiment.
