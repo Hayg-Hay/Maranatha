@@ -84,7 +84,7 @@ function blockByRef(document, ref) {
   return [...document.querySelectorAll('.interlinear-verse')]
     .find((b) => b.querySelector('.interlinear-ref')?.textContent === ref);
 }
-function readCards(document, ref) {
+function disclosureCards(document, ref) {
   const b = blockByRef(document, ref);
   if (!b) return [];
   return [...b.querySelectorAll('.iw-toggle')].map((btn) => ({
@@ -101,10 +101,11 @@ async function gotoCards(window, bookId, chapter, verse) {
   goto(window, bookId, chapter);
   await waitFor(() => refEndsWith(window.document, `:${verse}`));
   const block = refEndsWith(window.document, `:${verse}`);
-  const cards = block ? [...block.querySelectorAll('.iw-toggle')].map((btn) => ({
-    surface: btn.querySelector('.iw-greek')?.textContent,
-    translit: btn.querySelector('.iw-translit')?.textContent,
-    gloss: btn.querySelector('.iw-gloss-short')?.textContent,
+  // Berean Reading mode renders dense, non-expandable cards.
+  const cards = block ? [...block.querySelectorAll('.iw:not(.iw-toggle)')].map((c) => ({
+    surface: c.querySelector('.iw-greek')?.textContent,
+    translit: c.querySelector('.iw-translit')?.textContent,
+    gloss: c.querySelector('.iw-gloss')?.textContent,
   })) : [];
   return { block, cards };
 }
@@ -113,7 +114,7 @@ function chunkBooks(id) {
   vm.runInNewContext(fs.readFileSync(path.join(ROOT, 'data', 'berean', `${id}.js`), 'utf8'), sandbox);
   return sandbox.window[`MARANATHA_BEREAN_${id}`].books[id];
 }
-function studyCards(document, ref) {
+function denseCards(document, ref) {
   const b = blockByRef(document, ref);
   if (!b) return [];
   return [...b.querySelectorAll('.iw:not(.iw-toggle)')].map((c) => ({
@@ -134,13 +135,17 @@ function studyCards(document, ref) {
 
   goto(window, 'JHN', 6);
   toggle(window, 'interlinear-berean', true);
-  const loaded = await waitFor(() => readCards(document, 'John 6:50').length > 0);
+  const loaded = await waitFor(() => denseCards(document, 'John 6:50').length > 0);
   check('selecting Berean loads the John chunk and renders', loaded);
 
-  const c50 = readCards(document, 'John 6:50');
-  const c51 = readCards(document, 'John 6:51');
-  check('Berean John 6:50 has 17 cards', c50.length === 17, `got ${c50.length}`);
-  check('Berean John 6:51 has 38 cards', c51.length === 38, `got ${c51.length}`);
+  // --- Berean Reading = dense, non-expandable (inverted) ---------------
+  const c50 = denseCards(document, 'John 6:50');
+  const c51 = denseCards(document, 'John 6:51');
+  check('Berean Reading John 6:50 has 17 dense cards', c50.length === 17, `got ${c50.length}`);
+  check('Berean Reading John 6:51 has 38 dense cards', c51.length === 38, `got ${c51.length}`);
+  check('Berean Reading cards are dense, not expandable',
+    blockByRef(document, 'John 6:50').querySelectorAll('.iw-toggle').length === 0
+    && blockByRef(document, 'John 6:50').querySelectorAll('.iw').length === 17);
   check('Berean surface is Berean\'s own Greek (οὗτός)', c50[0]?.surface === 'οὗτός', c50[0]?.surface);
   check('Berean uses its own transliteration (houtos)', c50[0]?.translit === 'houtos', c50[0]?.translit);
   check('Berean shows its own contextual gloss (This)', c50[0]?.gloss === 'This', c50[0]?.gloss);
@@ -148,52 +153,76 @@ function studyCards(document, ref) {
   check('John 6:50 G1537 ἐξ gloss is "of"', c50[11]?.surface === 'ἐξ' && c50[11]?.gloss === 'of', JSON.stringify(c50[11]));
   check('John 6:51 G1537 ἐκ glosses are from/of',
     c51[7]?.gloss === 'from' && c51[14]?.gloss === 'of', JSON.stringify([c51[7], c51[14]]));
-  check('intentional "-" token (6:51 ὁ at index 4) renders an empty gloss', c51[4]?.gloss === '', `${JSON.stringify(c51[4])}`);
+  check('intentional "-" token (6:51 ὁ at index 4) is blank in Reading', c51[4]?.gloss === '', `${JSON.stringify(c51[4])}`);
   check('an untranslated Berean token does NOT fall back to Strong\'s ("the")', c51[4]?.gloss === '' && c51[0]?.gloss === 'I');
 
-  // Detail panel: Berean reading gloss + Strong's + morphology.
-  const block = blockByRef(document, 'John 6:50');
-  block.querySelectorAll('.iw-toggle')[0].click();
-  const detail = document.querySelector('.interlinear-details .iw-detail:not([hidden])')?.textContent || '';
-  check('Read-mode detail labels the Berean reading gloss', /Berean reading gloss/.test(detail), detail.slice(0, 120));
-  check('Read-mode detail retains Strong\'s and morphology', /G3778/.test(detail) && /DPro-NMS/.test(detail), detail.slice(0, 160));
-
-  // Study mode: dense cards, Berean transliteration + gloss.
+  // --- Berean Study = expandable disclosure (inverted) ------------------
   const mode = document.getElementById('interlinear-berean-mode');
   mode.value = 'study';
   mode.dispatchEvent(new window.Event('change'));
-  await waitFor(() => studyCards(document, 'John 6:51').length > 0);
-  const s51 = studyCards(document, 'John 6:51');
-  check('Study mode renders 38 Berean dense cards', s51.length === 38, `got ${s51.length}`);
-  check('Study mode keeps Berean transliteration/gloss', s51[0]?.translit === 'egō' && s51[0]?.gloss === 'I', JSON.stringify(s51[0]));
+  await waitFor(() => disclosureCards(document, 'John 6:51').length === 38);
+  const s50 = disclosureCards(document, 'John 6:50');
+  const s51 = disclosureCards(document, 'John 6:51');
+  check('Berean Study John 6:50 has 17 expandable cards', s50.length === 17, `got ${s50.length}`);
+  check('Berean Study John 6:51 has 38 expandable cards', s51.length === 38, `got ${s51.length}`);
+  check('Berean Study cards are expandable', blockByRef(document, 'John 6:50').querySelectorAll('.iw-toggle').length === 17);
+  check('Berean Study keeps Berean transliteration/gloss', s51[0]?.translit === 'egō' && s51[0]?.gloss === 'I', JSON.stringify(s51[0]));
+  check('intentional blank stays blank in Study', s51[4]?.gloss === '', `${JSON.stringify(s51[4])}`);
+
+  // Expanding a Study card reveals gloss, morphology, Strong's, optional detail.
+  const firstToggle = blockByRef(document, 'John 6:50').querySelectorAll('.iw-toggle')[0];
+  firstToggle.click();
+  await waitFor(() => /Definition/.test(document.querySelector('.interlinear-details .iw-detail:not([hidden])')?.textContent || ''));
+  const detail = document.querySelector('.interlinear-details .iw-detail:not([hidden])')?.textContent || '';
+  check('expanded Study card shows the Berean reading gloss', /Berean reading gloss/.test(detail), detail.slice(0, 120));
+  check('expanded Study card shows morphology', /DPro-NMS/.test(detail), detail.slice(0, 200));
+  check('expanded Study card shows the Strong\'s number', /G3778/.test(detail), detail.slice(0, 200));
+  check('expanded Study card shows optional dictionary details', /Definition/.test(detail) && /KJV/.test(detail), detail.slice(0, 200));
+
+  // --- switching modes preserves verse + token counts -------------------
   mode.value = 'read';
   mode.dispatchEvent(new window.Event('change'));
-  await waitFor(() => readCards(document, 'John 6:50').length === 17);
+  await waitFor(() => denseCards(document, 'John 6:51').length === 38);
+  check('switching Study -> Reading preserves 38 tokens', denseCards(document, 'John 6:51').length === 38);
+  mode.value = 'study';
+  mode.dispatchEvent(new window.Event('change'));
+  await waitFor(() => disclosureCards(document, 'John 6:51').length === 38);
+  check('switching Reading -> Study preserves 38 tokens', disclosureCards(document, 'John 6:51').length === 38);
 
-  // Switch Berean -> Byzantine: byz has 41 tokens at 6:51; the optional
-  // candidate layer loads asynchronously, so wait for the candidate gloss.
+  // --- Byzantine behavior unchanged (Reading = disclosure) --------------
   toggle(window, 'interlinear', true);
-  await waitFor(() => readCards(document, 'John 6:51').length === 41
-    && readCards(document, 'John 6:50')[5]?.gloss === 'from');
-  const b51 = readCards(document, 'John 6:51');
-  const b50 = readCards(document, 'John 6:50');
-  check('switching to Byzantine restores 41-token John 6:51', b51.length === 41, `got ${b51.length}`);
-  check('Byzantine John 6:50 uses the candidate gloss ("from")', b50[5]?.gloss === 'from', JSON.stringify(b50[5]));
+  await waitFor(() => disclosureCards(document, 'John 6:51').length === 41
+    && disclosureCards(document, 'John 6:50')[5]?.gloss === 'from');
+  check('Byzantine Reading still uses expandable cards', blockByRef(document, 'John 6:50').querySelectorAll('.iw-toggle').length === 17);
+  check('switching to Byzantine restores 41-token John 6:51', disclosureCards(document, 'John 6:51').length === 41);
+  check('Byzantine John 6:50 uses the candidate gloss ("from")', disclosureCards(document, 'John 6:50')[5]?.gloss === 'from', JSON.stringify(disclosureCards(document, 'John 6:50')[5]));
   check('Byzantine and Berean are mutually exclusive in the UI',
     document.getElementById('interlinear-berean').checked === false);
+  const gmode = document.getElementById('interlinear-greek-mode');
+  gmode.value = 'study';
+  gmode.dispatchEvent(new window.Event('change'));
+  await waitFor(() => denseCards(document, 'John 6:51').length === 41);
+  check('Byzantine Study remains dense (unchanged)', denseCards(document, 'John 6:51').length === 41);
+  gmode.value = 'read';
+  gmode.dispatchEvent(new window.Event('change'));
+  await waitFor(() => disclosureCards(document, 'John 6:51').length === 41);
 
-  // Switch Byzantine -> Berean again.
+  // --- switch Byzantine -> Berean again ---------------------------------
   toggle(window, 'interlinear-berean', true);
-  await waitFor(() => readCards(document, 'John 6:51').length === 38);
-  check('switching back to Berean restores 38 tokens', readCards(document, 'John 6:51').length === 38);
-  check('switching back to Berean restores Berean glosses', readCards(document, 'John 6:51')[0]?.translit === 'egō');
+  const bmode = document.getElementById('interlinear-berean-mode');
+  bmode.value = 'read';
+  bmode.dispatchEvent(new window.Event('change'));
+  await waitFor(() => denseCards(document, 'John 6:51').length === 38);
+  check('switching back to Berean restores 38 tokens (Reading dense)', denseCards(document, 'John 6:51').length === 38);
+  check('switching back to Berean restores Berean glosses', denseCards(document, 'John 6:51')[0]?.translit === 'egō');
 
-  // Hebrew isolation.
+  // --- Hebrew unchanged (Reading = disclosure) --------------------------
   toggle(window, 'interlinear-berean', false);
   toggle(window, 'interlinear-he', true);
   goto(window, 'GEN', 1);
   const heb = await waitFor(() => document.querySelectorAll('.interlinear-verse .iw-hebrew').length > 0);
   check('Hebrew interlinear still renders independently', heb);
+  check('Hebrew Reading still uses expandable cards', !!document.querySelector('.interlinear-verse .iw-toggle .iw-hebrew'));
   check('Hebrew view contains no Berean Greek cards', document.querySelectorAll('.interlinear-verse .iw-greek').length === 0);
 
   window.close();
@@ -225,7 +254,7 @@ function studyCards(document, ref) {
   // Reader is not broken: Byzantine still works.
   toggle(window, 'interlinear-berean', false);
   toggle(window, 'interlinear', true);
-  const byzOk = await waitFor(() => readCards(document, 'John 6:50').length === 17);
+  const byzOk = await waitFor(() => disclosureCards(document, 'John 6:50').length === 17);
   check('reader survives a failed Berean chunk (Byzantine still works)', byzOk);
   toggle(window, 'interlinear', false);
 
@@ -234,7 +263,7 @@ function studyCards(document, ref) {
   toggle(window, 'interlinear-berean', true);
   await waitFor(() => document.querySelector('.interlinear-error'));
   document.querySelector('.interlinear-error button').click();
-  const recovered = await waitFor(() => readCards(document, 'John 6:50').length === 17);
+  const recovered = await waitFor(() => denseCards(document, 'John 6:50').length === 17);
   check('Retry reloads the chunk and renders', recovered);
 
   window.close();
@@ -249,7 +278,7 @@ function studyCards(document, ref) {
   const { document } = window;
   goto(window, 'JHN', 6);
   toggle(window, 'interlinear-berean', true);
-  await waitFor(() => readCards(document, 'John 6:50').length === 17);
+  await waitFor(() => denseCards(document, 'John 6:50').length === 17);
   const count = () => [...document.querySelectorAll('script')].filter((s) => /data\/berean\/JHN\.js$/.test(s.src)).length;
   check('selecting Berean injects exactly one John chunk script', count() === 1, `got ${count()}`);
   toggle(window, 'interlinear-berean', false);
@@ -289,7 +318,7 @@ const COMPOUNDS = [
   const { document } = window;
   goto(window, 'MAT', 1);
   toggle(window, 'interlinear-berean', true);
-  await waitFor(() => document.querySelectorAll('.interlinear-verse .iw-toggle').length > 0);
+  await waitFor(() => document.querySelectorAll('.interlinear-verse .iw:not(.iw-toggle)').length > 0);
 
   for (const [book, ch, verse, order, surface, translit] of COMPOUNDS) {
     const { cards } = await gotoCards(window, book, ch, verse);
@@ -325,7 +354,7 @@ const COMPOUNDS = [
     !!chapOm && chapOm.classList.contains('interlinear-omission'));
   check('John 5:4 notice is not framed as a load failure',
     /not present in the Berean Greek source/.test(chapOm?.querySelector('.interlinear-omission-note')?.textContent || ''));
-  check('John 5:3 still renders as a normal verse', !!refEndsWith(document, 'John 5:3')?.querySelector('.iw-toggle'));
+  check('John 5:3 still renders as a normal verse', !!refEndsWith(document, 'John 5:3')?.querySelector('.iw:not(.iw-toggle)'));
 
   // Direct-reference view.
   document.getElementById('reference').value = 'John 5:4';
@@ -342,7 +371,7 @@ const COMPOUNDS = [
   await waitFor(() => refEndsWith(document, 'Acts 8:37'));
   const actOm = refEndsWith(document, 'Acts 8:37');
   check('Acts 8:37 renders an omission block', !!actOm && actOm.classList.contains('interlinear-omission'));
-  check('Acts 8:36 renders normally next to the omission', !!refEndsWith(document, 'Acts 8:36')?.querySelector('.iw-toggle'));
+  check('Acts 8:36 renders normally next to the omission', !!refEndsWith(document, 'Acts 8:36')?.querySelector('.iw:not(.iw-toggle)'));
 
   window.close();
 }
@@ -356,7 +385,10 @@ const COMPOUNDS = [
   const { document } = window;
   goto(window, 'JHN', 6);
   toggle(window, 'interlinear-berean', true);
-  await waitFor(() => readCards(document, 'John 6:50').length === 17);
+  const mode = document.getElementById('interlinear-berean-mode');
+  mode.value = 'study';
+  mode.dispatchEvent(new window.Event('change'));
+  await waitFor(() => disclosureCards(document, 'John 6:50').length === 17);
   const strongsLoaded = await waitFor(() => window.MARANATHA_STRONGS_GREEK && Object.keys(window.MARANATHA_STRONGS_GREEK.definitions || {}).length > 0);
   check('shared Strong\'s dictionary loads as optional detail for Berean', strongsLoaded);
   blockByRef(document, 'John 6:50').querySelectorAll('.iw-toggle')[0].click();
@@ -378,8 +410,11 @@ const COMPOUNDS = [
   const { document } = window;
   goto(window, 'JHN', 6);
   toggle(window, 'interlinear-berean', true);
-  await waitFor(() => readCards(document, 'John 6:50').length === 17);
-  check('Berean renders before the optional dictionary arrives', readCards(document, 'John 6:50').length === 17);
+  const mode = document.getElementById('interlinear-berean-mode');
+  mode.value = 'study';
+  mode.dispatchEvent(new window.Event('change'));
+  await waitFor(() => disclosureCards(document, 'John 6:50').length === 17);
+  check('Berean renders before the optional dictionary arrives', disclosureCards(document, 'John 6:50').length === 17);
   check('dictionary is genuinely absent pre-release', !window.MARANATHA_STRONGS_GREEK);
   window.__origAppend(document.head, held);
   const late = await waitFor(() => {
@@ -407,9 +442,12 @@ const COMPOUNDS = [
   const { document } = window;
   goto(window, 'JHN', 6);
   toggle(window, 'interlinear-berean', true);
-  await waitFor(() => readCards(document, 'John 6:50').length === 17);
-  check('Berean still renders when the optional dictionary fails', readCards(document, 'John 6:50').length === 17);
-  check('Berean gloss still shown when the optional dictionary fails', readCards(document, 'John 6:50')[5]?.gloss === 'from');
+  const mode = document.getElementById('interlinear-berean-mode');
+  mode.value = 'study';
+  mode.dispatchEvent(new window.Event('change'));
+  await waitFor(() => disclosureCards(document, 'John 6:50').length === 17);
+  check('Berean still renders when the optional dictionary fails', disclosureCards(document, 'John 6:50').length === 17);
+  check('Berean gloss still shown when the optional dictionary fails', disclosureCards(document, 'John 6:50')[5]?.gloss === 'from');
   blockByRef(document, 'John 6:50').querySelectorAll('.iw-toggle')[0].click();
   const detail = document.querySelector('.interlinear-details .iw-detail:not([hidden])')?.textContent || '';
   check('detail retains Strong\'s + morphology without the dictionary', /G3778/.test(detail) && /DPro-NMS/.test(detail));

@@ -331,7 +331,9 @@ const refs = {
       rtl: false,
       lang: 'el',
       transliterate: transliterateGreek,
-      disclosure: true,
+      // Which card style each mode uses, per interlinear. Default order:
+      // Reading = expandable disclosure cards, Study = dense cards.
+      disclosureByMode: { read: true, study: false },
       toggleRef: 'interlinear',
       modeRef: 'interlinearGreekMode',
     },
@@ -351,7 +353,7 @@ const refs = {
       rtl: true,
       lang: 'he',
       transliterate: transliterateHebrew,
-      disclosure: true,
+      disclosureByMode: { read: true, study: false },
       toggleRef: 'interlinearHe',
       modeRef: 'interlinearHeMode',
     },
@@ -389,7 +391,9 @@ const refs = {
       rtl: false,
       lang: 'el',
       transliterate: null, // use Berean's own transliteration (token field)
-      disclosure: true,
+      // Inverted for Berean only: Reading = dense cards, Study = expandable
+      // disclosure cards (gloss + morphology + Strong's + optional detail).
+      disclosureByMode: { read: false, study: true },
       toggleRef: 'interlinearBerean',
       modeRef: 'interlinearBereanMode',
     },
@@ -669,11 +673,13 @@ function init() {
       applyAppearance();
   }
 
-  // Interlinear display mode, shared by Greek and Hebrew: 'read' uses
-  // progressive-disclosure cards, 'study' uses the original dense lexicon
-  // cards. Preference is persisted like the other settings and defaults to
-  // 'read'. A newly added interlinear opts in by setting `disclosure` and the
-  // toggle/mode element refs on its config.
+  // Interlinear display mode, shared by all interlinears: the two mode names
+  // are 'read' and 'study'. Which card style each name maps to is declared per
+  // interlinear via `config.disclosureByMode` (true = expandable disclosure
+  // card, false = dense card). Byzantine/Hebrew use read=disclosure,
+  // study=dense; Berean inverts the two. Preference is persisted like the other
+  // settings and defaults to 'read'. A newly added interlinear opts in by
+  // setting `disclosureByMode` and the toggle/mode element refs on its config.
   function getStoredInterlinearMode(key) {
       try {
           return localStorage.getItem(`maranatha-interlinear-${key}-mode`) === 'study' ? 'study' : 'read';
@@ -2106,9 +2112,11 @@ function init() {
     // Optional reviewed reading layer (Read mode only, Byzantine only). Berean
     // never consults it. Absent/cached-out data simply yields no overrides.
     const reviewed = config.reviewedGlobal ? window[config.reviewedGlobal] : null;
-    // Progressive disclosure applies to the interlinears that opt in via
-    // `config.disclosure`; Study mode falls back to the original dense cards.
-    const disclosure = !!config.disclosure && interlinearState[config.key].mode !== 'study';
+    // Card style is explicit per interlinear and per mode (`disclosureByMode`):
+    // Byzantine/Hebrew use disclosure cards in Reading and dense cards in
+    // Study; Berean inverts that. No interlinear-specific branches below.
+    const disclosure = !!config.disclosureByMode
+      && !!config.disclosureByMode[interlinearState[config.key].mode];
     // First selected translation, if any, supplies the verse caption.
     const translation = translations[0];
 
