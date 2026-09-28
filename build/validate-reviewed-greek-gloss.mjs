@@ -96,7 +96,7 @@ const chapterKeys = Object.keys(jsonData.verses.JHN || {});
 check('only John 6 is present', chapterKeys.length === 1 && chapterKeys[0] === '6', chapterKeys.join(','));
 const verseKeys = Object.keys(jsonData.verses.JHN?.[6] || {}).sort();
 check('only John 6:50 and 6:51 are present', verseKeys.join(',') === '50,51', verseKeys.join(','));
-check('no verse slot is a gap (pilot fills all tokens)', 
+check('no verse slot is a gap (pilot fills all tokens)',
   [50, 51].every(v => (jsonData.verses.JHN[6][String(v)] || []).every(Boolean)));
 
 // --- revised candidate glosses (supervisor round 2) ---------------------
