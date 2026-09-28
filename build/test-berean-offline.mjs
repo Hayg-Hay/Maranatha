@@ -169,8 +169,8 @@ const statusText = (document) => document.getElementById('berean-cache-status')?
   const { window } = dom; const { document } = window;
   goto(window, 'JHN', 6);
   toggle(window, 'interlinear-berean', true);
-  await waitFor(() => document.querySelectorAll('.interlinear-verse .iw-toggle').length > 0);
-  check('file:// renders Berean without any service-worker call', document.querySelectorAll('.interlinear-verse .iw-toggle').length > 0);
+  await waitFor(() => document.querySelectorAll('.interlinear-verse .iw:not(.iw-toggle)').length > 0);
+  check('file:// renders Berean without any service-worker call', document.querySelectorAll('.interlinear-verse .iw:not(.iw-toggle)').length > 0);
   check('file:// leaves the cache status empty', statusText(document) === '', JSON.stringify(statusText(document)));
   window.close();
 }
