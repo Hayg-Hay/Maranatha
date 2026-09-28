@@ -306,12 +306,17 @@ const refs = {
       loadingLabel: 'Greek',
       dataGlobal: 'MARANATHA_INTERLINEAR_BYZ',
       glossGlobal: 'MARANATHA_STRONGS_GREEK',
-      dataSources: ['data/byz-interlinear.js', 'data/strongs-greek.js'],
+      reviewedGlobal: 'MARANATHA_REVIEWED_GREEK_GLOSS',
+      dataSources: [
+        'data/byz-interlinear.js',
+        'data/strongs-greek.js',
+        'data/reviewed-greek-gloss.js',
+      ],
       strongsPrefix: 'G',
       testament: 'NT',
       label: '(Greek interlinear)',
       unavailable: 'Interlinear data is available for the Greek New Testament only.',
-      sourceNote: 'Greek text: Robinson-Pierpont Byzantine (Unlicense) \u00b7 glosses: Strong\'s, Open Scriptures (CC-BY-SA).',
+      sourceNote: 'Greek text: Robinson-Pierpont Byzantine (Unlicense) \u00b7 glosses: Strong\'s, Open Scriptures (CC-BY-SA) \u00b7 reviewed reading pilot: John 6:50\u201351.',
       surfaceClass: 'iw-greek',
       rtl: false,
       lang: 'el',
@@ -1703,7 +1708,16 @@ function init() {
   // morphology live in a detail panel that the button reveals. Independent per
   // card (no accordion), keyboard/touch/SR friendly. Study mode does not use
   // this builder.
-  function buildDisclosureWord(config, surface, strongs, morph, definition, rendering, detailId) {
+  function buildDisclosureWord(config, surface, strongs, morph, definition, rendering, detailId, reviewed) {
+    // A reviewed pilot entry is [transliteration, gloss]. When present it wins
+    // over the algorithmic transliteration and the Strong's-derived gloss;
+    // otherwise the existing fallbacks are used. An intentional-empty gloss is
+    // a non-null entry whose gloss is '', so it suppresses the fallback (shown
+    // as deliberately blank) rather than silently reverting to Strong's.
+    const reviewedTranslit = reviewed && reviewed[0] ? reviewed[0] : '';
+    const translitText = reviewedTranslit || config.transliterate(surface);
+    const glossText = reviewed ? reviewed[1] : shortGloss(definition, strongs, morph);
+
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'iw iw-toggle';
@@ -1717,11 +1731,11 @@ function init() {
 
     const translit = document.createElement('span');
     translit.className = 'iw-translit';
-    translit.textContent = config.transliterate(surface);
+    translit.textContent = translitText;
 
     const shortGlossEl = document.createElement('span');
     shortGlossEl.className = 'iw-gloss-short';
-    shortGlossEl.textContent = shortGloss(definition, strongs, morph);
+    shortGlossEl.textContent = glossText;
 
     const caret = document.createElement('span');
     caret.className = 'iw-caret';
@@ -1740,10 +1754,11 @@ function init() {
     const headingWord = document.createElement('span');
     if (config.lang) headingWord.lang = config.lang;
     headingWord.textContent = surface;
-    heading.append(headingWord, ` \u00b7 ${config.transliterate(surface)}`);
+    heading.append(headingWord, ` \u00b7 ${translitText}`);
     detail.appendChild(heading);
 
     const rows = [];
+    if (reviewed) rows.push(['Reading gloss (reviewed pilot)', glossText || '(intentionally untranslated)']);
     if (definition) rows.push(['Definition', definition]);
     if (rendering) rows.push(['KJV', rendering]);
     if (strongs) rows.push(['Strong\u2019s', config.strongsPrefix + strongs]);
@@ -1778,6 +1793,9 @@ function init() {
     // working (both maps then resolve to the KJV list, as before).
     const definitions = strongsData.definitions || strongsData.glosses || {};
     const renderings = strongsData.renderings || strongsData.glosses || {};
+    // Optional reviewed reading layer (Read mode only). Absent/cached-out data
+    // simply yields no overrides, so every card falls back to current behavior.
+    const reviewed = config.reviewedGlobal ? window[config.reviewedGlobal] : null;
     // Progressive disclosure applies to the interlinears that opt in via
     // `config.disclosure`; Study mode falls back to the original dense cards.
     const disclosure = !!config.disclosure && interlinearState[config.key].mode !== 'study';
@@ -1793,7 +1811,7 @@ function init() {
       : [{ bookId: currentBook().id, chapter: Number(refs.chapter.value), ranges: null }];
 
     groups.forEach(group => {
-      renderInterlinearGroup(config, data, definitions, renderings, disclosure, translation, group);
+      renderInterlinearGroup(config, data, definitions, renderings, disclosure, translation, group, reviewed);
     });
 
     const note = document.createElement('p');
@@ -1804,7 +1822,7 @@ function init() {
 
   // Renders one book/chapter block of an interlinear view, optionally
   // restricted to a group's verse ranges (null ranges = whole chapter).
-  function renderInterlinearGroup(config, data, definitions, renderings, disclosure, translation, group) {
+  function renderInterlinearGroup(config, data, definitions, renderings, disclosure, translation, group, reviewed) {
     const book = canon.books.find(b => b.id === group.bookId);
     if (!book) return;
     const chapterNum = group.chapter;
@@ -1867,10 +1885,13 @@ function init() {
         const [surface, strongs, morph] = tokens[t];
         const definition = definitions[strongs] || '';
         const rendering = renderings[strongs] || '';
+        const reviewedEntry = reviewed
+          ? reviewed.verses?.[book.id]?.[chapterNum]?.[verseNum]?.[t] || null
+          : null;
 
         if (disclosure) {
           const detailId = `iw-detail-${book.id}-${chapterNum}-${verseNum}-${t}`;
-          const { button, detail } = buildDisclosureWord(config, surface, strongs, morph, definition, rendering, detailId);
+          const { button, detail } = buildDisclosureWord(config, surface, strongs, morph, definition, rendering, detailId, reviewedEntry);
           words.appendChild(button);
           details.appendChild(detail);
           continue;
