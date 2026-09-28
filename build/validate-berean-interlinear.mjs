@@ -105,6 +105,11 @@ check('no joining mark leaked into runtime', joiningLeaks === 0, `${joiningLeaks
 check('compound normalization table has the 19 reviewed cases', compoundTable.cases.length === 19, `${compoundTable.cases.length}`);
 check('build metadata preserves every raw compound form', (meta.compoundNormalization?.cases || []).length === 19
   && meta.compoundNormalization.cases.every((c) => c.rawSurface && c.surface));
+check('generated normalization description references the reviewed 19-case table',
+  /compound-normalization\.json/.test(meta.normalization?.compoundSeparators || '')
+  && /\b19\b/.test(meta.normalization?.compoundSeparators || '')
+  && /space/.test(meta.normalization?.compoundSeparators || '')
+  && /joined/.test(meta.normalization?.compoundSeparators || ''), JSON.stringify(meta.normalization?.compoundSeparators || '').slice(0, 100));
 
 let compoundMismatch = 0;
 for (const c of compoundTable.cases) {

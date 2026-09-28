@@ -62,7 +62,7 @@ Whole-document scan of **all 138,130** lexical hyperlinks:
 - **0** hyperlinks without a recoverable Greek surface.
 - **0** missing Strong's numbers; **0** empty glosses.
 - 138,034 (99.93%) have exactly one preceding Greek word.
-- 19 are single display compounds joined by `¦` (e.g. `μή¦γε`, `ἀγαθὸν¦ποιῆσαι`, `Ὅ¦τι`); each carries one tooltip for the whole compound.
+- 19 are single **Berean alignment records** whose displayed Greek contains a `¦` display separator and may therefore contain multiple displayed Greek words (e.g. `μή¦γε`, `ἀγαθὸν¦ποιῆσαι`, `ὅ¦τι`); each carries one tooltip/gloss for the whole record. All 19 are reviewed individually in [`compound-normalization.json`](compound-normalization.json): 18 render with a word space and `Ἁρ¦μαγεδών` is joined to `Ἁρμαγεδών`. The raw source surface/transliteration are preserved in that table and in `berean-build.json` for audit.
 - 77 are preceded by a typographic joining mark (`‿ 〉 ⧽ …`) rather than the word itself; the Greek word is in the run **before** that mark, and concatenating the runs between two hyperlinks recovers it. The extractor handles this.
 - `-` is Berean's explicit "intentionally untranslated" marker (e.g. articles); John contains 678 of them.
 

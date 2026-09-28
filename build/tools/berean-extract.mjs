@@ -50,8 +50,12 @@ const strip = (xml) => decode(xml
   .replace(/<w:tab\/>/g, '\t').replace(/<w:br\/>/g, '\n')
   .replace(/<w:noBreakHyphen\/>/g, '-').replace(/<[^>]+>/g, ''));
 
-// A display word may join its parts with U+00A6 (¦), U+2502 (│) or '|'
-// (e.g. μή¦γε, ἀγαθὸν¦ποιῆσαι). Those are one token; the separator is dropped.
+// A single Berean alignment record may display several Greek words joined by
+// U+00A6 (¦), U+2502 (│) or '|' (e.g. μή¦γε, ἀγαθὸν¦ποιῆσαι). The extractor
+// PRESERVES this raw separator on the surface (and the tooltip transliteration)
+// so nothing is silently altered; the production importer applies the reviewed
+// table in build/sources/berean-interlinear/compound-normalization.json to turn
+// each raw separator into a word space or, for a single split word, a join.
 const GREEK_COMPOUND = /[\p{Script=Greek}\p{M}]+(?:[\u00A6\u2502|][\p{Script=Greek}\p{M}]+)*/gu;
 
 const SCAN = /<w:hyperlink r:id="(rId\d+)" w:tooltip="([^"]*)"[^>]*>([\s\S]*?)<\/w:hyperlink>|<w:r\b[^>]*>([\s\S]*?)<\/w:r>|<w:bookmarkStart w:id="\d+" w:name="([^"]+)"\/>|<w:p\b/g;

@@ -304,7 +304,7 @@ export function assemble(xml, sourceHash) {
     intentionalBlanks: blanks,
     knownOmissions: omissions,
     normalization: {
-      compoundSeparators: 'U+00A6/U+2502/| removed inside a display compound (e.g. μή¦γε -> μήγε)',
+      compoundSeparators: 'All 19 raw U+00A6/U+2502/| display-separator cases are normalized individually by build/sources/berean-interlinear/compound-normalization.json: 18 become a word space (e.g. μή¦γε -> "μή γε", ἀγαθὸν¦ποιῆσαι -> "ἀγαθὸν ποιῆσαι") and 1 (Ἁρ¦μαγεδών) is joined to "Ἁρμαγεδών". Each stays one Berean alignment record. The raw source surface and transliteration remain recorded in this file for audit; no runtime surface or transliteration retains a separator.',
       glossWhitespace: 'non-breaking/extra whitespace collapsed to single spaces',
       untranslatedMarker: 'visible "-" converted to empty-string gloss (intentional blank, not missing data)',
       definitions: 'tooltip dictionary definitions excluded from runtime data',
