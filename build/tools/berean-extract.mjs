@@ -83,7 +83,11 @@ export function parse(xml, { maxAnomalies = 500 } = {}) {
     if (token.startsWith('<w:hyperlink')) {
       const [, rId, tooltip, inner] = m;
       const words = pending.match(GREEK_COMPOUND) || [];
-      const surface = words.length ? words[words.length - 1].replace(/[\u00A6\u2502|]/g, '') : '';
+      // Keep the source's own display form, including any  U+00A6/│/| display
+      // separator. Normalization to a visible surface happens in the importer
+      // against the reviewed compound table, so the raw form is preserved here
+      // for audit and the source can never be silently altered.
+      const surface = words.length ? words[words.length - 1] : '';
       if (!surface && anomalies.length < maxAnomalies) {
         anomalies.push({ kind: 'no-surface', book, chapter, verse, tooltip: tooltip.slice(0, 60) });
       }

@@ -101,25 +101,46 @@ self.addEventListener('message', (event) => {
     const books = Array.isArray(event.data.books) && event.data.books.length
       ? event.data.books
       : BEREAN_BOOKS;
-    event.waitUntil(cacheBereanChunks(books));
+    const requestId = event.data.requestId;
+    event.waitUntil(
+      cacheBereanChunks(books).then((result) => {
+        // Report the exact outcome so the page can decide whether the whole
+        // corpus is offline and can offer a retry for the failures.
+        if (event.source && event.source.postMessage) {
+          event.source.postMessage({
+            type: 'BEREAN_CACHE_RESULT',
+            requestId,
+            cached: result.cached,
+            failed: result.failed,
+          });
+        }
+      })
+    );
   }
 });
 
 async function cacheBereanChunks(books) {
   const cache = await caches.open(DATA_CACHE);
+  const cached = [];
+  const failed = [];
   await Promise.all(books.map(async (book) => {
     const url = `./data/berean/${book}.js`;
     try {
-      const cached = await cache.match(url);
-      if (cached) return;
+      const existing = await cache.match(url);
+      if (existing) { cached.push(book); return; }
       const response = await fetch(url);
       if (response && response.ok && response.type === 'basic') {
         await cache.put(url, response.clone());
+        cached.push(book);
+      } else {
+        failed.push(book);
       }
     } catch (error) {
-      // Offline or unavailable: the chunk stays lazy and can be fetched later.
+      // Offline or unavailable: report it so the page can retry.
+      failed.push(book);
     }
   }));
+  return { cached, failed };
 }
 
 self.addEventListener('activate', (event) => {

@@ -12,6 +12,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -50,6 +51,7 @@ async function createDom({ onScript } = {}) {
     beforeParse(window) {
       commonBeforeParse(window);
       const origAppend = window.Node.prototype.appendChild;
+      window.__origAppend = (node, child) => origAppend.call(node, child);
       window.Node.prototype.appendChild = function appendChild(child) {
         if (onScript && child && child.tagName === 'SCRIPT' && onScript(window, child)) return child;
         return origAppend.call(this, child);
@@ -90,6 +92,26 @@ function readCards(document, ref) {
     translit: btn.querySelector('.iw-translit')?.textContent,
     gloss: btn.querySelector('.iw-gloss-short')?.textContent,
   }));
+}
+function refEndsWith(document, suffix) {
+  return [...document.querySelectorAll('.interlinear-verse')]
+    .find((b) => (b.querySelector('.interlinear-ref')?.textContent || '').endsWith(suffix));
+}
+async function gotoCards(window, bookId, chapter, verse) {
+  goto(window, bookId, chapter);
+  await waitFor(() => refEndsWith(window.document, `:${verse}`));
+  const block = refEndsWith(window.document, `:${verse}`);
+  const cards = block ? [...block.querySelectorAll('.iw-toggle')].map((btn) => ({
+    surface: btn.querySelector('.iw-greek')?.textContent,
+    translit: btn.querySelector('.iw-translit')?.textContent,
+    gloss: btn.querySelector('.iw-gloss-short')?.textContent,
+  })) : [];
+  return { block, cards };
+}
+function chunkBooks(id) {
+  const sandbox = { window: {} };
+  vm.runInNewContext(fs.readFileSync(path.join(ROOT, 'data', 'berean', `${id}.js`), 'utf8'), sandbox);
+  return sandbox.window[`MARANATHA_BEREAN_${id}`].books[id];
 }
 function studyCards(document, ref) {
   const b = blockByRef(document, ref);
@@ -234,6 +256,164 @@ function studyCards(document, ref) {
   toggle(window, 'interlinear-berean', true);
   await sleep(300);
   check('re-selecting Berean does not inject a duplicate chunk script', count() === 1, `got ${count()}`);
+  window.close();
+}
+
+// ===========================================================================
+// Scenario D — all 19 reviewed display-compound cases (issue 1)
+// ===========================================================================
+const COMPOUNDS = [
+  ['MAT', 6, 1, 16, 'μή γε', 'mē ge'],
+  ['MAT', 7, 20, 0, 'ἄρα γε', 'ara ge'],
+  ['MAT', 9, 17, 9, 'μή γε', 'mē ge'],
+  ['MAT', 17, 26, 9, 'Ἄρα γε', 'Ara ge'],
+  ['MAT', 25, 9, 5, 'Μή ποτε', 'Mē pote'],
+  ['MRK', 3, 4, 6, 'ἀγαθὸν ποιῆσαι', 'agathon poiēsai'],
+  ['MRK', 6, 23, 4, 'Ὅ τι', 'Ho ti'],
+  ['LUK', 5, 36, 19, 'μή γε', 'mē ge'],
+  ['LUK', 5, 37, 10, 'μή γε', 'mē ge'],
+  ['LUK', 10, 6, 14, 'μή γε', 'mē ge'],
+  ['LUK', 13, 9, 9, 'μή γε', 'mē ge'],
+  ['LUK', 14, 32, 2, 'μή γε', 'mē ge'],
+  ['JHN', 8, 8, 2, 'κάτω κύψας', 'katō kypsas'],
+  ['JHN', 8, 25, 12, 'ὅ τι', 'ho ti'],
+  ['JHN', 14, 13, 1, 'ὅ τι', 'ho ti'],
+  ['JHN', 15, 16, 23, 'ὅ τι', 'ho ti'],
+  ['1CO', 16, 2, 9, 'ὅ τι', 'ho ti'],
+  ['2CO', 11, 16, 10, 'μή γε', 'mē ge'],
+  ['REV', 16, 16, 9, 'Ἁρμαγεδών', 'Harmagedōn'],
+];
+{
+  const dom = await createDom();
+  const { window } = dom;
+  const { document } = window;
+  goto(window, 'MAT', 1);
+  toggle(window, 'interlinear-berean', true);
+  await waitFor(() => document.querySelectorAll('.interlinear-verse .iw-toggle').length > 0);
+
+  for (const [book, ch, verse, order, surface, translit] of COMPOUNDS) {
+    const { cards } = await gotoCards(window, book, ch, verse);
+    const c = cards[order];
+    check(`compound ${book} ${ch}:${verse} #${order + 1} = "${surface}"`,
+      c && c.surface === surface && c.translit === translit,
+      c ? JSON.stringify([c.surface, c.translit]) : 'no card');
+  }
+
+  // Contextual distinction: the compound "ὅ τι" is a two-word relative form,
+  // while the ordinary conjunction ὅτι remains a single word in the data.
+  const jhn = chunkBooks('JHN');
+  let plainHoti = false;
+  for (const ch of jhn) if (ch) for (const vs of ch) if (vs) for (const t of vs) if (t && t[3] === '3754' && t[0] === 'ὅτι') plainHoti = true;
+  check('plain single-word conjunction ὅτι remains distinct from ὅ τι', plainHoti);
+
+  window.close();
+}
+
+// ===========================================================================
+// Scenario E — documented source omissions render explicitly (issue 3)
+// ===========================================================================
+{
+  const dom = await createDom();
+  const { window } = dom;
+  const { document } = window;
+  goto(window, 'JHN', 5);
+  toggle(window, 'interlinear-berean', true);
+  await waitFor(() => document.querySelectorAll('.interlinear-verse').length > 0);
+
+  const chapOm = refEndsWith(document, 'John 5:4');
+  check('John 5:4 renders an omission block in chapter view',
+    !!chapOm && chapOm.classList.contains('interlinear-omission'));
+  check('John 5:4 notice is not framed as a load failure',
+    /not present in the Berean Greek source/.test(chapOm?.querySelector('.interlinear-omission-note')?.textContent || ''));
+  check('John 5:3 still renders as a normal verse', !!refEndsWith(document, 'John 5:3')?.querySelector('.iw-toggle'));
+
+  // Direct-reference view.
+  document.getElementById('reference').value = 'John 5:4';
+  document.getElementById('reference-go').click();
+  await waitFor(() => {
+    const b = refEndsWith(document, 'John 5:4');
+    return b && b.classList.contains('interlinear-omission');
+  });
+  check('John 5:4 omission renders in direct-reference view',
+    !!refEndsWith(document, 'John 5:4')?.classList.contains('interlinear-omission'));
+
+  // A second omission in another book.
+  goto(window, 'ACT', 8);
+  await waitFor(() => refEndsWith(document, 'Acts 8:37'));
+  const actOm = refEndsWith(document, 'Acts 8:37');
+  check('Acts 8:37 renders an omission block', !!actOm && actOm.classList.contains('interlinear-omission'));
+  check('Acts 8:36 renders normally next to the omission', !!refEndsWith(document, 'Acts 8:36')?.querySelector('.iw-toggle'));
+
+  window.close();
+}
+
+// ===========================================================================
+// Scenario F — shared Strong's dictionary is optional supplemental detail (issue 4)
+// ===========================================================================
+{
+  const dom = await createDom();
+  const { window } = dom;
+  const { document } = window;
+  goto(window, 'JHN', 6);
+  toggle(window, 'interlinear-berean', true);
+  await waitFor(() => readCards(document, 'John 6:50').length === 17);
+  const strongsLoaded = await waitFor(() => window.MARANATHA_STRONGS_GREEK && Object.keys(window.MARANATHA_STRONGS_GREEK.definitions || {}).length > 0);
+  check('shared Strong\'s dictionary loads as optional detail for Berean', strongsLoaded);
+  blockByRef(document, 'John 6:50').querySelectorAll('.iw-toggle')[0].click();
+  const detail = document.querySelector('.interlinear-details .iw-detail:not([hidden])')?.textContent || '';
+  check('Definition row appears once the optional dictionary loads', /Definition/.test(detail), detail.slice(0, 120));
+  check('Berean reading gloss stays primary in the detail', /Berean reading gloss/.test(detail));
+  window.close();
+}
+{
+  // Late loading: cards render before the optional dictionary arrives.
+  let held = null;
+  const dom = await createDom({
+    onScript(window, child) {
+      if (String(child.src).includes('data/strongs-greek.js')) { held = child; return true; }
+      return false;
+    },
+  });
+  const { window } = dom;
+  const { document } = window;
+  goto(window, 'JHN', 6);
+  toggle(window, 'interlinear-berean', true);
+  await waitFor(() => readCards(document, 'John 6:50').length === 17);
+  check('Berean renders before the optional dictionary arrives', readCards(document, 'John 6:50').length === 17);
+  check('dictionary is genuinely absent pre-release', !window.MARANATHA_STRONGS_GREEK);
+  window.__origAppend(document.head, held);
+  const late = await waitFor(() => {
+    const block = blockByRef(document, 'John 6:50');
+    if (!block) return false;
+    block.querySelectorAll('.iw-toggle')[0].click();
+    const d = document.querySelector('.interlinear-details .iw-detail:not([hidden])')?.textContent || '';
+    return /Definition/.test(d);
+  });
+  check('optional dictionary late-load rerenders with Definition rows', late);
+  window.close();
+}
+{
+  // Non-fatal failure: Berean stays fully usable without the dictionary.
+  const dom = await createDom({
+    onScript(window, child) {
+      if (String(child.src).includes('data/strongs-greek.js')) {
+        setTimeout(() => { if (child.onerror) child.onerror(new window.Event('error')); }, 0);
+        return true;
+      }
+      return false;
+    },
+  });
+  const { window } = dom;
+  const { document } = window;
+  goto(window, 'JHN', 6);
+  toggle(window, 'interlinear-berean', true);
+  await waitFor(() => readCards(document, 'John 6:50').length === 17);
+  check('Berean still renders when the optional dictionary fails', readCards(document, 'John 6:50').length === 17);
+  check('Berean gloss still shown when the optional dictionary fails', readCards(document, 'John 6:50')[5]?.gloss === 'from');
+  blockByRef(document, 'John 6:50').querySelectorAll('.iw-toggle')[0].click();
+  const detail = document.querySelector('.interlinear-details .iw-detail:not([hidden])')?.textContent || '';
+  check('detail retains Strong\'s + morphology without the dictionary', /G3778/.test(detail) && /DPro-NMS/.test(detail));
+  check('no Definition row when the optional dictionary failed', !/Definition/.test(detail));
   window.close();
 }
 

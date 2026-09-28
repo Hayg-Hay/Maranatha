@@ -297,6 +297,20 @@ code { font-family:Consolas, monospace; }
 .iw-meta { font-size: .68rem; color: var(--placeholder); }
 .interlinear-source { color: var(--muted); font-size: .8rem; margin-top: 10px; }
 
+/* Documented source omissions (e.g. NA-omitted verses in Berean). A real,
+   visible verse block with its reference and a concise, accessible notice. */
+.interlinear-omission-note {
+  margin: 6px 0 0; padding: 10px 12px; border: 1px dashed var(--line);
+  border-radius: 6px; background: var(--paper); color: var(--muted); font-size: .85rem;
+}
+/* Opt-in Berean offline cache status. */
+.berean-cache-status { margin: 8px 0 0; font-size: .8rem; color: var(--muted); }
+.berean-cache-status[data-state="ok"] { color: var(--accent, #3a7d44); }
+.berean-cache-status[data-state="warn"] { color: var(--muted); }
+.berean-cache-status .berean-cache-retry {
+  font: inherit; padding: 1px 8px; margin-left: 2px; cursor: pointer;
+}
+
 /* Hebrew interlinear experiment: reading-first disclosure cards. The button
    is the collapsed reading surface; the detail panel below reveals the full
    Strong's entry. Greek keeps the original static cards above. */

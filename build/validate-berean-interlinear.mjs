@@ -16,7 +16,10 @@ const ROOT = path.join(dir, '..');
 const BEREAN_DIR = path.join(ROOT, 'data', 'berean');
 const BUILD_META = path.join(dir, 'sources', 'berean-interlinear', 'berean-build.json');
 const FIXTURE = path.join(dir, 'sources', 'berean-interlinear', 'john-6-50-51.fixture.json');
+const COMPOUND_TABLE = path.join(dir, 'sources', 'berean-interlinear', 'compound-normalization.json');
 const BYZ = path.join(ROOT, 'data', 'byz-interlinear.json');
+const SEPARATOR_RE = /[\u00A6\u2502|]/;
+const JOINING_RE = /[\u203F\u3008\u3009\u2040\u29FD\uFE33]/;
 
 const EXPECTED_TOTAL = 138130;
 const EXPECTED_JOHN = 15660;
@@ -36,6 +39,7 @@ function loadGlobal(src) {
 // --- load -----------------------------------------------------------------
 const meta = JSON.parse(fs.readFileSync(BUILD_META, 'utf8'));
 const fixture = JSON.parse(fs.readFileSync(FIXTURE, 'utf8'));
+const compoundTable = JSON.parse(fs.readFileSync(COMPOUND_TABLE, 'utf8'));
 const byz = JSON.parse(fs.readFileSync(BYZ, 'utf8'));
 
 const manifestWin = loadGlobal(fs.readFileSync(path.join(BEREAN_DIR, 'manifest.js'), 'utf8'));
@@ -71,7 +75,7 @@ check('manifest lists exactly the 27 NT books in canon order', JSON.stringify(ma
 check('build metadata lists exactly the 27 NT books', JSON.stringify(meta.books) === JSON.stringify(NT));
 
 // --- token validation -----------------------------------------------------
-let fieldErrors = 0, strongsErrors = 0, blanks = 0;
+let fieldErrors = 0, strongsErrors = 0, blanks = 0, separatorLeaks = 0, joiningLeaks = 0;
 for (const id of NT) {
   blankByBook[id] = 0;
   books[id].forEach((verseArr, ci) => {
@@ -84,6 +88,8 @@ for (const id of NT) {
         const [surface, translit, morph, strongs, gloss] = tok;
         if (!surface || !translit || !morph || !strongs || gloss === undefined) fieldErrors++;
         if (!/^\d+$/.test(strongs)) strongsErrors++;
+        if (SEPARATOR_RE.test(surface) || SEPARATOR_RE.test(translit)) separatorLeaks++;
+        if (JOINING_RE.test(surface) || JOINING_RE.test(translit)) joiningLeaks++;
         if (gloss === '') { blanks++; blankByBook[id]++; }
       });
     });
@@ -94,6 +100,30 @@ check('every Strong\'s number is numeric', strongsErrors === 0, `${strongsErrors
 check(`total tokens = ${EXPECTED_TOTAL}`, total === EXPECTED_TOTAL, `got ${total}`);
 check(`John tokens = ${EXPECTED_JOHN}`, john === EXPECTED_JOHN, `got ${john}`);
 check('intentional blanks match build metadata', JSON.stringify(blankByBook) === JSON.stringify(meta.intentionalBlanks));
+check('no U+00A6/│/| display separator leaked into runtime', separatorLeaks === 0, `${separatorLeaks}`);
+check('no joining mark leaked into runtime', joiningLeaks === 0, `${joiningLeaks}`);
+check('compound normalization table has the 19 reviewed cases', compoundTable.cases.length === 19, `${compoundTable.cases.length}`);
+check('build metadata preserves every raw compound form', (meta.compoundNormalization?.cases || []).length === 19
+  && meta.compoundNormalization.cases.every((c) => c.rawSurface && c.surface));
+
+let compoundMismatch = 0;
+for (const c of compoundTable.cases) {
+  const token = books[c.book]?.[c.chapter - 1]?.[c.verse - 1]?.[c.order];
+  if (!token || token[0] !== c.surface || token[1] !== c.transliteration || token[3] !== c.strongs) compoundMismatch++;
+}
+check('every reviewed compound case matches its normalized runtime token', compoundMismatch === 0, `${compoundMismatch} mismatch`);
+
+const named = [
+  ['MRK', 3, 4, 6, 'ἀγαθὸν ποιῆσαι', 'agathon poiēsai'],
+  ['JHN', 8, 8, 2, 'κάτω κύψας', 'katō kypsas'],
+  ['REV', 16, 16, 9, 'Ἁρμαγεδών', 'Harmagedōn'],
+  ['MRK', 6, 23, 4, 'Ὅ τι', 'Ho ti'],
+  ['MAT', 6, 1, 16, 'μή γε', 'mē ge'],
+];
+for (const [id, c, v, o, surface, translit] of named) {
+  const tok = books[id][c - 1][v - 1][o];
+  check(`named normalization ${id} ${c}:${v} #${o + 1} = "${surface}"`, tok && tok[0] === surface && tok[1] === translit, tok ? JSON.stringify([tok[0], tok[1]]) : 'missing');
+}
 
 // --- book/chapter/verse organization -------------------------------------
 const gaps = {};

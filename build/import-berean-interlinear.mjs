@@ -41,6 +41,15 @@ const dir = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(dir, '..');
 const OUT_DIR = path.join(ROOT, 'data', 'berean');
 const BUILD_META = path.join(dir, 'sources', 'berean-interlinear', 'berean-build.json');
+const COMPOUND_TABLE = path.join(dir, 'sources', 'berean-interlinear', 'compound-normalization.json');
+
+const COMPOUND_TABLE_DATA = JSON.parse(fs.readFileSync(COMPOUND_TABLE, 'utf8'));
+const NORM_BY_KEY = new Map(COMPOUND_TABLE_DATA.cases.map((c) => [`${c.book}:${c.chapter}:${c.verse}:${c.order}`, c]));
+const hasSeparator = (value) => /[\u00A6\u2502|]/.test(String(value || ''));
+const SEPARATOR_RE = /[\u00A6\u2502|]/;
+// Typographic joining marks seen in the source runs (undertie/angle/blanked
+// glyphs) that must never reach a visible runtime surface.
+const JOINING_RE = /[\u203F\u3008\u3009\u2040\u29FD\uFE33]/;
 
 export const EXPECTED_SHA256 = '2d969f0a3831a2edd0e374677fd793dc02808575cf9ed9ba555b6970a3e99352';
 export const EXPECTED_TOTAL_TOKENS = 138130;
@@ -132,6 +141,7 @@ function buildBooks(parsed, canon) {
   const books = {};
   const blanks = {};
   const omissions = {};
+  const usedCompounds = new Set();
 
   for (const [display, id] of Object.entries(BOOK_ID)) {
     const chunk = parsed[display];
@@ -159,7 +169,20 @@ function buildBooks(parsed, canon) {
         verseArr.push(tokens.map((t, i) => {
           if (t.order !== i) errors.push(`${id} ${c}:${v} token order not contiguous`);
           if (t.gloss === '-') bookBlanks++;
-          return [t.surface, t.transliteration, t.morphology, t.strongs, t.gloss === '-' ? '' : t.gloss];
+          let surface = t.surface;
+          let transliteration = t.transliteration;
+          if (hasSeparator(surface) || hasSeparator(transliteration)) {
+            const key = `${id}:${c}:${v}:${i}`;
+            const norm = NORM_BY_KEY.get(key);
+            if (!norm) {
+              errors.push(`${id} ${c}:${v} #${i + 1}: unreviewed display compound ${JSON.stringify(surface)}`);
+            } else {
+              surface = norm.surface;
+              transliteration = norm.transliteration;
+              usedCompounds.add(key);
+            }
+          }
+          return [surface, transliteration, t.morphology, t.strongs, t.gloss === '-' ? '' : t.gloss];
         }));
       }
       const gaps = [];
@@ -176,7 +199,7 @@ function buildBooks(parsed, canon) {
     books[id] = chapters;
     blanks[id] = bookBlanks;
   }
-  return { books, blanks, omissions, errors };
+  return { books, blanks, omissions, errors, usedCompounds };
 }
 
 function validateBooks(books, blanks) {
@@ -201,6 +224,8 @@ function validateBooks(books, blanks) {
           if (!strongs) errors.push(`${where}: empty Strong's`);
           if (!/^\d+$/.test(strongs)) errors.push(`${where}: non-numeric Strong's "${strongs}"`);
           if (gloss === undefined || gloss === null) errors.push(`${where}: gloss field missing`);
+          if (SEPARATOR_RE.test(surface) || SEPARATOR_RE.test(translit)) errors.push(`${where}: display separator leaked into runtime (${surface} / ${translit})`);
+          if (JOINING_RE.test(surface) || JOINING_RE.test(translit)) errors.push(`${where}: joining mark leaked into runtime (${surface} / ${translit})`);
         });
       });
     });
@@ -251,8 +276,12 @@ export function assemble(xml, sourceHash) {
   if (anomalies.length) {
     throw new Error(`extraction anomalies: ${anomalies.length}\n${JSON.stringify(anomalies.slice(0, 5), null, 2)}`);
   }
-  const { books, blanks, omissions, errors: buildErrors } = buildBooks(parsed, canon);
+  const { books, blanks, omissions, errors: buildErrors, usedCompounds } = buildBooks(parsed, canon);
   if (buildErrors.length) throw new Error(`book build errors:\n  ${buildErrors.join('\n  ')}`);
+  const unusedCompounds = [...NORM_BY_KEY.keys()].filter((key) => !usedCompounds.has(key));
+  if (unusedCompounds.length) {
+    throw new Error(`reviewed compound entries never applied (stale table):\n  ${unusedCompounds.join('\n  ')}`);
+  }
   const { errors, total, john } = validateBooks(books, blanks);
   if (errors.length) throw new Error(`validation errors:\n  ${errors.join('\n  ')}`);
 
@@ -280,6 +309,22 @@ export function assemble(xml, sourceHash) {
       untranslatedMarker: 'visible "-" converted to empty-string gloss (intentional blank, not missing data)',
       definitions: 'tooltip dictionary definitions excluded from runtime data',
       verseIndexing: 'verse numbers kept at their canonical index; NA-omitted verses are null placeholders',
+    },
+    compoundNormalization: {
+      table: 'build/sources/berean-interlinear/compound-normalization.json',
+      count: COMPOUND_TABLE_DATA.cases.length,
+      cases: COMPOUND_TABLE_DATA.cases.map((c) => ({
+        ref: `${c.book} ${c.chapter}:${c.verse}`,
+        order: c.order,
+        rawSurface: c.rawSurface,
+        rawTransliteration: c.rawTransliteration,
+        morphology: c.morphology,
+        strongs: c.strongs,
+        gloss: c.gloss,
+        surface: c.surface,
+        transliteration: c.transliteration,
+        decision: c.decision,
+      })),
     },
     files: {},
   };
