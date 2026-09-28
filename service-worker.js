@@ -35,8 +35,8 @@
 // the new shell. The update is therefore user-driven, not a silent replacement
 // mid-read.
 
-const CACHE_VERSION = 'v29';      // bump when shell files change
-const DATA_CACHE_VERSION = 'v2';  // bump when translation data changes
+const CACHE_VERSION = 'v30';      // bump when shell files change
+const DATA_CACHE_VERSION = 'v3';  // bump when translation/interlinear data changes
 
 const SHELL_CACHE = `maranatha-shell-${CACHE_VERSION}`;
 const DATA_CACHE = `maranatha-data-${DATA_CACHE_VERSION}`;
@@ -64,12 +64,22 @@ const SHELL_FILES = [
   './icons/favicon-32.png',
 ];
 
-// True for the lazy-loaded translation files: data/<id>.js, but NOT the
-// shell data files (canon.js, locales/en.js). The [^/]+ keeps the nested
-// locales path out, and canon.js is excluded explicitly.
+// True for the lazy-loaded translation and per-book interlinear files:
+// data/<id>.js and data/berean/<id>.js, but NOT the shell data files
+// (canon.js, locales/*.js). The [^/]+ keeps the nested locales path out, and
+// canon.js is excluded explicitly.
 function isTranslationFile(pathname) {
-  return /\/data\/[^/]+\.js$/.test(pathname) && !pathname.endsWith('/data/canon.js');
+  return /\/data\/(?:berean\/)?[^/]+\.js$/.test(pathname) && !pathname.endsWith('/data/canon.js');
 }
+
+// Berean Interlinear NT chunks. Kept in sync with the importer's deterministic
+// output names (data/berean/<BOOK>.js). Used only by the opt-in CACHE_BEREAN
+// message so the whole Berean NT can be cached for offline use without being a
+// mandatory startup payload.
+const BEREAN_BOOKS = [
+  'MAT', 'MRK', 'LUK', 'JHN', 'ACT', 'ROM', '1CO', '2CO', 'GAL', 'EPH', 'PHP', 'COL',
+  '1TH', '2TH', '1TI', '2TI', 'TIT', 'PHM', 'HEB', 'JAS', '1PE', '2PE', '1JN', '2JN', '3JN', 'JUD', 'REV',
+];
 
 self.addEventListener('install', (event) => {
   // Precache the new shell, but do not activate yet — see the update note at
@@ -83,7 +93,34 @@ self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
+  // Opt-in offline warm-up for the Berean NT: cache every per-book chunk so the
+  // complete Berean NT is available offline after the user selects it. This is
+  // deliberately NOT an install-time precache, so it never adds a mandatory
+  // startup payload. Failures are tolerated per file.
+  if (event.data && event.data.type === 'CACHE_BEREAN') {
+    const books = Array.isArray(event.data.books) && event.data.books.length
+      ? event.data.books
+      : BEREAN_BOOKS;
+    event.waitUntil(cacheBereanChunks(books));
+  }
 });
+
+async function cacheBereanChunks(books) {
+  const cache = await caches.open(DATA_CACHE);
+  await Promise.all(books.map(async (book) => {
+    const url = `./data/berean/${book}.js`;
+    try {
+      const cached = await cache.match(url);
+      if (cached) return;
+      const response = await fetch(url);
+      if (response && response.ok && response.type === 'basic') {
+        await cache.put(url, response.clone());
+      }
+    } catch (error) {
+      // Offline or unavailable: the chunk stays lazy and can be fetched later.
+    }
+  }));
+}
 
 self.addEventListener('activate', (event) => {
   const keep = new Set([SHELL_CACHE, DATA_CACHE]);

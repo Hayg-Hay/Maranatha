@@ -1,0 +1,188 @@
+{
+  "source": {
+    "url": "https://interlinearbible.com/bib.docx",
+    "sha256": "2d969f0a3831a2edd0e374677fd793dc02808575cf9ed9ba555b6970a3e99352",
+    "expectedSha256": "2d969f0a3831a2edd0e374677fd793dc02808575cf9ed9ba555b6970a3e99352"
+  },
+  "tool": "build/import-berean-interlinear.mjs",
+  "extractor": "build/tools/berean-extract.mjs",
+  "books": [
+    "MAT",
+    "MRK",
+    "LUK",
+    "JHN",
+    "ACT",
+    "ROM",
+    "1CO",
+    "2CO",
+    "GAL",
+    "EPH",
+    "PHP",
+    "COL",
+    "1TH",
+    "2TH",
+    "1TI",
+    "2TI",
+    "TIT",
+    "PHM",
+    "HEB",
+    "JAS",
+    "1PE",
+    "2PE",
+    "1JN",
+    "2JN",
+    "3JN",
+    "JUD",
+    "REV"
+  ],
+  "totalTokens": 138130,
+  "johnTokens": 15660,
+  "booksTokenCount": {
+    "MAT": 18373,
+    "MRK": 11285,
+    "LUK": 19509,
+    "JHN": 15660,
+    "ACT": 18458,
+    "ROM": 7120,
+    "1CO": 6838,
+    "2CO": 4477,
+    "GAL": 2231,
+    "EPH": 2423,
+    "PHP": 1631,
+    "COL": 1584,
+    "1TH": 1481,
+    "2TH": 824,
+    "1TI": 1592,
+    "2TI": 1239,
+    "TIT": 659,
+    "PHM": 335,
+    "HEB": 4960,
+    "JAS": 1743,
+    "1PE": 1685,
+    "2PE": 1102,
+    "1JN": 2141,
+    "2JN": 245,
+    "3JN": 219,
+    "JUD": 460,
+    "REV": 9856
+  },
+  "intentionalBlanks": {
+    "MAT": 700,
+    "MRK": 433,
+    "LUK": 739,
+    "JHN": 678,
+    "ACT": 826,
+    "ROM": 374,
+    "1CO": 210,
+    "2CO": 177,
+    "GAL": 80,
+    "EPH": 121,
+    "PHP": 64,
+    "COL": 79,
+    "1TH": 69,
+    "2TH": 37,
+    "1TI": 36,
+    "2TI": 54,
+    "TIT": 21,
+    "PHM": 9,
+    "HEB": 172,
+    "JAS": 62,
+    "1PE": 62,
+    "2PE": 40,
+    "1JN": 121,
+    "2JN": 7,
+    "3JN": 8,
+    "JUD": 17,
+    "REV": 371
+  },
+  "knownOmissions": {
+    "MAT 17": [
+      21
+    ],
+    "MAT 18": [
+      11
+    ],
+    "MAT 23": [
+      14
+    ],
+    "MRK 7": [
+      16
+    ],
+    "MRK 9": [
+      44,
+      46
+    ],
+    "MRK 11": [
+      26
+    ],
+    "MRK 15": [
+      28
+    ],
+    "LUK 17": [
+      36
+    ],
+    "LUK 23": [
+      17
+    ],
+    "JHN 5": [
+      4
+    ],
+    "ACT 8": [
+      37
+    ],
+    "ACT 15": [
+      34
+    ],
+    "ACT 24": [
+      7
+    ],
+    "ACT 28": [
+      29
+    ],
+    "ROM 14": [
+      24,
+      25,
+      26
+    ],
+    "ROM 16": [
+      24
+    ]
+  },
+  "normalization": {
+    "compoundSeparators": "U+00A6/U+2502/| removed inside a display compound (e.g. μή¦γε -> μήγε)",
+    "glossWhitespace": "non-breaking/extra whitespace collapsed to single spaces",
+    "untranslatedMarker": "visible \"-\" converted to empty-string gloss (intentional blank, not missing data)",
+    "definitions": "tooltip dictionary definitions excluded from runtime data",
+    "verseIndexing": "verse numbers kept at their canonical index; NA-omitted verses are null placeholders"
+  },
+  "files": {
+    "data/berean/MAT.js": "8979e4383df5b5938968845ad2aea9736f0c2c1b2adcfdc3e3fa08d7582b37ee",
+    "data/berean/MRK.js": "fcb095ceb1fd2ba1cd46783ed758d6dc5940b5f55eec82ea84858f09b59b06bc",
+    "data/berean/LUK.js": "6f99bf712d9a1c25982d10b84d946a41ad30a85562759492a79e40554f2ff8ea",
+    "data/berean/JHN.js": "0fbcc1a1684f09aabd6bb429177d36d8c77d8f66298deabf5a066e03711e6b06",
+    "data/berean/ACT.js": "32c313082693248fc2a2a1aa10b29b928d07753374e8b03c10c437a23318303d",
+    "data/berean/ROM.js": "2f8ca3cae8a2201d60d212401ae223b6aeb1f7a2e9494db30f3f0ca180140292",
+    "data/berean/1CO.js": "fdd72ba510e6f99f315d2a965b4a938f18ee538ace38d6236f89c48c33e2fb92",
+    "data/berean/2CO.js": "ea8d876bce4528d4d5794dd5375d1763dade45f82e6c9935529750a6c813d971",
+    "data/berean/GAL.js": "6451e7f4bbff5f06aad8562df461e4b6bf2a0cb00ff5c631a27be2a1c9de131e",
+    "data/berean/EPH.js": "ea177a0ed51f9a935c8db58c67b0b2968bbd274e405de5cdd796e22f1162c785",
+    "data/berean/PHP.js": "11a98174e1a6ff057ac2d5d3305ebaa5d839d10c967dc70a9dd780a23afefe22",
+    "data/berean/COL.js": "57caec01250c9aeb4f311cd000c2cca96b7d22f3698adae2014b316a5f041e03",
+    "data/berean/1TH.js": "67f319ba781bb123407b1330c342bb1ee41f2197a88973b5c56db54d042e0d12",
+    "data/berean/2TH.js": "c61c1e08bfb12f227bf3f0f604f51faf41b933afab8b185899729dbb0d861fdc",
+    "data/berean/1TI.js": "0843e5dac42ceaa8c6ed7ea02b5302f41510e49175330e2e2d845cb486d3a87f",
+    "data/berean/2TI.js": "a544c824f31fe3baf09b03805631a7b32599721b70b191a820183b15ab015de2",
+    "data/berean/TIT.js": "85ff755f7822984eefbab515f9453f006aaddf91196c99a63ac36cd66bb82150",
+    "data/berean/PHM.js": "fc75869fd6a38e69455d1dbb4037f71a5c059c03fff9471865bdfee1780c6978",
+    "data/berean/HEB.js": "441ba4bdccc57745eee3b5229cc9b1c6ad9e44206e3bafd78a6e7f488bf5eee4",
+    "data/berean/JAS.js": "e7424e8fd75c4f8b708ba3c3e75765d44065003376ebcb2ffbdf973c6d3a5c0a",
+    "data/berean/1PE.js": "0fb4fdf7522b2250ba1e4d5425f949acf57be2f02c2b21c7a9e1d2ebcd38d240",
+    "data/berean/2PE.js": "b5d5a4208eb6ba83d891b078a1031ea694770c153643a52caf6d3dff131f660d",
+    "data/berean/1JN.js": "fd88dfe6ffd811caa98f93f61158b2611c1d9cda3de2e219966ddf9a350b24e3",
+    "data/berean/2JN.js": "b2dbca293686412526cd945fbc66b1d2405cef3a366943d53df32b1c8cbb7d95",
+    "data/berean/3JN.js": "7afd69339e1188d7887e3b905167831267ba351a86f049d460502aac7788466f",
+    "data/berean/JUD.js": "490424f4444c27d15982d4c3c184161152fb217598af81d23ad3b45a8e999e5c",
+    "data/berean/REV.js": "7bf5d91bf4559584fafbfc280543aa01afad35784b2ef3ecd85b3600bd2b6165",
+    "data/berean/manifest.js": "68786fe36b06c31664a24e5cfee53ee30e437c58360e61666778e75b6cfec81f"
+  }
+}
