@@ -1,0 +1,422 @@
+{
+  "source": {
+    "url": "https://interlinearbible.com/bib.docx",
+    "sha256": "2d969f0a3831a2edd0e374677fd793dc02808575cf9ed9ba555b6970a3e99352",
+    "expectedSha256": "2d969f0a3831a2edd0e374677fd793dc02808575cf9ed9ba555b6970a3e99352"
+  },
+  "tool": "build/import-berean-interlinear.mjs",
+  "extractor": "build/tools/berean-extract.mjs",
+  "books": [
+    "MAT",
+    "MRK",
+    "LUK",
+    "JHN",
+    "ACT",
+    "ROM",
+    "1CO",
+    "2CO",
+    "GAL",
+    "EPH",
+    "PHP",
+    "COL",
+    "1TH",
+    "2TH",
+    "1TI",
+    "2TI",
+    "TIT",
+    "PHM",
+    "HEB",
+    "JAS",
+    "1PE",
+    "2PE",
+    "1JN",
+    "2JN",
+    "3JN",
+    "JUD",
+    "REV"
+  ],
+  "totalTokens": 138130,
+  "johnTokens": 15660,
+  "booksTokenCount": {
+    "MAT": 18373,
+    "MRK": 11285,
+    "LUK": 19509,
+    "JHN": 15660,
+    "ACT": 18458,
+    "ROM": 7120,
+    "1CO": 6838,
+    "2CO": 4477,
+    "GAL": 2231,
+    "EPH": 2423,
+    "PHP": 1631,
+    "COL": 1584,
+    "1TH": 1481,
+    "2TH": 824,
+    "1TI": 1592,
+    "2TI": 1239,
+    "TIT": 659,
+    "PHM": 335,
+    "HEB": 4960,
+    "JAS": 1743,
+    "1PE": 1685,
+    "2PE": 1102,
+    "1JN": 2141,
+    "2JN": 245,
+    "3JN": 219,
+    "JUD": 460,
+    "REV": 9856
+  },
+  "intentionalBlanks": {
+    "MAT": 700,
+    "MRK": 433,
+    "LUK": 739,
+    "JHN": 678,
+    "ACT": 826,
+    "ROM": 374,
+    "1CO": 210,
+    "2CO": 177,
+    "GAL": 80,
+    "EPH": 121,
+    "PHP": 64,
+    "COL": 79,
+    "1TH": 69,
+    "2TH": 37,
+    "1TI": 36,
+    "2TI": 54,
+    "TIT": 21,
+    "PHM": 9,
+    "HEB": 172,
+    "JAS": 62,
+    "1PE": 62,
+    "2PE": 40,
+    "1JN": 121,
+    "2JN": 7,
+    "3JN": 8,
+    "JUD": 17,
+    "REV": 371
+  },
+  "knownOmissions": {
+    "MAT 17": [
+      21
+    ],
+    "MAT 18": [
+      11
+    ],
+    "MAT 23": [
+      14
+    ],
+    "MRK 7": [
+      16
+    ],
+    "MRK 9": [
+      44,
+      46
+    ],
+    "MRK 11": [
+      26
+    ],
+    "MRK 15": [
+      28
+    ],
+    "LUK 17": [
+      36
+    ],
+    "LUK 23": [
+      17
+    ],
+    "JHN 5": [
+      4
+    ],
+    "ACT 8": [
+      37
+    ],
+    "ACT 15": [
+      34
+    ],
+    "ACT 24": [
+      7
+    ],
+    "ACT 28": [
+      29
+    ],
+    "ROM 14": [
+      24,
+      25,
+      26
+    ],
+    "ROM 16": [
+      24
+    ]
+  },
+  "normalization": {
+    "compoundSeparators": "All 19 raw U+00A6/U+2502/| display-separator cases are normalized individually by build/sources/berean-interlinear/compound-normalization.json: 18 become a word space (e.g. μή¦γε -> \"μή γε\", ἀγαθὸν¦ποιῆσαι -> \"ἀγαθὸν ποιῆσαι\") and 1 (Ἁρ¦μαγεδών) is joined to \"Ἁρμαγεδών\". Each stays one Berean alignment record. The raw source surface and transliteration remain recorded in this file for audit; no runtime surface or transliteration retains a separator.",
+    "glossWhitespace": "non-breaking/extra whitespace collapsed to single spaces",
+    "untranslatedMarker": "visible \"-\" converted to empty-string gloss (intentional blank, not missing data)",
+    "definitions": "tooltip dictionary definitions excluded from runtime data",
+    "verseIndexing": "verse numbers kept at their canonical index; NA-omitted verses are null placeholders"
+  },
+  "compoundNormalization": {
+    "table": "build/sources/berean-interlinear/compound-normalization.json",
+    "count": 19,
+    "cases": [
+      {
+        "ref": "MAT 6:1",
+        "order": 16,
+        "rawSurface": "μή¦γε",
+        "rawTransliteration": "mē¦ge",
+        "morphology": "Prtcl",
+        "strongs": "1490",
+        "gloss": "otherwise",
+        "surface": "μή γε",
+        "transliteration": "mē ge",
+        "decision": "space"
+      },
+      {
+        "ref": "MAT 7:20",
+        "order": 0,
+        "rawSurface": "ἄρα¦γε",
+        "rawTransliteration": "ara¦ge",
+        "morphology": "Prtcl",
+        "strongs": "686",
+        "gloss": "Then surely",
+        "surface": "ἄρα γε",
+        "transliteration": "ara ge",
+        "decision": "space"
+      },
+      {
+        "ref": "MAT 9:17",
+        "order": 9,
+        "rawSurface": "μή¦γε",
+        "rawTransliteration": "mē¦ge",
+        "morphology": "Prtcl",
+        "strongs": "1490",
+        "gloss": "lest",
+        "surface": "μή γε",
+        "transliteration": "mē ge",
+        "decision": "space"
+      },
+      {
+        "ref": "MAT 17:26",
+        "order": 9,
+        "rawSurface": "Ἄρα¦Γε",
+        "rawTransliteration": "Ara¦Ge",
+        "morphology": "Prtcl",
+        "strongs": "686",
+        "gloss": "Then",
+        "surface": "Ἄρα γε",
+        "transliteration": "Ara ge",
+        "decision": "space"
+      },
+      {
+        "ref": "MAT 25:9",
+        "order": 5,
+        "rawSurface": "Μή¦Ποτε",
+        "rawTransliteration": "Mē¦Pote",
+        "morphology": "Adv",
+        "strongs": "3379",
+        "gloss": "Lest",
+        "surface": "Μή ποτε",
+        "transliteration": "Mē pote",
+        "decision": "space"
+      },
+      {
+        "ref": "MRK 3:4",
+        "order": 6,
+        "rawSurface": "ἀγαθὸν¦ποιῆσαι",
+        "rawTransliteration": "agathon¦poiēsai",
+        "morphology": "V-ANA",
+        "strongs": "15",
+        "gloss": "to do good",
+        "surface": "ἀγαθὸν ποιῆσαι",
+        "transliteration": "agathon poiēsai",
+        "decision": "space"
+      },
+      {
+        "ref": "MRK 6:23",
+        "order": 4,
+        "rawSurface": "Ὅ¦τι",
+        "rawTransliteration": "HO¦ti",
+        "morphology": "Conj",
+        "strongs": "3754",
+        "gloss": "that",
+        "surface": "Ὅ τι",
+        "transliteration": "Ho ti",
+        "decision": "space"
+      },
+      {
+        "ref": "LUK 5:36",
+        "order": 19,
+        "rawSurface": "μή¦γε",
+        "rawTransliteration": "mē¦ge",
+        "morphology": "Prtcl",
+        "strongs": "1490",
+        "gloss": "otherwise",
+        "surface": "μή γε",
+        "transliteration": "mē ge",
+        "decision": "space"
+      },
+      {
+        "ref": "LUK 5:37",
+        "order": 10,
+        "rawSurface": "μή¦γε",
+        "rawTransliteration": "mē¦ge",
+        "morphology": "Prtcl",
+        "strongs": "1490",
+        "gloss": "otherwise",
+        "surface": "μή γε",
+        "transliteration": "mē ge",
+        "decision": "space"
+      },
+      {
+        "ref": "LUK 10:6",
+        "order": 14,
+        "rawSurface": "μή¦γε",
+        "rawTransliteration": "mē¦ge",
+        "morphology": "Prtcl",
+        "strongs": "1490",
+        "gloss": "not so",
+        "surface": "μή γε",
+        "transliteration": "mē ge",
+        "decision": "space"
+      },
+      {
+        "ref": "LUK 13:9",
+        "order": 9,
+        "rawSurface": "μή¦γε",
+        "rawTransliteration": "mē¦ge",
+        "morphology": "Adv",
+        "strongs": "1490",
+        "gloss": "not",
+        "surface": "μή γε",
+        "transliteration": "mē ge",
+        "decision": "space"
+      },
+      {
+        "ref": "LUK 14:32",
+        "order": 2,
+        "rawSurface": "μή¦γε",
+        "rawTransliteration": "mē¦ge",
+        "morphology": "Prtcl",
+        "strongs": "1490",
+        "gloss": "not",
+        "surface": "μή γε",
+        "transliteration": "mē ge",
+        "decision": "space"
+      },
+      {
+        "ref": "JHN 8:8",
+        "order": 2,
+        "rawSurface": "κάτω¦κύψας",
+        "rawTransliteration": "katō¦kypsas",
+        "morphology": "V-APA-NMS",
+        "strongs": "2955",
+        "gloss": "having stooped down",
+        "surface": "κάτω κύψας",
+        "transliteration": "katō kypsas",
+        "decision": "space"
+      },
+      {
+        "ref": "JHN 8:25",
+        "order": 12,
+        "rawSurface": "ὅ¦τι",
+        "rawTransliteration": "ho¦ti",
+        "morphology": "Conj",
+        "strongs": "3754",
+        "gloss": "what",
+        "surface": "ὅ τι",
+        "transliteration": "ho ti",
+        "decision": "space"
+      },
+      {
+        "ref": "JHN 14:13",
+        "order": 1,
+        "rawSurface": "ὅ¦τι",
+        "rawTransliteration": "ho¦ti",
+        "morphology": "Conj",
+        "strongs": "3754",
+        "gloss": "whatever",
+        "surface": "ὅ τι",
+        "transliteration": "ho ti",
+        "decision": "space"
+      },
+      {
+        "ref": "JHN 15:16",
+        "order": 23,
+        "rawSurface": "ὅ¦τι",
+        "rawTransliteration": "ho¦ti",
+        "morphology": "Conj",
+        "strongs": "3754",
+        "gloss": "whatever",
+        "surface": "ὅ τι",
+        "transliteration": "ho ti",
+        "decision": "space"
+      },
+      {
+        "ref": "1CO 16:2",
+        "order": 9,
+        "rawSurface": "ὅ¦τι",
+        "rawTransliteration": "ho¦ti",
+        "morphology": "Conj",
+        "strongs": "3754",
+        "gloss": "what",
+        "surface": "ὅ τι",
+        "transliteration": "ho ti",
+        "decision": "space"
+      },
+      {
+        "ref": "2CO 11:16",
+        "order": 10,
+        "rawSurface": "μή¦γε",
+        "rawTransliteration": "mē¦ge",
+        "morphology": "Prtcl",
+        "strongs": "1490",
+        "gloss": "otherwise",
+        "surface": "μή γε",
+        "transliteration": "mē ge",
+        "decision": "space"
+      },
+      {
+        "ref": "REV 16:16",
+        "order": 9,
+        "rawSurface": "Ἁρ¦μαγεδών",
+        "rawTransliteration": "Har¦magedōn",
+        "morphology": "N-NNS",
+        "strongs": "717",
+        "gloss": "Armageddon",
+        "surface": "Ἁρμαγεδών",
+        "transliteration": "Harmagedōn",
+        "decision": "join"
+      }
+    ]
+  },
+  "files": {
+    "data/berean/MAT.js": "46404bc5519b7d58e9fee00dab436b9f722749b903c2866d6d7071979bd789cc",
+    "data/berean/MRK.js": "33413099b74930c1a696e20cbc33807e4da5deb51445280beaa9f8fb8898cb7a",
+    "data/berean/LUK.js": "a6ccefa6e086cf7803e767a9052e9e0ba6e85ed29ac4cee7ef00128e3f2377af",
+    "data/berean/JHN.js": "2d2d75a0d43e7411040af3880abfa6ecb3cace01e89af9fd297f35f3ccb87d5a",
+    "data/berean/ACT.js": "32c313082693248fc2a2a1aa10b29b928d07753374e8b03c10c437a23318303d",
+    "data/berean/ROM.js": "2f8ca3cae8a2201d60d212401ae223b6aeb1f7a2e9494db30f3f0ca180140292",
+    "data/berean/1CO.js": "bf476f353136e3b85d7cc6c89c6e03a4df306e3452de66befae424361a733068",
+    "data/berean/2CO.js": "8f5391ec296971de961c968bbc782c17485aebc5fbeb8d65afcacb642f8a094e",
+    "data/berean/GAL.js": "6451e7f4bbff5f06aad8562df461e4b6bf2a0cb00ff5c631a27be2a1c9de131e",
+    "data/berean/EPH.js": "ea177a0ed51f9a935c8db58c67b0b2968bbd274e405de5cdd796e22f1162c785",
+    "data/berean/PHP.js": "11a98174e1a6ff057ac2d5d3305ebaa5d839d10c967dc70a9dd780a23afefe22",
+    "data/berean/COL.js": "57caec01250c9aeb4f311cd000c2cca96b7d22f3698adae2014b316a5f041e03",
+    "data/berean/1TH.js": "67f319ba781bb123407b1330c342bb1ee41f2197a88973b5c56db54d042e0d12",
+    "data/berean/2TH.js": "c61c1e08bfb12f227bf3f0f604f51faf41b933afab8b185899729dbb0d861fdc",
+    "data/berean/1TI.js": "0843e5dac42ceaa8c6ed7ea02b5302f41510e49175330e2e2d845cb486d3a87f",
+    "data/berean/2TI.js": "a544c824f31fe3baf09b03805631a7b32599721b70b191a820183b15ab015de2",
+    "data/berean/TIT.js": "85ff755f7822984eefbab515f9453f006aaddf91196c99a63ac36cd66bb82150",
+    "data/berean/PHM.js": "fc75869fd6a38e69455d1dbb4037f71a5c059c03fff9471865bdfee1780c6978",
+    "data/berean/HEB.js": "441ba4bdccc57745eee3b5229cc9b1c6ad9e44206e3bafd78a6e7f488bf5eee4",
+    "data/berean/JAS.js": "e7424e8fd75c4f8b708ba3c3e75765d44065003376ebcb2ffbdf973c6d3a5c0a",
+    "data/berean/1PE.js": "0fb4fdf7522b2250ba1e4d5425f949acf57be2f02c2b21c7a9e1d2ebcd38d240",
+    "data/berean/2PE.js": "b5d5a4208eb6ba83d891b078a1031ea694770c153643a52caf6d3dff131f660d",
+    "data/berean/1JN.js": "fd88dfe6ffd811caa98f93f61158b2611c1d9cda3de2e219966ddf9a350b24e3",
+    "data/berean/2JN.js": "b2dbca293686412526cd945fbc66b1d2405cef3a366943d53df32b1c8cbb7d95",
+    "data/berean/3JN.js": "7afd69339e1188d7887e3b905167831267ba351a86f049d460502aac7788466f",
+    "data/berean/JUD.js": "490424f4444c27d15982d4c3c184161152fb217598af81d23ad3b45a8e999e5c",
+    "data/berean/REV.js": "e223a7052e42e3d45cc3b14cdbe297f76f24e33c4adc55a7755afe22345421eb",
+    "data/berean/manifest.js": "68786fe36b06c31664a24e5cfee53ee30e437c58360e61666778e75b6cfec81f"
+  }
+}

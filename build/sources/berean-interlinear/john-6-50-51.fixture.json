@@ -1,0 +1,590 @@
+{
+  "id": "berean-interlinear-john-6-50-51-fixture",
+  "purpose": "Extraction-reliability fixture for the official Berean Interlinear Bible NT Word document.",
+  "status": "inspection fixture only — never loaded by the app and not production data",
+  "source": {
+    "title": "BGB New Testament",
+    "wordUrl": "https://interlinearbible.com/bib.docx",
+    "wordSha256": "2d969f0a3831a2edd0e374677fd793dc02808575cf9ed9ba555b6970a3e99352",
+    "pdfUrl": "https://interlinearbible.com/bib.pdf",
+    "pdfSha256": "e592d57cd13a371f3cfbf1f56c23e88b724e12a5235a87b04313018d4f57d6fb",
+    "docxCoreCreated": "2016-03-15T14:40:00Z",
+    "docxCoreModified": "2016-05-05T06:05:00Z",
+    "docxCreator": "ji"
+  },
+  "extraction": {
+    "tool": "build/tools/berean-extract.mjs",
+    "method": "Each Greek surface run (or runs) immediately preceding a <w:hyperlink>; gloss = hyperlink link text; morphology/Strong's/transliteration/definition = that hyperlink w:tooltip. Book from content bookmarks; chapter from \"<Book> N\" heading runs; verse from reftext1 number runs.",
+    "caution": "Berean's Greek edition (NA-type: e.g. ζήσει, no repeated relative clause at John 6:51) differs from the app's Robinson-Pierpont Byzantine text. Do not attach these glosses to Byzantine tokens by position."
+  },
+  "book": "John",
+  "chapter": 6,
+  "verses": {
+    "50": {
+      "tokenCount": 17,
+      "expectedVisibleGlossesFromPdf": [
+        "This",
+        "is",
+        "the",
+        "bread",
+        "-",
+        "from",
+        "-",
+        "heaven",
+        "coming down",
+        "that",
+        "anyone",
+        "of",
+        "it",
+        "may eat",
+        "and",
+        "not",
+        "die"
+      ],
+      "visibleGlossSequenceMatchesPdf": true,
+      "tokens": [
+        {
+          "order": 0,
+          "surface": "οὗτός",
+          "transliteration": "houtos",
+          "morphology": "DPro-NMS",
+          "strongs": "3778",
+          "gloss": "This",
+          "definition": "This; he, she, it."
+        },
+        {
+          "order": 1,
+          "surface": "ἐστιν",
+          "transliteration": "estin",
+          "morphology": "V-PIA-3S",
+          "strongs": "1510",
+          "gloss": "is",
+          "definition": "To be, exist."
+        },
+        {
+          "order": 2,
+          "surface": "ὁ",
+          "transliteration": "ho",
+          "morphology": "Art-NMS",
+          "strongs": "3588",
+          "gloss": "the",
+          "definition": "The, the definite article."
+        },
+        {
+          "order": 3,
+          "surface": "ἄρτος",
+          "transliteration": "artos",
+          "morphology": "N-NMS",
+          "strongs": "740",
+          "gloss": "bread",
+          "definition": "Bread, a loaf, food."
+        },
+        {
+          "order": 4,
+          "surface": "ὁ",
+          "transliteration": "ho",
+          "morphology": "Art-NMS",
+          "strongs": "3588",
+          "gloss": "-",
+          "definition": "The, the definite article."
+        },
+        {
+          "order": 5,
+          "surface": "ἐκ",
+          "transliteration": "ek",
+          "morphology": "Prep",
+          "strongs": "1537",
+          "gloss": "from",
+          "definition": "From out, out from among, from, suggesting from the interior outwards."
+        },
+        {
+          "order": 6,
+          "surface": "τοῦ",
+          "transliteration": "tou",
+          "morphology": "Art-GMS",
+          "strongs": "3588",
+          "gloss": "-",
+          "definition": "The, the definite article."
+        },
+        {
+          "order": 7,
+          "surface": "οὐρανοῦ",
+          "transliteration": "ouranou",
+          "morphology": "N-GMS",
+          "strongs": "3772",
+          "gloss": "heaven",
+          "definition": "Heaven, (a) the visible heavens: the atmosphere, the sky, the starry heavens, (b) the spiritual heavens."
+        },
+        {
+          "order": 8,
+          "surface": "καταβαίνων",
+          "transliteration": "katabainōn",
+          "morphology": "V-PPA-NMS",
+          "strongs": "2597",
+          "gloss": "coming down",
+          "definition": "To go down, come down, either from the sky or from higher land, descend."
+        },
+        {
+          "order": 9,
+          "surface": "ἵνα",
+          "transliteration": "hina",
+          "morphology": "Conj",
+          "strongs": "2443",
+          "gloss": "that",
+          "definition": "In order that, so that."
+        },
+        {
+          "order": 10,
+          "surface": "τις",
+          "transliteration": "tis",
+          "morphology": "IPro-NMS",
+          "strongs": "5100",
+          "gloss": "anyone",
+          "definition": "Any one, someone, a certain one or thing."
+        },
+        {
+          "order": 11,
+          "surface": "ἐξ",
+          "transliteration": "ex",
+          "morphology": "Prep",
+          "strongs": "1537",
+          "gloss": "of",
+          "definition": "From out, out from among, from, suggesting from the interior outwards."
+        },
+        {
+          "order": 12,
+          "surface": "αὐτοῦ",
+          "transliteration": "autou",
+          "morphology": "PPro-GM3S",
+          "strongs": "846",
+          "gloss": "it",
+          "definition": "He, she, it, they, them, same."
+        },
+        {
+          "order": 13,
+          "surface": "φάγῃ",
+          "transliteration": "phagē",
+          "morphology": "V-ASA-3S",
+          "strongs": "5315",
+          "gloss": "may eat",
+          "definition": "To eat, partake of food; to devour, consume (e.g. as rust does); used only in fut. and 2nd aor. tenses."
+        },
+        {
+          "order": 14,
+          "surface": "καὶ",
+          "transliteration": "kai",
+          "morphology": "Conj",
+          "strongs": "2532",
+          "gloss": "and",
+          "definition": "And, even, also, namely."
+        },
+        {
+          "order": 15,
+          "surface": "μὴ",
+          "transliteration": "mē",
+          "morphology": "Adv",
+          "strongs": "3361",
+          "gloss": "not",
+          "definition": "Not, lest."
+        },
+        {
+          "order": 16,
+          "surface": "ἀποθάνῃ",
+          "transliteration": "apothanē",
+          "morphology": "V-ASA-3S",
+          "strongs": "599",
+          "gloss": "die",
+          "definition": "To be dying, to be about to die, wither, decay."
+        }
+      ]
+    },
+    "51": {
+      "tokenCount": 38,
+      "expectedVisibleGlossesFromPdf": [
+        "I",
+        "am",
+        "the",
+        "bread",
+        "-",
+        "living",
+        "-",
+        "from",
+        "-",
+        "heaven",
+        "having come down",
+        "if",
+        "anyone",
+        "shall have eaten",
+        "of",
+        "this",
+        "-",
+        "bread",
+        "he will live",
+        "to",
+        "the",
+        "age",
+        "and",
+        "the",
+        "bread",
+        "also",
+        "that",
+        "I",
+        "will give",
+        "the",
+        "flesh",
+        "of Me",
+        "is",
+        "for",
+        "the",
+        "of the",
+        "world",
+        "life"
+      ],
+      "visibleGlossSequenceMatchesPdf": true,
+      "tokens": [
+        {
+          "order": 0,
+          "surface": "ἐγώ",
+          "transliteration": "egō",
+          "morphology": "PPro-N1S",
+          "strongs": "1473",
+          "gloss": "I",
+          "definition": "I, the first-person pronoun."
+        },
+        {
+          "order": 1,
+          "surface": "εἰμι",
+          "transliteration": "eimi",
+          "morphology": "V-PIA-1S",
+          "strongs": "1510",
+          "gloss": "am",
+          "definition": "To be, exist."
+        },
+        {
+          "order": 2,
+          "surface": "ὁ",
+          "transliteration": "ho",
+          "morphology": "Art-NMS",
+          "strongs": "3588",
+          "gloss": "the",
+          "definition": "The, the definite article."
+        },
+        {
+          "order": 3,
+          "surface": "ἄρτος",
+          "transliteration": "artos",
+          "morphology": "N-NMS",
+          "strongs": "740",
+          "gloss": "bread",
+          "definition": "Bread, a loaf, food."
+        },
+        {
+          "order": 4,
+          "surface": "ὁ",
+          "transliteration": "ho",
+          "morphology": "Art-NMS",
+          "strongs": "3588",
+          "gloss": "-",
+          "definition": "The, the definite article."
+        },
+        {
+          "order": 5,
+          "surface": "ζῶν",
+          "transliteration": "zōn",
+          "morphology": "V-PPA-NMS",
+          "strongs": "2198",
+          "gloss": "living",
+          "definition": "To live, to be alive."
+        },
+        {
+          "order": 6,
+          "surface": "ὁ",
+          "transliteration": "ho",
+          "morphology": "Art-NMS",
+          "strongs": "3588",
+          "gloss": "-",
+          "definition": "The, the definite article."
+        },
+        {
+          "order": 7,
+          "surface": "ἐκ",
+          "transliteration": "ek",
+          "morphology": "Prep",
+          "strongs": "1537",
+          "gloss": "from",
+          "definition": "From out, out from among, from, suggesting from the interior outwards."
+        },
+        {
+          "order": 8,
+          "surface": "τοῦ",
+          "transliteration": "tou",
+          "morphology": "Art-GMS",
+          "strongs": "3588",
+          "gloss": "-",
+          "definition": "The, the definite article."
+        },
+        {
+          "order": 9,
+          "surface": "οὐρανοῦ",
+          "transliteration": "ouranou",
+          "morphology": "N-GMS",
+          "strongs": "3772",
+          "gloss": "heaven",
+          "definition": "Heaven, (a) the visible heavens: the atmosphere, the sky, the starry heavens, (b) the spiritual heavens."
+        },
+        {
+          "order": 10,
+          "surface": "καταβάς",
+          "transliteration": "katabas",
+          "morphology": "V-APA-NMS",
+          "strongs": "2597",
+          "gloss": "having come down",
+          "definition": "To go down, come down, either from the sky or from higher land, descend."
+        },
+        {
+          "order": 11,
+          "surface": "ἐάν",
+          "transliteration": "ean",
+          "morphology": "Conj",
+          "strongs": "1437",
+          "gloss": "if",
+          "definition": "if."
+        },
+        {
+          "order": 12,
+          "surface": "τις",
+          "transliteration": "tis",
+          "morphology": "IPro-NMS",
+          "strongs": "5100",
+          "gloss": "anyone",
+          "definition": "Any one, someone, a certain one or thing."
+        },
+        {
+          "order": 13,
+          "surface": "φάγῃ",
+          "transliteration": "phagē",
+          "morphology": "V-ASA-3S",
+          "strongs": "5315",
+          "gloss": "shall have eaten",
+          "definition": "To eat, partake of food; to devour, consume (e.g. as rust does); used only in fut. and 2nd aor. tenses."
+        },
+        {
+          "order": 14,
+          "surface": "ἐκ",
+          "transliteration": "ek",
+          "morphology": "Prep",
+          "strongs": "1537",
+          "gloss": "of",
+          "definition": "From out, out from among, from, suggesting from the interior outwards."
+        },
+        {
+          "order": 15,
+          "surface": "τούτου",
+          "transliteration": "toutou",
+          "morphology": "DPro-GMS",
+          "strongs": "3778",
+          "gloss": "this",
+          "definition": "This; he, she, it."
+        },
+        {
+          "order": 16,
+          "surface": "τοῦ",
+          "transliteration": "tou",
+          "morphology": "Art-GMS",
+          "strongs": "3588",
+          "gloss": "-",
+          "definition": "The, the definite article."
+        },
+        {
+          "order": 17,
+          "surface": "ἄρτου",
+          "transliteration": "artou",
+          "morphology": "N-GMS",
+          "strongs": "740",
+          "gloss": "bread",
+          "definition": "Bread, a loaf, food."
+        },
+        {
+          "order": 18,
+          "surface": "ζήσει",
+          "transliteration": "zēsei",
+          "morphology": "V-FIA-3S",
+          "strongs": "2198",
+          "gloss": "he will live",
+          "definition": "To live, to be alive."
+        },
+        {
+          "order": 19,
+          "surface": "εἰς",
+          "transliteration": "eis",
+          "morphology": "Prep",
+          "strongs": "1519",
+          "gloss": "to",
+          "definition": "Into, in, unto, to, upon, towards, for, among."
+        },
+        {
+          "order": 20,
+          "surface": "τὸν",
+          "transliteration": "ton",
+          "morphology": "Art-AMS",
+          "strongs": "3588",
+          "gloss": "the",
+          "definition": "The, the definite article."
+        },
+        {
+          "order": 21,
+          "surface": "αἰῶνα",
+          "transliteration": "aiōna",
+          "morphology": "N-AMS",
+          "strongs": "165",
+          "gloss": "age",
+          "definition": "An age, a cycle (of time), especially of the present age as contrasted with the future age, and of one of a series of ages stretching to infinity."
+        },
+        {
+          "order": 22,
+          "surface": "καὶ",
+          "transliteration": "kai",
+          "morphology": "Conj",
+          "strongs": "2532",
+          "gloss": "and",
+          "definition": "And, even, also, namely."
+        },
+        {
+          "order": 23,
+          "surface": "ὁ",
+          "transliteration": "ho",
+          "morphology": "Art-NMS",
+          "strongs": "3588",
+          "gloss": "the",
+          "definition": "The, the definite article."
+        },
+        {
+          "order": 24,
+          "surface": "ἄρτος",
+          "transliteration": "artos",
+          "morphology": "N-NMS",
+          "strongs": "740",
+          "gloss": "bread",
+          "definition": "Bread, a loaf, food."
+        },
+        {
+          "order": 25,
+          "surface": "δὲ",
+          "transliteration": "de",
+          "morphology": "Conj",
+          "strongs": "1161",
+          "gloss": "also",
+          "definition": "A weak adversative particle, generally placed second in its clause; but, on the other hand, and."
+        },
+        {
+          "order": 26,
+          "surface": "ὃν",
+          "transliteration": "hon",
+          "morphology": "RelPro-AMS",
+          "strongs": "3739",
+          "gloss": "that",
+          "definition": "Who, which, what, that."
+        },
+        {
+          "order": 27,
+          "surface": "ἐγὼ",
+          "transliteration": "egō",
+          "morphology": "PPro-N1S",
+          "strongs": "1473",
+          "gloss": "I",
+          "definition": "I, the first-person pronoun."
+        },
+        {
+          "order": 28,
+          "surface": "δώσω",
+          "transliteration": "dōsō",
+          "morphology": "V-FIA-1S",
+          "strongs": "1325",
+          "gloss": "will give",
+          "definition": "To offer, give; to put, place."
+        },
+        {
+          "order": 29,
+          "surface": "ἡ",
+          "transliteration": "hē",
+          "morphology": "Art-NFS",
+          "strongs": "3588",
+          "gloss": "the",
+          "definition": "The, the definite article."
+        },
+        {
+          "order": 30,
+          "surface": "σάρξ",
+          "transliteration": "sarx",
+          "morphology": "N-NFS",
+          "strongs": "4561",
+          "gloss": "flesh",
+          "definition": "Flesh, body, human nature, materiality; kindred."
+        },
+        {
+          "order": 31,
+          "surface": "μού",
+          "transliteration": "mou",
+          "morphology": "PPro-G1S",
+          "strongs": "1473",
+          "gloss": "of Me",
+          "definition": "I, the first-person pronoun."
+        },
+        {
+          "order": 32,
+          "surface": "ἐστιν",
+          "transliteration": "estin",
+          "morphology": "V-PIA-3S",
+          "strongs": "1510",
+          "gloss": "is",
+          "definition": "To be, exist."
+        },
+        {
+          "order": 33,
+          "surface": "ὑπὲρ",
+          "transliteration": "hyper",
+          "morphology": "Prep",
+          "strongs": "5228",
+          "gloss": "for",
+          "definition": "Genitive: in behalf of; accusative: above."
+        },
+        {
+          "order": 34,
+          "surface": "τῆς",
+          "transliteration": "tēs",
+          "morphology": "Art-GFS",
+          "strongs": "3588",
+          "gloss": "the",
+          "definition": "The, the definite article."
+        },
+        {
+          "order": 35,
+          "surface": "τοῦ",
+          "transliteration": "tou",
+          "morphology": "Art-GMS",
+          "strongs": "3588",
+          "gloss": "of the",
+          "definition": "The, the definite article."
+        },
+        {
+          "order": 36,
+          "surface": "κόσμου",
+          "transliteration": "kosmou",
+          "morphology": "N-GMS",
+          "strongs": "2889",
+          "gloss": "world",
+          "definition": "The world, universe; worldly affairs; the inhabitants of the world; adornment."
+        },
+        {
+          "order": 37,
+          "surface": "ζωῆς",
+          "transliteration": "zōēs",
+          "morphology": "N-GFS",
+          "strongs": "2222",
+          "gloss": "life",
+          "definition": "Life, both of physical (present) and of spiritual (particularly future) existence."
+        }
+      ]
+    }
+  }
+}

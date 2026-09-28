@@ -260,8 +260,11 @@ const refs = {
     layout: q('#layout'),
     interlinear: q('#interlinear'),
     interlinearHe: q('#interlinear-he'),
+    interlinearBerean: q('#interlinear-berean'),
     interlinearGreekMode: q('#interlinear-greek-mode'),
     interlinearHeMode: q('#interlinear-he-mode'),
+    interlinearBereanMode: q('#interlinear-berean-mode'),
+    bereanCacheStatus: q('#berean-cache-status'),
     go: q('#go-button'),
     results: q('#results'),
     message: q('#message'),
@@ -306,12 +309,24 @@ const refs = {
       loadingLabel: 'Greek',
       dataGlobal: 'MARANATHA_INTERLINEAR_BYZ',
       glossGlobal: 'MARANATHA_STRONGS_GREEK',
-      dataSources: ['data/byz-interlinear.js', 'data/strongs-greek.js'],
+      reviewedGlobal: 'MARANATHA_REVIEWED_GREEK_GLOSS',
+      dataSources: [
+        'data/byz-interlinear.js',
+        'data/strongs-greek.js',
+      ],
+      // Optional, independent of the required sources above: a missing or
+      // uncached pilot file must never block the interlinear. Its successful
+      // (possibly late) load rerenders the active view with candidate glosses.
+      optionalDataSources: [
+        { src: 'data/reviewed-greek-gloss.js', global: 'MARANATHA_REVIEWED_GREEK_GLOSS' },
+      ],
       strongsPrefix: 'G',
       testament: 'NT',
       label: '(Greek interlinear)',
       unavailable: 'Interlinear data is available for the Greek New Testament only.',
-      sourceNote: 'Greek text: Robinson-Pierpont Byzantine (Unlicense) \u00b7 glosses: Strong\'s, Open Scriptures (CC-BY-SA).',
+      sourceNote: 'Greek text: Robinson-Pierpont Byzantine (Unlicense) \u00b7 glosses: Strong\'s, Open Scriptures (CC-BY-SA) \u00b7 candidate reading pilot: John 6:50\u201351.',
+      token: { surface: 0, strongs: 1, morph: 2 },
+      readingGlossLabel: 'Reading gloss (candidate pilot)',
       surfaceClass: 'iw-greek',
       rtl: false,
       lang: 'el',
@@ -331,6 +346,7 @@ const refs = {
       label: '(Hebrew interlinear)',
       unavailable: 'Interlinear data is available for the Old Testament (Hebrew) only.',
       sourceNote: 'Hebrew text: Open Scriptures Hebrew Bible (CC BY 4.0) \u00b7 glosses: Strong\'s, Open Scriptures (CC-BY-SA).',
+      token: { surface: 0, strongs: 1, morph: 2 },
       surfaceClass: 'iw-hebrew',
       rtl: true,
       lang: 'he',
@@ -339,10 +355,51 @@ const refs = {
       toggleRef: 'interlinearHe',
       modeRef: 'interlinearHeMode',
     },
+    // Berean Interlinear Bible NT: a *separate* Greek text with its own Greek
+    // tokens, transliteration, morphology, Strong's numbers, and contextual
+    // glosses. It is loaded one book at a time (data/berean/<BOOK>.js) so the
+    // 5.7 MB corpus is never a mandatory startup payload. It never consults the
+    // Byzantine data or the candidate-gloss layer.
+    berean: {
+      key: 'berean',
+      loadingLabel: 'Berean',
+      perBook: true,
+      testament: 'NT',
+      label: '(Berean interlinear)',
+      unavailable: 'The Berean interlinear is available for the Greek New Testament only.',
+      // NA-omitted verses exist in canon.js but not in Berean's Greek source.
+      omittedNotice: 'This verse is not present in the Berean Greek source.',
+      sourceNote: 'Berean Interlinear Bible \u00b7 interlinearbible.com \u00b7 public domain (April 30, 2023) \u00b7 Berean uses its own NA-type Greek text, not the Robinson-Pierpont Byzantine text.',
+      strongsPrefix: 'G',
+      glossGlobal: 'MARANATHA_STRONGS_GREEK',
+      // Optional supplemental detail only: the shared Strong's dictionary
+      // supplies Definition/KJV reference rows in the expanded detail panel.
+      // Berean surfaces/transliterations/glosses render immediately and stay
+      // usable if this fails; it is never consulted for Berean's own gloss.
+      optionalDataSources: [
+        { src: 'data/strongs-greek.js', global: 'MARANATHA_STRONGS_GREEK' },
+      ],
+      manifestGlobal: 'MARANATHA_BEREAN_MANIFEST',
+      chunkSrc: (bookId) => `data/berean/${bookId}.js`,
+      chunkGlobal: (bookId) => `MARANATHA_BEREAN_${bookId}`,
+      // token = [surface, transliteration, morphology, strongs, gloss]
+      token: { surface: 0, translit: 1, morph: 2, strongs: 3, gloss: 4 },
+      readingGlossLabel: 'Berean reading gloss',
+      surfaceClass: 'iw-greek',
+      rtl: false,
+      lang: 'el',
+      transliterate: null, // use Berean's own transliteration (token field)
+      disclosure: true,
+      toggleRef: 'interlinearBerean',
+      modeRef: 'interlinearBereanMode',
+    },
   };
   const interlinearState = {
-    greek: { enabled: false, status: 'idle', mode: 'read' },  // mode: 'read' | 'study'
-    hebrew: { enabled: false, status: 'idle', mode: 'read' },  // mode: 'read' | 'study'
+    greek: { enabled: false, status: 'idle', mode: 'read', optionalLoading: false },
+    hebrew: { enabled: false, status: 'idle', mode: 'read', optionalLoading: false },
+    // Berean is loaded per book; track which books are in flight (dedupes
+    // concurrent loads) and which failed (so the UI can offer a retry).
+    berean: { enabled: false, status: 'idle', mode: 'read', loading: {}, failed: {}, optionalLoading: false },
   };
 
   // Per-block context overrides.  Each key is "${bookId}-${chapterNum}".
@@ -493,6 +550,14 @@ function init() {
     });
 
     refs.interlinear.addEventListener('change', () => {
+        // Byzantine and Berean are two alternative Greek-text interlinears;
+        // selecting one releases the other so state never mixes. Hebrew is
+        // independent.
+        if (refs.interlinear.checked && refs.interlinearBerean.checked) {
+            refs.interlinearBerean.checked = false;
+            syncInterlinearModeVisibility(INTERLINEARS.berean);
+            onInterlinearToggle(INTERLINEARS.berean, false);
+        }
         syncInterlinearModeVisibility(INTERLINEARS.greek);
         onInterlinearToggle(INTERLINEARS.greek, refs.interlinear.checked);
     });
@@ -508,6 +573,21 @@ function init() {
 
     refs.interlinearHeMode.addEventListener('change', () => {
         setInterlinearMode(INTERLINEARS.hebrew, refs.interlinearHeMode.value);
+    });
+
+    refs.interlinearBerean.addEventListener('change', () => {
+        if (refs.interlinearBerean.checked && refs.interlinear.checked) {
+            refs.interlinear.checked = false;
+            syncInterlinearModeVisibility(INTERLINEARS.greek);
+            onInterlinearToggle(INTERLINEARS.greek, false);
+        }
+        syncInterlinearModeVisibility(INTERLINEARS.berean);
+        onInterlinearToggle(INTERLINEARS.berean, refs.interlinearBerean.checked);
+        if (refs.interlinearBerean.checked) warmBereanOfflineCache();
+    });
+
+    refs.interlinearBereanMode.addEventListener('change', () => {
+        setInterlinearMode(INTERLINEARS.berean, refs.interlinearBereanMode.value);
     });
 
     refs.contextBtn.addEventListener('click', () => {
@@ -535,8 +615,20 @@ function init() {
     setFontSize();
     restoreInterlinearMode(INTERLINEARS.greek);
     restoreInterlinearMode(INTERLINEARS.hebrew);
+    restoreInterlinearMode(INTERLINEARS.berean);
     syncInterlinearModeVisibility(INTERLINEARS.greek);
     syncInterlinearModeVisibility(INTERLINEARS.hebrew);
+    syncInterlinearModeVisibility(INTERLINEARS.berean);
+
+    // Service-worker hooks for opt-in Berean offline caching. Guarded so that
+    // file:// (and browsers without service workers) make no SW calls.
+    if (serviceWorkerSupported()) {
+      navigator.serviceWorker.addEventListener('message', onServiceWorkerMessage);
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (interlinearState.berean.enabled && !bereanCorpusWarmed) warmBereanOfflineCache();
+      });
+    }
+
     render();
 }
 
@@ -1422,13 +1514,196 @@ function init() {
       render();
       return;
     }
-    if (state.status === 'loaded') {
+    if (config.perBook) {
+      // Per-book interlinears load lazily inside render(), based on the book
+      // actually on screen, so switching books loads only what is needed. The
+      // optional shared dictionary loads independently and rerenders on
+      // success; a failure leaves Berean fully usable.
+      loadOptionalInterlinearData(config);
+      render();
+    } else if (state.status === 'loaded') {
+      // A previous enable may have finished before the optional pilot data
+      // arrived (or failed). Retry it, then render with whatever is present.
+      loadOptionalInterlinearData(config);
       render();
     } else if (state.status !== 'loading') {
       setMessage(`Loading ${config.loadingLabel} interlinear\u2026`);
       loadInterlinearData(config, () => {
         render();
       });
+    }
+  }
+
+  // Loads one per-book chunk (data/berean/<BOOK>.js). Dedupes concurrent
+  // requests for the same book and records failures so the UI can retry.
+  function ensureInterlinearBook(config, bookId, onDone) {
+    const state = interlinearState[config.key];
+    const global = config.chunkGlobal(bookId);
+    if (window[global]) { onDone(null); return; }
+    if (state.failed[bookId]) { onDone(new Error(bookId)); return; }
+    if (state.loading[bookId]) { state.loading[bookId].push(onDone); return; }
+    state.loading[bookId] = [onDone];
+    const script = document.createElement('script');
+    script.src = config.chunkSrc(bookId);
+    script.onload = () => {
+      const callbacks = state.loading[bookId] || [];
+      delete state.loading[bookId];
+      if (window[global]) {
+        callbacks.forEach((cb) => cb(null));
+      } else {
+        // Loaded but did not publish the expected global: treat as malformed.
+        state.failed[bookId] = true;
+        callbacks.forEach((cb) => cb(new Error(bookId)));
+      }
+    };
+    script.onerror = () => {
+      const callbacks = state.loading[bookId] || [];
+      delete state.loading[bookId];
+      state.failed[bookId] = true;
+      callbacks.forEach((cb) => cb(new Error(bookId)));
+    };
+    document.head.appendChild(script);
+  }
+
+  function ensureInterlinearBooks(config, bookIds, onSettled) {
+    const unique = [...new Set(bookIds)];
+    if (!unique.length) { onSettled([]); return; }
+    let remaining = unique.length;
+    const failed = [];
+    unique.forEach((id) => ensureInterlinearBook(config, id, (error) => {
+      if (error) failed.push(id);
+      if (--remaining === 0) onSettled(failed);
+    }));
+  }
+
+  // Books that the current render actually needs from a per-book interlinear.
+  // For reference mode that is every requested book; for browse mode the
+  // current book. Only books matching the interlinear's testament are loaded,
+  // so selecting Berean on an OT book shows its "NT only" message instead of
+  // trying to fetch a nonexistent chunk.
+  function interlinearBookIds(config) {
+    let ids = viewState.mode === 'reference'
+      ? [...new Set(viewState.groups.map((group) => group.bookId))]
+      : [currentBook().id];
+    if (config.testament) {
+      ids = ids.filter((id) => {
+        const book = canon.books.find((b) => b.id === id);
+        return book && book.testament === config.testament;
+      });
+    }
+    return ids;
+  }
+
+  // Non-destructive error card for a per-book interlinear whose chunk failed.
+  function renderInterlinearError(config, bookIds) {
+    const wrap = document.createElement('div');
+    wrap.className = 'interlinear-error';
+    const note = document.createElement('p');
+    note.className = 'empty';
+    note.textContent = `Could not load ${config.label} data${bookIds.length ? ` for ${bookIds.join(', ')}` : ''}. The rest of the reader is unaffected.`;
+    const retry = document.createElement('button');
+    retry.type = 'button';
+    retry.className = 'primary-action';
+    retry.textContent = 'Retry';
+    retry.addEventListener('click', () => {
+      for (const id of bookIds) delete interlinearState[config.key].failed[id];
+      render();
+    });
+    wrap.append(note, retry);
+    refs.results.appendChild(wrap);
+  }
+
+  // -----------------------------------------------------------------------
+  // Berean offline cache warm-up
+  //
+  // Opt-in only (never an install-time payload). It waits for
+  // navigator.serviceWorker.ready, can use the ready registration's active
+  // worker when there is no controller yet, and only marks the corpus warmed
+  // after all 27 books are confirmed cached. Failures are retryable and never
+  // permanently suppress a later attempt. No-op under file://.
+  // -----------------------------------------------------------------------
+  let bereanCorpusWarmed = false;   // true only after all books succeed
+  let bereanCacheInFlight = false;
+  let bereanCacheRequestSeq = 0;
+  const pendingBereanCache = new Map();
+
+  // Service workers are unavailable under file:// (the browser does not expose
+  // navigator.serviceWorker there), so this is false for the desktop workflow
+  // and no service-worker call is ever made. It is true only when a real
+  // serviceWorker API with a ready promise exists.
+  function serviceWorkerSupported() {
+    return typeof navigator !== 'undefined'
+      && !!navigator.serviceWorker
+      && typeof navigator.serviceWorker.ready !== 'undefined';
+  }
+
+  function setBereanCacheStatus(text, kind, retryable) {
+    const el = refs.bereanCacheStatus;
+    if (!el) return;
+    el.textContent = text;
+    el.dataset.state = kind || 'info';
+    if (retryable && !bereanCorpusWarmed) {
+      const retry = document.createElement('button');
+      retry.type = 'button';
+      retry.className = 'berean-cache-retry';
+      retry.textContent = 'Retry';
+      retry.addEventListener('click', () => {
+        bereanCorpusWarmed = false;
+        warmBereanOfflineCache();
+      });
+      el.append(' ', retry);
+    }
+  }
+
+  function requestBereanCache(worker, books) {
+    return new Promise((resolve) => {
+      const requestId = `berean-${++bereanCacheRequestSeq}`;
+      const timer = setTimeout(() => {
+        pendingBereanCache.delete(requestId);
+        resolve({ cached: [], failed: books });
+      }, 60000);
+      pendingBereanCache.set(requestId, (message) => {
+        clearTimeout(timer);
+        pendingBereanCache.delete(requestId);
+        resolve(message);
+      });
+      worker.postMessage({ type: 'CACHE_BEREAN', books, requestId });
+    });
+  }
+
+  function onServiceWorkerMessage(event) {
+    const data = event.data;
+    if (!data || data.type !== 'BEREAN_CACHE_RESULT') return;
+    const resolve = pendingBereanCache.get(data.requestId);
+    if (resolve) resolve(data);
+  }
+
+  async function warmBereanOfflineCache() {
+    if (!serviceWorkerSupported()) return;
+    if (bereanCorpusWarmed || bereanCacheInFlight) return;
+    bereanCacheInFlight = true;
+    setBereanCacheStatus('Caching Berean for offline use\u2026');
+    try {
+      const registration = await navigator.serviceWorker.ready;
+      const worker = navigator.serviceWorker.controller || registration.active;
+      if (!worker) {
+        setBereanCacheStatus('Berean offline caching is not available yet.', 'warn', true);
+        return;
+      }
+      const books = canon.books.filter((b) => b.testament === 'NT').map((b) => b.id);
+      const result = await requestBereanCache(worker, books);
+      const cached = result.cached || [];
+      const failed = result.failed || [];
+      if (!failed.length && books.length && cached.length === books.length) {
+        bereanCorpusWarmed = true;
+        setBereanCacheStatus(`Berean NT available offline (${cached.length}/${books.length} books).`, 'ok');
+      } else {
+        setBereanCacheStatus(`Berean offline caching incomplete (${cached.length}/${books.length} books).`, 'warn', true);
+      }
+    } catch (error) {
+      setBereanCacheStatus('Berean offline caching failed. The interlinear still works.', 'warn', true);
+    } finally {
+      bereanCacheInFlight = false;
     }
   }
 
@@ -1444,12 +1719,50 @@ function init() {
         if (--remaining === 0 && !failed) {
           state.status = 'loaded';
           onReady();
+          // Kick off the optional layer only after the required data is in
+          // place, so a slow/failed optional file cannot delay or block the
+          // interlinear. Its onload rerenders if the view is still active.
+          loadOptionalInterlinearData(config);
         }
       };
       script.onerror = () => {
         failed = true;
         state.status = 'idle';
         setMessage(`Could not load ${src}.`);
+      };
+      document.head.appendChild(script);
+    }
+  }
+
+  // Loads optional interlinear data (e.g. candidate reading glosses). Unlike
+  // loadInterlinearData(), a failure here is non-fatal: the required Greek
+  // text and Strong's data already rendered, and every card falls back to the
+  // existing Strong's-derived gloss. If an optional script loads later, the
+  // active interlinear is rerendered so the candidates appear without a manual
+  // refresh.
+  function loadOptionalInterlinearData(config) {
+    const state = interlinearState[config.key];
+    const optional = config.optionalDataSources || [];
+    if (!optional.length || state.optionalLoading) return;
+    const pending = optional.filter((opt) => !(opt.global && window[opt.global]));
+    if (!pending.length) return;
+    state.optionalLoading = true;
+    let remaining = pending.length;
+    let anyLoaded = false;
+    const settle = () => {
+      if (--remaining > 0) return;
+      state.optionalLoading = false;
+      const ready = state.status === 'loaded' || config.perBook;
+      if (anyLoaded && state.enabled && ready) render();
+    };
+    for (const opt of pending) {
+      const script = document.createElement('script');
+      script.src = opt.src;
+      script.onload = () => { anyLoaded = true; settle(); };
+      script.onerror = () => {
+        // Optional and non-fatal: keep the fallback glosses.
+        console.warn(`Optional interlinear data unavailable: ${opt.src}`);
+        settle();
       };
       document.head.appendChild(script);
     }
@@ -1703,7 +2016,19 @@ function init() {
   // morphology live in a detail panel that the button reveals. Independent per
   // card (no accordion), keyboard/touch/SR friendly. Study mode does not use
   // this builder.
-  function buildDisclosureWord(config, surface, strongs, morph, definition, rendering, detailId) {
+  function buildDisclosureWord(config, surface, strongs, morph, definition, rendering, detailId, override) {
+    // `override` is optional { transliteration, gloss, label }. It is used by
+    // the Byzantine candidate-gloss layer and by Berean's own word records.
+    // When present it wins over the algorithmic transliteration and the
+    // Strong's-derived gloss. An intentional-empty gloss is gloss === '', which
+    // suppresses the fallback (shown deliberately blank) rather than reverting
+    // to Strong's. `config.transliterate` may be null for Berean, in which case
+    // the surface is shown without an algorithmic transliteration.
+    const translitText = (override && override.transliteration)
+      ? override.transliteration
+      : (config.transliterate ? config.transliterate(surface) : '');
+    const glossText = override ? override.gloss : shortGloss(definition, strongs, morph);
+
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'iw iw-toggle';
@@ -1717,11 +2042,11 @@ function init() {
 
     const translit = document.createElement('span');
     translit.className = 'iw-translit';
-    translit.textContent = config.transliterate(surface);
+    translit.textContent = translitText;
 
     const shortGlossEl = document.createElement('span');
     shortGlossEl.className = 'iw-gloss-short';
-    shortGlossEl.textContent = shortGloss(definition, strongs, morph);
+    shortGlossEl.textContent = glossText;
 
     const caret = document.createElement('span');
     caret.className = 'iw-caret';
@@ -1740,10 +2065,11 @@ function init() {
     const headingWord = document.createElement('span');
     if (config.lang) headingWord.lang = config.lang;
     headingWord.textContent = surface;
-    heading.append(headingWord, ` \u00b7 ${config.transliterate(surface)}`);
+    heading.append(headingWord, ` \u00b7 ${translitText}`);
     detail.appendChild(heading);
 
     const rows = [];
+    if (override) rows.push([override.label || 'Reading gloss', glossText || '(intentionally untranslated)']);
     if (definition) rows.push(['Definition', definition]);
     if (rendering) rows.push(['KJV', rendering]);
     if (strongs) rows.push(['Strong\u2019s', config.strongsPrefix + strongs]);
@@ -1770,7 +2096,6 @@ function init() {
   }
 
   function renderInterlinear(config, translations) {
-    const data = window[config.dataGlobal];
     const strongsData = window[config.glossGlobal] || {};
     // `definitions` is the neutral Strong's definition (Read-mode gloss and
     // detail); `renderings` is the KJV rendering list (Study-mode card and the
@@ -1778,11 +2103,20 @@ function init() {
     // working (both maps then resolve to the KJV list, as before).
     const definitions = strongsData.definitions || strongsData.glosses || {};
     const renderings = strongsData.renderings || strongsData.glosses || {};
+    // Optional reviewed reading layer (Read mode only, Byzantine only). Berean
+    // never consults it. Absent/cached-out data simply yields no overrides.
+    const reviewed = config.reviewedGlobal ? window[config.reviewedGlobal] : null;
     // Progressive disclosure applies to the interlinears that opt in via
     // `config.disclosure`; Study mode falls back to the original dense cards.
     const disclosure = !!config.disclosure && interlinearState[config.key].mode !== 'study';
     // First selected translation, if any, supplies the verse caption.
     const translation = translations[0];
+
+    // Per-book interlinears (Berean) resolve data per group so a multi-book
+    // reference can mix books; the others use one shared global.
+    const dataForBook = config.perBook
+      ? (bookId) => window[config.chunkGlobal(bookId)] || null
+      : () => window[config.dataGlobal] || null;
 
     // In reference mode (the user searched a verse/passage) restrict each
     // group to the verses actually requested, same as renderReferenceGroups()
@@ -1793,7 +2127,7 @@ function init() {
       : [{ bookId: currentBook().id, chapter: Number(refs.chapter.value), ranges: null }];
 
     groups.forEach(group => {
-      renderInterlinearGroup(config, data, definitions, renderings, disclosure, translation, group);
+      renderInterlinearGroup(config, dataForBook(group.bookId), definitions, renderings, disclosure, translation, group, reviewed);
     });
 
     const note = document.createElement('p');
@@ -1802,9 +2136,24 @@ function init() {
     refs.results.appendChild(note);
   }
 
+  // Appends the first selected translation's verse text as a caption, when
+  // available. Shared by normal verse blocks and documented-omission blocks.
+  function appendInterlinearCaption(block, bookId, chapterNum, verseNum, translation) {
+    if (!translation) return;
+    const tv = window.MARANATHA_TRANSLATIONS[translation.id];
+    const tch = tv && tv.books[bookId] && tv.books[bookId][chapterNum - 1];
+    const ttext = tch && tch[verseNum - 1];
+    if (!ttext) return;
+    const caption = document.createElement('div');
+    caption.className = 'interlinear-caption';
+    caption.dir = 'auto';
+    caption.textContent = ttext;
+    block.appendChild(caption);
+  }
+
   // Renders one book/chapter block of an interlinear view, optionally
   // restricted to a group's verse ranges (null ranges = whole chapter).
-  function renderInterlinearGroup(config, data, definitions, renderings, disclosure, translation, group) {
+  function renderInterlinearGroup(config, data, definitions, renderings, disclosure, translation, group, reviewed) {
     const book = canon.books.find(b => b.id === group.bookId);
     if (!book) return;
     const chapterNum = group.chapter;
@@ -1831,10 +2180,31 @@ function init() {
       return;
     }
 
-    for (let v = 0; v < verses.length; v++) {
+    for (let v = 0; v < verseCount; v++) {
       const verseNum = v + 1;
       if (verseFilter && !verseFilter.has(verseNum)) continue;
       const tokens = verses[v];
+
+      // Documented source omissions (NA-omitted verses in Berean) get an
+      // explicit, accessible notice instead of being silently skipped. This
+      // is not a load failure and not missing application data. Only
+      // interlinears that declare `omittedNotice` render these blocks.
+      if ((tokens === null || tokens === undefined) && config.omittedNotice) {
+        const omitted = document.createElement('div');
+        omitted.className = 'interlinear-verse interlinear-omission';
+        const oref = document.createElement('div');
+        oref.className = 'interlinear-ref';
+        oref.textContent = `${name} ${chapterNum}:${verseNum}`;
+        omitted.appendChild(oref);
+        appendInterlinearCaption(omitted, book.id, chapterNum, verseNum, translation);
+        const note = document.createElement('p');
+        note.className = 'interlinear-omission-note';
+        note.setAttribute('role', 'note');
+        note.textContent = config.omittedNotice;
+        omitted.appendChild(note);
+        refs.results.appendChild(omitted);
+        continue;
+      }
       if (!tokens || !tokens.length) continue;
 
       const block = document.createElement('div');
@@ -1845,36 +2215,47 @@ function init() {
       ref.textContent = `${name} ${chapterNum}:${verseNum}`;
       block.appendChild(ref);
 
-      if (translation) {
-        const tv = window.MARANATHA_TRANSLATIONS[translation.id];
-        const tch = tv && tv.books[book.id] && tv.books[book.id][chapterNum - 1];
-        const ttext = tch && tch[verseNum - 1];
-        if (ttext) {
-          const caption = document.createElement('div');
-          caption.className = 'interlinear-caption';
-          caption.dir = 'auto';
-          caption.textContent = ttext;
-          block.appendChild(caption);
-        }
-      }
+      appendInterlinearCaption(block, book.id, chapterNum, verseNum, translation);
 
       const words = document.createElement('div');
       words.className = 'interlinear-words';
       if (config.rtl) words.dir = 'rtl';
       const details = disclosure ? document.createElement('div') : null;
       if (details) details.className = 'interlinear-details';
+      const layout = config.token || { surface: 0, strongs: 1, morph: 2 };
       for (let t = 0; t < tokens.length; t++) {
-        const [surface, strongs, morph] = tokens[t];
+        const raw = tokens[t];
+        const surface = raw[layout.surface];
+        const strongs = raw[layout.strongs];
+        const morph = raw[layout.morph];
+        // Berean supplies its own transliteration and contextual gloss inline;
+        // Byzantine/Hebrew do not (gloss comes from Strong's / the candidate
+        // layer). `tokenGloss === null` means "not provided by the data".
+        const tokenTranslit = layout.translit != null ? raw[layout.translit] : '';
+        const tokenGloss = layout.gloss != null ? raw[layout.gloss] : null;
         const definition = definitions[strongs] || '';
         const rendering = renderings[strongs] || '';
 
+        let override = null;
+        if (tokenGloss !== null) {
+          override = { transliteration: tokenTranslit, gloss: tokenGloss, label: config.readingGlossLabel };
+        } else if (reviewed) {
+          const entry = reviewed.verses?.[book.id]?.[chapterNum]?.[verseNum]?.[t] || null;
+          if (entry) override = { transliteration: entry[0], gloss: entry[1], label: config.readingGlossLabel };
+        }
+
         if (disclosure) {
           const detailId = `iw-detail-${book.id}-${chapterNum}-${verseNum}-${t}`;
-          const { button, detail } = buildDisclosureWord(config, surface, strongs, morph, definition, rendering, detailId);
+          const { button, detail } = buildDisclosureWord(config, surface, strongs, morph, definition, rendering, detailId, override);
           words.appendChild(button);
           details.appendChild(detail);
           continue;
         }
+
+        // Study mode: a dense card. Berean shows its own transliteration and
+        // contextual gloss; Byzantine/Hebrew keep the KJV rendering list.
+        const translitText = tokenTranslit || (config.transliterate ? config.transliterate(surface) : '');
+        const glossText = tokenGloss !== null ? tokenGloss : rendering;
 
         const card = document.createElement('span');
         card.className = 'iw';
@@ -1885,12 +2266,12 @@ function init() {
 
         const translit = document.createElement('span');
         translit.className = 'iw-translit';
-        translit.textContent = config.transliterate(surface);
+        translit.textContent = translitText;
 
         const gloss = document.createElement('span');
         gloss.className = 'iw-gloss';
-        gloss.textContent = rendering;
-        const glossTitle = [strongs ? config.strongsPrefix + strongs : '', rendering, morph].filter(Boolean).join(' \u00b7 ');
+        gloss.textContent = glossText;
+        const glossTitle = [strongs ? config.strongsPrefix + strongs : '', glossText, morph].filter(Boolean).join(' \u00b7 ');
         if (glossTitle) gloss.title = glossTitle;
 
         const meta = document.createElement('span');
@@ -1906,15 +2287,20 @@ function init() {
     }
   }
 
-  // Which interlinear, if any, should be shown for the current book. When both
-  // checkboxes are ticked the current book's testament decides.
+  // Which interlinear, if any, should be shown for the current book. The
+  // Greek-text interlinears (Byzantine, Berean) are mutually exclusive in the
+  // UI; Hebrew is independent. When a Greek interlinear is selected for an OT
+  // book it is still returned, so the block shows its "NT only" message.
   function activeInterlinear() {
     const book = currentBook();
     const isNT = !!(book && book.testament === 'NT');
-    if (interlinearState.greek.enabled && interlinearState.hebrew.enabled) {
-      return isNT ? INTERLINEARS.greek : INTERLINEARS.hebrew;
+    const greekChoice = interlinearState.berean.enabled
+      ? INTERLINEARS.berean
+      : interlinearState.greek.enabled ? INTERLINEARS.greek : null;
+    if (greekChoice) {
+      if (isNT) return greekChoice;
+      return interlinearState.hebrew.enabled ? INTERLINEARS.hebrew : greekChoice;
     }
-    if (interlinearState.greek.enabled) return INTERLINEARS.greek;
     if (interlinearState.hebrew.enabled) return INTERLINEARS.hebrew;
     return null;
   }
@@ -1925,12 +2311,31 @@ function init() {
     refs.results.innerHTML = '';
 
     // An interlinear overrides the normal reading view (works even with no
-    // translation selected — a selected one is used only as a caption). If
-    // both checkboxes are ticked, the current book's testament decides.
+    // translation selected — a selected one is used only as a caption).
     const interlinear = activeInterlinear();
     if (interlinear) {
       setMessage('');
       refs.contextBtn.hidden = true;
+      if (interlinear.perBook) {
+        const needed = interlinearBookIds(interlinear);
+        const failedHere = needed.filter((id) => interlinearState[interlinear.key].failed[id]);
+        if (failedHere.length) {
+          renderInterlinearError(interlinear, failedHere);
+          return;
+        }
+        const missing = needed.filter((id) => !window[interlinear.chunkGlobal(id)]);
+        if (missing.length) {
+          setMessage(`Loading ${interlinear.loadingLabel} interlinear\u2026`);
+          const loading = document.createElement('p');
+          loading.className = 'empty';
+          loading.textContent = `Loading ${interlinear.label} data\u2026`;
+          refs.results.appendChild(loading);
+          ensureInterlinearBooks(interlinear, missing, () => {
+            if (interlinearState[interlinear.key].enabled) render({ scrollToReference: false });
+          });
+          return;
+        }
+      }
       renderInterlinear(interlinear, translations);
       return;
     }
