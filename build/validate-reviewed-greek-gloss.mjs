@@ -1,15 +1,15 @@
 // validate-reviewed-greek-gloss.mjs
 //
-// Repeatable, dependency-free check for the reviewed Greek gloss pilot.
+// Repeatable, dependency-free check for the candidate Greek gloss pilot.
 // Run after `node build/import-reviewed-greek-gloss.mjs`.
 //
 //   node build/validate-reviewed-greek-gloss.mjs
 //
 // Verifies the generated data against the editable TSV and the Byzantine
 // interlinear: token counts (17 in John 6:50, 41 in John 6:51), all 58 identity
-// fingerprints, the four required G1537 contextual glosses, the intentionally
-// blank de, that no other verse/book is present, and that the JS payload is
-// syntactically valid and identical to the JSON.
+// fingerprints, the four required G1537 contextual glosses, the five
+// intentionally blank tokens, that no other verse/book is present, and that the
+// JS payload is syntactically valid and identical to the JSON.
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -38,7 +38,7 @@ const jsText = fs.readFileSync(JS_PATH, 'utf8');
 
 // --- parse TSV ----------------------------------------------------------
 const COLUMNS = ['book', 'chapter', 'verse', 'token', 'surface', 'strongs',
-  'morphology', 'transliteration', 'gloss', 'status', 'source_note'];
+  'morphology', 'transliteration', 'gloss', 'source_note', 'status'];
 const tsvRows = [];
 for (const line of tsvText.split(/\r?\n/)) {
   if (line.trim() === '' || line.startsWith('#')) continue;
@@ -70,12 +70,12 @@ for (const row of tsvRows) {
 const countNonBlank = (verse) =>
   (jsonData.verses.JHN[6][String(verse)] || []).filter(Boolean).length;
 
-check('John 6:50 has 17 reviewed tokens', countNonBlank(50) === 17, `got ${countNonBlank(50)}`);
-check('John 6:51 has 41 reviewed tokens', countNonBlank(51) === 41, `got ${countNonBlank(51)}`);
+check('John 6:50 has 17 candidate tokens', countNonBlank(50) === 17, `got ${countNonBlank(50)}`);
+check('John 6:51 has 41 candidate tokens', countNonBlank(51) === 41, `got ${countNonBlank(51)}`);
 check('TSV covers 17 tokens for John 6:50', perVerse['JHN 6:50'] === 17, `got ${perVerse['JHN 6:50']}`);
 check('TSV covers 41 tokens for John 6:51', perVerse['JHN 6:51'] === 41, `got ${perVerse['JHN 6:51']}`);
 check('all 58 identity fingerprints match the Byzantine interlinear', fingerprintMismatches === 0, `${fingerprintMismatches} mismatch(es)`);
-check('exactly 58 unique reviewed tokens', seen.size === 58, `got ${seen.size}`);
+check('exactly 58 unique candidate tokens', seen.size === 58, `got ${seen.size}`);
 
 // --- 4: required G1537 contextual glosses -------------------------------
 const g1537 = [
@@ -99,11 +99,35 @@ check('only John 6:50 and 6:51 are present', verseKeys.join(',') === '50,51', ve
 check('no verse slot is a gap (pilot fills all tokens)', 
   [50, 51].every(v => (jsonData.verses.JHN[6][String(v)] || []).every(Boolean)));
 
+// --- revised candidate glosses (supervisor round 2) ---------------------
+const glossAt = (verse, token) => jsonData.verses.JHN[6][String(verse)][token - 1]?.[1];
+const revised = [
+  [50, 5, 'that', '6:50 ho -> that'],
+  [50, 9, 'comes down', '6:50 katabainon -> comes down'],
+  [50, 14, 'may eat', '6:50 phage -> may eat'],
+  [51, 7, 'that', '6:51 ho -> that'],
+  [51, 11, 'having come down', '6:51 katabas -> having come down'],
+  [51, 22, 'forever', '6:51 aiona -> forever'],
+];
+for (const [verse, token, expected, label] of revised) {
+  check(`revised candidate: ${label}`, glossAt(verse, token) === expected, `got "${glossAt(verse, token)}"`);
+}
+
 // --- intentional blank vs missing --------------------------------------
-const de = jsonData.verses.JHN[6]['51'][25];
-check('de (John 6:51 token 26) is explicitly blank, not missing', Array.isArray(de) && de[0] === 'de' && de[1] === '', JSON.stringify(de));
-check('intentional blank count is exactly 1',
-  [50, 51].reduce((n, v) => n + jsonData.verses.JHN[6][String(v)].filter(e => e && e[1] === '').length, 0) === 1);
+const blanks = [
+  [50, 7, 'tou', '6:50 tou (article in "from heaven")'],
+  [51, 9, 'tou', '6:51 tou (article in "from heaven")'],
+  [51, 20, 'eis', '6:51 eis (phrase εἰς τὸν αἰῶνα = "forever")'],
+  [51, 21, 'ton', '6:51 ton (phrase εἰς τὸν αἰῶνα = "forever")'],
+  [51, 26, 'de', '6:51 de (postpositive connective)'],
+];
+for (const [verse, token, translit, label] of blanks) {
+  const entry = jsonData.verses.JHN[6][String(verse)][token - 1];
+  check(`${label} is explicitly blank, not missing`,
+    Array.isArray(entry) && entry[0] === translit && entry[1] === '', JSON.stringify(entry));
+}
+check('intentional blank count is exactly 5',
+  [50, 51].reduce((n, v) => n + jsonData.verses.JHN[6][String(v)].filter(e => e && e[1] === '').length, 0) === 5);
 
 // --- 6/7: JSON vs JS payload, JS syntax ---------------------------------
 let jsPayload;

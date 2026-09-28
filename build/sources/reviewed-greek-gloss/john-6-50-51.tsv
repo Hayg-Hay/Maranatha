@@ -1,73 +1,76 @@
-# Reviewed Greek interlinear card data — pilot: John 6:50-51 (Byzantine / Robinson-Pierpont).
+# Candidate Greek interlinear card data — pilot: John 6:50-51 (Byzantine / Robinson-Pierpont).
+#
+# STATUS: these are pilot *candidates* awaiting project-maintainer approval, not approved text.
 #
 # Editable source of truth for data/reviewed-greek-gloss.{json,js}.
 # Columns (tab-separated), in order:
-#   book chapter verse token surface strongs morphology transliteration gloss status source_note
+#   book chapter verse token surface strongs morphology transliteration gloss source_note status
 # token is 1-based and must match the token order in data/byz-interlinear.json.
 # surface / strongs / morphology must byte-match the Byzantine token after NFC normalization;
 #   the build script refuses to run otherwise.
-# status: "reviewed-pilot"      -> gloss must be non-empty
-#         "reviewed-pilot-blank"  -> gloss must be empty (intentional no-gloss; NOT missing data)
+# status (last column, always present so no row ends in a trailing tab):
+#   candidate-pilot        -> gloss must be non-empty
+#   candidate-pilot-blank  -> gloss must be empty (intentional no-gloss; NOT missing data)
 # A token with no row at all is "missing" (runtime falls back to the Strong's-derived gloss).
 # Transliteration: macrons for eta/omega (ē/ō), dropped accents/breathings except rough breathing.
-# English glosses reviewed for context; not copied positionally from any other edition.
+# English glosses are contextual candidates, not copied positionally from any other edition.
 #
-book	chapter	verse	token	surface	strongs	morphology	transliteration	gloss	status	source_note
-JHN	6	50	1	Οὗτός	3778	D-NSM	Houtos	This	reviewed-pilot	
-JHN	6	50	2	ἐστιν	1510	V-PAI-3S	estin	is	reviewed-pilot	
-JHN	6	50	3	ὁ	3588	T-NSM	ho	the	reviewed-pilot	
-JHN	6	50	4	ἄρτος	740	N-NSM	artos	bread	reviewed-pilot	
-JHN	6	50	5	ὁ	3588	T-NSM	ho	which	reviewed-pilot	article functioning as the relative: "the one which"
-JHN	6	50	6	ἐκ	1537	PREP	ek	from	reviewed-pilot	G1537: dictionary gloss broken; contextual "from"
-JHN	6	50	7	τοῦ	3588	T-GSM	tou	the	reviewed-pilot	
-JHN	6	50	8	οὐρανοῦ	3772	N-GSM	ouranou	heaven	reviewed-pilot	
-JHN	6	50	9	καταβαίνων	2597	V-PAP-NSM	katabainōn	coming down	reviewed-pilot	
-JHN	6	50	10	ἵνα	2443	CONJ	hina	so that	reviewed-pilot	
-JHN	6	50	11	τις	5100	X-NSM	tis	anyone	reviewed-pilot	
-JHN	6	50	12	ἐξ	1537	PREP	ex	of	reviewed-pilot	same lemma G1537, partitive in ἐξ αὐτοῦ "of it"
-JHN	6	50	13	αὐτοῦ	846	P-GSM	autou	it	reviewed-pilot	
-JHN	6	50	14	φάγῃ	5315	V-2AAS-3S	phagē	eat	reviewed-pilot	
-JHN	6	50	15	καὶ	2532	CONJ	kai	and	reviewed-pilot	
-JHN	6	50	16	μὴ	3361	PRT-N	mē	not	reviewed-pilot	
-JHN	6	50	17	ἀποθάνῃ	599	V-2AAS-3S	apothanē	die	reviewed-pilot	
-JHN	6	51	1	Ἐγώ	1473	P-1NS	Egō	I	reviewed-pilot	
-JHN	6	51	2	εἰμι	1510	V-PAI-1S	eimi	am	reviewed-pilot	
-JHN	6	51	3	ὁ	3588	T-NSM	ho	the	reviewed-pilot	
-JHN	6	51	4	ἄρτος	740	N-NSM	artos	bread	reviewed-pilot	
-JHN	6	51	5	ὁ	3588	T-NSM	ho	the	reviewed-pilot	
-JHN	6	51	6	ζῶν	2198	V-PAP-NSM	zōn	living	reviewed-pilot	
-JHN	6	51	7	ὁ	3588	T-NSM	ho	which	reviewed-pilot	article functioning as the relative: "the one which"
-JHN	6	51	8	ἐκ	1537	PREP	ek	from	reviewed-pilot	same lemma G1537, source "from"
-JHN	6	51	9	τοῦ	3588	T-GSM	tou	the	reviewed-pilot	
-JHN	6	51	10	οὐρανοῦ	3772	N-GSM	ouranou	heaven	reviewed-pilot	
-JHN	6	51	11	καταβάς	2597	V-2AAP-NSM	katabas	came down	reviewed-pilot	
-JHN	6	51	12	ἐάν	1437	COND	ean	if	reviewed-pilot	
-JHN	6	51	13	τις	5100	X-NSM	tis	anyone	reviewed-pilot	
-JHN	6	51	14	φάγῃ	5315	V-2AAS-3S	phagē	eats	reviewed-pilot	
-JHN	6	51	15	ἐκ	1537	PREP	ek	of	reviewed-pilot	same lemma G1537, partitive "of" this bread
-JHN	6	51	16	τούτου	3778	D-GSM	toutou	this	reviewed-pilot	
-JHN	6	51	17	τοῦ	3588	T-GSM	tou	the	reviewed-pilot	
-JHN	6	51	18	ἄρτου	740	N-GSM	artou	bread	reviewed-pilot	
-JHN	6	51	19	ζήσεται	2198	V-FDI-3S	zēsetai	will live	reviewed-pilot	
-JHN	6	51	20	εἰς	1519	PREP	eis	for	reviewed-pilot	εἰς τὸν αἰῶνα = "for the age / forever"
-JHN	6	51	21	τὸν	3588	T-ASM	ton	the	reviewed-pilot	
-JHN	6	51	22	αἰῶνα	165	N-ASM	aiōna	age	reviewed-pilot	
-JHN	6	51	23	Καὶ	2532	CONJ	Kai	And	reviewed-pilot	
-JHN	6	51	24	ὁ	3588	T-NSM	ho	the	reviewed-pilot	
-JHN	6	51	25	ἄρτος	740	N-NSM	artos	bread	reviewed-pilot	
-JHN	6	51	26	δὲ	1161	CONJ	de		reviewed-pilot-blank	intentionally untranslated: postpositive connective; global override "but" is wrong here, see pilot notes
-JHN	6	51	27	ὃν	3739	R-ASM	hon	which	reviewed-pilot	
-JHN	6	51	28	ἐγὼ	1473	P-1NS	egō	I	reviewed-pilot	
-JHN	6	51	29	δώσω	1325	V-FAI-1S	dōsō	will give	reviewed-pilot	
-JHN	6	51	30	ἡ	3588	T-NSF	hē	the	reviewed-pilot	
-JHN	6	51	31	σάρξ	4561	N-NSF	sarx	flesh	reviewed-pilot	
-JHN	6	51	32	μου	1473	P-1GS	mou	my	reviewed-pilot	
-JHN	6	51	33	ἐστίν	1510	V-PAI-3S	estin	is	reviewed-pilot	
-JHN	6	51	34	ἣν	3739	R-ASF	hēn	which	reviewed-pilot	
-JHN	6	51	35	ἐγὼ	1473	P-1NS	egō	I	reviewed-pilot	
-JHN	6	51	36	δώσω	1325	V-FAI-1S	dōsō	will give	reviewed-pilot	
-JHN	6	51	37	ὑπὲρ	5228	PREP	hyper	for	reviewed-pilot	
-JHN	6	51	38	τῆς	3588	T-GSF	tēs	the	reviewed-pilot	
-JHN	6	51	39	τοῦ	3588	T-GSM	tou	the	reviewed-pilot	
-JHN	6	51	40	κόσμου	2889	N-GSM	kosmou	world	reviewed-pilot	
-JHN	6	51	41	ζωῆς	2222	N-GSF	zōēs	life	reviewed-pilot	
+book	chapter	verse	token	surface	strongs	morphology	transliteration	gloss	source_note	status
+JHN	6	50	1	Οὗτός	3778	D-NSM	Houtos	This		candidate-pilot
+JHN	6	50	2	ἐστιν	1510	V-PAI-3S	estin	is		candidate-pilot
+JHN	6	50	3	ὁ	3588	T-NSM	ho	the		candidate-pilot
+JHN	6	50	4	ἄρτος	740	N-NSM	artos	bread		candidate-pilot
+JHN	6	50	5	ὁ	3588	T-NSM	ho	that	relative/demonstrative article: "the bread that comes down"	candidate-pilot
+JHN	6	50	6	ἐκ	1537	PREP	ek	from	G1537: dictionary gloss is broken; contextual "from"	candidate-pilot
+JHN	6	50	7	τοῦ	3588	T-GSM	tou		article not expressed in English "from heaven"	candidate-pilot-blank
+JHN	6	50	8	οὐρανοῦ	3772	N-GSM	ouranou	heaven		candidate-pilot
+JHN	6	50	9	καταβαίνων	2597	V-PAP-NSM	katabainōn	comes down		candidate-pilot
+JHN	6	50	10	ἵνα	2443	CONJ	hina	so that		candidate-pilot
+JHN	6	50	11	τις	5100	X-NSM	tis	anyone		candidate-pilot
+JHN	6	50	12	ἐξ	1537	PREP	ex	of	same lemma G1537, partitive in ἐξ αὐτοῦ "of it"	candidate-pilot
+JHN	6	50	13	αὐτοῦ	846	P-GSM	autou	it		candidate-pilot
+JHN	6	50	14	φάγῃ	5315	V-2AAS-3S	phagē	may eat		candidate-pilot
+JHN	6	50	15	καὶ	2532	CONJ	kai	and		candidate-pilot
+JHN	6	50	16	μὴ	3361	PRT-N	mē	not		candidate-pilot
+JHN	6	50	17	ἀποθάνῃ	599	V-2AAS-3S	apothanē	die		candidate-pilot
+JHN	6	51	1	Ἐγώ	1473	P-1NS	Egō	I		candidate-pilot
+JHN	6	51	2	εἰμι	1510	V-PAI-1S	eimi	am		candidate-pilot
+JHN	6	51	3	ὁ	3588	T-NSM	ho	the		candidate-pilot
+JHN	6	51	4	ἄρτος	740	N-NSM	artos	bread		candidate-pilot
+JHN	6	51	5	ὁ	3588	T-NSM	ho	the		candidate-pilot
+JHN	6	51	6	ζῶν	2198	V-PAP-NSM	zōn	living		candidate-pilot
+JHN	6	51	7	ὁ	3588	T-NSM	ho	that	relative/demonstrative article: "the bread that came down"	candidate-pilot
+JHN	6	51	8	ἐκ	1537	PREP	ek	from	same lemma G1537, source "from"	candidate-pilot
+JHN	6	51	9	τοῦ	3588	T-GSM	tou		article not expressed in English "from heaven"	candidate-pilot-blank
+JHN	6	51	10	οὐρανοῦ	3772	N-GSM	ouranou	heaven		candidate-pilot
+JHN	6	51	11	καταβάς	2597	V-2AAP-NSM	katabas	having come down		candidate-pilot
+JHN	6	51	12	ἐάν	1437	COND	ean	if		candidate-pilot
+JHN	6	51	13	τις	5100	X-NSM	tis	anyone		candidate-pilot
+JHN	6	51	14	φάγῃ	5315	V-2AAS-3S	phagē	eats		candidate-pilot
+JHN	6	51	15	ἐκ	1537	PREP	ek	of	same lemma G1537, partitive "of" this bread	candidate-pilot
+JHN	6	51	16	τούτου	3778	D-GSM	toutou	this		candidate-pilot
+JHN	6	51	17	τοῦ	3588	T-GSM	tou	the		candidate-pilot
+JHN	6	51	18	ἄρτου	740	N-GSM	artou	bread		candidate-pilot
+JHN	6	51	19	ζήσεται	2198	V-FDI-3S	zēsetai	will live		candidate-pilot
+JHN	6	51	20	εἰς	1519	PREP	eis		εἰς τὸν αἰῶνα is rendered as the phrase "forever"	candidate-pilot-blank
+JHN	6	51	21	τὸν	3588	T-ASM	ton		part of the phrase εἰς τὸν αἰῶνα ("forever")	candidate-pilot-blank
+JHN	6	51	22	αἰῶνα	165	N-ASM	aiōna	forever	phrase-level rendering of εἰς τὸν αἰῶνα	candidate-pilot
+JHN	6	51	23	Καὶ	2532	CONJ	Kai	And		candidate-pilot
+JHN	6	51	24	ὁ	3588	T-NSM	ho	the		candidate-pilot
+JHN	6	51	25	ἄρτος	740	N-NSM	artos	bread		candidate-pilot
+JHN	6	51	26	δὲ	1161	CONJ	de		intentionally untranslated: postpositive connective; global override "but" is wrong here	candidate-pilot-blank
+JHN	6	51	27	ὃν	3739	R-ASM	hon	which		candidate-pilot
+JHN	6	51	28	ἐγὼ	1473	P-1NS	egō	I		candidate-pilot
+JHN	6	51	29	δώσω	1325	V-FAI-1S	dōsō	will give		candidate-pilot
+JHN	6	51	30	ἡ	3588	T-NSF	hē	the		candidate-pilot
+JHN	6	51	31	σάρξ	4561	N-NSF	sarx	flesh		candidate-pilot
+JHN	6	51	32	μου	1473	P-1GS	mou	my		candidate-pilot
+JHN	6	51	33	ἐστίν	1510	V-PAI-3S	estin	is		candidate-pilot
+JHN	6	51	34	ἣν	3739	R-ASF	hēn	which		candidate-pilot
+JHN	6	51	35	ἐγὼ	1473	P-1NS	egō	I		candidate-pilot
+JHN	6	51	36	δώσω	1325	V-FAI-1S	dōsō	will give		candidate-pilot
+JHN	6	51	37	ὑπὲρ	5228	PREP	hyper	for		candidate-pilot
+JHN	6	51	38	τῆς	3588	T-GSF	tēs	the		candidate-pilot
+JHN	6	51	39	τοῦ	3588	T-GSM	tou	the		candidate-pilot
+JHN	6	51	40	κόσμου	2889	N-GSM	kosmou	world		candidate-pilot
+JHN	6	51	41	ζωῆς	2222	N-GSF	zōēs	life		candidate-pilot

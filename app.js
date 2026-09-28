@@ -310,13 +310,18 @@ const refs = {
       dataSources: [
         'data/byz-interlinear.js',
         'data/strongs-greek.js',
-        'data/reviewed-greek-gloss.js',
+      ],
+      // Optional, independent of the required sources above: a missing or
+      // uncached pilot file must never block the interlinear. Its successful
+      // (possibly late) load rerenders the active view with candidate glosses.
+      optionalDataSources: [
+        { src: 'data/reviewed-greek-gloss.js', global: 'MARANATHA_REVIEWED_GREEK_GLOSS' },
       ],
       strongsPrefix: 'G',
       testament: 'NT',
       label: '(Greek interlinear)',
       unavailable: 'Interlinear data is available for the Greek New Testament only.',
-      sourceNote: 'Greek text: Robinson-Pierpont Byzantine (Unlicense) \u00b7 glosses: Strong\'s, Open Scriptures (CC-BY-SA) \u00b7 reviewed reading pilot: John 6:50\u201351.',
+      sourceNote: 'Greek text: Robinson-Pierpont Byzantine (Unlicense) \u00b7 glosses: Strong\'s, Open Scriptures (CC-BY-SA) \u00b7 candidate reading pilot: John 6:50\u201351.',
       surfaceClass: 'iw-greek',
       rtl: false,
       lang: 'el',
@@ -346,8 +351,8 @@ const refs = {
     },
   };
   const interlinearState = {
-    greek: { enabled: false, status: 'idle', mode: 'read' },  // mode: 'read' | 'study'
-    hebrew: { enabled: false, status: 'idle', mode: 'read' },  // mode: 'read' | 'study'
+    greek: { enabled: false, status: 'idle', mode: 'read', optionalLoading: false },
+    hebrew: { enabled: false, status: 'idle', mode: 'read', optionalLoading: false },
   };
 
   // Per-block context overrides.  Each key is "${bookId}-${chapterNum}".
@@ -1428,6 +1433,9 @@ function init() {
       return;
     }
     if (state.status === 'loaded') {
+      // A previous enable may have finished before the optional pilot data
+      // arrived (or failed). Retry it, then render with whatever is present.
+      loadOptionalInterlinearData(config);
       render();
     } else if (state.status !== 'loading') {
       setMessage(`Loading ${config.loadingLabel} interlinear\u2026`);
@@ -1449,12 +1457,49 @@ function init() {
         if (--remaining === 0 && !failed) {
           state.status = 'loaded';
           onReady();
+          // Kick off the optional layer only after the required data is in
+          // place, so a slow/failed optional file cannot delay or block the
+          // interlinear. Its onload rerenders if the view is still active.
+          loadOptionalInterlinearData(config);
         }
       };
       script.onerror = () => {
         failed = true;
         state.status = 'idle';
         setMessage(`Could not load ${src}.`);
+      };
+      document.head.appendChild(script);
+    }
+  }
+
+  // Loads optional interlinear data (e.g. candidate reading glosses). Unlike
+  // loadInterlinearData(), a failure here is non-fatal: the required Greek
+  // text and Strong's data already rendered, and every card falls back to the
+  // existing Strong's-derived gloss. If an optional script loads later, the
+  // active interlinear is rerendered so the candidates appear without a manual
+  // refresh.
+  function loadOptionalInterlinearData(config) {
+    const state = interlinearState[config.key];
+    const optional = config.optionalDataSources || [];
+    if (!optional.length || state.optionalLoading) return;
+    const pending = optional.filter((opt) => !(opt.global && window[opt.global]));
+    if (!pending.length) return;
+    state.optionalLoading = true;
+    let remaining = pending.length;
+    let anyLoaded = false;
+    const settle = () => {
+      if (--remaining > 0) return;
+      state.optionalLoading = false;
+      if (anyLoaded && state.enabled && state.status === 'loaded') render();
+    };
+    for (const opt of pending) {
+      const script = document.createElement('script');
+      script.src = opt.src;
+      script.onload = () => { anyLoaded = true; settle(); };
+      script.onerror = () => {
+        // Optional and non-fatal: keep the fallback glosses.
+        console.warn(`Optional interlinear data unavailable: ${opt.src}`);
+        settle();
       };
       document.head.appendChild(script);
     }
@@ -1758,7 +1803,7 @@ function init() {
     detail.appendChild(heading);
 
     const rows = [];
-    if (reviewed) rows.push(['Reading gloss (reviewed pilot)', glossText || '(intentionally untranslated)']);
+    if (reviewed) rows.push(['Reading gloss (candidate pilot)', glossText || '(intentionally untranslated)']);
     if (definition) rows.push(['Definition', definition]);
     if (rendering) rows.push(['KJV', rendering]);
     if (strongs) rows.push(['Strong\u2019s', config.strongsPrefix + strongs]);

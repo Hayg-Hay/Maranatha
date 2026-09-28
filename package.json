@@ -1,5 +1,11 @@
 {
+  "scripts": {
+    "test": "node build/validate-reviewed-greek-gloss.mjs && node build/test-reviewed-greek-gloss.mjs"
+  },
   "dependencies": {
     "fast-xml-parser": "^5.10.1"
+  },
+  "devDependencies": {
+    "jsdom": "^30.0.1"
   }
 }
