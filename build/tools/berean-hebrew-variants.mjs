@@ -45,6 +45,7 @@ const BOOKS = [
   { bookId: 'EXO', osis: 'Exod', xml: 'Exod.xml' },
   { bookId: 'LEV', osis: 'Lev', xml: 'Lev.xml' },
   { bookId: 'NUM', osis: 'Num', xml: 'Num.xml' },
+  { bookId: 'DEU', osis: 'Deut', xml: 'Deut.xml' },
   { bookId: 'DAN', osis: 'Dan', xml: 'Dan.xml' },
 ];
 

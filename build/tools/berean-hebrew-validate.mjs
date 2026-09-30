@@ -67,22 +67,40 @@ for (const page of manifest.pages) {
 check('every cached page hash matches the manifest', hashBad === 0, `${hashBad} bad`);
 
 // --- coverage & totals ------------------------------------------------------
-check('coverage string names Genesis/Exodus/Leviticus/Numbers plus the retained verses',
-  fixture.coverage === 'Genesis 1\u201350; Exodus 1\u201340; Leviticus 1\u201327; Numbers 1\u201336; Daniel 2:4\u20135; Malachi 4:5\u20136', fixture.coverage);
+check('coverage string names the Torah (Genesis\u2013Deuteronomy) plus the retained verses',
+  fixture.coverage === 'Genesis 1\u201350; Exodus 1\u201340; Leviticus 1\u201327; Numbers 1\u201336; Deuteronomy 1\u201334; Daniel 2:4\u20135; Malachi 4:5\u20136', fixture.coverage);
 const t = fixture.totals;
-check('6 books imported', t.books === 6, `${t.books}`);
-check('155 chapters imported (50 GEN + 40 EXO + 27 LEV + 36 NUM + DAN 2 + MAL 4)', t.chapters === 155, `${t.chapters}`);
-check('4897 verses imported', t.verses === 4897, `${t.verses}`);
-check('65,745 records imported', t.records === 65745, `${t.records}`);
+check('7 books imported', t.books === 7, `${t.books}`);
+check('189 chapters imported (50 GEN + 40 EXO + 27 LEV + 36 NUM + 34 DEU + DAN 2 + MAL 4)', t.chapters === 189, `${t.chapters}`);
+check('5856 verses imported', t.verses === 5856, `${t.verses}`);
+check('80,039 records imported', t.records === 80039, `${t.records}`);
 check('no structural extraction errors', t.structuralErrors === 0, `${t.structuralErrors}`);
 
-for (const [bookId, chapters] of [['GEN', 50], ['EXO', 40], ['LEV', 27], ['NUM', 36]]) {
+for (const [bookId, chapters] of [['GEN', 50], ['EXO', 40], ['LEV', 27], ['NUM', 36], ['DEU', 34]]) {
   const passages = fixture.passages.filter((p) => p.bookId === bookId);
   const canonBook = canon.books.find((b) => b.id === bookId);
   let bad = 0;
   for (const p of passages) if (p.verseData.length !== canonBook.chapters[p.chapter - 1]) bad++;
   check(`${bookId} has all ${chapters} chapters matching canon`, passages.length === chapters && bad === 0, `${passages.length} chapters, ${bad} mismatch`);
 }
+
+// The five Torah books are complete; keep their combined totals explicit so a
+// future book addition cannot silently change them.
+const TORAH = ['GEN', 'EXO', 'LEV', 'NUM', 'DEU'];
+const torahPassages = fixture.passages.filter((p) => TORAH.includes(p.bookId));
+const torahRecords = torahPassages.flatMap((p) => p.verseData).flatMap((v) => v.records);
+check('Torah (5 books) = 187 chapters, 5852 verses, 79,982 records',
+  torahPassages.length === 187
+  && torahPassages.reduce((n, p) => n + p.verseData.length, 0) === 5852
+  && torahRecords.length === 79982,
+  `${torahPassages.length}/${torahPassages.reduce((n, p) => n + p.verseData.length, 0)}/${torahRecords.length}`);
+const deuPassages = fixture.passages.filter((p) => p.bookId === 'DEU');
+const deuRecords = deuPassages.flatMap((p) => p.verseData).flatMap((v) => v.records);
+check('Deuteronomy = 34 chapters, 959 verses, 14,294 records',
+  deuPassages.length === 34
+  && deuPassages.reduce((n, p) => n + p.verseData.length, 0) === 959
+  && deuRecords.length === 14294,
+  `${deuPassages.length}/${deuPassages.reduce((n, p) => n + p.verseData.length, 0)}/${deuRecords.length}`);
 
 for (const [bookId, chapter, verses] of [['DAN', 2, [4, 5]], ['MAL', 4, [5, 6]]]) {
   const p = fixture.passages.find((x) => x.bookId === bookId && x.chapter === chapter);
@@ -110,11 +128,14 @@ for (const r of allRecords) {
 check('missing blanks are explicit nulls, intentional blanks are "-"', fieldErrors === 0, `${fieldErrors}`);
 
 // --- verified variants ------------------------------------------------------
-check('42 verified Ketiv/Qere variants', variants.variants.length === 42, `${variants.variants.length}`);
-check('multiword written/read cases are left uncertain (unattached)', variants.uncertain.length === 2, `${variants.uncertain.length}`);
-check('the two uncertain cases are the multiword Qere pairs',
+check('65 verified Ketiv/Qere variants', variants.variants.length === 65, `${variants.variants.length}`);
+check('uncertain written/read cases are left unattached', variants.uncertain.length === 4, `${variants.uncertain.length}`);
+check('the two deferred multiword Qere pairs remain uncertain',
   ['GEN 30:11', 'EXO 4:2'].every((ref) => variants.uncertain.some((u) => `${u.bookId} ${u.chapter}:${u.verse}` === ref && /multiword Qere/.test(u.reason))),
   JSON.stringify(variants.uncertain.map((u) => u.reason)));
+check('the new Deuteronomy uncertain cases are documented, not forced',
+  ['DEU 33:2', 'DEU 5:10'].every((ref) => variants.uncertain.some((u) => `${u.bookId} ${u.chapter}:${u.verse}` === ref)),
+  JSON.stringify(variants.uncertain.filter((u) => u.bookId === 'DEU').map((u) => `${u.chapter}:${u.verse} ${u.reason}`)));
 let variantWired = 0;
 let fingerprintBad = 0;
 let fingerprintMissing = 0;
@@ -124,9 +145,10 @@ for (const v of variants.variants) {
   if (!v.sourceFingerprint) fingerprintMissing++;
   else if (rec && recordFingerprint(rec) !== v.sourceFingerprint) fingerprintBad++;
 }
-check('every verified variant is wired to exactly its record', variantWired === 42, `${variantWired}/42`);
+check('every verified variant is wired to exactly its record', variantWired === 65, `${variantWired}/65`);
 check('every verified variant carries a source fingerprint', fingerprintMissing === 0, `${fingerprintMissing} missing`);
 check('every attached fingerprint matches its record', fingerprintBad === 0, `${fingerprintBad} stale`);
+check('23 of the verified variants are Deuteronomy', variants.variants.filter((v) => v.bookId === 'DEU').length === 23, `${variants.variants.filter((v) => v.bookId === 'DEU').length}`);
 const variantKeys = new Set(variants.variants.map((v) => `${v.bookId}:${v.chapter}:${v.verse}:${v.order}`));
 let attached = 0;
 let attachedBad = 0;
@@ -139,7 +161,7 @@ for (const p of fixture.passages) {
     }
   }
 }
-check('only the 42 verified variants are attached to records', attached === 42 && attachedBad === 0, `attached ${attached}, unrecognised ${attachedBad}`);
+check('only the 65 verified variants are attached to records', attached === 65 && attachedBad === 0, `attached ${attached}, unrecognised ${attachedBad}`);
 check('variant letters match the displayed surface skeleton',
   variants.variants.every((v) => skeleton(v.observedPageSurface) === skeleton(v.oshbKetiv)), 'skeleton mismatch');
 
@@ -171,6 +193,22 @@ const yhwhNum = num11.find((r) => r.strongsList.includes('3068'));
 check('Numbers divine-name convention preserved (Yah·weh / YHWH)', yhwhNum && yhwhNum.transliteration === 'Yah·weh' && yhwhNum.gloss === 'YHWH', JSON.stringify(yhwhNum));
 const num2313 = variantAt('NUM', 23, 13, '1980');
 check('Numbers 23:13 variant present with the exact OSHB Qere', num2313 && num2313.oshbQere === 'לְכָ/ה', JSON.stringify(num2313 && num2313.oshbQere));
+
+// --- Deuteronomy anchors (Torah completion) ---------------------------------
+const deu16 = fixture.passages.find((p) => p.bookId === 'DEU' && p.chapter === 1).verseData.find((v) => v.verse === 6).records;
+const yhwhDeu = deu16.find((r) => r.strongsList.includes('3068'));
+check('Deuteronomy divine-name convention preserved (Yah\u00b7weh / YHWH)', yhwhDeu && yhwhDeu.transliteration === 'Yah\u00b7weh' && yhwhDeu.gloss === 'YHWH', JSON.stringify(yhwhDeu));
+const deuShema = fixture.passages.find((p) => p.bookId === 'DEU' && p.chapter === 6).verseData.find((v) => v.verse === 4).records;
+check('Deuteronomy 6:4 (Shema) has the expected 6 records with the divine name twice',
+  deuShema.length === 6 && deuShema.filter((r) => r.strongsList.includes('3068')).length === 2,
+  JSON.stringify(deuShema.map((r) => r.gloss)));
+check('Deuteronomy 34:12 ends the Torah (last chapter/verse present)',
+  !!fixture.passages.find((p) => p.bookId === 'DEU' && p.chapter === 34)?.verseData.find((v) => v.verse === 12));
+const deu2827 = variantAt('DEU', 28, 27, '6076');
+check('Deuteronomy 28:27 variant present with the exact OSHB Qere', deu2827 && deu2827.oshbQere === '\u05d5\u05bc/\u05d1\u05b7/\u05d8\u05bc\u05b0\u05d7\u05b9\u05e8\u05b4\u0594\u05d9\u05dd', JSON.stringify(deu2827 && deu2827.oshbQere));
+check('Deuteronomy 5:10 left unattached (ambiguous surface, paragraph marker)',
+  recordAt('DEU', 5, 10, 5)?.variant == null);
+check('Deuteronomy 33:2 left unattached (multiword Qere)', recordAt('DEU', 33, 2, 14)?.variant == null);
 
 // --- missing-gloss audit (every explicit null, classified) ------------------
 const missingGlossRecords = [];

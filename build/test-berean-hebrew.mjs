@@ -1,8 +1,9 @@
 // test-berean-hebrew.mjs
 //
-// Runtime tests for the Berean Hebrew (draft) preview — Genesis, Exodus and
-// Leviticus, plus the retained Daniel 2:4-5 and Malachi 4:5-6 pilot verses.
-// Loads the real app under jsdom from file:// and drives the real controls.
+// Runtime tests for the Berean Hebrew (Torah draft) preview — Genesis, Exodus,
+// Leviticus, Numbers and Deuteronomy, plus the retained Daniel 2:4-5 and
+// Malachi 4:5-6 samples. Loads the real app under jsdom from file:// and drives
+// the real controls.
 //
 //   node build/test-berean-hebrew.mjs
 
@@ -17,11 +18,12 @@ function loadGlobal(rel, globalName) {
   return JSON.parse(fs.readFileSync(path.join(ROOT, rel), 'utf8')
     .replace(new RegExp(`^window\\.${globalName}=`), '').replace(/;\s*$/, ''));
 }
-const MANIFEST = loadGlobal('data/berean-hebrew/manifest-v4.js', 'MARANATHA_BEREAN_HEBREW_MANIFEST');
+const MANIFEST = loadGlobal('data/berean-hebrew/manifest-v5.js', 'MARANATHA_BEREAN_HEBREW_MANIFEST');
 const GEN = loadGlobal(`data/berean-hebrew/${MANIFEST.chunkFiles.GEN}`, 'MARANATHA_BEREAN_HEBREW_GEN').books.GEN;
 const EXO = loadGlobal(`data/berean-hebrew/${MANIFEST.chunkFiles.EXO}`, 'MARANATHA_BEREAN_HEBREW_EXO').books.EXO;
 const LEV = loadGlobal(`data/berean-hebrew/${MANIFEST.chunkFiles.LEV}`, 'MARANATHA_BEREAN_HEBREW_LEV').books.LEV;
 const NUM = loadGlobal(`data/berean-hebrew/${MANIFEST.chunkFiles.NUM}`, 'MARANATHA_BEREAN_HEBREW_NUM').books.NUM;
+const DEU = loadGlobal(`data/berean-hebrew/${MANIFEST.chunkFiles.DEU}`, 'MARANATHA_BEREAN_HEBREW_DEU').books.DEU;
 const DAN = loadGlobal(`data/berean-hebrew/${MANIFEST.chunkFiles.DAN}`, 'MARANATHA_BEREAN_HEBREW_DAN').books.DAN;
 const MAL = loadGlobal(`data/berean-hebrew/${MANIFEST.chunkFiles.MAL}`, 'MARANATHA_BEREAN_HEBREW_MAL').books.MAL;
 const VARIANTS = JSON.parse(fs.readFileSync(path.join(ROOT, 'build', 'sources', 'berean-hebrew', 'variants.json'), 'utf8'));
@@ -123,8 +125,8 @@ async function openPilot(window, bookId, chapter, ref) {
   const rendered = await openPilot(window, 'GEN', 1, 'Genesis 1:1');
   check('selecting Berean Hebrew loads the versioned manifest + GEN chunk and renders', rendered);
   const srcs = () => [...document.querySelectorAll('script')].map((s) => s.src);
-  check('versioned manifest (v4) is loaded via <script>', srcs().some((s) => /data\/berean-hebrew\/manifest-v4\.js$/.test(s)));
-  check('earlier manifests are never requested', !srcs().some((s) => /data\/berean-hebrew\/manifest(-v[23])?\.js$/.test(s)));
+  check('versioned manifest (v5) is loaded via <script>', srcs().some((s) => /data\/berean-hebrew\/manifest-v5\.js$/.test(s)));
+  check('earlier manifests are never requested', !srcs().some((s) => /data\/berean-hebrew\/manifest(-v[234])?\.js$/.test(s)));
   check('versioned GEN chunk is loaded, not the stale GEN.js', srcs().some((s) => new RegExp(`berean-hebrew/${MANIFEST.chunkFiles.GEN}$`).test(s)) && !srcs().some((s) => /berean-hebrew\/GEN\.js$/.test(s)));
   const GEN_1_1 = ['In the beginning', 'created', 'God', '', 'the heavens', 'and', 'the earth'];
   const c = denseCards(document, 'Genesis 1:1');
@@ -144,14 +146,18 @@ async function openPilot(window, bookId, chapter, ref) {
   const dom = await createDom();
   const { window } = dom; const { document } = window;
   await openPilot(window, 'GEN', 1, 'Genesis 1:1');
-  check('manifest reports 65,745 records across GEN/EXO/LEV/NUM/DAN/MAL',
-    MANIFEST.recordCount === 65745 && JSON.stringify(MANIFEST.books) === JSON.stringify(['GEN', 'EXO', 'LEV', 'NUM', 'DAN', 'MAL']),
+  check('manifest reports 80,039 records across GEN/EXO/LEV/NUM/DEU/DAN/MAL',
+    MANIFEST.recordCount === 80039 && JSON.stringify(MANIFEST.books) === JSON.stringify(['GEN', 'EXO', 'LEV', 'NUM', 'DEU', 'DAN', 'MAL']),
     JSON.stringify([MANIFEST.recordCount, MANIFEST.books]));
-  check('coverage names Genesis 1-50, Exodus 1-40, Leviticus 1-27 and Numbers 1-36',
-    /Genesis 1\u201350/.test(MANIFEST.coverage) && /Exodus 1\u201340/.test(MANIFEST.coverage) && /Leviticus 1\u201327/.test(MANIFEST.coverage) && /Numbers 1\u201336/.test(MANIFEST.coverage), MANIFEST.coverage);
-  check('GEN 20,613 / EXO 16,713 / LEV 11,950 / NUM 16,412 records',
-    MANIFEST.booksRecordCount.GEN === 20613 && MANIFEST.booksRecordCount.EXO === 16713 && MANIFEST.booksRecordCount.LEV === 11950 && MANIFEST.booksRecordCount.NUM === 16412, JSON.stringify(MANIFEST.booksRecordCount));
-  check('GEN 50 / EXO 40 / LEV 27 / NUM 36 chapters', GEN.filter(Boolean).length === 50 && EXO.filter(Boolean).length === 40 && LEV.filter(Boolean).length === 27 && NUM.filter(Boolean).length === 36);
+  check('coverage names the Torah (Genesis 1-50 through Deuteronomy 1-34)',
+    /Genesis 1\u201350/.test(MANIFEST.coverage) && /Exodus 1\u201340/.test(MANIFEST.coverage) && /Leviticus 1\u201327/.test(MANIFEST.coverage) && /Numbers 1\u201336/.test(MANIFEST.coverage) && /Deuteronomy 1\u201334/.test(MANIFEST.coverage), MANIFEST.coverage);
+  check('GEN 20,613 / EXO 16,713 / LEV 11,950 / NUM 16,412 / DEU 14,294 records',
+    MANIFEST.booksRecordCount.GEN === 20613 && MANIFEST.booksRecordCount.EXO === 16713 && MANIFEST.booksRecordCount.LEV === 11950 && MANIFEST.booksRecordCount.NUM === 16412 && MANIFEST.booksRecordCount.DEU === 14294, JSON.stringify(MANIFEST.booksRecordCount));
+  check('GEN 50 / EXO 40 / LEV 27 / NUM 36 / DEU 34 chapters', GEN.filter(Boolean).length === 50 && EXO.filter(Boolean).length === 40 && LEV.filter(Boolean).length === 27 && NUM.filter(Boolean).length === 36 && DEU.filter(Boolean).length === 34);
+  check('five complete Torah books: 187 chapters / 5,852 verses / 79,982 records',
+    [GEN, EXO, LEV, NUM, DEU].reduce((n, b) => n + b.filter(Boolean).length, 0) === 187
+    && [GEN, EXO, LEV, NUM, DEU].reduce((n, b) => n + b.filter(Boolean).reduce((m, ch) => m + (ch ? ch.filter(Boolean).length : 0), 0), 0) === 5852
+    && [GEN, EXO, LEV, NUM, DEU].reduce((n, b) => n + b.filter(Boolean).reduce((m, ch) => m + (ch ? ch.reduce((k, v) => k + (v ? v.length : 0), 0) : 0), 0), 0) === 79982);
   for (const [ch, v, expected] of [[1, 1, 7], [2, 4, 11], [8, 17, 21], [50, 26, 11]]) {
     goto(window, 'GEN', ch);
     await waitFor(() => blockByRef(document, `Genesis ${ch}:${v}`));
@@ -176,6 +182,12 @@ async function openPilot(window, bookId, chapter, ref) {
     check(`Numbers ${ch}:${v} renders ${expected} cards`, denseCards(document, `Numbers ${ch}:${v}`).length === expected);
   }
   check('navigation to Numbers 36:13 works', !!blockByRef(document, 'Numbers 36:13'));
+  for (const [ch, v, expected] of [[1, 1, 22], [5, 6, 9], [5, 21, 16], [6, 4, 6], [8, 1, 19], [18, 15, 10], [24, 1, 24], [28, 1, 24], [30, 11, 14], [32, 1, 7], [32, 43, 13], [33, 5, 9], [34, 12, 12]]) {
+    goto(window, 'DEU', ch);
+    await waitFor(() => blockByRef(document, `Deuteronomy ${ch}:${v}`));
+    check(`Deuteronomy ${ch}:${v} renders ${expected} cards`, denseCards(document, `Deuteronomy ${ch}:${v}`).length === expected);
+  }
+  check('navigation to Deuteronomy 34:12 (last verse of the Torah) works', !!blockByRef(document, 'Deuteronomy 34:12'));
   window.close();
 }
 
@@ -200,6 +212,22 @@ async function openPilot(window, bookId, chapter, ref) {
   await waitFor(() => blockByRef(document, 'Numbers 1:1'));
   const numYhwh = denseCards(document, 'Numbers 1:1').find((x) => x.meta === 'H3068');
   check('Numbers divine name preserved (Yah·weh / YHWH)', numYhwh?.translit === 'Yah·weh' && numYhwh?.gloss === 'YHWH', JSON.stringify(numYhwh));
+  goto(window, 'DEU', 1);
+  await waitFor(() => blockByRef(document, 'Deuteronomy 1:6'));
+  const deuYhwh = denseCards(document, 'Deuteronomy 1:6').find((x) => x.meta === 'H3068');
+  check('Deuteronomy divine name preserved (Yah·weh / YHWH)', deuYhwh?.translit === 'Yah·weh' && deuYhwh?.gloss === 'YHWH', JSON.stringify(deuYhwh));
+  goto(window, 'DEU', 6);
+  await waitFor(() => blockByRef(document, 'Deuteronomy 6:4'));
+  const shema = denseCards(document, 'Deuteronomy 6:4');
+  check('Deuteronomy 6:4 (Shema) has 6 cards and two divine-name occurrences',
+    shema.length === 6 && shema.filter((x) => x.meta === 'H3068').length === 2, JSON.stringify(shema.map((x) => x.gloss)));
+  goto(window, 'DEU', 11);
+  await waitFor(() => blockByRef(document, 'Deuteronomy 11:27'));
+  const deu1127 = denseCards(document, 'Deuteronomy 11:27');
+  const missing = blockByRef(document, 'Deuteronomy 11:27').querySelectorAll('.iw')[0];
+  check('Deuteronomy 11:27 source-gap gloss renders the distinct missing marker, not dictionary prose',
+    deu1127.length === 13 && deu1127[0].surface === 'אֶֽת־' && deu1127[0].gloss === '\u2014' && missing.querySelector('.iw-gloss')?.classList.contains('iw-gloss-missing'),
+    JSON.stringify(deu1127[0]));
   window.close();
 }
 
@@ -228,6 +256,16 @@ async function openPilot(window, bookId, chapter, ref) {
   check('Numbers 23:13 detail shows the exact OSHB Qere', ndetail.includes(n.oshbQere), JSON.stringify(n.oshbQere));
   check('Numbers 23:13 variant is labelled an OSHB comparison', /OSHB comparison/.test(ndetail));
   check('Numbers 23:13 card count unchanged (21)', disclosureCards(document, 'Numbers 23:13').length === 21);
+
+  goto(window, 'DEU', 28);
+  await waitFor(() => blockByRef(document, 'Deuteronomy 28:27'));
+  await waitFor(() => disclosureCards(document, 'Deuteronomy 28:27').length === 11);
+  const d = variantBy('DEU', 28, 27, 4);
+  const del = await openDetailEl(document, 'Deuteronomy 28:27', 4);
+  const ddetail = del.textContent || '';
+  check('Deuteronomy 28:27 detail shows the exact OSHB Qere', ddetail.includes(d.oshbQere), JSON.stringify(d.oshbQere));
+  check('Deuteronomy 28:27 variant is labelled an OSHB comparison', /OSHB comparison/.test(ddetail));
+  check('Deuteronomy 28:27 card count unchanged (11)', disclosureCards(document, 'Deuteronomy 28:27').length === 11);
   window.close();
 }
 
@@ -263,8 +301,8 @@ async function openPilot(window, bookId, chapter, ref) {
   const srcs = () => [...document.querySelectorAll('script')].map((s) => s.src);
   await openPilot(window, 'EXO', 1, 'Exodus 1:1');
   check('Exodus loads its own EXO chunk', srcs().some((s) => /data\/berean-hebrew\/EXO-v2\.js$/.test(s)));
-  check('loading Exodus does not load Genesis/Leviticus/Numbers/Daniel/Malachi chunks',
-    !srcs().some((s) => /data\/berean-hebrew\/(GEN(-v\d+)?|LEV|NUM|DAN|MAL)\.js$/.test(s)));
+  check('loading Exodus does not load the other book chunks',
+    !srcs().some((s) => /data\/berean-hebrew\/(GEN(-v\d+)?|LEV|NUM|DEU|DAN|MAL)\.js$/.test(s)));
   window.close();
 }
 {
@@ -273,8 +311,8 @@ async function openPilot(window, bookId, chapter, ref) {
   const srcs = () => [...document.querySelectorAll('script')].map((s) => s.src);
   await openPilot(window, 'LEV', 1, 'Leviticus 1:1');
   check('Leviticus loads its own LEV chunk', srcs().some((s) => /data\/berean-hebrew\/LEV\.js$/.test(s)));
-  check('loading Leviticus does not load Genesis/Exodus/Numbers/Daniel/Malachi chunks',
-    !srcs().some((s) => /data\/berean-hebrew\/(GEN(-v\d+)?|EXO(-v\d+)?|NUM|DAN|MAL)\.js$/.test(s)));
+  check('loading Leviticus does not load the other book chunks',
+    !srcs().some((s) => /data\/berean-hebrew\/(GEN(-v\d+)?|EXO(-v\d+)?|NUM|DEU|DAN|MAL)\.js$/.test(s)));
   window.close();
 }
 {
@@ -283,13 +321,23 @@ async function openPilot(window, bookId, chapter, ref) {
   const srcs = () => [...document.querySelectorAll('script')].map((s) => s.src);
   await openPilot(window, 'NUM', 1, 'Numbers 1:1');
   check('Numbers loads its own NUM chunk', srcs().some((s) => /data\/berean-hebrew\/NUM\.js$/.test(s)));
-  check('loading Numbers does not load Genesis/Exodus/Leviticus/Daniel/Malachi chunks',
-    !srcs().some((s) => /data\/berean-hebrew\/(GEN(-v\d+)?|EXO(-v\d+)?|LEV|DAN|MAL)\.js$/.test(s)));
-  goto(window, 'DEU', 1);
+  check('loading Numbers does not load the other book chunks',
+    !srcs().some((s) => /data\/berean-hebrew\/(GEN(-v\d+)?|EXO(-v\d+)?|LEV|DEU|DAN|MAL)\.js$/.test(s)));
+  window.close();
+}
+{
+  const dom = await createDom();
+  const { window } = dom; const { document } = window;
+  const srcs = () => [...document.querySelectorAll('script')].map((s) => s.src);
+  await openPilot(window, 'DEU', 1, 'Deuteronomy 1:1');
+  check('Deuteronomy loads its own DEU chunk', srcs().some((s) => /data\/berean-hebrew\/DEU\.js$/.test(s)));
+  check('loading Deuteronomy does not load the other book chunks',
+    !srcs().some((s) => /data\/berean-hebrew\/(GEN(-v\d+)?|EXO(-v\d+)?|LEV|NUM|DAN|MAL)\.js$/.test(s)));
+  goto(window, 'JOS', 1);
   await waitFor(() => /outside the preview/.test(document.querySelector('#results .empty')?.textContent || ''));
-  check('uncovered book (Deuteronomy) shows the coverage notice', /outside the preview/.test(document.querySelector('#results .empty')?.textContent || ''));
+  check('uncovered book (Joshua) shows the coverage notice', /outside the preview/.test(document.querySelector('#results .empty')?.textContent || ''));
   check('uncovered book does not show a load error', !document.querySelector('.interlinear-error'));
-  check('no DEU chunk is requested', !srcs().some((s) => /berean-hebrew\/DEU\.js$/.test(s)));
+  check('no JOS chunk is requested', !srcs().some((s) => /berean-hebrew\/JOS\.js$/.test(s)));
   window.close();
 }
 
@@ -354,7 +402,7 @@ async function openPilot(window, bookId, chapter, ref) {
   const missingDetail = (await openDetailEl(document, 'Genesis 1:6', 1)).textContent || '';
   check('Study distinguishes missing gloss and never injects dictionary prose', /no gloss in source/.test(missingDetail) && !/Definition/.test(missingDetail));
   const fixtureText = fs.readFileSync(path.join(ROOT, 'build', 'sources', 'berean-hebrew', 'hebrew.fixture.json'), 'utf8');
-  check('the real fixture was not altered for synthetic cases', !fixtureText.includes('9999'));
+  check('the real fixture was not altered for synthetic cases', !/"9999"|"8888"/.test(fixtureText));
   window.close();
 }
 
@@ -394,6 +442,7 @@ async function openPilot(window, bookId, chapter, ref) {
   const shellList = (sw.match(/const SHELL_FILES = \[([\s\S]*?)\];/) || [])[1] || '';
   check('preview runtime files are not precached in the shell', !/berean-hebrew/.test(shellList));
   check('data cache version unchanged (v3)', /DATA_CACHE_VERSION\s*=\s*'v3'/.test(sw));
+  check('shell cache version bumped for the new coverage (v36)', /CACHE_VERSION\s*=\s*'v36'/.test(sw));
 
   const { assemble } = await import('./import-berean-hebrew.mjs');
   const { files } = assemble();

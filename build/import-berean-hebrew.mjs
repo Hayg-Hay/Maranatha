@@ -27,16 +27,16 @@ const OUT_DIR = path.join(ROOT, 'data', 'berean-hebrew');
 const BUILD_META = path.join(ROOT, 'build', 'sources', 'berean-hebrew', 'runtime-build.json');
 
 const GLOBAL_PREFIX = 'MARANATHA_BEREAN_HEBREW_';
-const BOOK_ORDER = ['GEN', 'EXO', 'LEV', 'NUM', 'DAN', 'MAL'];
+const BOOK_ORDER = ['GEN', 'EXO', 'LEV', 'NUM', 'DEU', 'DAN', 'MAL'];
 // The manifest filename is VERSIONED so a change in coverage cannot be hidden by
 // a cache-first copy from a previous milestone. Bump this suffix whenever the
 // manifest content changes (and update app.js `manifestSrc`).
-const MANIFEST_FILE = 'data/berean-hebrew/manifest-v4.js';
+const MANIFEST_FILE = 'data/berean-hebrew/manifest-v5.js';
 // A book whose chunk content changes gets a versioned filename so an old
 // cache-first copy cannot hide the change. The mapping is published in the
 // manifest (`chunkFiles`) and used by the app to build the script URL.
-// GEN/EXO changed this milestone (two multiword Ketiv/Qere cases moved out of
-// their verified sets), so both are re-versioned; LEV/DAN/MAL are unchanged.
+// This milestone only ADDS Deuteronomy (a new chunk, `DEU.js`); the earlier
+// book chunks are byte-identical, so their filenames are unchanged.
 const CHUNK_VERSION = { GEN: 'v3', EXO: 'v2' };
 function chunkFile(bookId) {
   return CHUNK_VERSION[bookId] ? `${bookId}-${CHUNK_VERSION[bookId]}.js` : `${bookId}.js`;
@@ -133,7 +133,7 @@ export function buildRuntime() {
   const totalRecords = Object.values(booksRecordCount).reduce((a, b) => a + b, 0);
   const manifest = {
     id: 'berean-hebrew',
-    label: 'Berean Hebrew (draft preview)',
+    label: 'Berean Hebrew (Torah, draft preview)',
     attribution: 'Berean Interlinear Bible (BIB) \u00b7 Bible Hub \u00b7 dedicated to the public domain on April 30, 2023 \u2014 attribution appreciated but not required.',
     sourceUrl: 'https://biblehub.com/interlinear/',
     termsUrl: 'https://berean.bible/terms.htm',

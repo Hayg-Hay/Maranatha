@@ -35,9 +35,9 @@
 // the new shell. The update is therefore user-driven, not a silent replacement
 // mid-read.
 
-const CACHE_VERSION = 'v35';      // bump when shell files change
+const CACHE_VERSION = 'v36';      // bump when shell files change
 // Data cache intentionally stays at v3: the Berean Hebrew preview uses
-// versioned/uniquely named data files (data/berean-hebrew/manifest-v2.js and
+// versioned/uniquely named data files (data/berean-hebrew/manifest-v5.js and
 // data/berean-hebrew/<BOOK>.js), so new coverage is fetched fresh without
 // invalidating users' already-downloaded translations or Berean Greek books.
 const DATA_CACHE_VERSION = 'v3';  // bump when translation/interlinear data changes

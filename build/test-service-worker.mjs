@@ -7,11 +7,11 @@
 //   node build/test-service-worker.mjs
 //
 // It asserts:
-//   - install precaches the NEW shell (maranatha-shell-v35);
+//   - install precaches the NEW shell (maranatha-shell-v36);
 //   - activate keeps the existing data cache (maranatha-data-v3) and every file
 //     already stored in it (previously downloaded translations / Greek books);
 //   - activate deletes the OLD shell cache (maranatha-shell-v29);
-//   - data/berean-hebrew/manifest-v2.js is routed through the data cache by
+//   - data/berean-hebrew/manifest-v5.js is routed through the data cache by
 //     isTranslationFile (and is not a shell file).
 
 import fs from 'node:fs';
@@ -102,8 +102,8 @@ async function main() {
   await fire(env.listeners, 'install');
   await fire(env.listeners, 'activate');
 
-  check('install creates the new shell cache (maranatha-shell-v35)', caches.store.has('maranatha-shell-v35'));
-  check('new shell cache is populated', (caches.store.get('maranatha-shell-v35') || new Map()).size > 0);
+  check('install creates the new shell cache (maranatha-shell-v36)', caches.store.has('maranatha-shell-v36'));
+  check('new shell cache is populated', (caches.store.get('maranatha-shell-v36') || new Map()).size > 0);
   check('activation preserves the existing data cache (maranatha-data-v3)', caches.store.has('maranatha-data-v3'));
   check('activation deletes the old shell cache (maranatha-shell-v29)', !caches.store.has('maranatha-shell-v29'));
 
@@ -115,20 +115,21 @@ async function main() {
     data && data.get('./data/berean-hebrew/manifest-v3.js')?.body === 'OLD-LEVITICUS-MANIFEST' && data.get('./data/berean-hebrew/LEV.js')?.body === 'LEV');
   check('every previously stored data file is retained (no wipes)', data && data.size === 11, data && String(data.size));
   check('the versioned manifest URL is distinct, so an old manifest cannot shadow new coverage',
-    './data/berean-hebrew/manifest-v4.js' !== './data/berean-hebrew/manifest-v3.js');
+    './data/berean-hebrew/manifest-v5.js' !== './data/berean-hebrew/manifest-v4.js');
 
   // The preview's per-book files must use the existing data-cache route.
   const genV3Routed = vm.runInContext('isTranslationFile("/data/berean-hebrew/GEN-v3.js")', env.sandbox);
   const exoV2Routed = vm.runInContext('isTranslationFile("/data/berean-hebrew/EXO-v2.js")', env.sandbox);
   const levRouted = vm.runInContext('isTranslationFile("/data/berean-hebrew/LEV.js")', env.sandbox);
   const numRouted = vm.runInContext('isTranslationFile("/data/berean-hebrew/NUM.js")', env.sandbox);
-  const manifestRouted = vm.runInContext('isTranslationFile("/data/berean-hebrew/manifest-v4.js")', env.sandbox);
+  const deuRouted = vm.runInContext('isTranslationFile("/data/berean-hebrew/DEU.js")', env.sandbox);
+  const manifestRouted = vm.runInContext('isTranslationFile("/data/berean-hebrew/manifest-v5.js")', env.sandbox);
   const oldManifestRouted = vm.runInContext('isTranslationFile("/data/berean-hebrew/manifest-v3.js")', env.sandbox);
   const oldPilotRouted = vm.runInContext('isTranslationFile("/data/berean-hebrew-pilot.js")', env.sandbox);
   const canonRouted = vm.runInContext('isTranslationFile("/data/canon.js")', env.sandbox);
   const translationsRouted = vm.runInContext('isTranslationFile("/data/web.js")', env.sandbox);
   const localeRouted = vm.runInContext('isTranslationFile("/data/locales/en.js")', env.sandbox);
-  check('versioned/plain Hebrew preview chunks are routed through the data cache', genV3Routed === true && exoV2Routed === true && levRouted === true && numRouted === true);
+  check('versioned/plain Hebrew preview chunks are routed through the data cache', genV3Routed === true && exoV2Routed === true && levRouted === true && numRouted === true && deuRouted === true);
   check('versioned Hebrew preview manifest is routed through the data cache', manifestRouted === true);
   check('legacy manifest path still matches the data-cache route', oldManifestRouted === true);
   check('legacy pilot path still matches the data-cache route', oldPilotRouted === true);
@@ -141,7 +142,7 @@ async function main() {
   const shellList = (swSource.match(/const SHELL_FILES = \[([\s\S]*?)\];/) || [])[1] || '';
   check('Hebrew preview files are not precached into the shell', !/berean-hebrew/.test(shellList));
   check('data cache version is v3 (unchanged by the Hebrew preview)', /DATA_CACHE_VERSION\s*=\s*'v3'/.test(swSource));
-  check('shell cache version was bumped for the app change', /CACHE_VERSION\s*=\s*'v35'/.test(swSource));
+  check('shell cache version was bumped for the app change', /CACHE_VERSION\s*=\s*'v36'/.test(swSource));
 
   let failed = 0;
   for (const [name, ok, detail] of results) {

@@ -1,13 +1,14 @@
 {
   "generatedBy": "build/import-berean-hebrew.mjs",
   "source": "build/sources/berean-hebrew/hebrew.fixture.json",
-  "sourceSha256": "c9953e73cc415fa1b057a2d9a065ed42f76755b0686a155a0ec4b187e2318a5e",
-  "recordCount": 65745,
+  "sourceSha256": "26970358943fc89129171e294ea4239069a1331cf5477642f0c78a379fa668d2",
+  "recordCount": 80039,
   "books": [
     "GEN",
     "EXO",
     "LEV",
     "NUM",
+    "DEU",
     "DAN",
     "MAL"
   ],
@@ -16,15 +17,17 @@
     "EXO": 16713,
     "LEV": 11950,
     "NUM": 16412,
+    "DEU": 14294,
     "DAN": 29,
     "MAL": 28
   },
   "files": {
-    "data/berean-hebrew/manifest-v4.js": "2c8e79ed2d0f13146973aceb497ea0568021bebad67a45ceb0da9e3f1f2fdb70",
+    "data/berean-hebrew/manifest-v5.js": "302a16163d6227384632606d4506fbc81f0c22476ec7475dc07eb58f48749e7a",
     "data/berean-hebrew/GEN-v3.js": "a1494e69c2d251e6f9a7fbc5b90739fe61269633114677c3708674c475bdd5ed",
     "data/berean-hebrew/EXO-v2.js": "8a90db665c6ab79824b8586e802938a59eca540baafac8667cffd6b61642ce2e",
     "data/berean-hebrew/LEV.js": "a83a2560b9065d756609c558f1fb4cc425333840ce5377a4f024b872982454b7",
     "data/berean-hebrew/NUM.js": "cc95bf2bdb52c6b92f14cc1858102d2f010a6ff5430ca4f4567e929d8250348b",
+    "data/berean-hebrew/DEU.js": "daac50676e723071f4d49e0e68e946a6160f920f5b87aa4c183d60eac8d615c5",
     "data/berean-hebrew/DAN.js": "2b6a2608363e339bdf52b91bcdbd04912501eea114ae1ac1b8496ca157313a7a",
     "data/berean-hebrew/MAL.js": "df28c36d6f0e7d67fe6fba859c4b99a94d7598d7c9198ff52c18c99c5392125c"
   }

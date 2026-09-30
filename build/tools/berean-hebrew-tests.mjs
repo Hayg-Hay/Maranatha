@@ -12,7 +12,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { runFetch, validateDownloadedPage } from './berean-hebrew-fetch.mjs';
 import { parsePage, assemblePassage, buildFixture, partitionAnomalies, writeFixtureIfClean, FIXTURE, recordFingerprint, missingSourcePages, sourceCacheRecoveryMessage } from './berean-hebrew-extract.mjs';
-import { classifyVariant, sourceVerseFor } from './berean-hebrew-variants.mjs';
+import { classifyVariant, sourceVerseFor, buildVariants } from './berean-hebrew-variants.mjs';
 
 const results = [];
 const skipped = [];
@@ -397,6 +397,25 @@ await test('variant: a multiword Qere is left unresolved, not forced into one re
   assert(r.uncertain && /multiword Qere/.test(r.uncertain), `expected multiword uncertainty, got ${JSON.stringify(r)}`);
 });
 
+await test('variant: a surface carrying a paragraph marker does not falsely match the unmarked Ketiv', () => {
+  // Bible Hub appends the setumah/petuchah marker (ס/פ) after some sof pasuq
+  // characters. The DEU 5:10 surface "מצותו׃ס" therefore has no exact OSHB
+  // Ketiv ("מצות/ו") skeleton match; the case must stay unresolved rather than
+  // be attached by position (NEVER silently repaired).
+  const pair = kqPair({ ketiv: 'מצות/ו', qere: 'מִצְוֺתָֽ/י', kL: '4687', qL: '4687', before: 'שׁמרי' });
+  const r = classifyVariant(pair, [kqRec(0, 'שׁמרי'), kqRec(1, 'מִצְוֹתוֹ׃ס', ['4687'])]);
+  assert(r.uncertain && /no source record matches/.test(r.uncertain), `expected unresolved, got ${JSON.stringify(r)}`);
+});
+
+await test('variant: a Deuteronomy multiword Qere stays unresolved, not forced', () => {
+  // OSHB Deut 33:2 Ketiv "אשדת" vs a TWO-word Qere "אֵשׁ דָּת"; the one-record
+  // model cannot represent it, so it must stay uncertain.
+  const pair = kqPair({ ketiv: 'אשדת', qere: 'אֵשׁ דָּת', kL: '799', qL: '784', before: 'מימינו' });
+  pair.qereWords = 2;
+  const r = classifyVariant(pair, [kqRec(0, 'מימינו'), kqRec(1, 'אֵשְׁדָּת', ['799'])]);
+  assert(r.uncertain && /multiword Qere/.test(r.uncertain), `expected multiword uncertainty, got ${JSON.stringify(r)}`);
+});
+
 await test('variant: OSHB-to-English verse mapping from the KJV note', () => {
   eq(sourceVerseFor('<note>KJV:Exod.22.5</note>', 22, 4), { chapter: 22, verse: 5 }, 'mapped OSHB 22:4 -> English 22:5');
   eq(sourceVerseFor('<verse>no mapping</verse>', 16, 2), { chapter: 16, verse: 2 }, 'unmapped verse unchanged');
@@ -457,6 +476,18 @@ if (hasSourceCache) {
   });
 } else {
   skipped.push('extract: the accepted fixture reproduces exactly from the local cache');
+}
+
+if (hasSourceCache) {
+  await test('variants: Deuteronomy yields 23 verified pairs and 2 documented uncertain cases', () => {
+    const v = buildVariants();
+    eq(v.variants.filter((x) => x.bookId === 'DEU').length, 23, 'DEU verified count');
+    eq(v.variants.length, 65, 'total verified count');
+    eq(v.uncertain.length, 4, 'total uncertain count');
+    eq(v.uncertain.filter((x) => x.bookId === 'DEU').map((x) => `${x.chapter}:${x.verse}`).sort(), ['33:2', '5:10'], 'DEU uncertain refs');
+  });
+} else {
+  skipped.push('variants: Deuteronomy yields 23 verified pairs and 2 documented uncertain cases');
 }
 
 // ---------------------------------------------------------------------------

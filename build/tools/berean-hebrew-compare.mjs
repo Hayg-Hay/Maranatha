@@ -124,10 +124,10 @@ function main() {
   const sampleMismatches = [];
   const coverageIssues = [];
 
-  // Coverage vs canon, per covered book/chapter. Full-book imports (Genesis,
-  // Exodus, Leviticus) must match canon exactly; the retained partial books are
-  // not checked here.
-  const FULL_BOOKS = new Set(['GEN', 'EXO', 'LEV', 'NUM']);
+  // Coverage vs canon, per covered book/chapter. Full-book imports (the five
+  // Torah books) must match canon exactly; the retained partial books are not
+  // checked here.
+  const FULL_BOOKS = new Set(['GEN', 'EXO', 'LEV', 'NUM', 'DEU']);
   const byBookChapter = new Map();
   for (const p of fixture.passages) byBookChapter.set(`${p.bookId}:${p.chapter}`, p);
   for (const [key, passage] of byBookChapter) {
@@ -179,7 +179,7 @@ function main() {
   }
 
   check('independent reader agrees with the fixture on every covered record', mismatches === 0, `${mismatches} mismatch(es)`);
-  check('full-book (Genesis/Exodus/Leviticus/Numbers) chapter/verse coverage matches canon', coverageIssues.length === 0, JSON.stringify(coverageIssues.slice(0, 5)));
+  check('full-book (Genesis/Exodus/Leviticus/Numbers/Deuteronomy) chapter/verse coverage matches canon', coverageIssues.length === 0, JSON.stringify(coverageIssues.slice(0, 5)));
   check('no structural extraction errors in the fixture', fixture.totals.structuralErrors === 0, `${fixture.totals.structuralErrors}`);
 
   // Anomaly summary (from the fixture) + uncertain variants.

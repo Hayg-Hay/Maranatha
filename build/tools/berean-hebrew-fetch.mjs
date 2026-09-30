@@ -46,13 +46,15 @@ const USER_AGENT =
   'Maranatha-BereanHebrewPilot/0.1 (+offline Bible browser research; contact via repo)';
 export const REQUEST_DELAY_MS = 3000;
 
-// The covered passages. Genesis, Exodus, Leviticus and Numbers are imported in
-// full; Daniel and Malachi keep only the accepted pilot chapters.
+// The covered passages. Genesis, Exodus, Leviticus, Numbers and Deuteronomy
+// are imported in full (the five books of the Torah); Daniel and Malachi keep
+// only the accepted pilot chapters.
 export const COVERED_BOOKS = [
   { bookId: 'GEN', book: 'Genesis', slug: 'genesis', chapters: 50 },
   { bookId: 'EXO', book: 'Exodus', slug: 'exodus', chapters: 40 },
   { bookId: 'LEV', book: 'Leviticus', slug: 'leviticus', chapters: 27 },
   { bookId: 'NUM', book: 'Numbers', slug: 'numbers', chapters: 36 },
+  { bookId: 'DEU', book: 'Deuteronomy', slug: 'deuteronomy', chapters: 34 },
   { bookId: 'DAN', book: 'Daniel', slug: 'daniel', chapters: [2] },
   { bookId: 'MAL', book: 'Malachi', slug: 'malachi', chapters: [4] },
 ];
