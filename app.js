@@ -261,9 +261,11 @@ const refs = {
     interlinear: q('#interlinear'),
     interlinearHe: q('#interlinear-he'),
     interlinearBerean: q('#interlinear-berean'),
+    interlinearBereanHe: q('#interlinear-berean-he'),
     interlinearGreekMode: q('#interlinear-greek-mode'),
     interlinearHeMode: q('#interlinear-he-mode'),
     interlinearBereanMode: q('#interlinear-berean-mode'),
+    interlinearBereanHeMode: q('#interlinear-berean-he-mode'),
     bereanCacheStatus: q('#berean-cache-status'),
     go: q('#go-button'),
     results: q('#results'),
@@ -397,6 +399,56 @@ const refs = {
       toggleRef: 'interlinearBerean',
       modeRef: 'interlinearBereanMode',
     },
+    // Berean Hebrew Old Testament (Torah draft preview): a *separate*
+    // Hebrew/Aramaic interlinear with its own surfaces, transliteration,
+    // morphology, Strong's numbers and contextual glosses. It covers the five
+    // books of the Torah (Genesis 1\u201350 through Deuteronomy 1\u201334) plus the
+    // retained Daniel 2:4\u20135 and Malachi 4:5\u20136 samples, and is loaded one book
+    // at a time (data/berean-hebrew/<BOOK>.js) so future OT expansion never
+    // needs the whole corpus up front. It never consults the OSHB Hebrew data or
+    // a Strong's dictionary for its glosses.
+    bereanHebrew: {
+      key: 'bereanHebrew',
+      loadingLabel: 'Berean Hebrew',
+      perBook: true,
+      testament: 'OT',
+      coveredBooks: ['GEN', 'EXO', 'LEV', 'NUM', 'DEU', 'DAN', 'MAL'],
+      label: '(Berean Hebrew, Torah draft)',
+      unavailable: 'The Berean Hebrew draft preview covers the five books of the Torah \u2014 Genesis 1\u201350, Exodus 1\u201340, Leviticus 1\u201327, Numbers 1\u201336 and Deuteronomy 1\u201334 \u2014 plus the retained Daniel 2:4\u20135 and Malachi 4:5\u20136 samples. This passage is outside the preview.',
+      coverageNotice: 'Outside the Berean Hebrew draft preview (Torah: Genesis 1\u201350; Exodus 1\u201340; Leviticus 1\u201327; Numbers 1\u201336; Deuteronomy 1\u201334; plus retained Daniel 2:4\u20135 and Malachi 4:5\u20136 samples).',
+      provenanceNote: 'Berean Hebrew Torah draft preview \u00b7 Bible Hub \u00b7 dated draft \u00b7 variant notes are verified OSHB comparisons only.',
+      sourceNote: 'Berean Interlinear Bible (BIB), Hebrew OT \u2014 dated draft preview from Bible Hub: the five books of the Torah (Genesis 1\u201350, Exodus 1\u201340, Leviticus 1\u201327, Numbers 1\u201336, Deuteronomy 1\u201334), plus the retained Daniel 2:4\u20135 and Malachi 4:5\u20136 samples. Text dedication: berean.bible/terms.htm.',
+      // No shared Strong's dictionary: the preview never falls back to
+      // dictionary prose for a missing gloss.
+      glossGlobal: null,
+      manifestGlobal: 'MARANATHA_BEREAN_HEBREW_MANIFEST',
+      manifestSrc: 'data/berean-hebrew/manifest-v5.js',
+      chunkSrc: (bookId) => {
+        // The manifest publishes each book's (possibly versioned) filename so a
+        // changed chunk is fetched fresh rather than served from an old cache.
+        const m = window.MARANATHA_BEREAN_HEBREW_MANIFEST;
+        const file = (m && m.chunkFiles && m.chunkFiles[bookId]) || `${bookId}.js`;
+        return `data/berean-hebrew/${file}`;
+      },
+      chunkGlobal: (bookId) => `MARANATHA_BEREAN_HEBREW_${bookId}`,
+      strongsPrefix: 'H',
+      // Object-keyed tokens; extra fields drive faithful rendering.
+      token: {
+        surface: 'surface', translit: 'transliteration', morph: 'morphology',
+        strongs: 'strongs', strongsList: 'strongsList', gloss: 'gloss',
+        glossStatus: 'glossStatus', variant: 'variant',
+      },
+      readingGlossLabel: 'Berean Hebrew reading gloss',
+      surfaceClass: 'iw-hebrew',
+      rtl: true,
+      isolateLtr: true,
+      lang: 'he',
+      transliterate: null, // use the source's own transliteration
+      // Inverted like Berean Greek: Reading = dense cards, Study = expandable.
+      disclosureByMode: { read: false, study: true },
+      toggleRef: 'interlinearBereanHe',
+      modeRef: 'interlinearBereanHeMode',
+    },
   };
   const interlinearState = {
     greek: { enabled: false, status: 'idle', mode: 'read', optionalLoading: false },
@@ -404,6 +456,9 @@ const refs = {
     // Berean is loaded per book; track which books are in flight (dedupes
     // concurrent loads) and which failed (so the UI can offer a retry).
     berean: { enabled: false, status: 'idle', mode: 'read', loading: {}, failed: {}, optionalLoading: false },
+    // Berean Hebrew preview is loaded per book (like Berean Greek), with a tiny
+    // manifest first; track manifest loading/failure too.
+    bereanHebrew: { enabled: false, status: 'idle', mode: 'read', optionalLoading: false, manifestLoading: null, manifestFailed: false, loading: {}, failed: {} },
   };
 
   // Per-block context overrides.  Each key is "${bookId}-${chapterNum}".
@@ -571,12 +626,33 @@ function init() {
     });
 
     refs.interlinearHe.addEventListener('change', () => {
+        // OSHB Hebrew and Berean Hebrew are alternative Hebrew-text
+        // interlinears; selecting one releases the other.
+        if (refs.interlinearHe.checked && refs.interlinearBereanHe.checked) {
+            refs.interlinearBereanHe.checked = false;
+            syncInterlinearModeVisibility(INTERLINEARS.bereanHebrew);
+            onInterlinearToggle(INTERLINEARS.bereanHebrew, false);
+        }
         syncInterlinearModeVisibility(INTERLINEARS.hebrew);
         onInterlinearToggle(INTERLINEARS.hebrew, refs.interlinearHe.checked);
     });
 
     refs.interlinearHeMode.addEventListener('change', () => {
         setInterlinearMode(INTERLINEARS.hebrew, refs.interlinearHeMode.value);
+    });
+
+    refs.interlinearBereanHe.addEventListener('change', () => {
+        if (refs.interlinearBereanHe.checked && refs.interlinearHe.checked) {
+            refs.interlinearHe.checked = false;
+            syncInterlinearModeVisibility(INTERLINEARS.hebrew);
+            onInterlinearToggle(INTERLINEARS.hebrew, false);
+        }
+        syncInterlinearModeVisibility(INTERLINEARS.bereanHebrew);
+        onInterlinearToggle(INTERLINEARS.bereanHebrew, refs.interlinearBereanHe.checked);
+    });
+
+    refs.interlinearBereanHeMode.addEventListener('change', () => {
+        setInterlinearMode(INTERLINEARS.bereanHebrew, refs.interlinearBereanHeMode.value);
     });
 
     refs.interlinearBerean.addEventListener('change', () => {
@@ -620,9 +696,11 @@ function init() {
     restoreInterlinearMode(INTERLINEARS.greek);
     restoreInterlinearMode(INTERLINEARS.hebrew);
     restoreInterlinearMode(INTERLINEARS.berean);
+    restoreInterlinearMode(INTERLINEARS.bereanHebrew);
     syncInterlinearModeVisibility(INTERLINEARS.greek);
     syncInterlinearModeVisibility(INTERLINEARS.hebrew);
     syncInterlinearModeVisibility(INTERLINEARS.berean);
+    syncInterlinearModeVisibility(INTERLINEARS.bereanHebrew);
 
     // Service-worker hooks for opt-in Berean offline caching. Guarded so that
     // file:// (and browsers without service workers) make no SW calls.
@@ -1522,11 +1600,13 @@ function init() {
     }
     if (config.perBook) {
       // Per-book interlinears load lazily inside render(), based on the book
-      // actually on screen, so switching books loads only what is needed. The
-      // optional shared dictionary loads independently and rerenders on
-      // success; a failure leaves Berean fully usable.
-      loadOptionalInterlinearData(config);
-      render();
+      // actually on screen, so switching books loads only what is needed. A
+      // declared manifest loads first (tiny); the optional shared dictionary
+      // loads independently and rerenders on success.
+      ensureManifest(config, () => {
+        loadOptionalInterlinearData(config);
+        render();
+      });
     } else if (state.status === 'loaded') {
       // A previous enable may have finished before the optional pilot data
       // arrived (or failed). Retry it, then render with whatever is present.
@@ -1580,6 +1660,28 @@ function init() {
       if (error) failed.push(id);
       if (--remaining === 0) onSettled(failed);
     }));
+  }
+
+  // Loads a per-book interlinear's manifest once, if it declares one. A failure
+  // is non-fatal and recorded so render() can fall back to the static
+  // coveredBooks list; nothing else is affected.
+  function ensureManifest(config, onDone) {
+    const state = interlinearState[config.key];
+    if (!config.manifestSrc || !config.manifestGlobal || window[config.manifestGlobal]) { onDone(); return; }
+    if (state.manifestFailed) { onDone(); return; }
+    if (state.manifestLoading) { state.manifestLoading.push(onDone); return; }
+    state.manifestLoading = [onDone];
+    const script = document.createElement('script');
+    script.src = config.manifestSrc;
+    const settle = () => {
+      const callbacks = state.manifestLoading || [];
+      state.manifestLoading = null;
+      if (!window[config.manifestGlobal]) state.manifestFailed = true;
+      callbacks.forEach((cb) => cb());
+    };
+    script.onload = settle;
+    script.onerror = settle;
+    document.head.appendChild(script);
   }
 
   // Books that the current render actually needs from a per-book interlinear.
@@ -2024,16 +2126,22 @@ function init() {
   // this builder.
   function buildDisclosureWord(config, surface, strongs, morph, definition, rendering, detailId, override) {
     // `override` is optional { transliteration, gloss, label }. It is used by
-    // the Byzantine candidate-gloss layer and by Berean's own word records.
-    // When present it wins over the algorithmic transliteration and the
-    // Strong's-derived gloss. An intentional-empty gloss is gloss === '', which
-    // suppresses the fallback (shown deliberately blank) rather than reverting
-    // to Strong's. `config.transliterate` may be null for Berean, in which case
-    // the surface is shown without an algorithmic transliteration.
+    // the Byzantine candidate-gloss layer, by Berean's own word records, and by
+    // the Berean Hebrew pilot (which also passes glossStatus / strongsList /
+    // variant / sourceRef). When present it wins over the algorithmic
+    // transliteration and the Strong's-derived gloss. An intentional-empty
+    // gloss is gloss === '' (shown deliberately blank); a pilot missing gloss
+    // is gloss === null with glossStatus 'missing', shown as explicitly absent
+    // and NEVER falling back to Strong's prose. `config.transliterate` may be
+    // null for Berean Hebrew, in which case the source transliteration is used.
     const translitText = (override && override.transliteration)
       ? override.transliteration
       : (config.transliterate ? config.transliterate(surface) : '');
     const glossText = override ? override.gloss : shortGloss(definition, strongs, morph);
+    const glossStatus = override && override.glossStatus;
+    const strongsList = override && Array.isArray(override.strongsList)
+      ? override.strongsList
+      : (strongs ? [strongs] : []);
 
     const button = document.createElement('button');
     button.type = 'button';
@@ -2044,14 +2152,17 @@ function init() {
     const surfaceSpan = document.createElement('span');
     surfaceSpan.className = config.surfaceClass;
     if (config.lang) surfaceSpan.lang = config.lang;
+    if (config.isolateLtr) surfaceSpan.dir = 'rtl';
     surfaceSpan.textContent = surface;
 
     const translit = document.createElement('span');
     translit.className = 'iw-translit';
+    if (config.isolateLtr) translit.dir = 'ltr';
     translit.textContent = translitText;
 
     const shortGlossEl = document.createElement('span');
     shortGlossEl.className = 'iw-gloss-short';
+    if (config.isolateLtr) shortGlossEl.dir = 'ltr';
     shortGlossEl.textContent = glossText;
 
     const caret = document.createElement('span');
@@ -2070,16 +2181,25 @@ function init() {
     heading.className = 'iw-detail-head';
     const headingWord = document.createElement('span');
     if (config.lang) headingWord.lang = config.lang;
+    if (config.isolateLtr) headingWord.dir = 'rtl';
     headingWord.textContent = surface;
     heading.append(headingWord, ` \u00b7 ${translitText}`);
     detail.appendChild(heading);
 
     const rows = [];
-    if (override) rows.push([override.label || 'Reading gloss', glossText || '(intentionally untranslated)']);
+    if (override) {
+      let readingValue;
+      if (glossStatus === 'missing') readingValue = '(no gloss in source)';
+      else if (glossText === '' || glossText === null || glossText === undefined) readingValue = '(intentionally untranslated)';
+      else readingValue = glossText;
+      rows.push([override.label || 'Reading gloss', readingValue]);
+    }
     if (definition) rows.push(['Definition', definition]);
     if (rendering) rows.push(['KJV', rendering]);
-    if (strongs) rows.push(['Strong\u2019s', config.strongsPrefix + strongs]);
+    if (strongsList.length) rows.push(['Strong\u2019s', strongsList.map((s) => config.strongsPrefix + s).join(' \u00b7 ')]);
     if (morph) rows.push(['Morphology', morph]);
+    if (override && override.sourceRef) rows.push(['Source', override.sourceRef]);
+    if (config.provenanceNote) rows.push(['Provenance', config.provenanceNote]);
     const dl = document.createElement('dl');
     dl.className = 'iw-detail-list';
     for (const [term, value] of rows) {
@@ -2087,6 +2207,32 @@ function init() {
       dt.textContent = term;
       const dd = document.createElement('dd');
       dd.textContent = value;
+      dl.append(dt, dd);
+    }
+    // Written/read variant: the exact annotated OSHB Ketiv and Qere forms are
+    // rendered as isolated RTL spans (so mixed Hebrew in an English sentence
+    // reads correctly) and clearly labelled as an OSHB comparison, NOT a field
+    // supplied by Berean. Berean's own surface/alignment is never replaced.
+    if (override && override.variant && override.variant.type === 'ketiv-qere') {
+      const v = override.variant;
+      const dt = document.createElement('dt');
+      dt.textContent = 'Variant';
+      const dd = document.createElement('dd');
+      dd.className = 'iw-variant';
+      const addText = (text) => dd.appendChild(document.createTextNode(text));
+      const addHebrew = (text) => {
+        const span = document.createElement('span');
+        span.className = 'iw-variant-hebrew';
+        span.lang = 'he';
+        span.dir = 'rtl';
+        span.textContent = text;
+        dd.appendChild(span);
+      };
+      addText(`Written/read variant \u2014 ${v.provenance || 'OSHB comparison (not supplied by Berean)'}. `);
+      if (v.sourceMarksVariant === false) addText('Bible Hub displays a single written (Ketiv) form and does not mark the variant. ');
+      if (v.oshbKetiv) { addText('OSHB Ketiv (written): '); addHebrew(v.oshbKetiv); addText('. '); }
+      if (v.oshbQere) { addText('OSHB Qere (read): '); addHebrew(v.oshbQere); addText('. '); }
+      addText('Berean\u2019s surface, transliteration, gloss and alignment are unchanged; no second reading word is added.');
       dl.append(dt, dd);
     }
     detail.appendChild(dl);
@@ -2102,7 +2248,7 @@ function init() {
   }
 
   function renderInterlinear(config, translations) {
-    const strongsData = window[config.glossGlobal] || {};
+    const strongsData = config.glossGlobal ? (window[config.glossGlobal] || {}) : {};
     // `definitions` is the neutral Strong's definition (Read-mode gloss and
     // detail); `renderings` is the KJV rendering list (Study-mode card and the
     // detail panel). The `glosses` fallback keeps an older cached data file
@@ -2188,6 +2334,7 @@ function init() {
       return;
     }
 
+    let sawCoverageGap = false;
     for (let v = 0; v < verseCount; v++) {
       const verseNum = v + 1;
       if (verseFilter && !verseFilter.has(verseNum)) continue;
@@ -2197,23 +2344,30 @@ function init() {
       // explicit, accessible notice instead of being silently skipped. This
       // is not a load failure and not missing application data. Only
       // interlinears that declare `omittedNotice` render these blocks.
-      if ((tokens === null || tokens === undefined) && config.omittedNotice) {
-        const omitted = document.createElement('div');
-        omitted.className = 'interlinear-verse interlinear-omission';
-        const oref = document.createElement('div');
-        oref.className = 'interlinear-ref';
-        oref.textContent = `${name} ${chapterNum}:${verseNum}`;
-        omitted.appendChild(oref);
-        appendInterlinearCaption(omitted, book.id, chapterNum, verseNum, translation);
-        const note = document.createElement('p');
-        note.className = 'interlinear-omission-note';
-        note.setAttribute('role', 'note');
-        note.textContent = config.omittedNotice;
-        omitted.appendChild(note);
-        refs.results.appendChild(omitted);
+      if (tokens === null || tokens === undefined) {
+        if (config.omittedNotice) {
+          const omitted = document.createElement('div');
+          omitted.className = 'interlinear-verse interlinear-omission';
+          const oref = document.createElement('div');
+          oref.className = 'interlinear-ref';
+          oref.textContent = `${name} ${chapterNum}:${verseNum}`;
+          omitted.appendChild(oref);
+          appendInterlinearCaption(omitted, book.id, chapterNum, verseNum, translation);
+          const note = document.createElement('p');
+          note.className = 'interlinear-omission-note';
+          note.setAttribute('role', 'note');
+          note.textContent = config.omittedNotice;
+          omitted.appendChild(note);
+          refs.results.appendChild(omitted);
+          continue;
+        }
+        // Coverage-limited interlinears (the Berean Hebrew pilot) collect gaps
+        // and render ONE concise coverage notice at the end, instead of a
+        // notice per uncovered verse. OSHB/Berean-Greek are unaffected.
+        if (config.coverageNotice) { sawCoverageGap = true; continue; }
         continue;
       }
-      if (!tokens || !tokens.length) continue;
+      if (!tokens.length) continue;
 
       const block = document.createElement('div');
       block.className = 'interlinear-verse';
@@ -2241,16 +2395,33 @@ function init() {
         // layer). `tokenGloss === null` means "not provided by the data".
         const tokenTranslit = layout.translit != null ? raw[layout.translit] : '';
         const tokenGloss = layout.gloss != null ? raw[layout.gloss] : null;
+        // Optional pilot fields: complete Strong's list, gloss status, and a
+        // curated variant annotation. Absent for the other interlinears.
+        const tokenStrongsList = layout.strongsList ? raw[layout.strongsList] : null;
+        const tokenGlossStatus = layout.glossStatus ? raw[layout.glossStatus] : null;
+        const tokenVariant = layout.variant ? raw[layout.variant] : null;
+        const strongsList = Array.isArray(tokenStrongsList) ? tokenStrongsList : (strongs ? [strongs] : []);
         const definition = definitions[strongs] || '';
         const rendering = renderings[strongs] || '';
 
         let override = null;
-        if (tokenGloss !== null) {
-          override = { transliteration: tokenTranslit, gloss: tokenGloss, label: config.readingGlossLabel };
+        if (tokenGloss !== null || tokenGlossStatus === 'missing') {
+          // Berean supplies its own gloss. gloss === '' is an intentional blank;
+          // gloss === null with glossStatus 'missing' is an explicit source gap
+          // (pilot) that must NOT fall back to dictionary prose.
+          override = {
+            transliteration: tokenTranslit,
+            gloss: tokenGloss,
+            glossStatus: tokenGlossStatus || undefined,
+            strongsList: Array.isArray(tokenStrongsList) ? tokenStrongsList : undefined,
+            variant: tokenVariant || undefined,
+            label: config.readingGlossLabel,
+          };
         } else if (reviewed) {
           const entry = reviewed.verses?.[book.id]?.[chapterNum]?.[verseNum]?.[t] || null;
           if (entry) override = { transliteration: entry[0], gloss: entry[1], label: config.readingGlossLabel };
         }
+        if (config.coverageNotice && override) override.sourceRef = `${name} ${chapterNum}:${verseNum}`;
 
         if (disclosure) {
           const detailId = `iw-detail-${book.id}-${chapterNum}-${verseNum}-${t}`;
@@ -2260,31 +2431,45 @@ function init() {
           continue;
         }
 
-        // Study mode: a dense card. Berean shows its own transliteration and
-        // contextual gloss; Byzantine/Hebrew keep the KJV rendering list.
+        // Dense card (Reading for Berean Hebrew). Berean shows its own
+        // transliteration and contextual gloss; Byzantine/Hebrew keep the KJV
+        // rendering list. A missing gloss is an explicit marker, never prose.
         const translitText = tokenTranslit || (config.transliterate ? config.transliterate(surface) : '');
-        const glossText = tokenGloss !== null ? tokenGloss : rendering;
+        let glossText;
+        let missingGloss = false;
+        if (tokenGlossStatus === 'missing') { glossText = '\u2014'; missingGloss = true; }
+        else if (tokenGloss !== null) glossText = tokenGloss; // '' = intentional blank
+        else glossText = rendering;
 
         const card = document.createElement('span');
         card.className = 'iw';
 
         const surfaceSpan = document.createElement('span');
         surfaceSpan.className = config.surfaceClass;
+        if (config.isolateLtr) { surfaceSpan.lang = config.lang; surfaceSpan.dir = 'rtl'; }
         surfaceSpan.textContent = surface;
 
         const translit = document.createElement('span');
         translit.className = 'iw-translit';
+        if (config.isolateLtr) translit.dir = 'ltr';
         translit.textContent = translitText;
 
         const gloss = document.createElement('span');
         gloss.className = 'iw-gloss';
+        if (config.isolateLtr) gloss.dir = 'ltr';
+        if (missingGloss) gloss.classList.add('iw-gloss-missing');
         gloss.textContent = glossText;
-        const glossTitle = [strongs ? config.strongsPrefix + strongs : '', glossText, morph].filter(Boolean).join(' \u00b7 ');
-        if (glossTitle) gloss.title = glossTitle;
+        const strongsLabel = strongsList.map((s) => config.strongsPrefix + s).join(' ');
+        if (missingGloss) {
+          gloss.title = 'No gloss in source (Berean Hebrew draft)';
+        } else {
+          const glossTitle = [strongsLabel, glossText, morph].filter(Boolean).join(' \u00b7 ');
+          if (glossTitle) gloss.title = glossTitle;
+        }
 
         const meta = document.createElement('span');
         meta.className = 'iw-meta';
-        meta.textContent = strongs ? config.strongsPrefix + strongs : '';
+        meta.textContent = strongsLabel;
 
         card.append(surfaceSpan, translit, gloss, meta);
         words.appendChild(card);
@@ -2293,23 +2478,43 @@ function init() {
       if (details) block.appendChild(details);
       refs.results.appendChild(block);
     }
+
+    // One concise coverage notice for a chapter that is only partly covered
+    // (Berean Hebrew pilot). Never rendered for OSHB or Berean Greek.
+    if (sawCoverageGap) {
+      const notice = document.createElement('div');
+      notice.className = 'interlinear-verse interlinear-coverage';
+      const note = document.createElement('p');
+      note.className = 'interlinear-coverage-note';
+      note.setAttribute('role', 'note');
+      note.textContent = config.coverageNotice;
+      notice.appendChild(note);
+      refs.results.appendChild(notice);
+    }
   }
 
-  // Which interlinear, if any, should be shown for the current book. The
-  // Greek-text interlinears (Byzantine, Berean) are mutually exclusive in the
-  // UI; Hebrew is independent. When a Greek interlinear is selected for an OT
-  // book it is still returned, so the block shows its "NT only" message.
+  // Which interlinear, if any, should be shown for the current book. The Greek
+  // interlinears (Byzantine, Berean NT) and the Hebrew interlinears (OSHB,
+  // Berean Hebrew pilot) are each mutually exclusive within their group; the
+  // two groups are independent, and render() picks the group matching the
+  // current book's testament. When only the "wrong" testament is enabled, it is
+  // still returned so the block shows its "NT/OT only" message.
   function activeInterlinear() {
     const book = currentBook();
     const isNT = !!(book && book.testament === 'NT');
     const greekChoice = interlinearState.berean.enabled
       ? INTERLINEARS.berean
       : interlinearState.greek.enabled ? INTERLINEARS.greek : null;
-    if (greekChoice) {
-      if (isNT) return greekChoice;
-      return interlinearState.hebrew.enabled ? INTERLINEARS.hebrew : greekChoice;
+    const hebrewChoice = interlinearState.bereanHebrew.enabled
+      ? INTERLINEARS.bereanHebrew
+      : interlinearState.hebrew.enabled ? INTERLINEARS.hebrew : null;
+    if (isNT) {
+      if (greekChoice) return greekChoice;
+      if (hebrewChoice) return hebrewChoice;
+      return null;
     }
-    if (interlinearState.hebrew.enabled) return INTERLINEARS.hebrew;
+    if (hebrewChoice) return hebrewChoice;
+    if (greekChoice) return greekChoice;
     return null;
   }
 
@@ -2325,7 +2530,29 @@ function init() {
       setMessage('');
       refs.contextBtn.hidden = true;
       if (interlinear.perBook) {
-        const needed = interlinearBookIds(interlinear);
+        const manifest = interlinear.manifestGlobal ? window[interlinear.manifestGlobal] : null;
+        // A declared manifest that is still loading must not trigger fetches for
+        // not-yet-known books.
+        if (interlinear.manifestSrc && !manifest && !interlinearState[interlinear.key].manifestFailed) {
+          setMessage(`Loading ${interlinear.loadingLabel} interlinear\u2026`);
+          const loading = document.createElement('p');
+          loading.className = 'empty';
+          loading.textContent = `Loading ${interlinear.label} data\u2026`;
+          refs.results.appendChild(loading);
+          return;
+        }
+        const available = new Set(
+          (manifest && Array.isArray(manifest.books) && manifest.books)
+          || interlinear.coveredBooks
+          || [],
+        );
+        // Only configurations that actually declare their coverage (a manifest
+        // source or a static coveredBooks list) filter by it. The Berean Greek
+        // interlinear declares neither here, so it keeps loading its chunks.
+        const declaresCoverage = !!interlinear.manifestSrc || Array.isArray(interlinear.coveredBooks);
+        const needed = declaresCoverage
+          ? interlinearBookIds(interlinear).filter((id) => available.has(id))
+          : interlinearBookIds(interlinear);
         const failedHere = needed.filter((id) => interlinearState[interlinear.key].failed[id]);
         if (failedHere.length) {
           renderInterlinearError(interlinear, failedHere);

@@ -461,7 +461,7 @@ const COMPOUNDS = [
 {
   const sw = fs.readFileSync(path.join(ROOT, 'service-worker.js'), 'utf8');
   check('service worker routes data/berean chunks through the data cache',
-    /\\\/data\\\/\(\?:berean\\\/\)\?/.test(sw) || /data\/\(\?:berean\/\)\?/.test(sw));
+    sw.includes('isTranslationFile') && sw.includes('berean\\/') && sw.includes('berean-hebrew\\/'));
   const books = ['MAT', 'MRK', 'LUK', 'JHN', 'ACT', 'ROM', '1CO', '2CO', 'GAL', 'EPH', 'PHP', 'COL',
     '1TH', '2TH', '1TI', '2TI', 'TIT', 'PHM', 'HEB', 'JAS', '1PE', '2PE', '1JN', '2JN', '3JN', 'JUD', 'REV'];
   check('service worker lists all 27 Berean books for opt-in caching',

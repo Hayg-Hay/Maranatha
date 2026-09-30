@@ -303,6 +303,18 @@ code { font-family:Consolas, monospace; }
   margin: 6px 0 0; padding: 10px 12px; border: 1px dashed var(--line);
   border-radius: 6px; background: var(--paper); color: var(--muted); font-size: .85rem;
 }
+/* Coverage-limited interlinear (Berean Hebrew draft pilot): one concise notice
+   for verses outside the nine pilot verses. */
+.interlinear-coverage-note {
+  margin: 6px 0 0; padding: 10px 12px; border: 1px dashed var(--line);
+  border-radius: 6px; background: var(--paper); color: var(--muted); font-size: .85rem;
+}
+/* A pilot missing gloss (distinct from an intentional blank). */
+.iw-gloss-missing { color: var(--muted); }
+/* Written/read variant detail: Hebrew forms isolated so they render RTL
+   correctly inside an otherwise English (LTR) definition list. */
+.iw-variant { overflow-wrap: anywhere; }
+.iw-variant-hebrew { font-family: 'Ezra SIL', 'SBL Hebrew', serif; unicode-bidi: isolate; }
 /* Opt-in Berean offline cache status. */
 .berean-cache-status { margin: 8px 0 0; font-size: .8rem; color: var(--muted); }
 .berean-cache-status[data-state="ok"] { color: var(--accent, #3a7d44); }

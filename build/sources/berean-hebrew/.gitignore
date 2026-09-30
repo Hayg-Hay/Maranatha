@@ -1,0 +1,10 @@
+# Raw Bible Hub HTML caches are kept LOCAL and re-fetchable, not committed.
+#
+# The pages carry site markup, navigation and other non-Bible content; the
+# Berean public-domain dedication covers the Bible text, not the page as a
+# whole, so the raw captures are not published for redistribution. The
+# extraction fixture (pilot.fixture.json), curated annotations, and the
+# source-manifest hashes ARE committed as the auditable record.
+#
+# Run `node build/tools/berean-hebrew-fetch.mjs` to (re)create source-pages/.
+source-pages/

@@ -35,7 +35,11 @@
 // the new shell. The update is therefore user-driven, not a silent replacement
 // mid-read.
 
-const CACHE_VERSION = 'v30';      // bump when shell files change
+const CACHE_VERSION = 'v36';      // bump when shell files change
+// Data cache intentionally stays at v3: the Berean Hebrew preview uses
+// versioned/uniquely named data files (data/berean-hebrew/manifest-v5.js and
+// data/berean-hebrew/<BOOK>.js), so new coverage is fetched fresh without
+// invalidating users' already-downloaded translations or Berean Greek books.
 const DATA_CACHE_VERSION = 'v3';  // bump when translation/interlinear data changes
 
 const SHELL_CACHE = `maranatha-shell-${CACHE_VERSION}`;
@@ -65,11 +69,11 @@ const SHELL_FILES = [
 ];
 
 // True for the lazy-loaded translation and per-book interlinear files:
-// data/<id>.js and data/berean/<id>.js, but NOT the shell data files
-// (canon.js, locales/*.js). The [^/]+ keeps the nested locales path out, and
-// canon.js is excluded explicitly.
+// data/<id>.js, data/berean/<id>.js and data/berean-hebrew/<id>.js, but NOT the
+// shell data files (canon.js, locales/*.js). The [^/]+ keeps the nested locales
+// path out, and canon.js is excluded explicitly.
 function isTranslationFile(pathname) {
-  return /\/data\/(?:berean\/)?[^/]+\.js$/.test(pathname) && !pathname.endsWith('/data/canon.js');
+  return /\/data\/(?:berean\/|berean-hebrew\/)?[^/]+\.js$/.test(pathname) && !pathname.endsWith('/data/canon.js');
 }
 
 // Berean Interlinear NT chunks. Kept in sync with the importer's deterministic

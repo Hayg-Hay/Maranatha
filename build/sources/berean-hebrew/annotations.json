@@ -1,0 +1,22 @@
+{
+  "note": "Curated language annotations for the Berean Hebrew preview. The Bible Hub pages do not label language, so the Hebrew/Aramaic split used by Daniel 2:4 is supplied here and referenced per record. Ketiv/Qere correspondences are NOT stored here: they are generated separately in variants.json, verified against the OSHB XML's explicit variant structure (see build/tools/berean-hebrew-variants.mjs). Neither file is merged into the extracted surface/transliteration/gloss strings.",
+  "languageRules": [
+    {
+      "bookId": "DAN",
+      "chapter": 2,
+      "verse": 4,
+      "type": "transition-after-strongs",
+      "strongs": "762",
+      "before": "hebrew",
+      "after": "aramaic",
+      "evidence": "Daniel 2:4 is the verse where the text switches from Hebrew to Aramaic. The page's own word for 'in Aramaic' is Strong's 762 (אֲרָמִית); every record after it is Aramaic. The page does not label this transition."
+    },
+    {
+      "bookId": "DAN",
+      "chapter": 2,
+      "verse": 5,
+      "language": "aramaic",
+      "evidence": "Continues the Aramaic section begun mid-way through Daniel 2:4."
+    }
+  ]
+}
