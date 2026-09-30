@@ -7,7 +7,7 @@
 //   node build/test-service-worker.mjs
 //
 // It asserts:
-//   - install precaches the NEW shell (maranatha-shell-v31);
+//   - install precaches the NEW shell (maranatha-shell-v32);
 //   - activate keeps the existing data cache (maranatha-data-v3) and every file
 //     already stored in it (previously downloaded translations / Greek books);
 //   - activate deletes the OLD shell cache (maranatha-shell-v29);
@@ -81,6 +81,8 @@ async function main() {
       ['./data/web.js', { url: './data/web.js', body: 'WEB' }],
       ['./data/berean/JHN.js', { url: './data/berean/JHN.js', body: 'GREEK-JOHN' }],
       ['./data/berean/ROM.js', { url: './data/berean/ROM.js', body: 'GREEK-ROM' }],
+      // A stale copy of the old single-file pilot must survive (never wiped).
+      ['./data/berean-hebrew-pilot.js', { url: './data/berean-hebrew-pilot.js', body: 'OLD-HEBREW-PILOT' }],
     ],
     'maranatha-shell-v29': [
       ['./index.html', { url: './index.html', body: 'OLD-SHELL' }],
@@ -91,28 +93,37 @@ async function main() {
   await fire(env.listeners, 'install');
   await fire(env.listeners, 'activate');
 
-  check('install creates the new shell cache (maranatha-shell-v31)', caches.store.has('maranatha-shell-v31'));
-  check('new shell cache is populated', (caches.store.get('maranatha-shell-v31') || new Map()).size > 0);
+  check('install creates the new shell cache (maranatha-shell-v32)', caches.store.has('maranatha-shell-v32'));
+  check('new shell cache is populated', (caches.store.get('maranatha-shell-v32') || new Map()).size > 0);
   check('activation preserves the existing data cache (maranatha-data-v3)', caches.store.has('maranatha-data-v3'));
   check('activation deletes the old shell cache (maranatha-shell-v29)', !caches.store.has('maranatha-shell-v29'));
 
   const data = caches.store.get('maranatha-data-v3');
   check('downloaded translation file survives the shell update', data && data.get('./data/web.js')?.body === 'WEB');
   check('downloaded Berean Greek book survives the shell update', data && data.get('./data/berean/JHN.js')?.body === 'GREEK-JOHN');
-  check('every previously stored data file is retained', data && data.size === 3, data && String(data.size));
+  check('the stale old pilot file is retained, not wiped', data && data.get('./data/berean-hebrew-pilot.js')?.body === 'OLD-HEBREW-PILOT');
+  check('every previously stored data file is retained', data && data.size === 4, data && String(data.size));
+  check('the expanded preview uses NEW urls, so the old pilot cannot shadow it',
+    './data/berean-hebrew/GEN.js' !== './data/berean-hebrew-pilot.js');
 
-  // The pilot runtime file must use the existing data-cache route.
-  const pilotRouted = vm.runInContext('isTranslationFile("/data/berean-hebrew-pilot.js")', env.sandbox);
+  // The preview's per-book files must use the existing data-cache route.
+  const genRouted = vm.runInContext('isTranslationFile("/data/berean-hebrew/GEN.js")', env.sandbox);
+  const manifestRouted = vm.runInContext('isTranslationFile("/data/berean-hebrew/manifest.js")', env.sandbox);
+  const oldPilotRouted = vm.runInContext('isTranslationFile("/data/berean-hebrew-pilot.js")', env.sandbox);
   const canonRouted = vm.runInContext('isTranslationFile("/data/canon.js")', env.sandbox);
   const translationsRouted = vm.runInContext('isTranslationFile("/data/web.js")', env.sandbox);
-  check('pilot runtime file is routed through the data cache', pilotRouted === true);
+  const localeRouted = vm.runInContext('isTranslationFile("/data/locales/en.js")', env.sandbox);
+  check('per-book Hebrew preview chunk is routed through the data cache', genRouted === true);
+  check('Hebrew preview manifest is routed through the data cache', manifestRouted === true);
+  check('legacy pilot path still matches the data-cache route', oldPilotRouted === true);
   check('canon.js is not treated as a translation data file', canonRouted === false);
+  check('locales are not treated as translation data files', localeRouted === false);
   check('ordinary translation files are still data-cache routed', translationsRouted === true);
 
   const shellList = (swSource.match(/const SHELL_FILES = \[([\s\S]*?)\];/) || [])[1] || '';
-  check('pilot runtime file is not precached into the shell', !/berean-hebrew-pilot/.test(shellList));
-  check('data cache version is v3 (unchanged by the pilot)', /DATA_CACHE_VERSION\s*=\s*'v3'/.test(swSource));
-  check('shell cache version was bumped for the app change', /CACHE_VERSION\s*=\s*'v31'/.test(swSource));
+  check('Hebrew preview files are not precached into the shell', !/berean-hebrew/.test(shellList));
+  check('data cache version is v3 (unchanged by the Hebrew preview)', /DATA_CACHE_VERSION\s*=\s*'v3'/.test(swSource));
+  check('shell cache version was bumped for the app change', /CACHE_VERSION\s*=\s*'v32'/.test(swSource));
 
   let failed = 0;
   for (const [name, ok, detail] of results) {

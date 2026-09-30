@@ -1,13 +1,15 @@
 // berean-hebrew-fetch.mjs
 //
 // Cached, rate-limited downloader for the Berean Interlinear Bible (BIB) Hebrew
-// Old Testament pages hosted on Bible Hub. This is the *only* tool in the pilot
-// that touches the network; every other script reads the local cache.
+// Old Testament pages hosted on Bible Hub. This is the *only* tool in the
+// Hebrew pilot that touches the network; every other script reads the local
+// cache.
 //
 // SAFETY
 //   - Every manifest entry is preserved across runs. An entry is updated only
-//     after its page is downloaded AND passes validation; a failed or blocked
-//     request never replaces a valid cached page or its metadata.
+//     after its page is downloaded AND passes validation (interlinear structure,
+//     BIB footer, and matching chapter identity); a failed or blocked request
+//     never replaces a valid cached page or its metadata.
 //   - Page files and the manifest are each written through a temp file + rename,
 //     so neither is ever left partially written. These are INDIVIDUALLY atomic,
 //     not one transaction: an interruption between the page rename and the
@@ -17,15 +19,16 @@
 //     re-trust.
 //   - Reusing a cached page keeps its original retrieval date and full entry.
 //   - A cached page whose bytes no longer match its manifest hash is reported
-//     as CORRUPT and left untouched — it is never silently re-trusted with a new
-//     hash. Use --refresh to re-download and re-establish trust.
+//     as CORRUPT and left untouched.
 //   - Rate limiting (REQUEST_DELAY_MS between live requests) and abort-on-block
-//     are enforced.
+//     are enforced; the run is resumable because every success is persisted.
 //
 // USAGE
-//   node build/tools/berean-hebrew-fetch.mjs            # fetch missing pages only
-//   node build/tools/berean-hebrew-fetch.mjs --refresh  # re-fetch every pilot page
-//   node build/tools/berean-hebrew-fetch.mjs --list     # print the pilot URLs, no network
+//   node build/tools/berean-hebrew-fetch.mjs                  # fetch missing pages
+//   node build/tools/berean-hebrew-fetch.mjs --refresh        # re-fetch every page
+//   node build/tools/berean-hebrew-fetch.mjs --list           # print URLs, no network
+//   node build/tools/berean-hebrew-fetch.mjs --only GEN       # restrict to a book
+//   node build/tools/berean-hebrew-fetch.mjs --only GEN --chapters 2,8,22   # subset
 
 import https from 'node:https';
 import fs from 'node:fs';
@@ -43,13 +46,46 @@ const USER_AGENT =
   'Maranatha-BereanHebrewPilot/0.1 (+offline Bible browser research; contact via repo)';
 export const REQUEST_DELAY_MS = 3000;
 
-// The pilot passages. URL shape verified in the repo docs; the displayed
-// edition label is captured from each page's own footer, never assumed.
-export const PILOT_PAGES = [
-  { passage: 'GEN 1', book: 'Genesis', chapter: 1, url: 'https://biblehub.com/interlinear/genesis/1.htm', file: 'genesis-1.html' },
-  { passage: 'DAN 2', book: 'Daniel', chapter: 2, url: 'https://biblehub.com/interlinear/daniel/2.htm', file: 'daniel-2.html' },
-  { passage: 'MAL 4', book: 'Malachi', chapter: 4, url: 'https://biblehub.com/interlinear/malachi/4.htm', file: 'malachi-4.html' },
+// The covered passages. Genesis is imported in full (50 chapters); Daniel and
+// Malachi keep only the accepted pilot chapters.
+export const COVERED_BOOKS = [
+  { bookId: 'GEN', book: 'Genesis', slug: 'genesis', chapters: 50 },
+  { bookId: 'DAN', book: 'Daniel', slug: 'daniel', chapters: [2] },
+  { bookId: 'MAL', book: 'Malachi', slug: 'malachi', chapters: [4] },
 ];
+
+function chapterList(spec) {
+  return Array.isArray(spec) ? spec.slice() : Array.from({ length: spec }, (_, i) => i + 1);
+}
+
+export function pageFor(book, chapter) {
+  return {
+    passage: `${book.bookId} ${chapter}`,
+    book: book.book,
+    bookId: book.bookId,
+    chapter,
+    slug: book.slug,
+    url: `https://biblehub.com/interlinear/${book.slug}/${chapter}.htm`,
+    file: `${book.slug}-${chapter}.html`,
+  };
+}
+
+// Build the page list, optionally restricted to one book and/or a chapter set.
+export function coveredPages({ only = null, chapters = null } = {}) {
+  const books = only
+    ? COVERED_BOOKS.filter((b) => b.bookId === only || b.slug === only || b.book === only)
+    : COVERED_BOOKS;
+  const out = [];
+  for (const book of books) {
+    for (const c of chapterList(book.chapters)) {
+      if (chapters && !chapters.includes(c)) continue;
+      out.push(pageFor(book, c));
+    }
+  }
+  return out;
+}
+
+export const COVERED_PAGES = coveredPages();
 
 const sha256 = (buf) => crypto.createHash('sha256').update(buf).digest('hex');
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -102,15 +138,21 @@ export function detectBlock(status, body) {
   return null;
 }
 
-// A download is accepted only if it is a 200 page that actually carries the
-// Berean interlinear structure and footer. Anything else is rejected, so a
-// failure page can never overwrite a valid cached page.
-export function validateDownloadedPage(body, { statusCode } = {}) {
+// A download is accepted only if it is a 200 page that carries the Berean
+// interlinear structure and footer AND (when expected) identifies the requested
+// book/chapter. Anything else is rejected, so a failure page can never
+// overwrite a valid cached page.
+export function validateDownloadedPage(body, { statusCode, book, chapter } = {}) {
   const block = detectBlock(statusCode, body);
   if (block) return `access blocked (${block})`;
   if (statusCode !== 200) return `HTTP ${statusCode}`;
   if (!/<table class="tablefloatheb">/.test(body)) return 'page does not contain an interlinear word table';
   if (!/Berean Interlinear Bible \(BIB\)/.test(body)) return 'page does not carry the Berean Interlinear Bible (BIB) footer';
+  if (book && chapter) {
+    const title = /<title>([\s\S]*?)<\/title>/i.exec(body)?.[1]?.trim() || '';
+    const expected = `${book} ${chapter} Interlinear Bible`;
+    if (title !== expected) return `page title "${title}" does not identify "${expected}"`;
+  }
   return null;
 }
 
@@ -133,7 +175,7 @@ export function loadManifest(manifestPath = MANIFEST) {
 // Core routine. Dependencies are injectable so the offline test can simulate
 // responses without any network.
 export async function runFetch({
-  pages = PILOT_PAGES,
+  pages = COVERED_PAGES,
   pageDir = PAGE_DIR,
   manifestPath = MANIFEST,
   requestImpl = request,
@@ -182,7 +224,7 @@ export async function runFetch({
       }
       const entry = {
         ...(existing || {}),
-        passage: page.passage, book: page.book, chapter: page.chapter, url: page.url, file: relFile,
+        passage: page.passage, book: page.book, bookId: page.bookId, chapter: page.chapter, url: page.url, file: relFile,
         // Reuse keeps the ORIGINAL retrieval date and status.
         retrievedAt: existing?.retrievedAt ?? null,
         httpStatus: existing?.httpStatus ?? 200,
@@ -208,7 +250,7 @@ export async function runFetch({
     }
     liveFetches++;
 
-    const problem = validateDownloadedPage(res.body, { statusCode: res.statusCode });
+    const problem = validateDownloadedPage(res.body, { statusCode: res.statusCode, book: page.book, chapter: page.chapter });
     if (problem) {
       report.failed = { passage: page.passage, url: page.url, error: problem };
       report.blocked = /blocked/.test(problem);
@@ -219,7 +261,7 @@ export async function runFetch({
     // Success: write the page, then update its entry, then persist the manifest.
     atomicWrite(filePath, res.body);
     const entry = {
-      passage: page.passage, book: page.book, chapter: page.chapter, url: page.url, file: relFile,
+      passage: page.passage, book: page.book, bookId: page.bookId, chapter: page.chapter, url: page.url, file: relFile,
       retrievedAt: now().toISOString(),
       httpStatus: res.statusCode,
       byteLength: Buffer.byteLength(res.body, 'utf8'),
@@ -238,24 +280,29 @@ export async function runFetch({
 }
 
 function parseArgs(argv) {
-  const opts = { refresh: false, list: false };
-  for (const a of argv) {
+  const opts = { refresh: false, list: false, only: null, chapters: null };
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
     if (a === '--refresh') opts.refresh = true;
     else if (a === '--list') opts.list = true;
+    else if (a === '--only') opts.only = argv[++i] || null;
+    else if (a === '--chapters') opts.chapters = String(argv[++i] || '').split(',').map(Number).filter((n) => n > 0);
   }
   return opts;
 }
 
 async function main() {
   const opts = parseArgs(process.argv.slice(2));
+  const pages = coveredPages({ only: opts.only, chapters: opts.chapters });
   if (opts.list) {
-    for (const p of PILOT_PAGES) console.log(`${p.passage}\t${p.url}`);
+    for (const p of pages) console.log(`${p.passage}\t${p.url}`);
+    console.log(`\n${pages.length} page(s).`);
     return;
   }
-  const report = await runFetch({ refresh: opts.refresh });
+  const report = await runFetch({ pages, refresh: opts.refresh });
   if (report.corrupt.length) console.error(`${report.corrupt.length} corrupt cache page(s) detected and not trusted.`);
   if (report.failed) {
-    console.error(`Run stopped early: ${report.failed.error} on ${report.failed.url}. Valid cache is untouched; re-run later.`);
+    console.error(`Run stopped early: ${report.failed.error} on ${report.failed.url}. Valid cache is untouched; re-run later (resumable).`);
     process.exit(1);
   }
   if (report.corrupt.length) process.exit(1);

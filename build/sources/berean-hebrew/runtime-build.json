@@ -1,28 +1,22 @@
 {
-  "generatedBy": "build/import-berean-hebrew-pilot.mjs",
-  "source": "build/sources/berean-hebrew/pilot.fixture.json",
-  "sourceSha256": "66c9767d949ce1f5f0c15245a2f93018410b05834f17ad748d40e127d37f239a",
-  "output": "data/berean-hebrew-pilot.js",
-  "outputSha256": "fbc473726df69b0d34fbfa8c031c295d057bed46b3fc7f394968cde6224d5074",
-  "recordCount": 109,
-  "passages": [
-    {
-      "passage": "GEN 1:1-5",
-      "bookId": "GEN",
-      "chapter": 1,
-      "recordCount": 52
-    },
-    {
-      "passage": "DAN 2:4-5",
-      "bookId": "DAN",
-      "chapter": 2,
-      "recordCount": 29
-    },
-    {
-      "passage": "MAL 4:5-6",
-      "bookId": "MAL",
-      "chapter": 4,
-      "recordCount": 28
-    }
-  ]
+  "generatedBy": "build/import-berean-hebrew.mjs",
+  "source": "build/sources/berean-hebrew/hebrew.fixture.json",
+  "sourceSha256": "5934d815be0eb409ac08e85770b3c550925b537fdf62b009b92e54df8c97311d",
+  "recordCount": 20670,
+  "books": [
+    "GEN",
+    "DAN",
+    "MAL"
+  ],
+  "booksRecordCount": {
+    "GEN": 20613,
+    "DAN": 29,
+    "MAL": 28
+  },
+  "files": {
+    "data/berean-hebrew/manifest.js": "494cfe4a809ccef42500e0a3a79a4195952f522bf2272f8d6e6947e26f8ed365",
+    "data/berean-hebrew/GEN.js": "c1eec848ce12a23dd2f9b0efcb2521a3302e0f4b1fb4a98822064bee22dc89bf",
+    "data/berean-hebrew/DAN.js": "2b6a2608363e339bdf52b91bcdbd04912501eea114ae1ac1b8496ca157313a7a",
+    "data/berean-hebrew/MAL.js": "df28c36d6f0e7d67fe6fba859c4b99a94d7598d7c9198ff52c18c99c5392125c"
+  }
 }

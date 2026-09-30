@@ -1,7 +1,7 @@
 // berean-hebrew-extract.mjs
 //
 // Offline extractor for the Berean Interlinear Bible (BIB) Hebrew Old Testament
-// pilot. It reads the *cached* Bible Hub pages under
+// local preview. It reads the *cached* Bible Hub pages under
 // build/sources/berean-hebrew/source-pages/ and recovers one record per source
 // alignment token. It never touches the network and never writes into data/.
 //
@@ -24,11 +24,12 @@
 // ANOMALY CLASSES (every anomaly carries a `class`)
 //   structural   ambiguous/failed extraction (no surface, multiple Hebrew spans,
 //                malformed/out-of-order verse refs, unsupported token structure,
-//                missing transliteration or morphology). The fixture build
-//                REFUSES to overwrite accepted output while any structural error
-//                exists.
+//                ABSENT transliteration/morphology spans, multiple spans of any
+//                kind). The fixture build REFUSES to overwrite accepted output
+//                while any structural error exists.
 //   source-gap   known legitimate omissions the source itself makes (empty gloss
-//                span, absent Strong's). Kept as explicit nulls with diagnostics.
+//                span, empty transliteration/morphology for some compound names,
+//                absent Strong's). Kept as explicit nulls with diagnostics.
 //   info         valid but notable, e.g. a record with multiple Strong's numbers.
 //
 // WHAT IT DOES *NOT* DO
@@ -39,15 +40,15 @@
 //
 // USAGE
 //   node build/tools/berean-hebrew-extract.mjs build   # regenerate the fixture
-//   node build/tools/berean-hebrew-extract.mjs dump DAN 2 4
 //   node build/tools/berean-hebrew-extract.mjs dump GEN 1 1
+//   node build/tools/berean-hebrew-extract.mjs dump DAN 2 4
 
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-export const PARSER_VERSION = '2.1.0';
+export const PARSER_VERSION = '3.0.0';
 
 const sha256 = (buf) => crypto.createHash('sha256').update(buf).digest('hex');
 
@@ -57,12 +58,15 @@ const SRC_DIR = path.join(ROOT, 'build', 'sources', 'berean-hebrew');
 const PAGE_DIR = path.join(SRC_DIR, 'source-pages');
 const MANIFEST = path.join(SRC_DIR, 'source-manifest.json');
 const ANNOTATIONS = path.join(SRC_DIR, 'annotations.json');
-export const FIXTURE = path.join(SRC_DIR, 'pilot.fixture.json');
+const VARIANTS = path.join(SRC_DIR, 'variants.json');
+export const FIXTURE = path.join(SRC_DIR, 'hebrew.fixture.json');
 
-export const PILOT = [
-  { passage: 'GEN 1:1-5', manifestPassage: 'GEN 1', book: 'Genesis', bookId: 'GEN', chapter: 1, verses: [1, 2, 3, 4, 5] },
-  { passage: 'DAN 2:4-5', manifestPassage: 'DAN 2', book: 'Daniel', bookId: 'DAN', chapter: 2, verses: [4, 5] },
-  { passage: 'MAL 4:5-6', manifestPassage: 'MAL 4', book: 'Malachi', bookId: 'MAL', chapter: 4, verses: [5, 6] },
+// Covered passages: all 50 chapters of Genesis, plus the retained Daniel 2:4-5
+// and Malachi 4:5-6 pilot verses.
+export const COVERAGE = [
+  { bookId: 'GEN', book: 'Genesis', full: true },
+  { bookId: 'DAN', book: 'Daniel', versesByChapter: { 2: [4, 5] } },
+  { bookId: 'MAL', book: 'Malachi', versesByChapter: { 4: [5, 6] } },
 ];
 
 const NAMED = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: '\u00a0' };
@@ -162,32 +166,35 @@ export function parsePage(html, { book, chapter }) {
       anomalies.push(structural('multi-hebrew-span', { book, chapter, verse: currentVerse, count: hebMatches.length, candidates: hebMatches.map((m) => normText(m[1])) }));
     }
 
-    // --- transliteration ----------------------------------------------------
+    // --- transliteration: an EMPTY span is a known source gap (the source
+    //     leaves some compound-name transliterations blank); an ABSENT span is
+    //     a structural parser failure ----------------------------------------
     let transliteration = null;
     if (translitMatches.length === 1) {
       transliteration = normText(translitMatches[0][1]);
       if (!transliteration) {
         transliteration = null;
-        anomalies.push(structural('missing-transliteration', { book, chapter, verse: currentVerse }));
+        anomalies.push(sourceGap('missing-transliteration', { book, chapter, verse: currentVerse }));
       }
     } else if (translitMatches.length > 1) {
       anomalies.push(structural('multi-transliteration-span', { book, chapter, verse: currentVerse, count: translitMatches.length }));
     } else {
-      anomalies.push(structural('missing-transliteration', { book, chapter, verse: currentVerse }));
+      anomalies.push(structural('no-transliteration-span', { book, chapter, verse: currentVerse }));
     }
 
-    // --- morphology ---------------------------------------------------------
+    // --- morphology: same empty-vs-absent distinction (the source leaves
+    //     morphology blank for some proper-name components) -------------------
     let morphology = null;
     if (morphMatches.length === 1) {
       morphology = normText(morphMatches[0][2]);
       if (!morphology) {
         morphology = null;
-        anomalies.push(structural('missing-morphology', { book, chapter, verse: currentVerse }));
+        anomalies.push(sourceGap('missing-morphology', { book, chapter, verse: currentVerse }));
       }
     } else if (morphMatches.length > 1) {
       anomalies.push(structural('multi-morphology-span', { book, chapter, verse: currentVerse, count: morphMatches.length }));
     } else {
-      anomalies.push(structural('missing-morphology', { book, chapter, verse: currentVerse }));
+      anomalies.push(structural('no-morphology-span', { book, chapter, verse: currentVerse }));
     }
 
     // --- gloss: an ABSENT span is a structural failure; an EMPTY span is a
@@ -225,16 +232,23 @@ export function parsePage(html, { book, chapter }) {
   return { verses, anomalies };
 }
 
-// Curated annotations (language transition + Ketiv/Qere) are external facts the
-// page does not state; they are kept in a separate file and referenced, never
-// silently merged into the extracted strings.
+// Curated annotations (language transitions) are external facts the page does
+// not state; they are kept in a separate file and referenced, never silently
+// merged into the extracted strings.
 export function loadAnnotations(annotationsPath = ANNOTATIONS) {
-  if (!fs.existsSync(annotationsPath)) return { languageRules: [], variants: [] };
+  if (!fs.existsSync(annotationsPath)) return { languageRules: [] };
   return JSON.parse(fs.readFileSync(annotationsPath, 'utf8'));
 }
 
+// Generated, verified Ketiv/Qere correspondences (see berean-hebrew-variants.mjs).
+export function loadVariants(variantsPath = VARIANTS) {
+  if (!fs.existsSync(variantsPath)) return { variants: [], uncertain: [] };
+  const parsed = JSON.parse(fs.readFileSync(variantsPath, 'utf8'));
+  return { variants: parsed.variants || [], uncertain: parsed.uncertain || [] };
+}
+
 function applyLanguage(record, bookId, chapter, verse, records, annotations) {
-  const rule = annotations.languageRules.find((r) => r.bookId === bookId && r.chapter === chapter && r.verse === verse);
+  const rule = (annotations.languageRules || []).find((r) => r.bookId === bookId && r.chapter === chapter && r.verse === verse);
   if (!rule) return record.language || 'hebrew';
   if (rule.language) return rule.language;
   if (rule.type === 'transition-after-strongs') {
@@ -245,26 +259,29 @@ function applyLanguage(record, bookId, chapter, verse, records, annotations) {
   return rule.before || 'hebrew';
 }
 
-function applyVariant(record, bookId, chapter, verse, annotations) {
-  return annotations.variants.find(
-    (v) => v.bookId === bookId && v.chapter === chapter && v.verse === verse && record.strongsList.includes(v.strongs),
-  ) || null;
-}
+// Assemble one covered chapter from a page's HTML. Pure; no writes.
+// `wantedVerses` is null for a full-chapter import, or the explicit verse list
+// for the retained Daniel/Malachi pilot verses.
+export function assemblePassage({ coverage, html, page, annotations, variantByKey, wantedVerses = null }) {
+  const { verses, anomalies: pageAnomalies } = parsePage(html, { book: coverage.book, chapter: page.chapter });
+  const present = Object.keys(verses).map(Number).sort((a, b) => a - b);
+  const selected = wantedVerses ? wantedVerses.slice() : present;
 
-// Assemble one pilot passage from a page's HTML. Pure; no writes.
-export function assemblePassage({ pilot, html, page, annotations }) {
-  const { verses, anomalies: pageAnomalies } = parsePage(html, { book: pilot.book, chapter: pilot.chapter });
-  const anomalies = pageAnomalies.map((a) => ({ ...a, inPilotRange: a.verse != null && pilot.verses.includes(a.verse) }));
+  // For explicit pilot verses, a missing verse is a real extraction problem.
+  const missingWanted = selected.filter((v) => !verses[v]);
+  const anomalies = pageAnomalies
+    .map((a) => ({ ...a, inSelected: a.verse == null || selected.includes(a.verse) }))
+    .concat(missingWanted.map((v) => ({ class: 'structural', kind: 'missing-wanted-verse', book: coverage.book, bookId: coverage.bookId, chapter: page.chapter, verse: v })));
 
   const outVerses = [];
   let recordCount = 0;
-  for (const v of pilot.verses) {
+  for (const v of selected) {
     const raw = verses[v];
-    if (!raw) throw new Error(`missing verse ${pilot.book} ${pilot.chapter}:${v} in cached page`);
+    if (!raw) continue;
     const records = raw.map((r) => {
-      const language = applyLanguage(r, pilot.bookId, pilot.chapter, v, raw, annotations);
+      const language = applyLanguage(r, coverage.bookId, page.chapter, v, raw, annotations);
       const glossStatus = r.gloss === null ? 'missing' : r.gloss === '-' ? 'untranslated' : 'translated';
-      const variant = applyVariant(r, pilot.bookId, pilot.chapter, v, annotations);
+      const variant = variantByKey.get(`${coverage.bookId}:${page.chapter}:${v}:${r.order}`) || null;
       const rec = {
         order: r.order,
         surface: r.surface,
@@ -281,11 +298,7 @@ export function assemblePassage({ pilot, html, page, annotations }) {
           type: variant.type,
           sourceDisplays: variant.sourceDisplays,
           sourceMarksVariant: variant.sourceMarksVariant,
-          ref: `DAN ${pilot.chapter}:${v} @${variant.strongs}`,
-          // Curated OSHB comparison values, carried through from annotations.json
-          // so the runtime detail can show the exact Ketiv/Qere without the app
-          // re-reading annotations.json. These are OSHB comparisons, NOT fields
-          // supplied by Berean; provenance is stated explicitly.
+          ref: `${coverage.bookId} ${page.chapter}:${v} @${variant.strongs}`,
           provenance: variant.provenance || 'OSHB comparison (not supplied by Berean)',
           observedPageSurface: variant.observedPageSurface || null,
           oshbKetiv: variant.oshbKetiv || null,
@@ -305,11 +318,11 @@ export function assemblePassage({ pilot, html, page, annotations }) {
   }
 
   const passage = {
-    passage: pilot.passage,
-    bookId: pilot.bookId,
-    book: pilot.book,
-    chapter: pilot.chapter,
-    verses: pilot.verses,
+    passage: `${coverage.bookId} ${page.chapter}`,
+    bookId: coverage.bookId,
+    book: coverage.book,
+    chapter: page.chapter,
+    verses: selected,
     recordCount,
     sourcePage: {
       url: page.url,
@@ -340,7 +353,7 @@ export function missingSourcePages({ pageDir = SRC_DIR, manifestPath = MANIFEST 
 export function sourceCacheRecoveryMessage(missing) {
   return [
     'The raw Bible Hub pages needed by extraction-dependent checks are not present locally.',
-    missing && missing.length ? `  missing pages: ${missing.join(', ')}` : null,
+    missing && missing.length ? `  missing pages: ${missing.length > 6 ? `${missing.slice(0, 6).join(', ')} … (${missing.length} total)` : missing.join(', ')}` : null,
     '  These raw pages are intentionally NOT committed (see build/sources/berean-hebrew/.gitignore).',
     '  Nothing is downloaded automatically. To enable these checks, fetch the pages once:',
     '    node build/tools/berean-hebrew-fetch.mjs',
@@ -349,70 +362,88 @@ export function sourceCacheRecoveryMessage(missing) {
   ].filter(Boolean).join('\n');
 }
 
-// Build the full pilot fixture object (pure; no writes).
-export function buildFixture({ manifestPath = MANIFEST, annotationsPath = ANNOTATIONS, pageDir = SRC_DIR } = {}) {
+function variantMap(variants) {
+  const map = new Map();
+  for (const v of variants) map.set(`${v.bookId}:${v.chapter}:${v.verse}:${v.order}`, v);
+  return map;
+}
+
+// Build the full fixture object (pure; no writes).
+export function buildFixture({ manifestPath = MANIFEST, annotationsPath = ANNOTATIONS, variantsPath = VARIANTS, pageDir = SRC_DIR } = {}) {
   const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
   const annotations = loadAnnotations(annotationsPath);
-  const pageByPassage = new Map(manifest.pages.map((p) => [p.passage, p]));
+  const { variants } = loadVariants(variantsPath);
+  const variantByKey = variantMap(variants);
 
   const passages = [];
   const allAnomalies = [];
 
-  for (const pilot of PILOT) {
-    const page = pageByPassage.get(pilot.manifestPassage);
-    if (!page) throw new Error(`no cached page for ${pilot.manifestPassage}`);
-    if (!page.sha256) throw new Error(`manifest entry for ${pilot.manifestPassage} has no sha256; refusing to parse`);
-    // Verify the cached bytes against the manifest BEFORE parsing. A missing or
-    // changed page (or a hash the manifest does not record) stops generation so
-    // the accepted fixture output is never regenerated from unverified bytes.
-    const pagePath = path.join(pageDir, page.file);
-    if (!fs.existsSync(pagePath)) throw new Error(`cached page missing for ${pilot.manifestPassage}: ${page.file}`);
-    const bytes = fs.readFileSync(pagePath);
-    const actualHash = sha256(bytes);
-    if (actualHash !== page.sha256) {
-      throw new Error(`cached page sha256 mismatch for ${pilot.manifestPassage} (${page.file}): manifest ${page.sha256}, file ${actualHash}; refusing to parse`);
+  for (const coverage of COVERAGE) {
+    const bookPages = manifest.pages
+      .filter((p) => p.bookId === coverage.bookId)
+      .sort((a, b) => a.chapter - b.chapter);
+    for (const page of bookPages) {
+      const wantedVerses = coverage.versesByChapter ? coverage.versesByChapter[page.chapter] || null : null;
+      if (coverage.versesByChapter && !wantedVerses) continue;
+      if (!page.sha256) throw new Error(`manifest entry for ${page.passage} has no sha256; refusing to parse`);
+      const pagePath = path.join(pageDir, page.file);
+      if (!fs.existsSync(pagePath)) throw new Error(`cached page missing for ${page.passage}: ${page.file}`);
+      const bytes = fs.readFileSync(pagePath);
+      const actualHash = sha256(bytes);
+      if (actualHash !== page.sha256) {
+        throw new Error(`cached page sha256 mismatch for ${page.passage} (${page.file}): manifest ${page.sha256}, file ${actualHash}; refusing to parse`);
+      }
+      const { passage, anomalies } = assemblePassage({
+        coverage, html: bytes.toString('utf8'), page, annotations, variantByKey, wantedVerses,
+      });
+      passages.push(passage);
+      allAnomalies.push(...anomalies);
     }
-    const { passage, anomalies } = assemblePassage({ pilot, html: bytes.toString('utf8'), page, annotations });
-    passages.push(passage);
-    allAnomalies.push(...anomalies);
   }
 
   const allRecords = passages.flatMap((p) => p.verseData).flatMap((v) => v.records);
   const totalRecords = allRecords.length;
+  const totalVerses = passages.reduce((n, p) => n + p.verseData.length, 0);
   const missingGlosses = allRecords.filter((r) => r.glossStatus === 'missing').length;
   const untranslated = allRecords.filter((r) => r.glossStatus === 'untranslated').length;
   const noStrongs = allRecords.filter((r) => r.strongsList.length === 0).length;
+  const noTranslit = allRecords.filter((r) => r.transliteration === null).length;
+  const noMorph = allRecords.filter((r) => r.morphology === null).length;
   const { structural: structuralErrors, sourceGaps, info: infoAnomalies } = partitionAnomalies(allAnomalies);
 
   return {
-    id: 'berean-hebrew-pilot',
-    label: 'Berean Interlinear Bible (BIB) — Hebrew OT pilot',
-    status: 'inspection fixture — tooling/provenance only; not loaded by app.js or used at runtime',
+    id: 'berean-hebrew',
+    label: 'Berean Interlinear Bible (BIB) — Hebrew OT local preview',
+    status: 'local evaluation data — not publication approval; retained Daniel/Malachi pilot verses + all Genesis',
     draft: true,
     parserVersion: PARSER_VERSION,
     extractor: 'build/tools/berean-hebrew-extract.mjs',
     source: {
       edition: 'Berean Interlinear Bible (BIB)',
       host: 'Bible Hub',
-      editionEvidence: 'All three cached pages carry the footer "Berean Interlinear Bible (BIB). Produced in cooperation with Bible Hub, Discovery Bible, unfoldingWord, Bible Aquifer, OpenBible.com, and the Berean Bible Translation Committee." See build/sources/berean-hebrew/README.md and source-manifest.json.',
+      editionEvidence: 'Every cached page carries the footer "Berean Interlinear Bible (BIB). Produced in cooperation with Bible Hub, Discovery Bible, unfoldingWord, Bible Aquifer, OpenBible.com, and the Berean Bible Translation Committee." See build/sources/berean-hebrew/README.md and source-manifest.json.',
       permission: 'Berean team email (on file in README.md) grants programmatic RETRIEVAL of the current draft from Bible Hub, because no downloadable file exists yet. Separately, berean.bible/terms.htm dedicates the Berean Bible texts to the public domain (April 30, 2023). Established and unresolved licence scope is documented in README.md.',
       draftNote: 'The interlinear is still in draft mode per the Berean team; the cached pages are a dated snapshot, not a fixed edition.',
       termsUrl: 'https://berean.bible/terms.htm',
       sourceManifest: 'build/sources/berean-hebrew/source-manifest.json',
     },
+    coverage: 'Genesis 1\u201350; Daniel 2:4\u20135; Malachi 4:5\u20136',
     totals: {
-      passages: passages.length,
-      verses: passages.reduce((n, p) => n + p.verseData.length, 0),
+      books: [...new Set(passages.map((p) => p.bookId))].length,
+      chapters: passages.length,
+      verses: totalVerses,
       records: totalRecords,
       untranslatedGlosses: untranslated,
       missingGlosses,
       recordsWithoutStrongs: noStrongs,
+      recordsWithoutTransliteration: noTranslit,
+      recordsWithoutMorphology: noMorph,
       structuralErrors: structuralErrors.length,
       sourceGapDiagnostics: sourceGaps.length,
-      pilotRangeSourceGaps: sourceGaps.filter((a) => a.inPilotRange).length,
       infoDiagnostics: infoAnomalies.length,
     },
     anomalies: allAnomalies,
+    uncertainVariants: loadVariants(variantsPath).uncertain,
     passages,
   };
 }
@@ -440,8 +471,6 @@ function main() {
     try {
       fixture = buildFixture();
     } catch (error) {
-      // Source verification failed (missing/mismatched hash, missing page). The
-      // accepted fixture output is left untouched.
       console.error(`Refusing to regenerate ${path.relative(ROOT, FIXTURE)}: ${error.message}`);
       if (/page missing|no cached page|sha256 mismatch/i.test(error.message)) {
         console.error('  Raw pages are not committed. Fetch them once with: node build/tools/berean-hebrew-fetch.mjs');
@@ -456,10 +485,11 @@ function main() {
     }
     const { written } = writeFixtureIfClean(fixture);
     if (!written) { console.error('Refusing to write fixture: structural errors present.'); process.exit(1); }
+    const t = fixture.totals;
     console.log(`Wrote ${path.relative(ROOT, FIXTURE)}`);
-    console.log(`  passages ${fixture.totals.passages}, verses ${fixture.totals.verses}, records ${fixture.totals.records}`);
-    console.log(`  untranslated ${fixture.totals.untranslatedGlosses}, missing-gloss ${fixture.totals.missingGlosses}, no-Strong's ${fixture.totals.recordsWithoutStrongs}`);
-    console.log(`  structural ${fixture.totals.structuralErrors}, source-gap ${fixture.totals.sourceGapDiagnostics} (pilot-range ${fixture.totals.pilotRangeSourceGaps}), info ${fixture.totals.infoDiagnostics}`);
+    console.log(`  books ${t.books}, chapters ${t.chapters}, verses ${t.verses}, records ${t.records}`);
+    console.log(`  untranslated ${t.untranslatedGlosses}, missing-gloss ${t.missingGlosses}, no-Strong's ${t.recordsWithoutStrongs}, no-translit ${t.recordsWithoutTransliteration}, no-morph ${t.recordsWithoutMorphology}`);
+    console.log(`  structural ${t.structuralErrors}, source-gap ${t.sourceGapDiagnostics}, info ${t.infoDiagnostics}`);
     return;
   }
   if (mode === 'dump') {

@@ -31,17 +31,17 @@ async function test(name, fn) {
 // Fetch recovery tests (simulated responses, no network)
 // ---------------------------------------------------------------------------
 const minimalPage = (label) =>
-  '<!DOCTYPE html><html><head><title>' + label + '</title></head><body>' +
-  '<div id="breadcrumbs">Bible &gt; BSB &gt; ' + label + '</div>' +
+  '<!DOCTYPE html><html><head><title>Test 1 Interlinear Bible</title></head><body>' +
+  '<div id="breadcrumbs">Bible &gt; BSB &gt; Test 1</div>' +
   '<table class="tablefloatheb"><tbody><tr><td>' +
   '<span class="hebrew">\u05d0</span><span class="translit"><a href="/hebrew/x.htm">x</a></span><span class="eng">' + label + '</span>' +
   '</td></tr></tbody></table>' +
   '<div>Berean Interlinear Bible (BIB). Produced in cooperation with Bible Hub.</div></body></html>';
 
 const TEST_PAGES = [
-  { passage: 'T1 1', book: 'Test1', chapter: 1, url: 'https://example.test/1.htm', file: 't1.html' },
-  { passage: 'T2 1', book: 'Test2', chapter: 1, url: 'https://example.test/2.htm', file: 't2.html' },
-  { passage: 'T3 1', book: 'Test3', chapter: 1, url: 'https://example.test/3.htm', file: 't3.html' },
+  { passage: 'T1 1', book: 'Test', chapter: 1, url: 'https://example.test/1.htm', file: 't1.html' },
+  { passage: 'T2 1', book: 'Test', chapter: 1, url: 'https://example.test/2.htm', file: 't2.html' },
+  { passage: 'T3 1', book: 'Test', chapter: 1, url: 'https://example.test/3.htm', file: 't3.html' },
 ];
 const [P1, P2, P3] = TEST_PAGES;
 
@@ -208,6 +208,12 @@ await test('fetch: validateDownloadedPage accepts only real interlinear pages', 
   assert(validateDownloadedPage(minimalPage('x'), { statusCode: 403 }) !== null, 'HTTP 403 rejected');
 });
 
+await test('fetch: validateDownloadedPage verifies the chapter identity', () => {
+  // minimalPage's title is "Test 1 Interlinear Bible".
+  assert(validateDownloadedPage(minimalPage('x'), { statusCode: 200, book: 'Test', chapter: 1 }) === null, 'matching chapter accepted');
+  assert(validateDownloadedPage(minimalPage('x'), { statusCode: 200, book: 'Test', chapter: 2 }) !== null, 'wrong chapter rejected');
+});
+
 // ---------------------------------------------------------------------------
 // Parser / extraction edge-case tests (synthetic HTML)
 // ---------------------------------------------------------------------------
@@ -246,13 +252,25 @@ await test('parse: a missing Hebrew span is a structural error', () => {
   assert(partitionAnomalies(anomalies).structural.some((a) => a.kind === 'no-surface'), 'no-surface flagged structural');
 });
 
-await test('parse: missing transliteration and morphology are structural', () => {
+await test('parse: absent transliteration/morphology spans are structural', () => {
   const { verses, anomalies } = parse1(wordBlock({ translit: null, morph: null, strongs: ['1111'], ref: 1 }));
   eq(verses[1][0].transliteration, null, 'transliteration null');
   eq(verses[1][0].morphology, null, 'morphology null');
   const { structural } = partitionAnomalies(anomalies);
-  assert(structural.some((a) => a.kind === 'missing-transliteration'), 'missing-transliteration flagged');
-  assert(structural.some((a) => a.kind === 'missing-morphology'), 'missing-morphology flagged');
+  assert(structural.some((a) => a.kind === 'no-transliteration-span'), 'no-transliteration-span flagged');
+  assert(structural.some((a) => a.kind === 'no-morphology-span'), 'no-morphology-span flagged');
+});
+
+await test('parse: empty transliteration/morphology spans are source gaps, not structural', () => {
+  // Matches Bible Hub's compound-name records (e.g. Gen 50:11 "Abel-", Gen 14:17
+  // "laomer") where the span exists but carries no text.
+  const { verses, anomalies } = parse1(wordBlock({ translit: '', morph: '', strongs: ['1111'], ref: 1 }));
+  eq(verses[1][0].transliteration, null, 'empty translit -> null');
+  eq(verses[1][0].morphology, null, 'empty morph -> null');
+  const { structural, sourceGaps } = partitionAnomalies(anomalies);
+  assert(structural.length === 0, `expected no structural errors, got ${JSON.stringify(structural)}`);
+  assert(sourceGaps.some((a) => a.kind === 'missing-transliteration'), 'empty translit is a source gap');
+  assert(sourceGaps.some((a) => a.kind === 'missing-morphology'), 'empty morph is a source gap');
 });
 
 await test('parse: a malformed verse reference is structural', () => {
@@ -286,9 +304,9 @@ await test('parse: an absent Strong\'s number is a source gap, not invented', ()
 });
 
 await test('assemble: gloss status distinguishes missing, untranslated and translated', () => {
-  const pilot = { passage: 'T 1:1', manifestPassage: 'T 1', book: 'Test', bookId: 'T', chapter: 1, verses: [1] };
+  const coverage = { bookId: 'T', book: 'Test' };
   const page = { file: 't.html', url: 'u', sha256: '0'.repeat(64), retrievedAt: 'x', httpStatus: 200, editionFooter: 'Berean Interlinear Bible (BIB)' };
-  const mk = (eng) => assemblePassage({ pilot, html: wordBlock({ eng, strongs: ['1111'], ref: 1 }), page, annotations: { languageRules: [], variants: [] } })
+  const mk = (eng) => assemblePassage({ coverage, html: wordBlock({ eng, strongs: ['1111'], ref: 1 }), page, annotations: { languageRules: [] }, variantByKey: new Map() })
     .passage.verseData[0].records[0].glossStatus;
   eq(mk(''), 'missing', 'empty -> missing');
   eq(mk('-'), 'untranslated', 'dash -> untranslated');
@@ -320,7 +338,7 @@ await test('extract: buildFixture stops on a page SHA-256 that does not match th
   fs.writeFileSync(path.join(dir, 'source-pages', 'genesis-1.html'), '<html><table class="tablefloatheb">x</table></html>');
   const manifestPath = path.join(dir, 'source-manifest.json');
   fs.writeFileSync(manifestPath, JSON.stringify({ pages: [
-    { passage: 'GEN 1', book: 'Genesis', chapter: 1, url: 'u', file: 'source-pages/genesis-1.html', sha256: '0'.repeat(64), retrievedAt: 'x' },
+    { passage: 'GEN 1', book: 'Genesis', bookId: 'GEN', chapter: 1, url: 'u', file: 'source-pages/genesis-1.html', sha256: '0'.repeat(64), retrievedAt: 'x' },
   ] }));
   let threw = '';
   try { buildFixture({ manifestPath, pageDir: dir }); } catch (e) { threw = e.message; }
@@ -332,7 +350,7 @@ await test('extract: buildFixture stops when a hashed page file is missing', () 
   fs.mkdirSync(path.join(dir, 'source-pages'), { recursive: true });
   const manifestPath = path.join(dir, 'source-manifest.json');
   fs.writeFileSync(manifestPath, JSON.stringify({ pages: [
-    { passage: 'GEN 1', book: 'Genesis', chapter: 1, url: 'u', file: 'source-pages/genesis-1.html', sha256: sha256(Buffer.from('x')), retrievedAt: 'x' },
+    { passage: 'GEN 1', book: 'Genesis', bookId: 'GEN', chapter: 1, url: 'u', file: 'source-pages/genesis-1.html', sha256: sha256(Buffer.from('x')), retrievedAt: 'x' },
   ] }));
   let threw = '';
   try { buildFixture({ manifestPath, pageDir: dir }); } catch (e) { threw = e.message; }

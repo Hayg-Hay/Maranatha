@@ -399,25 +399,31 @@ const refs = {
       toggleRef: 'interlinearBerean',
       modeRef: 'interlinearBereanMode',
     },
-    // Berean Hebrew Old Testament (draft pilot): a *separate* Hebrew/Aramaic
+    // Berean Hebrew Old Testament (draft preview): a *separate* Hebrew/Aramaic
     // interlinear with its own surfaces, transliteration, morphology, Strong's
-    // numbers and contextual glosses, covering only nine pilot verses. It is
-    // loaded as one small script (data/berean-hebrew-pilot.js) and never
-    // consults the OSHB Hebrew data or a Strong's dictionary for its glosses.
+    // numbers and contextual glosses. It covers Genesis 1–50 plus the retained
+    // Daniel 2:4–5 and Malachi 4:5–6 pilot verses, and is loaded one book at a
+    // time (data/berean-hebrew/<BOOK>.js) so future OT expansion never needs the
+    // whole corpus up front. It never consults the OSHB Hebrew data or a
+    // Strong's dictionary for its glosses.
     bereanHebrew: {
       key: 'bereanHebrew',
       loadingLabel: 'Berean Hebrew',
-      dataGlobal: 'MARANATHA_BEREAN_HEBREW_PILOT',
-      dataSources: ['data/berean-hebrew-pilot.js'],
-      // No shared Strong's dictionary: the pilot never falls back to
+      perBook: true,
+      testament: 'OT',
+      coveredBooks: ['GEN', 'DAN', 'MAL'],
+      label: '(Berean Hebrew, draft preview)',
+      unavailable: 'The Berean Hebrew draft preview covers Genesis 1\u201350, Daniel 2:4\u20135, and Malachi 4:5\u20136. This passage is outside the preview.',
+      coverageNotice: 'Outside the Berean Hebrew draft preview (Genesis 1\u201350; Daniel 2:4\u20135; Malachi 4:5\u20136).',
+      provenanceNote: 'Berean Hebrew draft preview \u00b7 Bible Hub \u00b7 dated draft \u00b7 variant notes are verified OSHB comparisons only.',
+      sourceNote: 'Berean Interlinear Bible (BIB), Hebrew OT \u2014 dated draft preview from Bible Hub: Genesis 1\u201350, plus Daniel 2:4\u20135 and Malachi 4:5\u20136. Text dedication: berean.bible/terms.htm.',
+      // No shared Strong's dictionary: the preview never falls back to
       // dictionary prose for a missing gloss.
       glossGlobal: null,
-      testament: 'OT',
-      label: '(Berean Hebrew, draft pilot)',
-      unavailable: 'The Berean Hebrew draft pilot covers only Genesis 1:1\u20135, Daniel 2:4\u20135, and Malachi 4:5\u20136. This passage is outside the pilot.',
-      coverageNotice: 'Outside the Berean Hebrew draft pilot (Genesis 1:1\u20135; Daniel 2:4\u20135; Malachi 4:5\u20136).',
-      provenanceNote: 'Berean Hebrew draft pilot \u00b7 Bible Hub \u00b7 dated draft \u00b7 variant notes are OSHB comparisons only.',
-      sourceNote: 'Berean Interlinear Bible (BIB), Hebrew OT \u2014 dated draft pilot retrieved from Bible Hub; nine verses only (Genesis 1:1\u20135, Daniel 2:4\u20135, Malachi 4:5\u20136). Text dedication: berean.bible/terms.htm.',
+      manifestGlobal: 'MARANATHA_BEREAN_HEBREW_MANIFEST',
+      manifestSrc: 'data/berean-hebrew/manifest.js',
+      chunkSrc: (bookId) => `data/berean-hebrew/${bookId}.js`,
+      chunkGlobal: (bookId) => `MARANATHA_BEREAN_HEBREW_${bookId}`,
       strongsPrefix: 'H',
       // Object-keyed tokens; extra fields drive faithful rendering.
       token: {
@@ -443,9 +449,9 @@ const refs = {
     // Berean is loaded per book; track which books are in flight (dedupes
     // concurrent loads) and which failed (so the UI can offer a retry).
     berean: { enabled: false, status: 'idle', mode: 'read', loading: {}, failed: {}, optionalLoading: false },
-    // Berean Hebrew pilot is a single small script, loaded like the shared
-    // Greek/Hebrew interlinears.
-    bereanHebrew: { enabled: false, status: 'idle', mode: 'read', optionalLoading: false },
+    // Berean Hebrew preview is loaded per book (like Berean Greek), with a tiny
+    // manifest first; track manifest loading/failure too.
+    bereanHebrew: { enabled: false, status: 'idle', mode: 'read', optionalLoading: false, manifestLoading: null, manifestFailed: false, loading: {}, failed: {} },
   };
 
   // Per-block context overrides.  Each key is "${bookId}-${chapterNum}".
@@ -1587,11 +1593,13 @@ function init() {
     }
     if (config.perBook) {
       // Per-book interlinears load lazily inside render(), based on the book
-      // actually on screen, so switching books loads only what is needed. The
-      // optional shared dictionary loads independently and rerenders on
-      // success; a failure leaves Berean fully usable.
-      loadOptionalInterlinearData(config);
-      render();
+      // actually on screen, so switching books loads only what is needed. A
+      // declared manifest loads first (tiny); the optional shared dictionary
+      // loads independently and rerenders on success.
+      ensureManifest(config, () => {
+        loadOptionalInterlinearData(config);
+        render();
+      });
     } else if (state.status === 'loaded') {
       // A previous enable may have finished before the optional pilot data
       // arrived (or failed). Retry it, then render with whatever is present.
@@ -1645,6 +1653,28 @@ function init() {
       if (error) failed.push(id);
       if (--remaining === 0) onSettled(failed);
     }));
+  }
+
+  // Loads a per-book interlinear's manifest once, if it declares one. A failure
+  // is non-fatal and recorded so render() can fall back to the static
+  // coveredBooks list; nothing else is affected.
+  function ensureManifest(config, onDone) {
+    const state = interlinearState[config.key];
+    if (!config.manifestSrc || !config.manifestGlobal || window[config.manifestGlobal]) { onDone(); return; }
+    if (state.manifestFailed) { onDone(); return; }
+    if (state.manifestLoading) { state.manifestLoading.push(onDone); return; }
+    state.manifestLoading = [onDone];
+    const script = document.createElement('script');
+    script.src = config.manifestSrc;
+    const settle = () => {
+      const callbacks = state.manifestLoading || [];
+      state.manifestLoading = null;
+      if (!window[config.manifestGlobal]) state.manifestFailed = true;
+      callbacks.forEach((cb) => cb());
+    };
+    script.onload = settle;
+    script.onerror = settle;
+    document.head.appendChild(script);
   }
 
   // Books that the current render actually needs from a per-book interlinear.
@@ -2493,7 +2523,29 @@ function init() {
       setMessage('');
       refs.contextBtn.hidden = true;
       if (interlinear.perBook) {
-        const needed = interlinearBookIds(interlinear);
+        const manifest = interlinear.manifestGlobal ? window[interlinear.manifestGlobal] : null;
+        // A declared manifest that is still loading must not trigger fetches for
+        // not-yet-known books.
+        if (interlinear.manifestSrc && !manifest && !interlinearState[interlinear.key].manifestFailed) {
+          setMessage(`Loading ${interlinear.loadingLabel} interlinear\u2026`);
+          const loading = document.createElement('p');
+          loading.className = 'empty';
+          loading.textContent = `Loading ${interlinear.label} data\u2026`;
+          refs.results.appendChild(loading);
+          return;
+        }
+        const available = new Set(
+          (manifest && Array.isArray(manifest.books) && manifest.books)
+          || interlinear.coveredBooks
+          || [],
+        );
+        // Only configurations that actually declare their coverage (a manifest
+        // source or a static coveredBooks list) filter by it. The Berean Greek
+        // interlinear declares neither here, so it keeps loading its chunks.
+        const declaresCoverage = !!interlinear.manifestSrc || Array.isArray(interlinear.coveredBooks);
+        const needed = declaresCoverage
+          ? interlinearBookIds(interlinear).filter((id) => available.has(id))
+          : interlinearBookIds(interlinear);
         const failedHere = needed.filter((id) => interlinearState[interlinear.key].failed[id]);
         if (failedHere.length) {
           renderInterlinearError(interlinear, failedHere);
