@@ -11,7 +11,7 @@ import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { runFetch, validateDownloadedPage } from './berean-hebrew-fetch.mjs';
-import { parsePage, assemblePassage, buildFixture, partitionAnomalies, writeFixtureIfClean, FIXTURE, missingSourcePages, sourceCacheRecoveryMessage } from './berean-hebrew-extract.mjs';
+import { parsePage, assemblePassage, buildFixture, partitionAnomalies, writeFixtureIfClean, FIXTURE, recordFingerprint, missingSourcePages, sourceCacheRecoveryMessage } from './berean-hebrew-extract.mjs';
 
 const results = [];
 const skipped = [];
@@ -305,12 +305,39 @@ await test('parse: an absent Strong\'s number is a source gap, not invented', ()
 
 await test('assemble: gloss status distinguishes missing, untranslated and translated', () => {
   const coverage = { bookId: 'T', book: 'Test' };
-  const page = { file: 't.html', url: 'u', sha256: '0'.repeat(64), retrievedAt: 'x', httpStatus: 200, editionFooter: 'Berean Interlinear Bible (BIB)' };
+  const page = { file: 't.html', url: 'u', chapter: 1, sha256: '0'.repeat(64), retrievedAt: 'x', httpStatus: 200, editionFooter: 'Berean Interlinear Bible (BIB)' };
   const mk = (eng) => assemblePassage({ coverage, html: wordBlock({ eng, strongs: ['1111'], ref: 1 }), page, annotations: { languageRules: [] }, variantByKey: new Map() })
     .passage.verseData[0].records[0].glossStatus;
   eq(mk(''), 'missing', 'empty -> missing');
   eq(mk('-'), 'untranslated', 'dash -> untranslated');
   eq(mk('word'), 'translated', 'text -> translated');
+});
+
+await test('assemble: a matching variant fingerprint attaches the annotation', () => {
+  const coverage = { bookId: 'T', book: 'Test' };
+  const page = { file: 't.html', url: 'u', chapter: 1, sha256: '0'.repeat(64), retrievedAt: 'x', httpStatus: 200, editionFooter: 'Berean Interlinear Bible (BIB)' };
+  const html = wordBlock({ strongs: ['1111'], ref: 1 });
+  const rawRec = parse1(html).verses[1][0];
+  const good = new Map([['T:1:1:0', {
+    type: 'ketiv-qere', sourceDisplays: 'ketiv', sourceMarksVariant: false,
+    oshbKetiv: 'א', oshbQere: 'ב', sourceFingerprint: recordFingerprint(rawRec),
+  }]]);
+  const { passage, anomalies } = assemblePassage({ coverage, html, page, annotations: { languageRules: [] }, variantByKey: good });
+  assert(passage.verseData[0].records[0].variant, 'variant attached');
+  eq(partitionAnomalies(anomalies).structural.length, 0, 'no structural error');
+});
+
+await test('assemble: a stale variant fingerprint is rejected as structural', () => {
+  const coverage = { bookId: 'T', book: 'Test' };
+  const page = { file: 't.html', url: 'u', chapter: 1, sha256: '0'.repeat(64), retrievedAt: 'x', httpStatus: 200, editionFooter: 'Berean Interlinear Bible (BIB)' };
+  const html = wordBlock({ strongs: ['1111'], ref: 1 });
+  const stale = new Map([['T:1:1:0', {
+    type: 'ketiv-qere', sourceDisplays: 'ketiv', sourceMarksVariant: false,
+    oshbKetiv: 'א', oshbQere: 'ב', sourceFingerprint: 'deadbeef'.repeat(8),
+  }]]);
+  const { passage, anomalies } = assemblePassage({ coverage, html, page, annotations: { languageRules: [] }, variantByKey: stale });
+  assert(!passage.verseData[0].records[0].variant, 'stale variant not attached');
+  assert(partitionAnomalies(anomalies).structural.some((a) => a.kind === 'stale-variant-fingerprint'), 'stale fingerprint flagged structural');
 });
 
 if (hasSourceCache) {

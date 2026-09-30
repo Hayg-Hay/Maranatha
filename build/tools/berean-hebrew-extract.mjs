@@ -61,10 +61,11 @@ const ANNOTATIONS = path.join(SRC_DIR, 'annotations.json');
 const VARIANTS = path.join(SRC_DIR, 'variants.json');
 export const FIXTURE = path.join(SRC_DIR, 'hebrew.fixture.json');
 
-// Covered passages: all 50 chapters of Genesis, plus the retained Daniel 2:4-5
-// and Malachi 4:5-6 pilot verses.
+// Covered passages: all 50 chapters of Genesis and all 40 of Exodus, plus the
+// retained Daniel 2:4-5 and Malachi 4:5-6 pilot verses.
 export const COVERAGE = [
   { bookId: 'GEN', book: 'Genesis', full: true },
+  { bookId: 'EXO', book: 'Exodus', full: true },
   { bookId: 'DAN', book: 'Daniel', versesByChapter: { 2: [4, 5] } },
   { bookId: 'MAL', book: 'Malachi', versesByChapter: { 4: [5, 6] } },
 ];
@@ -107,6 +108,16 @@ export function partitionAnomalies(anomalies = []) {
     sourceGaps: anomalies.filter((a) => a.class === 'source-gap'),
     info: anomalies.filter((a) => a.class === 'info'),
   };
+}
+
+// Stable fingerprint of a source record's extracted fields. Variant entries
+// carry the fingerprint of the record they were verified against, so a stale
+// annotation can never attach to a changed token merely because its index
+// stayed the same.
+export function recordFingerprint(rec) {
+  return sha256(Buffer.from(JSON.stringify([
+    rec.order, rec.surface, rec.transliteration, rec.gloss, rec.morphology, rec.strongsList || [],
+  ]), 'utf8'));
 }
 
 // Parse one Bible Hub interlinear chapter page into ordered per-verse records.
@@ -294,17 +305,28 @@ export function assemblePassage({ coverage, html, page, annotations, variantByKe
         language,
       };
       if (variant) {
-        rec.variant = {
-          type: variant.type,
-          sourceDisplays: variant.sourceDisplays,
-          sourceMarksVariant: variant.sourceMarksVariant,
-          ref: `${coverage.bookId} ${page.chapter}:${v} @${variant.strongs}`,
-          provenance: variant.provenance || 'OSHB comparison (not supplied by Berean)',
-          observedPageSurface: variant.observedPageSurface || null,
-          oshbKetiv: variant.oshbKetiv || null,
-          oshbQere: variant.oshbQere || null,
-          note: variant.note || null,
-        };
+        // Reject a stale annotation whose fingerprint does not match this token.
+        if (variant.sourceFingerprint && variant.sourceFingerprint !== recordFingerprint(r)) {
+          anomalies.push(structural('stale-variant-fingerprint', {
+            bookId: coverage.bookId, chapter: page.chapter, verse: v, order: r.order,
+            expected: variant.sourceFingerprint, actual: recordFingerprint(r),
+          }));
+        } else {
+          rec.variant = {
+            type: variant.type,
+            sourceDisplays: variant.sourceDisplays,
+            sourceMarksVariant: variant.sourceMarksVariant,
+            ref: `${coverage.bookId} ${page.chapter}:${v} @${variant.strongs}`,
+            oshbRef: variant.oshbRef || null,
+            provenance: variant.provenance || 'OSHB comparison (not supplied by Berean)',
+            evidence: variant.evidence || null,
+            sourceFingerprint: variant.sourceFingerprint || null,
+            observedPageSurface: variant.observedPageSurface || null,
+            oshbKetiv: variant.oshbKetiv || null,
+            oshbQere: variant.oshbQere || null,
+            note: variant.note || null,
+          };
+        }
       }
       return rec;
     });
@@ -427,7 +449,7 @@ export function buildFixture({ manifestPath = MANIFEST, annotationsPath = ANNOTA
       termsUrl: 'https://berean.bible/terms.htm',
       sourceManifest: 'build/sources/berean-hebrew/source-manifest.json',
     },
-    coverage: 'Genesis 1\u201350; Daniel 2:4\u20135; Malachi 4:5\u20136',
+    coverage: 'Genesis 1\u201350; Exodus 1\u201340; Daniel 2:4\u20135; Malachi 4:5\u20136',
     totals: {
       books: [...new Set(passages.map((p) => p.bookId))].length,
       chapters: passages.length,
@@ -455,7 +477,13 @@ export function writeFixtureIfClean(fixture, fixturePath = FIXTURE) {
   if (structuralErrors.length) return { written: false, structuralErrors };
   const tmp = `${fixturePath}.tmp-${process.pid}-${Date.now()}`;
   fs.writeFileSync(tmp, JSON.stringify(fixture, null, 2) + '\n');
-  fs.renameSync(tmp, fixturePath);
+  try {
+    fs.renameSync(tmp, fixturePath);
+  } catch (e) {
+    // Never leave a partial temp file behind if the rename is blocked.
+    try { fs.unlinkSync(tmp); } catch { /* best effort */ }
+    throw e;
+  }
   return { written: true, structuralErrors: [] };
 }
 

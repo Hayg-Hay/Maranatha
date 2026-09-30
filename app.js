@@ -411,18 +411,24 @@ const refs = {
       loadingLabel: 'Berean Hebrew',
       perBook: true,
       testament: 'OT',
-      coveredBooks: ['GEN', 'DAN', 'MAL'],
+      coveredBooks: ['GEN', 'EXO', 'DAN', 'MAL'],
       label: '(Berean Hebrew, draft preview)',
-      unavailable: 'The Berean Hebrew draft preview covers Genesis 1\u201350, Daniel 2:4\u20135, and Malachi 4:5\u20136. This passage is outside the preview.',
-      coverageNotice: 'Outside the Berean Hebrew draft preview (Genesis 1\u201350; Daniel 2:4\u20135; Malachi 4:5\u20136).',
+      unavailable: 'The Berean Hebrew draft preview covers Genesis 1\u201350 and Exodus 1\u201340, plus Daniel 2:4\u20135 and Malachi 4:5\u20136. This passage is outside the preview.',
+      coverageNotice: 'Outside the Berean Hebrew draft preview (Genesis 1\u201350; Exodus 1\u201340; Daniel 2:4\u20135; Malachi 4:5\u20136).',
       provenanceNote: 'Berean Hebrew draft preview \u00b7 Bible Hub \u00b7 dated draft \u00b7 variant notes are verified OSHB comparisons only.',
-      sourceNote: 'Berean Interlinear Bible (BIB), Hebrew OT \u2014 dated draft preview from Bible Hub: Genesis 1\u201350, plus Daniel 2:4\u20135 and Malachi 4:5\u20136. Text dedication: berean.bible/terms.htm.',
+      sourceNote: 'Berean Interlinear Bible (BIB), Hebrew OT \u2014 dated draft preview from Bible Hub: Genesis 1\u201350 and Exodus 1\u201340, plus Daniel 2:4\u20135 and Malachi 4:5\u20136. Text dedication: berean.bible/terms.htm.',
       // No shared Strong's dictionary: the preview never falls back to
       // dictionary prose for a missing gloss.
       glossGlobal: null,
       manifestGlobal: 'MARANATHA_BEREAN_HEBREW_MANIFEST',
-      manifestSrc: 'data/berean-hebrew/manifest.js',
-      chunkSrc: (bookId) => `data/berean-hebrew/${bookId}.js`,
+      manifestSrc: 'data/berean-hebrew/manifest-v2.js',
+      chunkSrc: (bookId) => {
+        // The manifest publishes each book's (possibly versioned) filename so a
+        // changed chunk is fetched fresh rather than served from an old cache.
+        const m = window.MARANATHA_BEREAN_HEBREW_MANIFEST;
+        const file = (m && m.chunkFiles && m.chunkFiles[bookId]) || `${bookId}.js`;
+        return `data/berean-hebrew/${file}`;
+      },
       chunkGlobal: (bookId) => `MARANATHA_BEREAN_HEBREW_${bookId}`,
       strongsPrefix: 'H',
       // Object-keyed tokens; extra fields drive faithful rendering.

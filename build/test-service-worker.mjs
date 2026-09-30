@@ -7,11 +7,11 @@
 //   node build/test-service-worker.mjs
 //
 // It asserts:
-//   - install precaches the NEW shell (maranatha-shell-v32);
+//   - install precaches the NEW shell (maranatha-shell-v33);
 //   - activate keeps the existing data cache (maranatha-data-v3) and every file
 //     already stored in it (previously downloaded translations / Greek books);
 //   - activate deletes the OLD shell cache (maranatha-shell-v29);
-//   - data/berean-hebrew-pilot.js is routed through the data cache by
+//   - data/berean-hebrew/manifest-v2.js is routed through the data cache by
 //     isTranslationFile (and is not a shell file).
 
 import fs from 'node:fs';
@@ -83,6 +83,9 @@ async function main() {
       ['./data/berean/ROM.js', { url: './data/berean/ROM.js', body: 'GREEK-ROM' }],
       // A stale copy of the old single-file pilot must survive (never wiped).
       ['./data/berean-hebrew-pilot.js', { url: './data/berean-hebrew-pilot.js', body: 'OLD-HEBREW-PILOT' }],
+      // The Genesis-milestone manifest (same URL as before) and its GEN chunk.
+      ['./data/berean-hebrew/manifest.js', { url: './data/berean-hebrew/manifest.js', body: 'OLD-GENESIS-MANIFEST' }],
+      ['./data/berean-hebrew/GEN.js', { url: './data/berean-hebrew/GEN.js', body: 'GEN' }],
     ],
     'maranatha-shell-v29': [
       ['./index.html', { url: './index.html', body: 'OLD-SHELL' }],
@@ -93,8 +96,8 @@ async function main() {
   await fire(env.listeners, 'install');
   await fire(env.listeners, 'activate');
 
-  check('install creates the new shell cache (maranatha-shell-v32)', caches.store.has('maranatha-shell-v32'));
-  check('new shell cache is populated', (caches.store.get('maranatha-shell-v32') || new Map()).size > 0);
+  check('install creates the new shell cache (maranatha-shell-v33)', caches.store.has('maranatha-shell-v33'));
+  check('new shell cache is populated', (caches.store.get('maranatha-shell-v33') || new Map()).size > 0);
   check('activation preserves the existing data cache (maranatha-data-v3)', caches.store.has('maranatha-data-v3'));
   check('activation deletes the old shell cache (maranatha-shell-v29)', !caches.store.has('maranatha-shell-v29'));
 
@@ -102,28 +105,35 @@ async function main() {
   check('downloaded translation file survives the shell update', data && data.get('./data/web.js')?.body === 'WEB');
   check('downloaded Berean Greek book survives the shell update', data && data.get('./data/berean/JHN.js')?.body === 'GREEK-JOHN');
   check('the stale old pilot file is retained, not wiped', data && data.get('./data/berean-hebrew-pilot.js')?.body === 'OLD-HEBREW-PILOT');
-  check('every previously stored data file is retained', data && data.size === 4, data && String(data.size));
-  check('the expanded preview uses NEW urls, so the old pilot cannot shadow it',
-    './data/berean-hebrew/GEN.js' !== './data/berean-hebrew-pilot.js');
+  check('the old Genesis manifest is retained, not wiped', data && data.get('./data/berean-hebrew/manifest.js')?.body === 'OLD-GENESIS-MANIFEST');
+  check('every previously stored data file is retained', data && data.size === 6, data && String(data.size));
+  check('the versioned manifest URL is distinct, so the old manifest cannot shadow new coverage',
+    './data/berean-hebrew/manifest-v2.js' !== './data/berean-hebrew/manifest.js');
 
   // The preview's per-book files must use the existing data-cache route.
-  const genRouted = vm.runInContext('isTranslationFile("/data/berean-hebrew/GEN.js")', env.sandbox);
-  const manifestRouted = vm.runInContext('isTranslationFile("/data/berean-hebrew/manifest.js")', env.sandbox);
+  const genV2Routed = vm.runInContext('isTranslationFile("/data/berean-hebrew/GEN-v2.js")', env.sandbox);
+  const exoRouted = vm.runInContext('isTranslationFile("/data/berean-hebrew/EXO.js")', env.sandbox);
+  const manifestRouted = vm.runInContext('isTranslationFile("/data/berean-hebrew/manifest-v2.js")', env.sandbox);
+  const oldGenRouted = vm.runInContext('isTranslationFile("/data/berean-hebrew/GEN.js")', env.sandbox);
+  const oldManifestRouted = vm.runInContext('isTranslationFile("/data/berean-hebrew/manifest.js")', env.sandbox);
   const oldPilotRouted = vm.runInContext('isTranslationFile("/data/berean-hebrew-pilot.js")', env.sandbox);
   const canonRouted = vm.runInContext('isTranslationFile("/data/canon.js")', env.sandbox);
   const translationsRouted = vm.runInContext('isTranslationFile("/data/web.js")', env.sandbox);
   const localeRouted = vm.runInContext('isTranslationFile("/data/locales/en.js")', env.sandbox);
-  check('per-book Hebrew preview chunk is routed through the data cache', genRouted === true);
-  check('Hebrew preview manifest is routed through the data cache', manifestRouted === true);
+  check('versioned/plain Hebrew preview chunks are routed through the data cache', genV2Routed === true && exoRouted === true && oldGenRouted === true);
+  check('versioned Hebrew preview manifest is routed through the data cache', manifestRouted === true);
+  check('legacy manifest path still matches the data-cache route', oldManifestRouted === true);
   check('legacy pilot path still matches the data-cache route', oldPilotRouted === true);
   check('canon.js is not treated as a translation data file', canonRouted === false);
   check('locales are not treated as translation data files', localeRouted === false);
   check('ordinary translation files are still data-cache routed', translationsRouted === true);
+  check('the versioned GEN chunk URL is distinct, so the old chunk cannot shadow the new variants',
+    './data/berean-hebrew/GEN-v2.js' !== './data/berean-hebrew/GEN.js');
 
   const shellList = (swSource.match(/const SHELL_FILES = \[([\s\S]*?)\];/) || [])[1] || '';
   check('Hebrew preview files are not precached into the shell', !/berean-hebrew/.test(shellList));
   check('data cache version is v3 (unchanged by the Hebrew preview)', /DATA_CACHE_VERSION\s*=\s*'v3'/.test(swSource));
-  check('shell cache version was bumped for the app change', /CACHE_VERSION\s*=\s*'v32'/.test(swSource));
+  check('shell cache version was bumped for the app change', /CACHE_VERSION\s*=\s*'v33'/.test(swSource));
 
   let failed = 0;
   for (const [name, ok, detail] of results) {

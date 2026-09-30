@@ -46,10 +46,11 @@ const USER_AGENT =
   'Maranatha-BereanHebrewPilot/0.1 (+offline Bible browser research; contact via repo)';
 export const REQUEST_DELAY_MS = 3000;
 
-// The covered passages. Genesis is imported in full (50 chapters); Daniel and
+// The covered passages. Genesis and Exodus are imported in full; Daniel and
 // Malachi keep only the accepted pilot chapters.
 export const COVERED_BOOKS = [
   { bookId: 'GEN', book: 'Genesis', slug: 'genesis', chapters: 50 },
+  { bookId: 'EXO', book: 'Exodus', slug: 'exodus', chapters: 40 },
   { bookId: 'DAN', book: 'Daniel', slug: 'daniel', chapters: [2] },
   { bookId: 'MAL', book: 'Malachi', slug: 'malachi', chapters: [4] },
 ];

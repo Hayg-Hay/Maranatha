@@ -2,9 +2,9 @@
 //
 // Offline validation for the Berean Hebrew (draft) preview: the committed
 // fixture against the local cached pages, the manifest and the verified variant
-// table. Coverage, totals, anomaly classes, variant wiring and deterministic
-// regeneration. Deep record-level fidelity is checked separately and
-// independently by berean-hebrew-compare.mjs.
+// table. Coverage, totals, anomaly classes, variant wiring, fingerprints and
+// deterministic regeneration. Deep record-level fidelity is checked separately
+// and independently by berean-hebrew-compare.mjs.
 //
 //   node build/tools/berean-hebrew-validate.mjs
 //
@@ -15,7 +15,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import { buildFixture, FIXTURE, PARSER_VERSION, partitionAnomalies, missingSourcePages, sourceCacheRecoveryMessage } from './berean-hebrew-extract.mjs';
+import { buildFixture, FIXTURE, PARSER_VERSION, partitionAnomalies, recordFingerprint, missingSourcePages, sourceCacheRecoveryMessage } from './berean-hebrew-extract.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(here, '..', '..');
@@ -41,6 +41,15 @@ const manifest = JSON.parse(fs.readFileSync(MANIFEST, 'utf8'));
 const variants = JSON.parse(fs.readFileSync(VARIANTS, 'utf8'));
 const canon = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'canon.js'), 'utf8').replace(/^window\.MARANATHA_CANON=/, '').replace(/;\s*$/, ''));
 
+function recordAt(bookId, chapter, verse, order) {
+  const p = fixture.passages.find((x) => x.bookId === bookId && x.chapter === chapter);
+  return p?.verseData.find((vd) => vd.verse === verse)?.records[order] || null;
+}
+function variantAt(bookId, chapter, verse, strongs) {
+  const hit = variants.variants.find((v) => v.bookId === bookId && v.chapter === chapter && v.verse === verse && (!strongs || v.strongs === strongs));
+  return hit ? recordAt(bookId, chapter, verse, hit.order)?.variant || null : null;
+}
+
 // --- source identity --------------------------------------------------------
 check('fixture names the Berean Interlinear Bible (BIB)', fixture.source.edition === 'Berean Interlinear Bible (BIB)', fixture.source.edition);
 check('every cached page carries the BIB footer', manifest.pages.every((p) => /Berean Interlinear Bible \(BIB\)/.test(p.editionFooter || '')));
@@ -58,23 +67,22 @@ for (const page of manifest.pages) {
 check('every cached page hash matches the manifest', hashBad === 0, `${hashBad} bad`);
 
 // --- coverage & totals ------------------------------------------------------
-check('coverage string names Genesis 1-50 plus the retained verses', fixture.coverage === 'Genesis 1\u201350; Daniel 2:4\u20135; Malachi 4:5\u20136');
+check('coverage string names Genesis 1-50 and Exodus 1-40 plus the retained verses',
+  fixture.coverage === 'Genesis 1\u201350; Exodus 1\u201340; Daniel 2:4\u20135; Malachi 4:5\u20136', fixture.coverage);
 const t = fixture.totals;
-check('3 books imported', t.books === 3, `${t.books}`);
-check('52 chapters imported (50 GEN + DAN 2 + MAL 4)', t.chapters === 52, `${t.chapters}`);
-check('1537 verses imported', t.verses === 1537, `${t.verses}`);
-check('20,670 records imported', t.records === 20670, `${t.records}`);
+check('4 books imported', t.books === 4, `${t.books}`);
+check('92 chapters imported (50 GEN + 40 EXO + DAN 2 + MAL 4)', t.chapters === 92, `${t.chapters}`);
+check('2750 verses imported', t.verses === 2750, `${t.verses}`);
+check('37,383 records imported', t.records === 37383, `${t.records}`);
 check('no structural extraction errors', t.structuralErrors === 0, `${t.structuralErrors}`);
 
-const genPassages = fixture.passages.filter((p) => p.bookId === 'GEN');
-check('Genesis has exactly 50 chapters', genPassages.length === 50, `${genPassages.length}`);
-const canonGen = canon.books.find((b) => b.id === 'GEN');
-let genCoverageBad = 0;
-for (const p of genPassages) {
-  const expected = canonGen.chapters[p.chapter - 1];
-  if (p.verseData.length !== expected) genCoverageBad++;
+for (const [bookId, chapters] of [['GEN', 50], ['EXO', 40]]) {
+  const passages = fixture.passages.filter((p) => p.bookId === bookId);
+  const canonBook = canon.books.find((b) => b.id === bookId);
+  let bad = 0;
+  for (const p of passages) if (p.verseData.length !== canonBook.chapters[p.chapter - 1]) bad++;
+  check(`${bookId} has all ${chapters} chapters matching canon`, passages.length === chapters && bad === 0, `${passages.length} chapters, ${bad} mismatch`);
 }
-check('every Genesis chapter matches canon verse count', genCoverageBad === 0, `${genCoverageBad} mismatch(es)`);
 
 for (const [bookId, chapter, verses] of [['DAN', 2, [4, 5]], ['MAL', 4, [5, 6]]]) {
   const p = fixture.passages.find((x) => x.bookId === bookId && x.chapter === chapter);
@@ -90,27 +98,32 @@ for (const a of sourceGaps) kindCounts[a.kind] = (kindCounts[a.kind] || 0) + 1;
 check('source-gap kinds are the expected ones', Object.keys(kindCounts).every((k) => ['missing-strongs', 'missing-gloss', 'missing-transliteration', 'missing-morphology'].includes(k)), JSON.stringify(kindCounts));
 
 const allRecords = fixture.passages.flatMap((p) => p.verseData).flatMap((v) => v.records);
-let glossErrors = 0;
+let fieldErrors = 0;
 for (const r of allRecords) {
-  if (r.glossStatus === 'missing' && r.gloss !== null) glossErrors++;
-  else if (r.glossStatus === 'untranslated' && r.gloss !== '-') glossErrors++;
-  else if (r.glossStatus === 'translated' && (r.gloss === null || r.gloss === '-')) glossErrors++;
-  if (r.strongsList.length === 0 && r.strongs !== null) glossErrors++;
-  if (r.strongsList.length === 1 && r.strongs !== r.strongsList[0]) glossErrors++;
-  if (r.strongsList.length > 1 && r.strongs !== null) glossErrors++;
+  if (r.glossStatus === 'missing' && r.gloss !== null) fieldErrors++;
+  else if (r.glossStatus === 'untranslated' && r.gloss !== '-') fieldErrors++;
+  else if (r.glossStatus === 'translated' && (r.gloss === null || r.gloss === '-')) fieldErrors++;
+  if (r.strongsList.length === 0 && r.strongs !== null) fieldErrors++;
+  if (r.strongsList.length === 1 && r.strongs !== r.strongsList[0]) fieldErrors++;
+  if (r.strongsList.length > 1 && r.strongs !== null) fieldErrors++;
 }
-check('missing blanks are explicit nulls, intentional blanks are "-"', glossErrors === 0, `${glossErrors}`);
+check('missing blanks are explicit nulls, intentional blanks are "-"', fieldErrors === 0, `${fieldErrors}`);
 
 // --- verified variants ------------------------------------------------------
-check('13 verified Ketiv/Qere variants', variants.variants.length === 13, `${variants.variants.length}`);
-check('5 uncertain Ketiv/Qere cases recorded for review', variants.uncertain.length === 5, `${variants.uncertain.length}`);
+check('30 verified Ketiv/Qere variants', variants.variants.length === 30, `${variants.variants.length}`);
+check('all covered Ketiv/Qere cases resolved (0 uncertain)', variants.uncertain.length === 0, `${variants.uncertain.length}`);
 let variantWired = 0;
+let fingerprintBad = 0;
+let fingerprintMissing = 0;
 for (const v of variants.variants) {
-  const p = fixture.passages.find((x) => x.bookId === v.bookId && x.chapter === v.chapter);
-  const rec = p?.verseData.find((vd) => vd.verse === v.verse)?.records[v.order];
+  const rec = recordAt(v.bookId, v.chapter, v.verse, v.order);
   if (rec && rec.variant && rec.variant.oshbKetiv === v.oshbKetiv && rec.variant.oshbQere === v.oshbQere) variantWired++;
+  if (!v.sourceFingerprint) fingerprintMissing++;
+  else if (rec && recordFingerprint(rec) !== v.sourceFingerprint) fingerprintBad++;
 }
-check('every verified variant is wired to exactly its record', variantWired === 13, `${variantWired}/13`);
+check('every verified variant is wired to exactly its record', variantWired === 30, `${variantWired}/30`);
+check('every verified variant carries a source fingerprint', fingerprintMissing === 0, `${fingerprintMissing} missing`);
+check('every attached fingerprint matches its record', fingerprintBad === 0, `${fingerprintBad} stale`);
 const variantKeys = new Set(variants.variants.map((v) => `${v.bookId}:${v.chapter}:${v.verse}:${v.order}`));
 let attached = 0;
 let attachedBad = 0;
@@ -123,25 +136,26 @@ for (const p of fixture.passages) {
     }
   }
 }
-check('only the 13 verified variants are attached to records', attached === 13 && attachedBad === 0, `attached ${attached}, unrecognised ${attachedBad}`);
-check('variant correspondence is form-verified (displayed surface matches the OSHB Ketiv skeleton)',
+check('only the 30 verified variants are attached to records', attached === 30 && attachedBad === 0, `attached ${attached}, unrecognised ${attachedBad}`);
+check('variant letters match the displayed surface skeleton',
   variants.variants.every((v) => skeleton(v.observedPageSurface) === skeleton(v.oshbKetiv)), 'skeleton mismatch');
 
-// --- named anchors ----------------------------------------------------------
-const gen24 = fixture.passages.find((p) => p.bookId === 'GEN' && p.chapter === 2).verseData.find((v) => v.verse === 4).records;
-const yhwh = gen24.find((r) => r.strongsList.includes('3068'));
-check('divine-name convention preserved (YHWH transliteration + gloss)', yhwh && yhwh.transliteration === 'Yah·weh' && yhwh.gloss === 'YHWH', JSON.stringify(yhwh));
-const gen817 = variantByHelper('GEN', 8, 17, '3318');
-check('Genesis 8:17 variant present with the exact OSHB Qere', gen817 && gen817.oshbQere === 'הַיְצֵ֣א', JSON.stringify(gen817));
-
-function variantByHelper(bookId, chapter, verse, strongs) {
-  const list = variants.variants.filter((v) => v.bookId === bookId && v.chapter === chapter && v.verse === verse);
-  const hit = list.find((v) => v.strongs === strongs);
-  if (!hit) return null;
-  const p = fixture.passages.find((x) => x.bookId === bookId && x.chapter === chapter);
-  const rec = p?.verseData.find((vd) => vd.verse === verse)?.records[hit.order];
-  return rec && rec.variant ? rec.variant : null;
+// --- resolved Genesis cases (previously uncertain) --------------------------
+for (const [chapter, verse, strongs] of [[27, 3, '6718'], [27, 29, '7812'], [30, 11, '935'], [36, 5, '3266'], [36, 14, '3266']]) {
+  const v = variantAt('GEN', chapter, verse, strongs);
+  check(`Genesis ${chapter}:${verse} Ketiv/Qere resolved and attached`, !!v && v.type === 'ketiv-qere', JSON.stringify(v && v.sourceDisplays));
 }
+
+// --- named anchors / divine name -------------------------------------------
+const gen24 = fixture.passages.find((p) => p.bookId === 'GEN' && p.chapter === 2).verseData.find((v) => v.verse === 4).records;
+const yhwhGen = gen24.find((r) => r.strongsList.includes('3068'));
+check('Genesis divine-name convention preserved (Yah·weh / YHWH)', yhwhGen && yhwhGen.transliteration === 'Yah·weh' && yhwhGen.gloss === 'YHWH', JSON.stringify(yhwhGen));
+const exo315 = fixture.passages.find((p) => p.bookId === 'EXO' && p.chapter === 3).verseData.find((v) => v.verse === 15).records;
+const yhwhExo = exo315.find((r) => r.strongsList.includes('3068'));
+check('Exodus divine-name convention preserved (Yah·weh / YHWH)', yhwhExo && yhwhExo.transliteration === 'Yah·weh' && yhwhExo.gloss === 'YHWH', JSON.stringify(yhwhExo));
+check('Genesis 8:17 variant present with the exact OSHB Qere', variantAt('GEN', 8, 17, '3318')?.oshbQere === 'הַיְצֵ֣א');
+const exo225 = variantAt('EXO', 22, 5, '1165');
+check('Exodus 22:5 variant present (OSHB 22:4 mapped to the English verse)', exo225 && exo225.oshbQere === 'בְּעִיר֔/וֹ' && exo225.oshbRef === 'Exod 22:4', JSON.stringify(exo225 && { q: exo225.oshbQere, ref: exo225.oshbRef }));
 
 // --- report -----------------------------------------------------------------
 let failed = 0;
@@ -149,7 +163,7 @@ for (const [name, ok, detail] of results) {
   if (ok) console.log(`PASS  ${name}`);
   else { failed++; console.log(`FAIL  ${name}${detail ? ` (${detail})` : ''}`); }
 }
-console.log(`\nTotals: ${t.chapters} chapters, ${t.verses} verses, ${t.records} records; structural ${t.structuralErrors}; source-gap ${t.sourceGapDiagnostics}; info ${t.infoDiagnostics}.`);
-console.log(`Genesis ${genPassages.length} chapters; verified variants ${variants.variants.length}; uncertain ${variants.uncertain.length}.`);
+console.log(`\nTotals: ${t.books} books, ${t.chapters} chapters, ${t.verses} verses, ${t.records} records; structural ${t.structuralErrors}; source-gap ${t.sourceGapDiagnostics}; info ${t.infoDiagnostics}.`);
+console.log(`Verified variants ${variants.variants.length}; uncertain ${variants.uncertain.length}.`);
 if (failed) { console.error(`\n${failed} check(s) failed.`); process.exit(1); }
 console.log(`\nAll ${results.length} checks passed.`);

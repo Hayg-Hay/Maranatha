@@ -27,7 +27,18 @@ const OUT_DIR = path.join(ROOT, 'data', 'berean-hebrew');
 const BUILD_META = path.join(ROOT, 'build', 'sources', 'berean-hebrew', 'runtime-build.json');
 
 const GLOBAL_PREFIX = 'MARANATHA_BEREAN_HEBREW_';
-const BOOK_ORDER = ['GEN', 'DAN', 'MAL'];
+const BOOK_ORDER = ['GEN', 'EXO', 'DAN', 'MAL'];
+// The manifest filename is VERSIONED so a change in coverage cannot be hidden by
+// a cache-first copy from a previous milestone. Bump this suffix whenever the
+// manifest content changes (and update app.js `manifestSrc`).
+const MANIFEST_FILE = 'data/berean-hebrew/manifest-v2.js';
+// A book whose chunk content changes gets a versioned filename so an old
+// cache-first copy cannot hide the change. The mapping is published in the
+// manifest (`chunkFiles`) and used by the app to build the script URL.
+const CHUNK_VERSION = { GEN: 'v2' };
+function chunkFile(bookId) {
+  return CHUNK_VERSION[bookId] ? `${bookId}-${CHUNK_VERSION[bookId]}.js` : `${bookId}.js`;
+}
 const sha256 = (text) => crypto.createHash('sha256').update(text, 'utf8').digest('hex');
 const norm = (text) => text.replace(/\r\n/g, '\n');
 
@@ -54,7 +65,24 @@ function toRuntimeToken(rec) {
     glossStatus: rec.glossStatus,
   };
   if (rec.language) token.language = rec.language;
-  if (rec.variant) token.variant = rec.variant;
+  if (rec.variant) {
+    // Runtime variant shape is kept identical to the Genesis milestone so
+    // unchanged books' chunks stay byte-identical (no needless cache churn).
+    // Audit-only fields (oshbRef, evidence, sourceFingerprint) stay in the
+    // fixture and variants.json.
+    const v = rec.variant;
+    token.variant = {
+      type: v.type,
+      sourceDisplays: v.sourceDisplays,
+      sourceMarksVariant: v.sourceMarksVariant,
+      ref: v.ref,
+      provenance: v.provenance,
+      observedPageSurface: v.observedPageSurface,
+      oshbKetiv: v.oshbKetiv,
+      oshbQere: v.oshbQere,
+      note: v.note,
+    };
+  }
   return token;
 }
 
@@ -114,6 +142,7 @@ export function buildRuntime() {
     generatedFrom: 'build/sources/berean-hebrew/hebrew.fixture.json',
     recordCount: totalRecords,
     books: BOOK_ORDER.filter((id) => books[id]),
+    chunkFiles: Object.fromEntries(BOOK_ORDER.filter((id) => books[id]).map((id) => [id, chunkFile(id)])),
     booksRecordCount,
     booksChapterCount,
   };
@@ -129,9 +158,9 @@ function manifestSource(manifest) {
 
 export function assemble() {
   const { manifest, books } = buildRuntime();
-  const files = { 'data/berean-hebrew/manifest.js': manifestSource(manifest) };
+  const files = { [MANIFEST_FILE]: manifestSource(manifest) };
   for (const bookId of BOOK_ORDER) {
-    if (books[bookId]) files[`data/berean-hebrew/${bookId}.js`] = chunkSource(bookId, books[bookId]);
+    if (books[bookId]) files[`data/berean-hebrew/${chunkFile(bookId)}`] = chunkSource(bookId, books[bookId]);
   }
   return { files, manifest };
 }
@@ -173,7 +202,7 @@ function main() {
   for (const [rel, text] of Object.entries(files)) fs.writeFileSync(path.join(ROOT, rel), text);
   fs.writeFileSync(BUILD_META, metaText);
   const totalBytes = Object.entries(files)
-    .filter(([rel]) => rel !== 'data/berean-hebrew/manifest.js')
+    .filter(([rel]) => rel !== MANIFEST_FILE)
     .reduce((n, [rel]) => n + Buffer.byteLength(files[rel]), 0);
   console.log(`Wrote manifest + ${manifest.books.length} book chunks (${(totalBytes / 1024 / 1024).toFixed(2)} MB).`);
   console.log(`  records ${manifest.recordCount} \u00b7 coverage ${manifest.coverage}`);

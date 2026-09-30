@@ -105,15 +105,17 @@ function main() {
   const sampleMismatches = [];
   const coverageIssues = [];
 
-  // Coverage vs canon, per covered book/chapter.
+  // Coverage vs canon, per covered book/chapter. Full-book imports (Genesis,
+  // Exodus) must match canon exactly; the retained partial books are not
+  // checked here.
+  const FULL_BOOKS = new Set(['GEN', 'EXO']);
   const byBookChapter = new Map();
   for (const p of fixture.passages) byBookChapter.set(`${p.bookId}:${p.chapter}`, p);
   for (const [key, passage] of byBookChapter) {
     const canonBook = canon.books.find((b) => b.id === passage.bookId);
     const expected = canonBook.chapters[passage.chapter - 1];
     const present = passage.verseData.map((v) => v.verse);
-    // For the full-chapter Genesis import, coverage should match canon exactly.
-    if (passage.passage.startsWith('GEN ')) {
+    if (FULL_BOOKS.has(passage.bookId)) {
       const missing = [];
       for (let v = 1; v <= expected; v++) if (!present.includes(v)) missing.push(v);
       if (present.length !== expected || missing.length) coverageIssues.push({ passage: passage.passage, expected, present: present.length, missing });
@@ -154,7 +156,7 @@ function main() {
   }
 
   check('independent reader agrees with the fixture on every covered record', mismatches === 0, `${mismatches} mismatch(es)`);
-  check('Genesis chapter/verse coverage matches canon', coverageIssues.length === 0, JSON.stringify(coverageIssues.slice(0, 5)));
+  check('full-book (Genesis/Exodus) chapter/verse coverage matches canon', coverageIssues.length === 0, JSON.stringify(coverageIssues.slice(0, 5)));
   check('no structural extraction errors in the fixture', fixture.totals.structuralErrors === 0, `${fixture.totals.structuralErrors}`);
 
   // Anomaly summary (from the fixture) + uncertain variants.
