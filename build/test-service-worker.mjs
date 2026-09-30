@@ -7,7 +7,7 @@
 //   node build/test-service-worker.mjs
 //
 // It asserts:
-//   - install precaches the NEW shell (maranatha-shell-v34);
+//   - install precaches the NEW shell (maranatha-shell-v35);
 //   - activate keeps the existing data cache (maranatha-data-v3) and every file
 //     already stored in it (previously downloaded translations / Greek books);
 //   - activate deletes the OLD shell cache (maranatha-shell-v29);
@@ -85,10 +85,13 @@ async function main() {
       ['./data/berean-hebrew-pilot.js', { url: './data/berean-hebrew-pilot.js', body: 'OLD-HEBREW-PILOT' }],
       ['./data/berean-hebrew/manifest.js', { url: './data/berean-hebrew/manifest.js', body: 'OLD-GENESIS-MANIFEST' }],
       ['./data/berean-hebrew/GEN.js', { url: './data/berean-hebrew/GEN.js', body: 'OLD-GEN' }],
-      // The Exodus-milestone files a returning user would already have cached.
+      // The Exodus-milestone files.
       ['./data/berean-hebrew/manifest-v2.js', { url: './data/berean-hebrew/manifest-v2.js', body: 'OLD-EXODUS-MANIFEST' }],
       ['./data/berean-hebrew/GEN-v2.js', { url: './data/berean-hebrew/GEN-v2.js', body: 'GEN-V2' }],
       ['./data/berean-hebrew/EXO.js', { url: './data/berean-hebrew/EXO.js', body: 'EXO' }],
+      // The Leviticus-milestone files.
+      ['./data/berean-hebrew/manifest-v3.js', { url: './data/berean-hebrew/manifest-v3.js', body: 'OLD-LEVITICUS-MANIFEST' }],
+      ['./data/berean-hebrew/LEV.js', { url: './data/berean-hebrew/LEV.js', body: 'LEV' }],
     ],
     'maranatha-shell-v29': [
       ['./index.html', { url: './index.html', body: 'OLD-SHELL' }],
@@ -99,8 +102,8 @@ async function main() {
   await fire(env.listeners, 'install');
   await fire(env.listeners, 'activate');
 
-  check('install creates the new shell cache (maranatha-shell-v34)', caches.store.has('maranatha-shell-v34'));
-  check('new shell cache is populated', (caches.store.get('maranatha-shell-v34') || new Map()).size > 0);
+  check('install creates the new shell cache (maranatha-shell-v35)', caches.store.has('maranatha-shell-v35'));
+  check('new shell cache is populated', (caches.store.get('maranatha-shell-v35') || new Map()).size > 0);
   check('activation preserves the existing data cache (maranatha-data-v3)', caches.store.has('maranatha-data-v3'));
   check('activation deletes the old shell cache (maranatha-shell-v29)', !caches.store.has('maranatha-shell-v29'));
 
@@ -108,36 +111,37 @@ async function main() {
   check('downloaded translation file survives the shell update', data && data.get('./data/web.js')?.body === 'WEB');
   check('downloaded Berean Greek book survives the shell update', data && data.get('./data/berean/JHN.js')?.body === 'GREEK-JOHN');
   check('the stale old pilot file is retained, not wiped', data && data.get('./data/berean-hebrew-pilot.js')?.body === 'OLD-HEBREW-PILOT');
-  check('the Exodus-milestone manifest and chunks are retained, not wiped',
-    data && data.get('./data/berean-hebrew/manifest-v2.js')?.body === 'OLD-EXODUS-MANIFEST' && data.get('./data/berean-hebrew/GEN-v2.js')?.body === 'GEN-V2' && data.get('./data/berean-hebrew/EXO.js')?.body === 'EXO');
-  check('every previously stored data file is retained (no wipes)', data && data.size === 9, data && String(data.size));
+  check('the Leviticus-milestone manifest and chunk are retained, not wiped',
+    data && data.get('./data/berean-hebrew/manifest-v3.js')?.body === 'OLD-LEVITICUS-MANIFEST' && data.get('./data/berean-hebrew/LEV.js')?.body === 'LEV');
+  check('every previously stored data file is retained (no wipes)', data && data.size === 11, data && String(data.size));
   check('the versioned manifest URL is distinct, so an old manifest cannot shadow new coverage',
-    './data/berean-hebrew/manifest-v3.js' !== './data/berean-hebrew/manifest-v2.js');
+    './data/berean-hebrew/manifest-v4.js' !== './data/berean-hebrew/manifest-v3.js');
 
   // The preview's per-book files must use the existing data-cache route.
-  const genV2Routed = vm.runInContext('isTranslationFile("/data/berean-hebrew/GEN-v2.js")', env.sandbox);
-  const exoRouted = vm.runInContext('isTranslationFile("/data/berean-hebrew/EXO.js")', env.sandbox);
+  const genV3Routed = vm.runInContext('isTranslationFile("/data/berean-hebrew/GEN-v3.js")', env.sandbox);
+  const exoV2Routed = vm.runInContext('isTranslationFile("/data/berean-hebrew/EXO-v2.js")', env.sandbox);
   const levRouted = vm.runInContext('isTranslationFile("/data/berean-hebrew/LEV.js")', env.sandbox);
-  const manifestRouted = vm.runInContext('isTranslationFile("/data/berean-hebrew/manifest-v3.js")', env.sandbox);
-  const oldManifestRouted = vm.runInContext('isTranslationFile("/data/berean-hebrew/manifest-v2.js")', env.sandbox);
+  const numRouted = vm.runInContext('isTranslationFile("/data/berean-hebrew/NUM.js")', env.sandbox);
+  const manifestRouted = vm.runInContext('isTranslationFile("/data/berean-hebrew/manifest-v4.js")', env.sandbox);
+  const oldManifestRouted = vm.runInContext('isTranslationFile("/data/berean-hebrew/manifest-v3.js")', env.sandbox);
   const oldPilotRouted = vm.runInContext('isTranslationFile("/data/berean-hebrew-pilot.js")', env.sandbox);
   const canonRouted = vm.runInContext('isTranslationFile("/data/canon.js")', env.sandbox);
   const translationsRouted = vm.runInContext('isTranslationFile("/data/web.js")', env.sandbox);
   const localeRouted = vm.runInContext('isTranslationFile("/data/locales/en.js")', env.sandbox);
-  check('versioned/plain Hebrew preview chunks are routed through the data cache', genV2Routed === true && exoRouted === true && levRouted === true);
+  check('versioned/plain Hebrew preview chunks are routed through the data cache', genV3Routed === true && exoV2Routed === true && levRouted === true && numRouted === true);
   check('versioned Hebrew preview manifest is routed through the data cache', manifestRouted === true);
   check('legacy manifest path still matches the data-cache route', oldManifestRouted === true);
   check('legacy pilot path still matches the data-cache route', oldPilotRouted === true);
   check('canon.js is not treated as a translation data file', canonRouted === false);
   check('locales are not treated as translation data files', localeRouted === false);
   check('ordinary translation files are still data-cache routed', translationsRouted === true);
-  check('the versioned GEN chunk URL is distinct, so the old chunk cannot shadow the new variants',
-    './data/berean-hebrew/GEN-v2.js' !== './data/berean-hebrew/GEN.js');
+  check('the changed GEN/EXO chunks are re-versioned so old copies cannot shadow the new variants',
+    './data/berean-hebrew/GEN-v3.js' !== './data/berean-hebrew/GEN-v2.js' && './data/berean-hebrew/EXO-v2.js' !== './data/berean-hebrew/EXO.js');
 
   const shellList = (swSource.match(/const SHELL_FILES = \[([\s\S]*?)\];/) || [])[1] || '';
   check('Hebrew preview files are not precached into the shell', !/berean-hebrew/.test(shellList));
   check('data cache version is v3 (unchanged by the Hebrew preview)', /DATA_CACHE_VERSION\s*=\s*'v3'/.test(swSource));
-  check('shell cache version was bumped for the app change', /CACHE_VERSION\s*=\s*'v34'/.test(swSource));
+  check('shell cache version was bumped for the app change', /CACHE_VERSION\s*=\s*'v35'/.test(swSource));
 
   let failed = 0;
   for (const [name, ok, detail] of results) {

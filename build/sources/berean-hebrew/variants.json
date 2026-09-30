@@ -289,28 +289,6 @@
       "note": "Bible Hub displays the written (Ketiv) form; the OSHB Qere differs. Berean’s own surface/alignment is unchanged."
     },
     {
-      "bookId": "EXO",
-      "chapter": 4,
-      "verse": 2,
-      "order": 3,
-      "oshbRef": "Exod 4:2",
-      "strongs": "4100",
-      "type": "ketiv-qere",
-      "sourceDisplays": "ketiv",
-      "sourceMarksVariant": false,
-      "provenance": "OSHB comparison (not supplied by Berean)",
-      "observedPageSurface": "מַזֶּה",
-      "oshbKetiv": "מ/זה",
-      "oshbQere": "מַה",
-      "evidence": {
-        "displayBy": "skeleton",
-        "strongs": "other-reading",
-        "vowels": "unresolved"
-      },
-      "sourceFingerprint": "65a090c8ba112337a0c613324b58729799cc49afec8c961d376e19a94d498cd6",
-      "note": "Bible Hub displays the written (Ketiv) form; the OSHB Qere differs. Berean’s own surface/alignment is unchanged."
-    },
-    {
       "bookId": "GEN",
       "chapter": 13,
       "verse": 3,
@@ -462,28 +440,6 @@
         "vowels": "unresolved"
       },
       "sourceFingerprint": "3cab8f200edc4d05e7173803712bb7c013b5e4cd1a66eb6dc0df5bb8b6c186c6",
-      "note": "Bible Hub displays the written (Ketiv) form; the OSHB Qere differs. Berean’s own surface/alignment is unchanged."
-    },
-    {
-      "bookId": "GEN",
-      "chapter": 30,
-      "verse": 11,
-      "order": 2,
-      "oshbRef": "Gen 30:11",
-      "strongs": "935",
-      "type": "ketiv-qere",
-      "sourceDisplays": "ketiv",
-      "sourceMarksVariant": false,
-      "provenance": "OSHB comparison (not supplied by Berean)",
-      "observedPageSurface": "בְּגָד",
-      "oshbKetiv": "ב/גד",
-      "oshbQere": "בָּ֣א",
-      "evidence": {
-        "displayBy": "skeleton",
-        "strongs": "other-reading",
-        "vowels": "unresolved"
-      },
-      "sourceFingerprint": "c7f38ad275b3ca59ac7fa70d27bf8d9c87c3afbf7a33b2f959504f6a23b9272b",
       "note": "Bible Hub displays the written (Ketiv) form; the OSHB Qere differs. Berean’s own surface/alignment is unchanged."
     },
     {
@@ -771,7 +727,224 @@
       },
       "sourceFingerprint": "b504061a6e6dd91ade50b4aff9a8a2ab0b64811b40677bb5a8c69653f6aec89d",
       "note": "Bible Hub displays the written (Ketiv) form; the OSHB Qere differs. Berean’s own surface/alignment is unchanged."
+    },
+    {
+      "bookId": "NUM",
+      "chapter": 1,
+      "verse": 16,
+      "order": 1,
+      "oshbRef": "Num 1:16",
+      "strongs": "7148",
+      "type": "ketiv-qere",
+      "sourceDisplays": "ketiv",
+      "sourceMarksVariant": false,
+      "provenance": "OSHB comparison (not supplied by Berean)",
+      "observedPageSurface": "קְרִיאֵי",
+      "oshbKetiv": "קריאי",
+      "oshbQere": "קְרוּאֵ֣י",
+      "evidence": {
+        "displayBy": "skeleton",
+        "strongs": "display",
+        "vowels": "unresolved"
+      },
+      "sourceFingerprint": "886d4daa5be311ad1883c4e767e1b3d3ce0f8de31d2624587080b41ee4158fb9",
+      "note": "Bible Hub displays the written (Ketiv) form; the OSHB Qere differs. Berean’s own surface/alignment is unchanged."
+    },
+    {
+      "bookId": "NUM",
+      "chapter": 12,
+      "verse": 3,
+      "order": 2,
+      "oshbRef": "Num 12:3",
+      "strongs": "6035",
+      "type": "ketiv-qere",
+      "sourceDisplays": "ketiv",
+      "sourceMarksVariant": false,
+      "provenance": "OSHB comparison (not supplied by Berean)",
+      "observedPageSurface": "עָנָו",
+      "oshbKetiv": "ענו",
+      "oshbQere": "עָנָ֣יו",
+      "evidence": {
+        "displayBy": "skeleton",
+        "strongs": "display",
+        "vowels": "unresolved"
+      },
+      "sourceFingerprint": "35636fc8c4d2f0703bf70d6d8dbc4c6cf9a0d02df308da7972b98b1a4b854c7b",
+      "note": "Bible Hub displays the written (Ketiv) form; the OSHB Qere differs. Berean’s own surface/alignment is unchanged."
+    },
+    {
+      "bookId": "NUM",
+      "chapter": 14,
+      "verse": 36,
+      "order": 8,
+      "oshbRef": "Num 14:36",
+      "strongs": "3885",
+      "type": "ketiv-qere",
+      "sourceDisplays": "ketiv",
+      "sourceMarksVariant": false,
+      "provenance": "OSHB comparison (not supplied by Berean)",
+      "observedPageSurface": "וַיִּלּוֹנוּ",
+      "oshbKetiv": "ו/ילונו",
+      "oshbQere": "וַ/יַּלִּ֤ינוּ",
+      "evidence": {
+        "displayBy": "skeleton",
+        "strongs": "display",
+        "vowels": "unresolved"
+      },
+      "sourceFingerprint": "3dd2c1c1fb125dd21e165da722b10304a93c1a3efe120ccc03628ca05dc9546a",
+      "note": "Bible Hub displays the written (Ketiv) form; the OSHB Qere differs. Berean’s own surface/alignment is unchanged."
+    },
+    {
+      "bookId": "NUM",
+      "chapter": 16,
+      "verse": 11,
+      "order": 11,
+      "oshbRef": "Num 16:11",
+      "strongs": "3885",
+      "type": "ketiv-qere",
+      "sourceDisplays": "ketiv",
+      "sourceMarksVariant": false,
+      "provenance": "OSHB comparison (not supplied by Berean)",
+      "observedPageSurface": "תִלּוֹנוּ",
+      "oshbKetiv": "תלונו",
+      "oshbQere": "תַלִּ֖ינוּ",
+      "evidence": {
+        "displayBy": "skeleton",
+        "strongs": "display",
+        "vowels": "unresolved"
+      },
+      "sourceFingerprint": "28fab63c9e0cb6c5f43d2c64ca3c415d93711901b5e17cac27e088f1688b6b4b",
+      "note": "Bible Hub displays the written (Ketiv) form; the OSHB Qere differs. Berean’s own surface/alignment is unchanged."
+    },
+    {
+      "bookId": "NUM",
+      "chapter": 21,
+      "verse": 32,
+      "order": 7,
+      "oshbRef": "Num 21:32",
+      "strongs": "3423",
+      "type": "ketiv-qere",
+      "sourceDisplays": "ketiv",
+      "sourceMarksVariant": false,
+      "provenance": "OSHB comparison (not supplied by Berean)",
+      "observedPageSurface": "וַיִּירֶשׁ",
+      "oshbKetiv": "ו/יירש",
+      "oshbQere": "וַ/יּ֖וֹרֶשׁ",
+      "evidence": {
+        "displayBy": "skeleton",
+        "strongs": "display",
+        "vowels": "unresolved"
+      },
+      "sourceFingerprint": "68ed2d5827127b9c5fdf5d303b04b89f85aae1a6c965a3a6b77e7a2e110d1048",
+      "note": "Bible Hub displays the written (Ketiv) form; the OSHB Qere differs. Berean’s own surface/alignment is unchanged."
+    },
+    {
+      "bookId": "NUM",
+      "chapter": 23,
+      "verse": 13,
+      "order": 3,
+      "oshbRef": "Num 23:13",
+      "strongs": "1980",
+      "type": "ketiv-qere",
+      "sourceDisplays": "ketiv",
+      "sourceMarksVariant": false,
+      "provenance": "OSHB comparison (not supplied by Berean)",
+      "observedPageSurface": "לְךָ",
+      "oshbKetiv": "לך",
+      "oshbQere": "לְכָ/ה",
+      "evidence": {
+        "displayBy": "skeleton",
+        "strongs": "other-reading",
+        "vowels": "unresolved"
+      },
+      "sourceFingerprint": "f370795f9beb6e3635e75388e785b0d1624e13c32a37c8be9f7a45671369b583",
+      "note": "Bible Hub displays the written (Ketiv) form; the OSHB Qere differs. Berean’s own surface/alignment is unchanged."
+    },
+    {
+      "bookId": "NUM",
+      "chapter": 26,
+      "verse": 9,
+      "order": 8,
+      "oshbRef": "Num 26:9",
+      "strongs": "7148",
+      "type": "ketiv-qere",
+      "sourceDisplays": "ketiv",
+      "sourceMarksVariant": false,
+      "provenance": "OSHB comparison (not supplied by Berean)",
+      "observedPageSurface": "קְרוּאֵי",
+      "oshbKetiv": "קרואי",
+      "oshbQere": "קְרִיאֵ֣י",
+      "evidence": {
+        "displayBy": "skeleton",
+        "strongs": "other-reading",
+        "vowels": "unresolved"
+      },
+      "sourceFingerprint": "d6028297ca31d2aadebb05101d3d19dbe14a2f7eccd0aad53e953292f74768cd",
+      "note": "Bible Hub displays the written (Ketiv) form; the OSHB Qere differs. Berean’s own surface/alignment is unchanged."
+    },
+    {
+      "bookId": "NUM",
+      "chapter": 32,
+      "verse": 7,
+      "order": 1,
+      "oshbRef": "Num 32:7",
+      "strongs": "5106",
+      "type": "ketiv-qere",
+      "sourceDisplays": "ketiv",
+      "sourceMarksVariant": false,
+      "provenance": "OSHB comparison (not supplied by Berean)",
+      "observedPageSurface": "תְנוּאוּן",
+      "oshbKetiv": "תנואו/ן",
+      "oshbQere": "תְנִיא֔וּ/ן",
+      "evidence": {
+        "displayBy": "skeleton",
+        "strongs": "display",
+        "vowels": "unresolved"
+      },
+      "sourceFingerprint": "15d5335a4701b6b1cce7690caf65e76b11a433dc1c397ebf8c3d202d48b9fb4e",
+      "note": "Bible Hub displays the written (Ketiv) form; the OSHB Qere differs. Berean’s own surface/alignment is unchanged."
+    },
+    {
+      "bookId": "NUM",
+      "chapter": 34,
+      "verse": 4,
+      "order": 8,
+      "oshbRef": "Num 34:4",
+      "strongs": "1961",
+      "type": "ketiv-qere",
+      "sourceDisplays": "ketiv",
+      "sourceMarksVariant": false,
+      "provenance": "OSHB comparison (not supplied by Berean)",
+      "observedPageSurface": "וְהָיָה",
+      "oshbKetiv": "ו/היה",
+      "oshbQere": "וְ/הָיוּ֙",
+      "evidence": {
+        "displayBy": "skeleton",
+        "strongs": "display",
+        "vowels": "unresolved"
+      },
+      "sourceFingerprint": "a871d6a29be0f037b3dc87b8ffc2fbd54399164aa3b7a4048aac3a282a88b9e6",
+      "note": "Bible Hub displays the written (Ketiv) form; the OSHB Qere differs. Berean’s own surface/alignment is unchanged."
     }
   ],
-  "uncertain": []
+  "uncertain": [
+    {
+      "bookId": "EXO",
+      "chapter": 4,
+      "verse": 2,
+      "oshbRef": "Exod 4:2",
+      "oshbKetiv": "מ/זה",
+      "oshbQere": "מַה זֶּ֣ה",
+      "reason": "multiword Qere (2 words: מַה זֶּ֣ה); not represented in the one-record model"
+    },
+    {
+      "bookId": "GEN",
+      "chapter": 30,
+      "verse": 11,
+      "oshbRef": "Gen 30:11",
+      "oshbKetiv": "ב/גד",
+      "oshbQere": "בָּ֣א גָ֑ד",
+      "reason": "multiword Qere (2 words: בָּ֣א גָ֑ד); not represented in the one-record model"
+    }
+  ]
 }

@@ -61,12 +61,13 @@ const ANNOTATIONS = path.join(SRC_DIR, 'annotations.json');
 const VARIANTS = path.join(SRC_DIR, 'variants.json');
 export const FIXTURE = path.join(SRC_DIR, 'hebrew.fixture.json');
 
-// Covered passages: all of Genesis, Exodus and Leviticus, plus the retained
-// Daniel 2:4-5 and Malachi 4:5-6 pilot verses.
+// Covered passages: all of Genesis, Exodus, Leviticus and Numbers, plus the
+// retained Daniel 2:4-5 and Malachi 4:5-6 pilot verses.
 export const COVERAGE = [
   { bookId: 'GEN', book: 'Genesis', full: true },
   { bookId: 'EXO', book: 'Exodus', full: true },
   { bookId: 'LEV', book: 'Leviticus', full: true },
+  { bookId: 'NUM', book: 'Numbers', full: true },
   { bookId: 'DAN', book: 'Daniel', versesByChapter: { 2: [4, 5] } },
   { bookId: 'MAL', book: 'Malachi', versesByChapter: { 4: [5, 6] } },
 ];
@@ -450,7 +451,7 @@ export function buildFixture({ manifestPath = MANIFEST, annotationsPath = ANNOTA
       termsUrl: 'https://berean.bible/terms.htm',
       sourceManifest: 'build/sources/berean-hebrew/source-manifest.json',
     },
-    coverage: 'Genesis 1\u201350; Exodus 1\u201340; Leviticus 1\u201327; Daniel 2:4\u20135; Malachi 4:5\u20136',
+    coverage: 'Genesis 1\u201350; Exodus 1\u201340; Leviticus 1\u201327; Numbers 1\u201336; Daniel 2:4\u20135; Malachi 4:5\u20136',
     totals: {
       books: [...new Set(passages.map((p) => p.bookId))].length,
       chapters: passages.length,

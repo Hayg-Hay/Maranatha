@@ -388,6 +388,15 @@ await test('variant: ambiguous repeated words remain unresolved', () => {
   assert(r.uncertain && /ambiguous/.test(r.uncertain), `expected ambiguity, got ${JSON.stringify(r)}`);
 });
 
+await test('variant: a multiword Qere is left unresolved, not forced into one record', () => {
+  // OSHB Gen 30:11 Ketiv "בגד" vs a TWO-word Qere "בא גד"; the one-record model
+  // cannot represent it, so it must stay uncertain.
+  const pair = kqPair({ ketiv: 'בגד', qere: 'בא גד', kL: 'b/1409', qL: '935', before: 'לאה' });
+  pair.qereWords = 2;
+  const r = classifyVariant(pair, [kqRec(0, 'לאה'), kqRec(1, 'בגד', ['935'])]);
+  assert(r.uncertain && /multiword Qere/.test(r.uncertain), `expected multiword uncertainty, got ${JSON.stringify(r)}`);
+});
+
 await test('variant: OSHB-to-English verse mapping from the KJV note', () => {
   eq(sourceVerseFor('<note>KJV:Exod.22.5</note>', 22, 4), { chapter: 22, verse: 5 }, 'mapped OSHB 22:4 -> English 22:5');
   eq(sourceVerseFor('<verse>no mapping</verse>', 16, 2), { chapter: 16, verse: 2 }, 'unmapped verse unchanged');

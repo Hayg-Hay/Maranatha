@@ -5,9 +5,10 @@
 // and compares the result against the accepted fixture record by record:
 // references, record counts/order, surface, transliteration, gloss, morphology
 // and the COMPLETE Strong's list. It also checks chapter/verse coverage against
-// Maranatha's canon for the full books (Genesis, Exodus, Leviticus) and prints
-// the anomaly summary. Each page's jsdom window is closed after its plain
-// records are extracted (try/finally), so pages do not accumulate in memory.
+// Maranatha's canon for the full books (Genesis, Exodus, Leviticus, Numbers) and
+// prints the anomaly summary. One jsdom window is reused (each page parsed with
+// its DOMParser, returning only plain data) and closed in a finally block, so
+// memory stays flat instead of leaking a window per page.
 //
 // It deliberately does NOT import the extractor's parser.
 //
@@ -48,43 +49,53 @@ function normText(raw) {
 }
 
 // Independent DOM reader: returns { verses: { n: [ {order,surface,transliteration,gloss,morphology,strongsList} ] } }.
-// Only plain data is returned; the jsdom window is always closed (even if
-// extraction throws) so pages do not accumulate in memory.
-function readPageDom(html) {
-  const dom = new JSDOM(html);
-  try {
-    const { document } = dom.window;
-    const tables = [...document.querySelectorAll('table.tablefloatheb')];
-    const verses = {};
-    let currentVerse = 0;
-    for (const table of tables) {
-      // Verse reference: first ref span in this word block.
-      const refSpan = table.querySelector('span.reftop, span.reftrans, span.refheb, span.refbot, span.reftop2');
-      if (refSpan) {
-        const n = Number(refSpan.textContent.replace(/[^0-9]/g, ''));
-        if (n > 0) currentVerse = n;
-      }
-      const hebSpans = [...table.querySelectorAll('span.hebrew')];
-      const translitSpan = table.querySelector('span.translit');
-      const engSpan = table.querySelector('span.eng');
-      const morphLink = table.querySelector('a[href="/hebrewparse.htm"]');
-      const strongsList = [...table.querySelectorAll('a[href]')]
-        .map((a) => /^\/hebrew\/(\d+)\.htm$/.exec(a.getAttribute('href')))
-        .filter(Boolean)
-        .map((m) => m[1]);
-
-      if (!currentVerse) continue;
-      const surface = hebSpans.length === 1 ? normText(hebSpans[0].textContent) : null;
-      const transliteration = translitSpan ? normText(translitSpan.textContent) || null : null;
-      const gloss = engSpan ? normText(engSpan.textContent) || null : null;
-      const morphology = morphLink ? normText(morphLink.textContent) || null : null;
-      verses[currentVerse] = verses[currentVerse] || [];
-      verses[currentVerse].push({ order: verses[currentVerse].length, surface, transliteration, gloss, morphology, strongsList });
-    }
-    return { verses };
-  } finally {
-    dom.window.close();
+// Only plain data is returned. A single jsdom window is reused and each page is
+// parsed with its DOMParser; the per-page document is a plain DOM tree released
+// after extraction. Reusing one window keeps memory flat (creating and closing a
+// fresh JSDOM per page leaks in jsdom) and the shared window is closed in a
+// finally block by main().
+let parserWindow = null;
+function getParserWindow() {
+  if (!parserWindow) parserWindow = new JSDOM('<!doctype html><html><body></body></html>').window;
+  return parserWindow;
+}
+function closeParserWindow() {
+  if (parserWindow) {
+    try { parserWindow.close(); } catch { /* best effort */ }
+    parserWindow = null;
   }
+}
+
+function readPageDom(html) {
+  const document = new (getParserWindow().DOMParser)().parseFromString(html, 'text/html');
+  const tables = [...document.querySelectorAll('table.tablefloatheb')];
+  const verses = {};
+  let currentVerse = 0;
+  for (const table of tables) {
+    // Verse reference: first ref span in this word block.
+    const refSpan = table.querySelector('span.reftop, span.reftrans, span.refheb, span.refbot, span.reftop2');
+    if (refSpan) {
+      const n = Number(refSpan.textContent.replace(/[^0-9]/g, ''));
+      if (n > 0) currentVerse = n;
+    }
+    const hebSpans = [...table.querySelectorAll('span.hebrew')];
+    const translitSpan = table.querySelector('span.translit');
+    const engSpan = table.querySelector('span.eng');
+    const morphLink = table.querySelector('a[href="/hebrewparse.htm"]');
+    const strongsList = [...table.querySelectorAll('a[href]')]
+      .map((a) => /^\/hebrew\/(\d+)\.htm$/.exec(a.getAttribute('href')))
+      .filter(Boolean)
+      .map((m) => m[1]);
+
+    if (!currentVerse) continue;
+    const surface = hebSpans.length === 1 ? normText(hebSpans[0].textContent) : null;
+    const transliteration = translitSpan ? normText(translitSpan.textContent) || null : null;
+    const gloss = engSpan ? normText(engSpan.textContent) || null : null;
+    const morphology = morphLink ? normText(morphLink.textContent) || null : null;
+    verses[currentVerse] = verses[currentVerse] || [];
+    verses[currentVerse].push({ order: verses[currentVerse].length, surface, transliteration, gloss, morphology, strongsList });
+  }
+  return { verses };
 }
 
 function loadCanon() {
@@ -116,7 +127,7 @@ function main() {
   // Coverage vs canon, per covered book/chapter. Full-book imports (Genesis,
   // Exodus, Leviticus) must match canon exactly; the retained partial books are
   // not checked here.
-  const FULL_BOOKS = new Set(['GEN', 'EXO', 'LEV']);
+  const FULL_BOOKS = new Set(['GEN', 'EXO', 'LEV', 'NUM']);
   const byBookChapter = new Map();
   for (const p of fixture.passages) byBookChapter.set(`${p.bookId}:${p.chapter}`, p);
   for (const [key, passage] of byBookChapter) {
@@ -130,41 +141,45 @@ function main() {
     }
   }
 
-  for (const passage of fixture.passages) {
-    const page = manifest.pages.find((p) => p.bookId === passage.bookId && p.chapter === passage.chapter);
-    if (!page) { mismatches++; sampleMismatches.push(`${passage.passage}: no manifest page`); continue; }
-    const html = fs.readFileSync(path.join(SRC_DIR, page.file), 'utf8');
-    const dom = readPageDom(html);
-    for (const vd of passage.verseData) {
-      const other = dom.verses[vd.verse];
-      comparedVerses++;
-      if (!other || other.length !== vd.records.length) {
-        mismatches++;
-        if (sampleMismatches.length < 20) sampleMismatches.push(`${passage.passage}:${vd.verse} count fixture=${vd.records.length} dom=${other ? other.length : 'missing'}`);
-        continue;
-      }
-      for (let i = 0; i < vd.records.length; i++) {
-        comparedRecords++;
-        const a = vd.records[i];
-        const b = other[i];
-        const same = a.order === b.order
-          && a.surface === b.surface
-          && a.transliteration === b.transliteration
-          && a.gloss === b.gloss
-          && a.morphology === b.morphology
-          && JSON.stringify(a.strongsList) === JSON.stringify(b.strongsList);
-        if (!same) {
+  try {
+    for (const passage of fixture.passages) {
+      const page = manifest.pages.find((p) => p.bookId === passage.bookId && p.chapter === passage.chapter);
+      if (!page) { mismatches++; sampleMismatches.push(`${passage.passage}: no manifest page`); continue; }
+      const html = fs.readFileSync(path.join(SRC_DIR, page.file), 'utf8');
+      const { verses: otherVerseMap } = readPageDom(html);
+      for (const vd of passage.verseData) {
+        const other = otherVerseMap[vd.verse];
+        comparedVerses++;
+        if (!other || other.length !== vd.records.length) {
           mismatches++;
-          if (sampleMismatches.length < 20) {
-            sampleMismatches.push(`${passage.passage}:${vd.verse} #${i} fixture=${JSON.stringify([a.surface, a.transliteration, a.gloss, a.morphology, a.strongsList])} dom=${JSON.stringify([b.surface, b.transliteration, b.gloss, b.morphology, b.strongsList])}`);
+          if (sampleMismatches.length < 20) sampleMismatches.push(`${passage.passage}:${vd.verse} count fixture=${vd.records.length} dom=${other ? other.length : 'missing'}`);
+          continue;
+        }
+        for (let i = 0; i < vd.records.length; i++) {
+          comparedRecords++;
+          const a = vd.records[i];
+          const b = other[i];
+          const same = a.order === b.order
+            && a.surface === b.surface
+            && a.transliteration === b.transliteration
+            && a.gloss === b.gloss
+            && a.morphology === b.morphology
+            && JSON.stringify(a.strongsList) === JSON.stringify(b.strongsList);
+          if (!same) {
+            mismatches++;
+            if (sampleMismatches.length < 20) {
+              sampleMismatches.push(`${passage.passage}:${vd.verse} #${i} fixture=${JSON.stringify([a.surface, a.transliteration, a.gloss, a.morphology, a.strongsList])} dom=${JSON.stringify([b.surface, b.transliteration, b.gloss, b.morphology, b.strongsList])}`);
+            }
           }
         }
       }
     }
+  } finally {
+    closeParserWindow();
   }
 
   check('independent reader agrees with the fixture on every covered record', mismatches === 0, `${mismatches} mismatch(es)`);
-  check('full-book (Genesis/Exodus/Leviticus) chapter/verse coverage matches canon', coverageIssues.length === 0, JSON.stringify(coverageIssues.slice(0, 5)));
+  check('full-book (Genesis/Exodus/Leviticus/Numbers) chapter/verse coverage matches canon', coverageIssues.length === 0, JSON.stringify(coverageIssues.slice(0, 5)));
   check('no structural extraction errors in the fixture', fixture.totals.structuralErrors === 0, `${fixture.totals.structuralErrors}`);
 
   // Anomaly summary (from the fixture) + uncertain variants.

@@ -44,6 +44,7 @@ const BOOKS = [
   { bookId: 'GEN', osis: 'Gen', xml: 'Gen.xml' },
   { bookId: 'EXO', osis: 'Exod', xml: 'Exod.xml' },
   { bookId: 'LEV', osis: 'Lev', xml: 'Lev.xml' },
+  { bookId: 'NUM', osis: 'Num', xml: 'Num.xml' },
   { bookId: 'DAN', osis: 'Dan', xml: 'Dan.xml' },
 ];
 
@@ -103,15 +104,24 @@ function oshbVariants(book) {
       const wordsBefore = [...before.matchAll(/<w\b[^>]*>([\s\S]*?)<\/w>/g)];
       const prevWord = wordsBefore.length ? decodeEntities(stripTags(wordsBefore[wordsBefore.length - 1][1])) : '';
       const kk = /^<w type="x-ketiv"[^>]*?lemma="([^"]*)"[^>]*>([\s\S]*?)<\/w>/.exec(chunk);
-      const qq = /<rdg type="x-qere"><w lemma="([^"]*)"[^>]*>([\s\S]*?)<\/w>/.exec(chunk);
+      // Capture the FULL Qere group: some written/read pairs are two words
+      // (e.g. OSHB Gen 30:11 Ketiv "בגד" vs Qere "בא גד"), which the one-record
+      // model cannot represent. Count and join them so classifyVariant can
+      // reject multiword cases conservatively.
+      const qereBlock = /<rdg type="x-qere">([\s\S]*?)<\/rdg>/.exec(chunk);
+      const qereWords = qereBlock
+        ? [...qereBlock[1].matchAll(/<w\b[^>]*>([\s\S]*?)<\/w>/g)].map((w) => decodeEntities(stripTags(w[1])))
+        : [];
+      const qereLemmas = qereBlock ? [...qereBlock[1].matchAll(/<w\b[^>]*?lemma="([^"]*)"/g)].map((w) => w[1]) : [];
       out.push({
         chapter: sourceChapter,
         verse: sourceVerse,
         oshbRef: `${book.osis} ${chapter}:${verse}`,
         oshbKetiv: kk ? decodeEntities(stripTags(kk[2])) : null,
-        oshbQere: qq ? decodeEntities(stripTags(qq[2])) : null,
+        oshbQere: qereWords.length ? qereWords.join(' ') : null,
+        qereWords: qereWords.length,
         ketivLemma: kk ? kk[1] : null,
-        qereLemma: qq ? qq[1] : null,
+        qereLemma: qereLemmas[0] || null,
         beforeSkeleton: skeleton(prevWord),
       });
       idx += 12;
@@ -137,6 +147,9 @@ function isCovered(bookId, chapter, verse) {
 // decide which form the page displays (or why that is unresolved). It never uses
 // raw position; "context" means the preceding-word skeleton.
 export function classifyVariant(pair, recs) {
+  if (pair.qereWords && pair.qereWords > 1) {
+    return { uncertain: `multiword Qere (${pair.qereWords} words: ${pair.oshbQere}); not represented in the one-record model` };
+  }
   const kSk = skeleton(pair.oshbKetiv);
   const qSk = skeleton(pair.oshbQere);
   if (!kSk || !qSk) return { uncertain: 'OSHB form missing' };

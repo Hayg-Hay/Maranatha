@@ -17,10 +17,11 @@ function loadGlobal(rel, globalName) {
   return JSON.parse(fs.readFileSync(path.join(ROOT, rel), 'utf8')
     .replace(new RegExp(`^window\\.${globalName}=`), '').replace(/;\s*$/, ''));
 }
-const MANIFEST = loadGlobal('data/berean-hebrew/manifest-v3.js', 'MARANATHA_BEREAN_HEBREW_MANIFEST');
+const MANIFEST = loadGlobal('data/berean-hebrew/manifest-v4.js', 'MARANATHA_BEREAN_HEBREW_MANIFEST');
 const GEN = loadGlobal(`data/berean-hebrew/${MANIFEST.chunkFiles.GEN}`, 'MARANATHA_BEREAN_HEBREW_GEN').books.GEN;
 const EXO = loadGlobal(`data/berean-hebrew/${MANIFEST.chunkFiles.EXO}`, 'MARANATHA_BEREAN_HEBREW_EXO').books.EXO;
 const LEV = loadGlobal(`data/berean-hebrew/${MANIFEST.chunkFiles.LEV}`, 'MARANATHA_BEREAN_HEBREW_LEV').books.LEV;
+const NUM = loadGlobal(`data/berean-hebrew/${MANIFEST.chunkFiles.NUM}`, 'MARANATHA_BEREAN_HEBREW_NUM').books.NUM;
 const DAN = loadGlobal(`data/berean-hebrew/${MANIFEST.chunkFiles.DAN}`, 'MARANATHA_BEREAN_HEBREW_DAN').books.DAN;
 const MAL = loadGlobal(`data/berean-hebrew/${MANIFEST.chunkFiles.MAL}`, 'MARANATHA_BEREAN_HEBREW_MAL').books.MAL;
 const VARIANTS = JSON.parse(fs.readFileSync(path.join(ROOT, 'build', 'sources', 'berean-hebrew', 'variants.json'), 'utf8'));
@@ -122,8 +123,8 @@ async function openPilot(window, bookId, chapter, ref) {
   const rendered = await openPilot(window, 'GEN', 1, 'Genesis 1:1');
   check('selecting Berean Hebrew loads the versioned manifest + GEN chunk and renders', rendered);
   const srcs = () => [...document.querySelectorAll('script')].map((s) => s.src);
-  check('versioned manifest (v3) is loaded via <script>', srcs().some((s) => /data\/berean-hebrew\/manifest-v3\.js$/.test(s)));
-  check('earlier manifests are never requested', !srcs().some((s) => /data\/berean-hebrew\/manifest(-v2)?\.js$/.test(s)));
+  check('versioned manifest (v4) is loaded via <script>', srcs().some((s) => /data\/berean-hebrew\/manifest-v4\.js$/.test(s)));
+  check('earlier manifests are never requested', !srcs().some((s) => /data\/berean-hebrew\/manifest(-v[23])?\.js$/.test(s)));
   check('versioned GEN chunk is loaded, not the stale GEN.js', srcs().some((s) => new RegExp(`berean-hebrew/${MANIFEST.chunkFiles.GEN}$`).test(s)) && !srcs().some((s) => /berean-hebrew\/GEN\.js$/.test(s)));
   const GEN_1_1 = ['In the beginning', 'created', 'God', '', 'the heavens', 'and', 'the earth'];
   const c = denseCards(document, 'Genesis 1:1');
@@ -137,20 +138,20 @@ async function openPilot(window, bookId, chapter, ref) {
 }
 
 // ===========================================================================
-// B — coverage & totals; Genesis/Exodus/Leviticus navigation
+// B — coverage & totals; Genesis/Exodus/Leviticus/Numbers navigation
 // ===========================================================================
 {
   const dom = await createDom();
   const { window } = dom; const { document } = window;
   await openPilot(window, 'GEN', 1, 'Genesis 1:1');
-  check('manifest reports 49,333 records across GEN/EXO/LEV/DAN/MAL',
-    MANIFEST.recordCount === 49333 && JSON.stringify(MANIFEST.books) === JSON.stringify(['GEN', 'EXO', 'LEV', 'DAN', 'MAL']),
+  check('manifest reports 65,745 records across GEN/EXO/LEV/NUM/DAN/MAL',
+    MANIFEST.recordCount === 65745 && JSON.stringify(MANIFEST.books) === JSON.stringify(['GEN', 'EXO', 'LEV', 'NUM', 'DAN', 'MAL']),
     JSON.stringify([MANIFEST.recordCount, MANIFEST.books]));
-  check('coverage names Genesis 1-50, Exodus 1-40 and Leviticus 1-27',
-    /Genesis 1\u201350/.test(MANIFEST.coverage) && /Exodus 1\u201340/.test(MANIFEST.coverage) && /Leviticus 1\u201327/.test(MANIFEST.coverage), MANIFEST.coverage);
-  check('GEN 20,613 / EXO 16,713 / LEV 11,950 records',
-    MANIFEST.booksRecordCount.GEN === 20613 && MANIFEST.booksRecordCount.EXO === 16713 && MANIFEST.booksRecordCount.LEV === 11950, JSON.stringify(MANIFEST.booksRecordCount));
-  check('GEN 50 / EXO 40 / LEV 27 chapters', GEN.filter(Boolean).length === 50 && EXO.filter(Boolean).length === 40 && LEV.filter(Boolean).length === 27);
+  check('coverage names Genesis 1-50, Exodus 1-40, Leviticus 1-27 and Numbers 1-36',
+    /Genesis 1\u201350/.test(MANIFEST.coverage) && /Exodus 1\u201340/.test(MANIFEST.coverage) && /Leviticus 1\u201327/.test(MANIFEST.coverage) && /Numbers 1\u201336/.test(MANIFEST.coverage), MANIFEST.coverage);
+  check('GEN 20,613 / EXO 16,713 / LEV 11,950 / NUM 16,412 records',
+    MANIFEST.booksRecordCount.GEN === 20613 && MANIFEST.booksRecordCount.EXO === 16713 && MANIFEST.booksRecordCount.LEV === 11950 && MANIFEST.booksRecordCount.NUM === 16412, JSON.stringify(MANIFEST.booksRecordCount));
+  check('GEN 50 / EXO 40 / LEV 27 / NUM 36 chapters', GEN.filter(Boolean).length === 50 && EXO.filter(Boolean).length === 40 && LEV.filter(Boolean).length === 27 && NUM.filter(Boolean).length === 36);
   for (const [ch, v, expected] of [[1, 1, 7], [2, 4, 11], [8, 17, 21], [50, 26, 11]]) {
     goto(window, 'GEN', ch);
     await waitFor(() => blockByRef(document, `Genesis ${ch}:${v}`));
@@ -169,6 +170,12 @@ async function openPilot(window, bookId, chapter, ref) {
     check(`Leviticus ${ch}:${v} renders ${expected} cards`, denseCards(document, `Leviticus ${ch}:${v}`).length === expected);
   }
   check('navigation to Leviticus 27:34 works', !!blockByRef(document, 'Leviticus 27:34'));
+  for (const [ch, v, expected] of [[1, 1, 17], [6, 24, 3], [11, 16, 25], [12, 1, 14], [13, 1, 5], [21, 8, 17], [22, 21, 10], [24, 15, 11], [27, 15, 5], [36, 10, 9], [36, 13, 16]]) {
+    goto(window, 'NUM', ch);
+    await waitFor(() => blockByRef(document, `Numbers ${ch}:${v}`));
+    check(`Numbers ${ch}:${v} renders ${expected} cards`, denseCards(document, `Numbers ${ch}:${v}`).length === expected);
+  }
+  check('navigation to Numbers 36:13 works', !!blockByRef(document, 'Numbers 36:13'));
   window.close();
 }
 
@@ -189,6 +196,10 @@ async function openPilot(window, bookId, chapter, ref) {
   await waitFor(() => blockByRef(document, 'Leviticus 1:1'));
   const levYhwh = denseCards(document, 'Leviticus 1:1').find((x) => x.meta === 'H3068');
   check('Leviticus divine name preserved (Yah·weh / YHWH)', levYhwh?.translit === 'Yah·weh' && levYhwh?.gloss === 'YHWH', JSON.stringify(levYhwh));
+  goto(window, 'NUM', 1);
+  await waitFor(() => blockByRef(document, 'Numbers 1:1'));
+  const numYhwh = denseCards(document, 'Numbers 1:1').find((x) => x.meta === 'H3068');
+  check('Numbers divine name preserved (Yah·weh / YHWH)', numYhwh?.translit === 'Yah·weh' && numYhwh?.gloss === 'YHWH', JSON.stringify(numYhwh));
   window.close();
 }
 
@@ -207,6 +218,16 @@ async function openPilot(window, bookId, chapter, ref) {
   check('Leviticus 16:21 detail shows the exact OSHB Qere', ldetail.includes(l.oshbQere), JSON.stringify(l.oshbQere));
   check('Leviticus 16:21 variant is labelled an OSHB comparison', /OSHB comparison/.test(ldetail));
   check('Leviticus 16:21 card count unchanged (31)', disclosureCards(document, 'Leviticus 16:21').length === 31);
+
+  goto(window, 'NUM', 23);
+  await waitFor(() => blockByRef(document, 'Numbers 23:13'));
+  await waitFor(() => disclosureCards(document, 'Numbers 23:13').length === 21);
+  const n = variantBy('NUM', 23, 13, 3);
+  const nel = await openDetailEl(document, 'Numbers 23:13', 3);
+  const ndetail = nel.textContent || '';
+  check('Numbers 23:13 detail shows the exact OSHB Qere', ndetail.includes(n.oshbQere), JSON.stringify(n.oshbQere));
+  check('Numbers 23:13 variant is labelled an OSHB comparison', /OSHB comparison/.test(ndetail));
+  check('Numbers 23:13 card count unchanged (21)', disclosureCards(document, 'Numbers 23:13').length === 21);
   window.close();
 }
 
@@ -241,9 +262,9 @@ async function openPilot(window, bookId, chapter, ref) {
   const { window } = dom; const { document } = window;
   const srcs = () => [...document.querySelectorAll('script')].map((s) => s.src);
   await openPilot(window, 'EXO', 1, 'Exodus 1:1');
-  check('Exodus loads its own EXO chunk', srcs().some((s) => /data\/berean-hebrew\/EXO\.js$/.test(s)));
-  check('loading Exodus does not load Genesis/Leviticus/Daniel/Malachi chunks',
-    !srcs().some((s) => /data\/berean-hebrew\/(GEN(-v\d+)?|LEV|DAN|MAL)\.js$/.test(s)));
+  check('Exodus loads its own EXO chunk', srcs().some((s) => /data\/berean-hebrew\/EXO-v2\.js$/.test(s)));
+  check('loading Exodus does not load Genesis/Leviticus/Numbers/Daniel/Malachi chunks',
+    !srcs().some((s) => /data\/berean-hebrew\/(GEN(-v\d+)?|LEV|NUM|DAN|MAL)\.js$/.test(s)));
   window.close();
 }
 {
@@ -252,13 +273,23 @@ async function openPilot(window, bookId, chapter, ref) {
   const srcs = () => [...document.querySelectorAll('script')].map((s) => s.src);
   await openPilot(window, 'LEV', 1, 'Leviticus 1:1');
   check('Leviticus loads its own LEV chunk', srcs().some((s) => /data\/berean-hebrew\/LEV\.js$/.test(s)));
-  check('loading Leviticus does not load Genesis/Exodus/Daniel/Malachi chunks',
-    !srcs().some((s) => /data\/berean-hebrew\/(GEN(-v\d+)?|EXO|DAN|MAL)\.js$/.test(s)));
-  goto(window, 'NUM', 1);
+  check('loading Leviticus does not load Genesis/Exodus/Numbers/Daniel/Malachi chunks',
+    !srcs().some((s) => /data\/berean-hebrew\/(GEN(-v\d+)?|EXO(-v\d+)?|NUM|DAN|MAL)\.js$/.test(s)));
+  window.close();
+}
+{
+  const dom = await createDom();
+  const { window } = dom; const { document } = window;
+  const srcs = () => [...document.querySelectorAll('script')].map((s) => s.src);
+  await openPilot(window, 'NUM', 1, 'Numbers 1:1');
+  check('Numbers loads its own NUM chunk', srcs().some((s) => /data\/berean-hebrew\/NUM\.js$/.test(s)));
+  check('loading Numbers does not load Genesis/Exodus/Leviticus/Daniel/Malachi chunks',
+    !srcs().some((s) => /data\/berean-hebrew\/(GEN(-v\d+)?|EXO(-v\d+)?|LEV|DAN|MAL)\.js$/.test(s)));
+  goto(window, 'DEU', 1);
   await waitFor(() => /outside the preview/.test(document.querySelector('#results .empty')?.textContent || ''));
-  check('uncovered book (Numbers) shows the coverage notice', /outside the preview/.test(document.querySelector('#results .empty')?.textContent || ''));
+  check('uncovered book (Deuteronomy) shows the coverage notice', /outside the preview/.test(document.querySelector('#results .empty')?.textContent || ''));
   check('uncovered book does not show a load error', !document.querySelector('.interlinear-error'));
-  check('no NUM chunk is requested', !srcs().some((s) => /berean-hebrew\/NUM\.js$/.test(s)));
+  check('no DEU chunk is requested', !srcs().some((s) => /berean-hebrew\/DEU\.js$/.test(s)));
   window.close();
 }
 

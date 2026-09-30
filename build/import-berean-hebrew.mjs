@@ -27,15 +27,17 @@ const OUT_DIR = path.join(ROOT, 'data', 'berean-hebrew');
 const BUILD_META = path.join(ROOT, 'build', 'sources', 'berean-hebrew', 'runtime-build.json');
 
 const GLOBAL_PREFIX = 'MARANATHA_BEREAN_HEBREW_';
-const BOOK_ORDER = ['GEN', 'EXO', 'LEV', 'DAN', 'MAL'];
+const BOOK_ORDER = ['GEN', 'EXO', 'LEV', 'NUM', 'DAN', 'MAL'];
 // The manifest filename is VERSIONED so a change in coverage cannot be hidden by
 // a cache-first copy from a previous milestone. Bump this suffix whenever the
 // manifest content changes (and update app.js `manifestSrc`).
-const MANIFEST_FILE = 'data/berean-hebrew/manifest-v3.js';
+const MANIFEST_FILE = 'data/berean-hebrew/manifest-v4.js';
 // A book whose chunk content changes gets a versioned filename so an old
 // cache-first copy cannot hide the change. The mapping is published in the
 // manifest (`chunkFiles`) and used by the app to build the script URL.
-const CHUNK_VERSION = { GEN: 'v2' };
+// GEN/EXO changed this milestone (two multiword Ketiv/Qere cases moved out of
+// their verified sets), so both are re-versioned; LEV/DAN/MAL are unchanged.
+const CHUNK_VERSION = { GEN: 'v3', EXO: 'v2' };
 function chunkFile(bookId) {
   return CHUNK_VERSION[bookId] ? `${bookId}-${CHUNK_VERSION[bookId]}.js` : `${bookId}.js`;
 }

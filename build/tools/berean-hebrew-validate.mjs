@@ -67,16 +67,16 @@ for (const page of manifest.pages) {
 check('every cached page hash matches the manifest', hashBad === 0, `${hashBad} bad`);
 
 // --- coverage & totals ------------------------------------------------------
-check('coverage string names Genesis 1-50, Exodus 1-40 and Leviticus 1-27 plus the retained verses',
-  fixture.coverage === 'Genesis 1\u201350; Exodus 1\u201340; Leviticus 1\u201327; Daniel 2:4\u20135; Malachi 4:5\u20136', fixture.coverage);
+check('coverage string names Genesis/Exodus/Leviticus/Numbers plus the retained verses',
+  fixture.coverage === 'Genesis 1\u201350; Exodus 1\u201340; Leviticus 1\u201327; Numbers 1\u201336; Daniel 2:4\u20135; Malachi 4:5\u20136', fixture.coverage);
 const t = fixture.totals;
-check('5 books imported', t.books === 5, `${t.books}`);
-check('119 chapters imported (50 GEN + 40 EXO + 27 LEV + DAN 2 + MAL 4)', t.chapters === 119, `${t.chapters}`);
-check('3609 verses imported', t.verses === 3609, `${t.verses}`);
-check('49,333 records imported', t.records === 49333, `${t.records}`);
+check('6 books imported', t.books === 6, `${t.books}`);
+check('155 chapters imported (50 GEN + 40 EXO + 27 LEV + 36 NUM + DAN 2 + MAL 4)', t.chapters === 155, `${t.chapters}`);
+check('4897 verses imported', t.verses === 4897, `${t.verses}`);
+check('65,745 records imported', t.records === 65745, `${t.records}`);
 check('no structural extraction errors', t.structuralErrors === 0, `${t.structuralErrors}`);
 
-for (const [bookId, chapters] of [['GEN', 50], ['EXO', 40], ['LEV', 27]]) {
+for (const [bookId, chapters] of [['GEN', 50], ['EXO', 40], ['LEV', 27], ['NUM', 36]]) {
   const passages = fixture.passages.filter((p) => p.bookId === bookId);
   const canonBook = canon.books.find((b) => b.id === bookId);
   let bad = 0;
@@ -110,8 +110,11 @@ for (const r of allRecords) {
 check('missing blanks are explicit nulls, intentional blanks are "-"', fieldErrors === 0, `${fieldErrors}`);
 
 // --- verified variants ------------------------------------------------------
-check('35 verified Ketiv/Qere variants', variants.variants.length === 35, `${variants.variants.length}`);
-check('all covered Ketiv/Qere cases resolved (0 uncertain)', variants.uncertain.length === 0, `${variants.uncertain.length}`);
+check('42 verified Ketiv/Qere variants', variants.variants.length === 42, `${variants.variants.length}`);
+check('multiword written/read cases are left uncertain (unattached)', variants.uncertain.length === 2, `${variants.uncertain.length}`);
+check('the two uncertain cases are the multiword Qere pairs',
+  ['GEN 30:11', 'EXO 4:2'].every((ref) => variants.uncertain.some((u) => `${u.bookId} ${u.chapter}:${u.verse}` === ref && /multiword Qere/.test(u.reason))),
+  JSON.stringify(variants.uncertain.map((u) => u.reason)));
 let variantWired = 0;
 let fingerprintBad = 0;
 let fingerprintMissing = 0;
@@ -121,7 +124,7 @@ for (const v of variants.variants) {
   if (!v.sourceFingerprint) fingerprintMissing++;
   else if (rec && recordFingerprint(rec) !== v.sourceFingerprint) fingerprintBad++;
 }
-check('every verified variant is wired to exactly its record', variantWired === 35, `${variantWired}/35`);
+check('every verified variant is wired to exactly its record', variantWired === 42, `${variantWired}/42`);
 check('every verified variant carries a source fingerprint', fingerprintMissing === 0, `${fingerprintMissing} missing`);
 check('every attached fingerprint matches its record', fingerprintBad === 0, `${fingerprintBad} stale`);
 const variantKeys = new Set(variants.variants.map((v) => `${v.bookId}:${v.chapter}:${v.verse}:${v.order}`));
@@ -136,15 +139,17 @@ for (const p of fixture.passages) {
     }
   }
 }
-check('only the 35 verified variants are attached to records', attached === 35 && attachedBad === 0, `attached ${attached}, unrecognised ${attachedBad}`);
+check('only the 42 verified variants are attached to records', attached === 42 && attachedBad === 0, `attached ${attached}, unrecognised ${attachedBad}`);
 check('variant letters match the displayed surface skeleton',
   variants.variants.every((v) => skeleton(v.observedPageSurface) === skeleton(v.oshbKetiv)), 'skeleton mismatch');
 
 // --- resolved Genesis cases (previously uncertain) --------------------------
-for (const [chapter, verse, strongs] of [[27, 3, '6718'], [27, 29, '7812'], [30, 11, '935'], [36, 5, '3266'], [36, 14, '3266']]) {
+for (const [chapter, verse, strongs] of [[27, 3, '6718'], [27, 29, '7812'], [36, 5, '3266'], [36, 14, '3266']]) {
   const v = variantAt('GEN', chapter, verse, strongs);
   check(`Genesis ${chapter}:${verse} Ketiv/Qere resolved and attached`, !!v && v.type === 'ketiv-qere', JSON.stringify(v && v.sourceDisplays));
 }
+// GEN 30:11 is a multiword Qere and is intentionally left unattached.
+check('Genesis 30:11 left unattached (multiword Qere)', variantAt('GEN', 30, 11, '935') === null);
 
 // --- named anchors / divine name -------------------------------------------
 const gen24 = fixture.passages.find((p) => p.bookId === 'GEN' && p.chapter === 2).verseData.find((v) => v.verse === 4).records;
@@ -161,12 +166,35 @@ const exo225 = variantAt('EXO', 22, 5, '1165');
 check('Exodus 22:5 variant present (OSHB 22:4 mapped to the English verse)', exo225 && exo225.oshbQere === 'בְּעִיר֔/וֹ' && exo225.oshbRef === 'Exod 22:4', JSON.stringify(exo225 && { q: exo225.oshbQere, ref: exo225.oshbRef }));
 const lev1621 = variantAt('LEV', 16, 21, '3027');
 check('Leviticus 16:21 variant present with the exact OSHB Qere', lev1621 && lev1621.oshbQere === 'יָדָ֗י/ו', JSON.stringify(lev1621 && lev1621.oshbQere));
+const num11 = fixture.passages.find((p) => p.bookId === 'NUM' && p.chapter === 1).verseData.find((v) => v.verse === 1).records;
+const yhwhNum = num11.find((r) => r.strongsList.includes('3068'));
+check('Numbers divine-name convention preserved (Yah·weh / YHWH)', yhwhNum && yhwhNum.transliteration === 'Yah·weh' && yhwhNum.gloss === 'YHWH', JSON.stringify(yhwhNum));
+const num2313 = variantAt('NUM', 23, 13, '1980');
+check('Numbers 23:13 variant present with the exact OSHB Qere', num2313 && num2313.oshbQere === 'לְכָ/ה', JSON.stringify(num2313 && num2313.oshbQere));
+
+// --- missing-gloss audit (every explicit null, classified) ------------------
+const missingGlossRecords = [];
+for (const p of fixture.passages) {
+  for (const vd of p.verseData) {
+    for (const r of vd.records) {
+      if (r.glossStatus !== 'missing') continue;
+      const isObjectMarker = r.strongsList.includes('853') || r.strongsList.includes('854');
+      missingGlossRecords.push({ ref: `${p.bookId} ${p.chapter}:${vd.verse} #${r.order}`, surface: r.surface, strongsList: r.strongsList, morphology: r.morphology, isObjectMarker });
+    }
+  }
+}
+check('missing-gloss count matches the recorded totals', missingGlossRecords.length === t.missingGlosses, `${missingGlossRecords.length} vs ${t.missingGlosses}`);
+check('every missing gloss is an explicit null (never a substitute)', missingGlossRecords.every((m) => m.morphology != null));
 
 // --- report -----------------------------------------------------------------
 let failed = 0;
 for (const [name, ok, detail] of results) {
   if (ok) console.log(`PASS  ${name}`);
   else { failed++; console.log(`FAIL  ${name}${detail ? ` (${detail})` : ''}`); }
+}
+console.log(`\nMissing-gloss records (explicit nulls) — ${missingGlossRecords.length} total:`);
+for (const m of missingGlossRecords) {
+  console.log(`  ${m.ref}  ${m.surface}  H${m.strongsList.join('+') || 'none'}  ${m.morphology}  ${m.isObjectMarker ? '[object marker]' : '[SUBSTANTIVE — review]'}`);
 }
 console.log(`\nTotals: ${t.books} books, ${t.chapters} chapters, ${t.verses} verses, ${t.records} records; structural ${t.structuralErrors}; source-gap ${t.sourceGapDiagnostics}; info ${t.infoDiagnostics}.`);
 console.log(`Verified variants ${variants.variants.length}; uncertain ${variants.uncertain.length}.`);
