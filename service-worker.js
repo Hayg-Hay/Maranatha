@@ -35,7 +35,10 @@
 // the new shell. The update is therefore user-driven, not a silent replacement
 // mid-read.
 
-const CACHE_VERSION = 'v30';      // bump when shell files change
+const CACHE_VERSION = 'v31';      // bump when shell files change
+// Data cache intentionally stays at v3: adding the Berean Hebrew pilot runtime
+// file does not require invalidating already-downloaded translations or Berean
+// Greek books (they are re-used as-is; the new file is cached on first use).
 const DATA_CACHE_VERSION = 'v3';  // bump when translation/interlinear data changes
 
 const SHELL_CACHE = `maranatha-shell-${CACHE_VERSION}`;

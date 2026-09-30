@@ -1,0 +1,1847 @@
+{
+  "id": "berean-hebrew-pilot",
+  "label": "Berean Interlinear Bible (BIB) — Hebrew OT pilot",
+  "status": "inspection fixture — tooling/provenance only; not loaded by app.js or used at runtime",
+  "draft": true,
+  "parserVersion": "2.1.0",
+  "extractor": "build/tools/berean-hebrew-extract.mjs",
+  "source": {
+    "edition": "Berean Interlinear Bible (BIB)",
+    "host": "Bible Hub",
+    "editionEvidence": "All three cached pages carry the footer \"Berean Interlinear Bible (BIB). Produced in cooperation with Bible Hub, Discovery Bible, unfoldingWord, Bible Aquifer, OpenBible.com, and the Berean Bible Translation Committee.\" See build/sources/berean-hebrew/README.md and source-manifest.json.",
+    "permission": "Berean team email (on file in README.md) grants programmatic RETRIEVAL of the current draft from Bible Hub, because no downloadable file exists yet. Separately, berean.bible/terms.htm dedicates the Berean Bible texts to the public domain (April 30, 2023). Established and unresolved licence scope is documented in README.md.",
+    "draftNote": "The interlinear is still in draft mode per the Berean team; the cached pages are a dated snapshot, not a fixed edition.",
+    "termsUrl": "https://berean.bible/terms.htm",
+    "sourceManifest": "build/sources/berean-hebrew/source-manifest.json"
+  },
+  "totals": {
+    "passages": 3,
+    "verses": 9,
+    "records": 109,
+    "untranslatedGlosses": 4,
+    "missingGlosses": 0,
+    "recordsWithoutStrongs": 1,
+    "structuralErrors": 0,
+    "sourceGapDiagnostics": 31,
+    "pilotRangeSourceGaps": 1,
+    "infoDiagnostics": 0
+  },
+  "anomalies": [
+    {
+      "class": "source-gap",
+      "kind": "missing-strongs",
+      "book": "Genesis",
+      "chapter": 1,
+      "verse": 11,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-strongs",
+      "book": "Genesis",
+      "chapter": 1,
+      "verse": 12,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-strongs",
+      "book": "Genesis",
+      "chapter": 1,
+      "verse": 28,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-strongs",
+      "book": "Genesis",
+      "chapter": 1,
+      "verse": 29,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-strongs",
+      "book": "Genesis",
+      "chapter": 1,
+      "verse": 29,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-strongs",
+      "book": "Genesis",
+      "chapter": 1,
+      "verse": 29,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-strongs",
+      "book": "Genesis",
+      "chapter": 1,
+      "verse": 30,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-strongs",
+      "book": "Daniel",
+      "chapter": 2,
+      "verse": 3,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-strongs",
+      "book": "Daniel",
+      "chapter": 2,
+      "verse": 9,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-strongs",
+      "book": "Daniel",
+      "chapter": 2,
+      "verse": 16,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-gloss",
+      "book": "Daniel",
+      "chapter": 2,
+      "verse": 20,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-strongs",
+      "book": "Daniel",
+      "chapter": 2,
+      "verse": 20,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-strongs",
+      "book": "Daniel",
+      "chapter": 2,
+      "verse": 23,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-strongs",
+      "book": "Daniel",
+      "chapter": 2,
+      "verse": 23,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-strongs",
+      "book": "Daniel",
+      "chapter": 2,
+      "verse": 24,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-strongs",
+      "book": "Daniel",
+      "chapter": 2,
+      "verse": 25,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-gloss",
+      "book": "Daniel",
+      "chapter": 2,
+      "verse": 25,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-strongs",
+      "book": "Daniel",
+      "chapter": 2,
+      "verse": 30,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-strongs",
+      "book": "Daniel",
+      "chapter": 2,
+      "verse": 30,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-gloss",
+      "book": "Daniel",
+      "chapter": 2,
+      "verse": 32,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-gloss",
+      "book": "Daniel",
+      "chapter": 2,
+      "verse": 33,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-gloss",
+      "book": "Daniel",
+      "chapter": 2,
+      "verse": 34,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-strongs",
+      "book": "Daniel",
+      "chapter": 2,
+      "verse": 35,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-strongs",
+      "book": "Daniel",
+      "chapter": 2,
+      "verse": 37,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-gloss",
+      "book": "Daniel",
+      "chapter": 2,
+      "verse": 41,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-strongs",
+      "book": "Daniel",
+      "chapter": 2,
+      "verse": 41,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-strongs",
+      "book": "Daniel",
+      "chapter": 2,
+      "verse": 46,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-strongs",
+      "book": "Daniel",
+      "chapter": 2,
+      "verse": 48,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-strongs",
+      "book": "Malachi",
+      "chapter": 4,
+      "verse": 1,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-strongs",
+      "book": "Malachi",
+      "chapter": 4,
+      "verse": 2,
+      "inPilotRange": false
+    },
+    {
+      "class": "source-gap",
+      "kind": "missing-strongs",
+      "book": "Malachi",
+      "chapter": 4,
+      "verse": 5,
+      "inPilotRange": true
+    }
+  ],
+  "passages": [
+    {
+      "passage": "GEN 1:1-5",
+      "bookId": "GEN",
+      "book": "Genesis",
+      "chapter": 1,
+      "verses": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "recordCount": 52,
+      "sourcePage": {
+        "url": "https://biblehub.com/interlinear/genesis/1.htm",
+        "file": "source-pages/genesis-1.html",
+        "retrievedAt": "2026-09-30T12:37:39.692Z",
+        "sha256": "fee715dbb90970e11dd4e0837dd75edc7970884f31dc1034c71eb1d470f8b7c2",
+        "httpStatus": 200,
+        "editionLabel": "Berean Interlinear Bible (BIB)"
+      },
+      "verseData": [
+        {
+          "verse": 1,
+          "language": "hebrew",
+          "recordCount": 7,
+          "records": [
+            {
+              "order": 0,
+              "surface": "בְּרֵאשִׁ֖ית",
+              "transliteration": "bə·rê·šîṯ",
+              "gloss": "In the beginning",
+              "glossStatus": "translated",
+              "morphology": "Prep-b ¦ N-fs",
+              "strongs": "7225",
+              "strongsList": [
+                "7225"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 1,
+              "surface": "בָּרָ֣א",
+              "transliteration": "bā·rā",
+              "gloss": "created",
+              "glossStatus": "translated",
+              "morphology": "V-Qal-Perf-3ms",
+              "strongs": "1254",
+              "strongsList": [
+                "1254"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 2,
+              "surface": "אֱלֹהִ֑ים",
+              "transliteration": "’ĕ·lō·hîm;",
+              "gloss": "God",
+              "glossStatus": "translated",
+              "morphology": "N-mp",
+              "strongs": "430",
+              "strongsList": [
+                "430"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 3,
+              "surface": "אֵ֥ת",
+              "transliteration": "’êṯ",
+              "gloss": "-",
+              "glossStatus": "untranslated",
+              "morphology": "DirObjM",
+              "strongs": "853",
+              "strongsList": [
+                "853"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 4,
+              "surface": "הַשָּׁמַ֖יִם",
+              "transliteration": "haš·šā·ma·yim",
+              "gloss": "the heavens",
+              "glossStatus": "translated",
+              "morphology": "Art ¦ N-mp",
+              "strongs": "8064",
+              "strongsList": [
+                "8064"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 5,
+              "surface": "וְאֵ֥ת",
+              "transliteration": "wə·’êṯ",
+              "gloss": "and",
+              "glossStatus": "translated",
+              "morphology": "Conj-w ¦ DirObjM",
+              "strongs": "853",
+              "strongsList": [
+                "853"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 6,
+              "surface": "הָאָֽרֶץ׃",
+              "transliteration": "hā·’ā·reṣ.",
+              "gloss": "the earth",
+              "glossStatus": "translated",
+              "morphology": "Art ¦ N-fs",
+              "strongs": "776",
+              "strongsList": [
+                "776"
+              ],
+              "language": "hebrew"
+            }
+          ]
+        },
+        {
+          "verse": 2,
+          "language": "hebrew",
+          "recordCount": 14,
+          "records": [
+            {
+              "order": 0,
+              "surface": "וְהָאָ֗רֶץ",
+              "transliteration": "wə·hā·’ā·reṣ,",
+              "gloss": "And the earth",
+              "glossStatus": "translated",
+              "morphology": "Conj-w, Art ¦ N-fs",
+              "strongs": "776",
+              "strongsList": [
+                "776"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 1,
+              "surface": "הָיְתָ֥ה",
+              "transliteration": "hā·yə·ṯāh",
+              "gloss": "was",
+              "glossStatus": "translated",
+              "morphology": "V-Qal-Perf-3fs",
+              "strongs": "1961",
+              "strongsList": [
+                "1961"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 2,
+              "surface": "תֹ֙הוּ֙",
+              "transliteration": "ṯō·hū",
+              "gloss": "formless",
+              "glossStatus": "translated",
+              "morphology": "N-ms",
+              "strongs": "8414",
+              "strongsList": [
+                "8414"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 3,
+              "surface": "וָבֹ֔הוּ",
+              "transliteration": "wā·ḇō·hū,",
+              "gloss": "and void",
+              "glossStatus": "translated",
+              "morphology": "Conj-w ¦ N-ms",
+              "strongs": "922",
+              "strongsList": [
+                "922"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 4,
+              "surface": "וְחֹ֖שֶׁךְ",
+              "transliteration": "wə·ḥō·šeḵ",
+              "gloss": "and darkness",
+              "glossStatus": "translated",
+              "morphology": "Conj-w ¦ N-ms",
+              "strongs": "2822",
+              "strongsList": [
+                "2822"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 5,
+              "surface": "עַל־",
+              "transliteration": "‘al-",
+              "gloss": "[was] over",
+              "glossStatus": "translated",
+              "morphology": "Prep",
+              "strongs": "5921",
+              "strongsList": [
+                "5921"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 6,
+              "surface": "פְּנֵ֣י",
+              "transliteration": "pə·nê",
+              "gloss": "the face",
+              "glossStatus": "translated",
+              "morphology": "N-cpc",
+              "strongs": "6440",
+              "strongsList": [
+                "6440"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 7,
+              "surface": "תְה֑וֹם",
+              "transliteration": "ṯə·hō·wm;",
+              "gloss": "of the deep",
+              "glossStatus": "translated",
+              "morphology": "N-cs",
+              "strongs": "8415",
+              "strongsList": [
+                "8415"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 8,
+              "surface": "וְר֣וּחַ",
+              "transliteration": "wə·rū·aḥ",
+              "gloss": "And the Spirit",
+              "glossStatus": "translated",
+              "morphology": "Conj-w ¦ N-csc",
+              "strongs": "7307",
+              "strongsList": [
+                "7307"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 9,
+              "surface": "אֱלֹהִ֔ים",
+              "transliteration": "’ĕ·lō·hîm,",
+              "gloss": "of God",
+              "glossStatus": "translated",
+              "morphology": "N-mp",
+              "strongs": "430",
+              "strongsList": [
+                "430"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 10,
+              "surface": "מְרַחֶ֖פֶת",
+              "transliteration": "mə·ra·ḥe·p̄eṯ",
+              "gloss": "was hovering",
+              "glossStatus": "translated",
+              "morphology": "V-Piel-Prtcpl-fs",
+              "strongs": "7363",
+              "strongsList": [
+                "7363"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 11,
+              "surface": "עַל־",
+              "transliteration": "‘al-",
+              "gloss": "over",
+              "glossStatus": "translated",
+              "morphology": "Prep",
+              "strongs": "5921",
+              "strongsList": [
+                "5921"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 12,
+              "surface": "פְּנֵ֥י",
+              "transliteration": "pə·nê",
+              "gloss": "the face",
+              "glossStatus": "translated",
+              "morphology": "N-cpc",
+              "strongs": "6440",
+              "strongsList": [
+                "6440"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 13,
+              "surface": "הַמָּֽיִם׃",
+              "transliteration": "ham·mā·yim.",
+              "gloss": "of the waters",
+              "glossStatus": "translated",
+              "morphology": "Art ¦ N-mp",
+              "strongs": "4325",
+              "strongsList": [
+                "4325"
+              ],
+              "language": "hebrew"
+            }
+          ]
+        },
+        {
+          "verse": 3,
+          "language": "hebrew",
+          "recordCount": 6,
+          "records": [
+            {
+              "order": 0,
+              "surface": "וַיֹּ֥אמֶר",
+              "transliteration": "way·yō·mer",
+              "gloss": "And said",
+              "glossStatus": "translated",
+              "morphology": "Conj-w ¦ V-Qal-CImperf-3ms",
+              "strongs": "559",
+              "strongsList": [
+                "559"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 1,
+              "surface": "אֱלֹהִ֖ים",
+              "transliteration": "’ĕ·lō·hîm",
+              "gloss": "God",
+              "glossStatus": "translated",
+              "morphology": "N-mp",
+              "strongs": "430",
+              "strongsList": [
+                "430"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 2,
+              "surface": "יְהִ֣י",
+              "transliteration": "yə·hî",
+              "gloss": "Let there be",
+              "glossStatus": "translated",
+              "morphology": "V-Qal-Imperf.Jus-3ms",
+              "strongs": "1961",
+              "strongsList": [
+                "1961"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 3,
+              "surface": "א֑וֹר",
+              "transliteration": "’ō·wr;",
+              "gloss": "light",
+              "glossStatus": "translated",
+              "morphology": "N-cs",
+              "strongs": "216",
+              "strongsList": [
+                "216"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 4,
+              "surface": "וַֽיְהִי־",
+              "transliteration": "way·hî-",
+              "gloss": "and there was",
+              "glossStatus": "translated",
+              "morphology": "Conj-w ¦ V-Qal-CImperf-3ms",
+              "strongs": "1961",
+              "strongsList": [
+                "1961"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 5,
+              "surface": "אֽוֹר׃",
+              "transliteration": "’ō·wr.",
+              "gloss": "light",
+              "glossStatus": "translated",
+              "morphology": "N-cs",
+              "strongs": "216",
+              "strongsList": [
+                "216"
+              ],
+              "language": "hebrew"
+            }
+          ]
+        },
+        {
+          "verse": 4,
+          "language": "hebrew",
+          "recordCount": 12,
+          "records": [
+            {
+              "order": 0,
+              "surface": "וַיַּ֧רְא",
+              "transliteration": "way·yar",
+              "gloss": "And saw",
+              "glossStatus": "translated",
+              "morphology": "Conj-w ¦ V-Qal-CImperf-3ms",
+              "strongs": "7200",
+              "strongsList": [
+                "7200"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 1,
+              "surface": "אֱלֹהִ֛ים",
+              "transliteration": "’ĕ·lō·hîm",
+              "gloss": "God",
+              "glossStatus": "translated",
+              "morphology": "N-mp",
+              "strongs": "430",
+              "strongsList": [
+                "430"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 2,
+              "surface": "אֶת־",
+              "transliteration": "’eṯ-",
+              "gloss": "-",
+              "glossStatus": "untranslated",
+              "morphology": "DirObjM",
+              "strongs": "853",
+              "strongsList": [
+                "853"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 3,
+              "surface": "הָא֖וֹר",
+              "transliteration": "hā·’ō·wr",
+              "gloss": "the light",
+              "glossStatus": "translated",
+              "morphology": "Art ¦ N-cs",
+              "strongs": "216",
+              "strongsList": [
+                "216"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 4,
+              "surface": "כִּי־",
+              "transliteration": "kî-",
+              "gloss": "that",
+              "glossStatus": "translated",
+              "morphology": "Conj",
+              "strongs": "3588",
+              "strongsList": [
+                "3588"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 5,
+              "surface": "ט֑וֹב",
+              "transliteration": "ṭō·wḇ;",
+              "gloss": "[it was] good",
+              "glossStatus": "translated",
+              "morphology": "Adj-ms",
+              "strongs": "2896",
+              "strongsList": [
+                "2896"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 6,
+              "surface": "וַיַּבְדֵּ֣ל",
+              "transliteration": "way·yaḇ·dêl",
+              "gloss": "and divided",
+              "glossStatus": "translated",
+              "morphology": "Conj-w ¦ V-Hifil-CImperf-3ms",
+              "strongs": "914",
+              "strongsList": [
+                "914"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 7,
+              "surface": "אֱלֹהִ֔ים",
+              "transliteration": "’ĕ·lō·hîm,",
+              "gloss": "God",
+              "glossStatus": "translated",
+              "morphology": "N-mp",
+              "strongs": "430",
+              "strongsList": [
+                "430"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 8,
+              "surface": "בֵּ֥ין",
+              "transliteration": "bên",
+              "gloss": "between",
+              "glossStatus": "translated",
+              "morphology": "Prep",
+              "strongs": "996",
+              "strongsList": [
+                "996"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 9,
+              "surface": "הָא֖וֹר",
+              "transliteration": "hā·’ō·wr",
+              "gloss": "the light",
+              "glossStatus": "translated",
+              "morphology": "Art ¦ N-cs",
+              "strongs": "216",
+              "strongsList": [
+                "216"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 10,
+              "surface": "וּבֵ֥ין",
+              "transliteration": "ū·ḇên",
+              "gloss": "and between",
+              "glossStatus": "translated",
+              "morphology": "Conj-w ¦ Prep",
+              "strongs": "996",
+              "strongsList": [
+                "996"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 11,
+              "surface": "הַחֹֽשֶׁךְ׃",
+              "transliteration": "ha·ḥō·šeḵ.",
+              "gloss": "the darkness",
+              "glossStatus": "translated",
+              "morphology": "Art ¦ N-ms",
+              "strongs": "2822",
+              "strongsList": [
+                "2822"
+              ],
+              "language": "hebrew"
+            }
+          ]
+        },
+        {
+          "verse": 5,
+          "language": "hebrew",
+          "recordCount": 13,
+          "records": [
+            {
+              "order": 0,
+              "surface": "וַיִּקְרָ֨א",
+              "transliteration": "way·yiq·rā",
+              "gloss": "And called",
+              "glossStatus": "translated",
+              "morphology": "Conj-w ¦ V-Qal-CImperf-3ms",
+              "strongs": "7121",
+              "strongsList": [
+                "7121"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 1,
+              "surface": "אֱלֹהִ֤ים׀",
+              "transliteration": "’ĕ·lō·hîm",
+              "gloss": "God",
+              "glossStatus": "translated",
+              "morphology": "N-mp",
+              "strongs": "430",
+              "strongsList": [
+                "430"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 2,
+              "surface": "לָאוֹר֙",
+              "transliteration": "lā·’ō·wr",
+              "gloss": "to the light",
+              "glossStatus": "translated",
+              "morphology": "Prep-l, Art ¦ N-cs",
+              "strongs": "216",
+              "strongsList": [
+                "216"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 3,
+              "surface": "י֔וֹם",
+              "transliteration": "yō·wm,",
+              "gloss": "Day",
+              "glossStatus": "translated",
+              "morphology": "N-ms",
+              "strongs": "3117",
+              "strongsList": [
+                "3117"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 4,
+              "surface": "וְלַחֹ֖שֶׁךְ",
+              "transliteration": "wə·la·ḥō·šeḵ",
+              "gloss": "and to the darkness",
+              "glossStatus": "translated",
+              "morphology": "Conj-w, Prep-l, Art ¦ N-ms",
+              "strongs": "2822",
+              "strongsList": [
+                "2822"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 5,
+              "surface": "קָ֣רָא",
+              "transliteration": "qā·rā",
+              "gloss": "He called",
+              "glossStatus": "translated",
+              "morphology": "V-Qal-Perf-3ms",
+              "strongs": "7121",
+              "strongsList": [
+                "7121"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 6,
+              "surface": "לָ֑יְלָה",
+              "transliteration": "lā·yə·lāh;",
+              "gloss": "Night",
+              "glossStatus": "translated",
+              "morphology": "N-ms",
+              "strongs": "3915",
+              "strongsList": [
+                "3915"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 7,
+              "surface": "וַֽיְהִי־",
+              "transliteration": "way·hî-",
+              "gloss": "And there was",
+              "glossStatus": "translated",
+              "morphology": "Conj-w ¦ V-Qal-CImperf-3ms",
+              "strongs": "1961",
+              "strongsList": [
+                "1961"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 8,
+              "surface": "עֶ֥רֶב",
+              "transliteration": "‘e·reḇ",
+              "gloss": "evening",
+              "glossStatus": "translated",
+              "morphology": "N-ms",
+              "strongs": "6153",
+              "strongsList": [
+                "6153"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 9,
+              "surface": "וַֽיְהִי־",
+              "transliteration": "way·hî-",
+              "gloss": "and there was",
+              "glossStatus": "translated",
+              "morphology": "Conj-w ¦ V-Qal-CImperf-3ms",
+              "strongs": "1961",
+              "strongsList": [
+                "1961"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 10,
+              "surface": "בֹ֖קֶר",
+              "transliteration": "ḇō·qer",
+              "gloss": "morning",
+              "glossStatus": "translated",
+              "morphology": "N-ms",
+              "strongs": "1242",
+              "strongsList": [
+                "1242"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 11,
+              "surface": "י֥וֹם",
+              "transliteration": "yō·wm",
+              "gloss": "day",
+              "glossStatus": "translated",
+              "morphology": "N-ms",
+              "strongs": "3117",
+              "strongsList": [
+                "3117"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 12,
+              "surface": "אֶחָֽד׃פ",
+              "transliteration": "’e·ḥāḏ.",
+              "gloss": "one",
+              "glossStatus": "translated",
+              "morphology": "Number-ms",
+              "strongs": "259",
+              "strongsList": [
+                "259"
+              ],
+              "language": "hebrew"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "passage": "DAN 2:4-5",
+      "bookId": "DAN",
+      "book": "Daniel",
+      "chapter": 2,
+      "verses": [
+        4,
+        5
+      ],
+      "recordCount": 29,
+      "sourcePage": {
+        "url": "https://biblehub.com/interlinear/daniel/2.htm",
+        "file": "source-pages/daniel-2.html",
+        "retrievedAt": "2026-09-30T12:37:43.482Z",
+        "sha256": "5d6f457b73b3adc2cbc377819497eb5bc64b15b77353054b492b47d3e5949a9c",
+        "httpStatus": 200,
+        "editionLabel": "Berean Interlinear Bible (BIB)"
+      },
+      "verseData": [
+        {
+          "verse": 4,
+          "language": "mixed",
+          "recordCount": 12,
+          "records": [
+            {
+              "order": 0,
+              "surface": "וַֽיְדַבְּר֧וּ",
+              "transliteration": "way·ḏab·bə·rū",
+              "gloss": "And spoke",
+              "glossStatus": "translated",
+              "morphology": "Conj-w ¦ V-Piel-CImperf-3mp",
+              "strongs": "1696",
+              "strongsList": [
+                "1696"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 1,
+              "surface": "הַכַּשְׂדִּ֛ים",
+              "transliteration": "hak·kaś·dîm",
+              "gloss": "The astrologers",
+              "glossStatus": "translated",
+              "morphology": "Art ¦ N-proper-mp",
+              "strongs": "3778",
+              "strongsList": [
+                "3778"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 2,
+              "surface": "לַמֶּ֖לֶךְ",
+              "transliteration": "lam·me·leḵ",
+              "gloss": "to the king",
+              "glossStatus": "translated",
+              "morphology": "Prep-l, Art ¦ N-ms",
+              "strongs": "4428",
+              "strongsList": [
+                "4428"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 3,
+              "surface": "אֲרָמִ֑ית",
+              "transliteration": "’ă·rā·mîṯ;",
+              "gloss": "in Aramaic",
+              "glossStatus": "translated",
+              "morphology": "N-proper-fs",
+              "strongs": "762",
+              "strongsList": [
+                "762"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 4,
+              "surface": "מַלְכָּא֙",
+              "transliteration": "mal·kā",
+              "gloss": "O king",
+              "glossStatus": "translated",
+              "morphology": "N-msd",
+              "strongs": "4430",
+              "strongsList": [
+                "4430"
+              ],
+              "language": "aramaic"
+            },
+            {
+              "order": 5,
+              "surface": "לְעָלְמִ֣ין",
+              "transliteration": "lə·‘ā·lə·mîn",
+              "gloss": "forever",
+              "glossStatus": "translated",
+              "morphology": "Prep-l ¦ N-mp",
+              "strongs": "5957",
+              "strongsList": [
+                "5957"
+              ],
+              "language": "aramaic"
+            },
+            {
+              "order": 6,
+              "surface": "חֱיִ֔י",
+              "transliteration": "ḥĕ·yî,",
+              "gloss": "May you live",
+              "glossStatus": "translated",
+              "morphology": "V-Qal-Imp-ms",
+              "strongs": "2418",
+              "strongsList": [
+                "2418"
+              ],
+              "language": "aramaic"
+            },
+            {
+              "order": 7,
+              "surface": "אֱמַ֥ר",
+              "transliteration": "’ĕ·mar",
+              "gloss": "Tell",
+              "glossStatus": "translated",
+              "morphology": "V-Qal-Imp-ms",
+              "strongs": "560",
+              "strongsList": [
+                "560"
+              ],
+              "language": "aramaic"
+            },
+            {
+              "order": 8,
+              "surface": "חֶלְמָ֛א",
+              "transliteration": "ḥel·mā",
+              "gloss": "the dream",
+              "glossStatus": "translated",
+              "morphology": "N-msd",
+              "strongs": "2493",
+              "strongsList": [
+                "2493"
+              ],
+              "language": "aramaic"
+            },
+            {
+              "order": 9,
+              "surface": "לְעַבְדַּיִךְ",
+              "transliteration": "lə·‘aḇ·ḏāḵ",
+              "gloss": "to your servants",
+              "glossStatus": "translated",
+              "morphology": "Prep-l ¦ N-mpc ¦ 2ms",
+              "strongs": "5649",
+              "strongsList": [
+                "5649"
+              ],
+              "language": "aramaic",
+              "variant": {
+                "type": "ketiv-qere",
+                "sourceDisplays": "ketiv",
+                "sourceMarksVariant": false,
+                "ref": "DAN 2:4 @5649",
+                "provenance": "OSHB comparison (not supplied by Berean)",
+                "observedPageSurface": "לְעַבְדַּיִךְ",
+                "oshbKetiv": "ל/עבדי/ך",
+                "oshbQere": "לְ/עַבְדָ֖/ךְ",
+                "note": "The page shows a single surface (matching the OSHB Ketiv consonant skeleton, plural 'your servants') and a single gloss. It does not mark the written/read difference, so the Qere ('your servant', singular) cannot be recovered from this source. Do not split this into two reading words."
+              }
+            },
+            {
+              "order": 10,
+              "surface": "וּפִשְׁרָ֥א",
+              "transliteration": "ū·p̄iš·rā",
+              "gloss": "and the interpretation",
+              "glossStatus": "translated",
+              "morphology": "Conj-w ¦ N-msd",
+              "strongs": "6591",
+              "strongsList": [
+                "6591"
+              ],
+              "language": "aramaic"
+            },
+            {
+              "order": 11,
+              "surface": "נְחַוֵּֽא׃",
+              "transliteration": "nə·ḥaw·wê.",
+              "gloss": "we will show",
+              "glossStatus": "translated",
+              "morphology": "V-Piel-Imperf-1cp",
+              "strongs": "2324",
+              "strongsList": [
+                "2324"
+              ],
+              "language": "aramaic"
+            }
+          ]
+        },
+        {
+          "verse": 5,
+          "language": "aramaic",
+          "recordCount": 17,
+          "records": [
+            {
+              "order": 0,
+              "surface": "עָנֵ֤ה",
+              "transliteration": "‘ā·nêh",
+              "gloss": "Answered",
+              "glossStatus": "translated",
+              "morphology": "V-Qal-Prtcpl-ms",
+              "strongs": "6032",
+              "strongsList": [
+                "6032"
+              ],
+              "language": "aramaic"
+            },
+            {
+              "order": 1,
+              "surface": "מַלְכָּא֙",
+              "transliteration": "mal·kā",
+              "gloss": "the king",
+              "glossStatus": "translated",
+              "morphology": "N-msd",
+              "strongs": "4430",
+              "strongsList": [
+                "4430"
+              ],
+              "language": "aramaic"
+            },
+            {
+              "order": 2,
+              "surface": "וְאָמַ֣ר",
+              "transliteration": "wə·’ā·mar",
+              "gloss": "and said",
+              "glossStatus": "translated",
+              "morphology": "Conj-w ¦ V-Qal-Prtcpl-ms",
+              "strongs": "560",
+              "strongsList": [
+                "560"
+              ],
+              "language": "aramaic"
+            },
+            {
+              "order": 3,
+              "surface": "לְכַשְׂדָּיֵא",
+              "transliteration": "lə·ḵaś·dā·’ê,",
+              "gloss": "to the astrologers",
+              "glossStatus": "translated",
+              "morphology": "Prep-l ¦ N-proper-mp",
+              "strongs": "3779",
+              "strongsList": [
+                "3779"
+              ],
+              "language": "aramaic",
+              "variant": {
+                "type": "ketiv-qere",
+                "sourceDisplays": "ketiv",
+                "sourceMarksVariant": false,
+                "ref": "DAN 2:5 @3779",
+                "provenance": "OSHB comparison (not supplied by Berean)",
+                "observedPageSurface": "לְכַשְׂדָּיֵא",
+                "oshbKetiv": "ל/כשדי/א",
+                "oshbQere": "לְ/כַשְׂדָּאֵ֔/י",
+                "note": "The page shows a single surface (matching the OSHB Ketiv consonant skeleton) and glosses it contextually 'to the astrologers'. The Qere differs in letter order and is not marked on the page."
+              }
+            },
+            {
+              "order": 4,
+              "surface": "מִלְּתָ֖א",
+              "transliteration": "mil·lə·ṯā",
+              "gloss": "The word",
+              "glossStatus": "translated",
+              "morphology": "N-fsd",
+              "strongs": "4406",
+              "strongsList": [
+                "4406"
+              ],
+              "language": "aramaic"
+            },
+            {
+              "order": 5,
+              "surface": "מִנִּ֣י",
+              "transliteration": "min·nî",
+              "gloss": "from me",
+              "glossStatus": "translated",
+              "morphology": "Prep-m ¦ 1cs",
+              "strongs": "4481",
+              "strongsList": [
+                "4481"
+              ],
+              "language": "aramaic"
+            },
+            {
+              "order": 6,
+              "surface": "אַזְדָּ֑א",
+              "transliteration": "’az·dā;",
+              "gloss": "is firm",
+              "glossStatus": "translated",
+              "morphology": "Adj-fs",
+              "strongs": "230",
+              "strongsList": [
+                "230"
+              ],
+              "language": "aramaic"
+            },
+            {
+              "order": 7,
+              "surface": "הֵ֣ן",
+              "transliteration": "hên",
+              "gloss": "if",
+              "glossStatus": "translated",
+              "morphology": "Conj",
+              "strongs": "2006",
+              "strongsList": [
+                "2006"
+              ],
+              "language": "aramaic"
+            },
+            {
+              "order": 8,
+              "surface": "לָ֤א",
+              "transliteration": "lā",
+              "gloss": "not",
+              "glossStatus": "translated",
+              "morphology": "Adv-NegPrt",
+              "strongs": "3809",
+              "strongsList": [
+                "3809"
+              ],
+              "language": "aramaic"
+            },
+            {
+              "order": 9,
+              "surface": "תְהֽוֹדְעוּנַּ֙נִי֙",
+              "transliteration": "ṯə·hō·wḏ·‘ūn·na·nî",
+              "gloss": "you⁺ do make known to me",
+              "glossStatus": "translated",
+              "morphology": "V-Hifil-Imperf-2mp ¦ 1cse",
+              "strongs": "3046",
+              "strongsList": [
+                "3046"
+              ],
+              "language": "aramaic"
+            },
+            {
+              "order": 10,
+              "surface": "חֶלְמָ֣א",
+              "transliteration": "ḥel·mā",
+              "gloss": "the dream",
+              "glossStatus": "translated",
+              "morphology": "N-msd",
+              "strongs": "2493",
+              "strongsList": [
+                "2493"
+              ],
+              "language": "aramaic"
+            },
+            {
+              "order": 11,
+              "surface": "וּפִשְׁרֵ֔הּ",
+              "transliteration": "ū·p̄iš·rêh,",
+              "gloss": "and its interpretation",
+              "glossStatus": "translated",
+              "morphology": "Conj-w ¦ N-msc ¦ 3ms",
+              "strongs": "6591",
+              "strongsList": [
+                "6591"
+              ],
+              "language": "aramaic"
+            },
+            {
+              "order": 12,
+              "surface": "הַדָּמִין֙",
+              "transliteration": "had·dā·mîn",
+              "gloss": "into limbs",
+              "glossStatus": "translated",
+              "morphology": "N-mp",
+              "strongs": "1917",
+              "strongsList": [
+                "1917"
+              ],
+              "language": "aramaic"
+            },
+            {
+              "order": 13,
+              "surface": "תִּתְעַבְד֔וּן",
+              "transliteration": "tiṯ·‘aḇ·ḏūn,",
+              "gloss": "you⁺ shall be cut",
+              "glossStatus": "translated",
+              "morphology": "V-Hitpael-Imperf-2mp",
+              "strongs": "5648",
+              "strongsList": [
+                "5648"
+              ],
+              "language": "aramaic"
+            },
+            {
+              "order": 14,
+              "surface": "וּבָתֵּיכ֖וֹן",
+              "transliteration": "ū·ḇāt·tê·ḵō·wn",
+              "gloss": "and your houses",
+              "glossStatus": "translated",
+              "morphology": "Conj-w, Prep-b ¦ N-mpc",
+              "strongs": "1005",
+              "strongsList": [
+                "1005"
+              ],
+              "language": "aramaic"
+            },
+            {
+              "order": 15,
+              "surface": "נְוָלִ֥י",
+              "transliteration": "nə·wā·lî",
+              "gloss": "a dunghill",
+              "glossStatus": "translated",
+              "morphology": "N-fs",
+              "strongs": "5122",
+              "strongsList": [
+                "5122"
+              ],
+              "language": "aramaic"
+            },
+            {
+              "order": 16,
+              "surface": "יִתְּשָׂמֽוּן׃",
+              "transliteration": "yit·tə·śā·mūn.",
+              "gloss": "shall be made",
+              "glossStatus": "translated",
+              "morphology": "V-Hitpael-Imperf-3mp",
+              "strongs": "7761",
+              "strongsList": [
+                "7761"
+              ],
+              "language": "aramaic"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "passage": "MAL 4:5-6",
+      "bookId": "MAL",
+      "book": "Malachi",
+      "chapter": 4,
+      "verses": [
+        5,
+        6
+      ],
+      "recordCount": 28,
+      "sourcePage": {
+        "url": "https://biblehub.com/interlinear/malachi/4.htm",
+        "file": "source-pages/malachi-4.html",
+        "retrievedAt": "2026-09-30T12:37:46.876Z",
+        "sha256": "d384fb2331deb470f63da3748b58f4c9bbb3830c7fbfcb8b7f032137baad1d65",
+        "httpStatus": 200,
+        "editionLabel": "Berean Interlinear Bible (BIB)"
+      },
+      "verseData": [
+        {
+          "verse": 5,
+          "language": "hebrew",
+          "recordCount": 13,
+          "records": [
+            {
+              "order": 0,
+              "surface": "הִנֵּ֤ה",
+              "transliteration": "hin·nêh",
+              "gloss": "Behold",
+              "glossStatus": "translated",
+              "morphology": "Interjection",
+              "strongs": "2009",
+              "strongsList": [
+                "2009"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 1,
+              "surface": "אָֽנֹכִי֙",
+              "transliteration": "’ā·nō·ḵî",
+              "gloss": "I",
+              "glossStatus": "translated",
+              "morphology": "Pro-1cs",
+              "strongs": "595",
+              "strongsList": [
+                "595"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 2,
+              "surface": "שֹׁלֵ֣חַ",
+              "transliteration": "šō·lê·aḥ",
+              "gloss": "am sending",
+              "glossStatus": "translated",
+              "morphology": "V-Qal-Prtcpl-ms",
+              "strongs": "7971",
+              "strongsList": [
+                "7971"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 3,
+              "surface": "לָכֶ֔ם",
+              "transliteration": "lā·ḵem,",
+              "gloss": "to you⁺",
+              "glossStatus": "translated",
+              "morphology": "Prep-l ¦ 2mp",
+              "strongs": null,
+              "strongsList": [],
+              "language": "hebrew"
+            },
+            {
+              "order": 4,
+              "surface": "אֵ֖ת",
+              "transliteration": "’êṯ",
+              "gloss": "-",
+              "glossStatus": "untranslated",
+              "morphology": "DirObjM",
+              "strongs": "853",
+              "strongsList": [
+                "853"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 5,
+              "surface": "אֵלִיָּ֣ה",
+              "transliteration": "’ê·lî·yāh",
+              "gloss": "Elijah",
+              "glossStatus": "translated",
+              "morphology": "N-proper-ms",
+              "strongs": "452",
+              "strongsList": [
+                "452"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 6,
+              "surface": "הַנָּבִ֑יא",
+              "transliteration": "han·nā·ḇî;",
+              "gloss": "the prophet",
+              "glossStatus": "translated",
+              "morphology": "Art ¦ N-ms",
+              "strongs": "5030",
+              "strongsList": [
+                "5030"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 7,
+              "surface": "לִפְנֵ֗י",
+              "transliteration": "lip̄·nê,",
+              "gloss": "before the face of",
+              "glossStatus": "translated",
+              "morphology": "Prep-l ¦ N-cpc",
+              "strongs": "6440",
+              "strongsList": [
+                "6440"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 8,
+              "surface": "בּ֚וֹא",
+              "transliteration": "bō·w",
+              "gloss": "the coming",
+              "glossStatus": "translated",
+              "morphology": "V-Qal-Inf",
+              "strongs": "935",
+              "strongsList": [
+                "935"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 9,
+              "surface": "י֣וֹם",
+              "transliteration": "yō·wm",
+              "gloss": "of the day",
+              "glossStatus": "translated",
+              "morphology": "N-msc",
+              "strongs": "3117",
+              "strongsList": [
+                "3117"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 10,
+              "surface": "יְהוָ֔ה",
+              "transliteration": "Yah·weh,",
+              "gloss": "of YHWH",
+              "glossStatus": "translated",
+              "morphology": "N-proper-ms",
+              "strongs": "3068",
+              "strongsList": [
+                "3068"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 11,
+              "surface": "הַגָּד֖וֹל",
+              "transliteration": "hag·gā·ḏō·wl",
+              "gloss": "the great",
+              "glossStatus": "translated",
+              "morphology": "Art ¦ Adj-ms",
+              "strongs": "1419",
+              "strongsList": [
+                "1419"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 12,
+              "surface": "וְהַנּוֹרָֽא׃",
+              "transliteration": "wə·han·nō·w·rā.",
+              "gloss": "and awesome",
+              "glossStatus": "translated",
+              "morphology": "Conj-w, Art ¦ V-Nifal-Prtcpl-ms",
+              "strongs": "3372",
+              "strongsList": [
+                "3372"
+              ],
+              "language": "hebrew"
+            }
+          ]
+        },
+        {
+          "verse": 6,
+          "language": "hebrew",
+          "recordCount": 15,
+          "records": [
+            {
+              "order": 0,
+              "surface": "וְהֵשִׁ֤יב",
+              "transliteration": "wə·hê·šîḇ",
+              "gloss": "And he will turn",
+              "glossStatus": "translated",
+              "morphology": "Conj-w ¦ V-Hifil-ConjPerf-3ms",
+              "strongs": "7725",
+              "strongsList": [
+                "7725"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 1,
+              "surface": "לֵב־",
+              "transliteration": "lêḇ-",
+              "gloss": "the heart",
+              "glossStatus": "translated",
+              "morphology": "N-msc",
+              "strongs": "3820",
+              "strongsList": [
+                "3820"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 2,
+              "surface": "אָבוֹת֙",
+              "transliteration": "’ā·ḇō·wṯ",
+              "gloss": "of the fathers",
+              "glossStatus": "translated",
+              "morphology": "N-mp",
+              "strongs": "1",
+              "strongsList": [
+                "1"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 3,
+              "surface": "עַל־",
+              "transliteration": "‘al-",
+              "gloss": "to",
+              "glossStatus": "translated",
+              "morphology": "Prep",
+              "strongs": "5921",
+              "strongsList": [
+                "5921"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 4,
+              "surface": "בָּנִ֔ים",
+              "transliteration": "bā·nîm,",
+              "gloss": "the sons",
+              "glossStatus": "translated",
+              "morphology": "N-mp",
+              "strongs": "1121",
+              "strongsList": [
+                "1121"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 5,
+              "surface": "וְלֵ֥ב",
+              "transliteration": "wə·lêḇ",
+              "gloss": "and the heart",
+              "glossStatus": "translated",
+              "morphology": "Conj-w ¦ N-msc",
+              "strongs": "3820",
+              "strongsList": [
+                "3820"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 6,
+              "surface": "בָּנִ֖ים",
+              "transliteration": "bā·nîm",
+              "gloss": "of sons",
+              "glossStatus": "translated",
+              "morphology": "N-mp",
+              "strongs": "1121",
+              "strongsList": [
+                "1121"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 7,
+              "surface": "עַל־",
+              "transliteration": "‘al-",
+              "gloss": "to",
+              "glossStatus": "translated",
+              "morphology": "Prep",
+              "strongs": "5921",
+              "strongsList": [
+                "5921"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 8,
+              "surface": "אֲבוֹתָ֑ם",
+              "transliteration": "’ă·ḇō·w·ṯām;",
+              "gloss": "their fathers",
+              "glossStatus": "translated",
+              "morphology": "N-mpc ¦ 3mp",
+              "strongs": "1",
+              "strongsList": [
+                "1"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 9,
+              "surface": "פֶּן־",
+              "transliteration": "pen-",
+              "gloss": "lest",
+              "glossStatus": "translated",
+              "morphology": "Conj",
+              "strongs": "6435",
+              "strongsList": [
+                "6435"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 10,
+              "surface": "אָב֕וֹא",
+              "transliteration": "’ā·ḇō·w",
+              "gloss": "I come",
+              "glossStatus": "translated",
+              "morphology": "V-Qal-Imperf-1cs",
+              "strongs": "935",
+              "strongsList": [
+                "935"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 11,
+              "surface": "וְהִכֵּיתִ֥י",
+              "transliteration": "wə·hik·kê·ṯî",
+              "gloss": "and strike",
+              "glossStatus": "translated",
+              "morphology": "Conj-w ¦ V-Hifil-ConjPerf-1cs",
+              "strongs": "5221",
+              "strongsList": [
+                "5221"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 12,
+              "surface": "אֶת־",
+              "transliteration": "’eṯ-",
+              "gloss": "-",
+              "glossStatus": "untranslated",
+              "morphology": "DirObjM",
+              "strongs": "853",
+              "strongsList": [
+                "853"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 13,
+              "surface": "הָאָ֖רֶץ",
+              "transliteration": "hā·’ā·reṣ",
+              "gloss": "the land",
+              "glossStatus": "translated",
+              "morphology": "Art ¦ N-fs",
+              "strongs": "776",
+              "strongsList": [
+                "776"
+              ],
+              "language": "hebrew"
+            },
+            {
+              "order": 14,
+              "surface": "חֵֽרֶם׃",
+              "transliteration": "ḥê·rem.",
+              "gloss": "with a curse",
+              "glossStatus": "translated",
+              "morphology": "N-ms",
+              "strongs": "2764",
+              "strongsList": [
+                "2764"
+              ],
+              "language": "hebrew"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "generatedBy": "build/import-berean-hebrew-pilot.mjs",
+  "source": "build/sources/berean-hebrew/pilot.fixture.json",
+  "sourceSha256": "66c9767d949ce1f5f0c15245a2f93018410b05834f17ad748d40e127d37f239a",
+  "output": "data/berean-hebrew-pilot.js",
+  "outputSha256": "fbc473726df69b0d34fbfa8c031c295d057bed46b3fc7f394968cde6224d5074",
+  "recordCount": 109,
+  "passages": [
+    {
+      "passage": "GEN 1:1-5",
+      "bookId": "GEN",
+      "chapter": 1,
+      "recordCount": 52
+    },
+    {
+      "passage": "DAN 2:4-5",
+      "bookId": "DAN",
+      "chapter": 2,
+      "recordCount": 29
+    },
+    {
+      "passage": "MAL 4:5-6",
+      "bookId": "MAL",
+      "chapter": 4,
+      "recordCount": 28
+    }
+  ]
+}

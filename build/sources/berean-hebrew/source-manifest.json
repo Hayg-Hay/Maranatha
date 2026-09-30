@@ -1,0 +1,50 @@
+{
+  "retrievedBy": "build/tools/berean-hebrew-fetch.mjs",
+  "userAgent": "Maranatha-BereanHebrewPilot/0.1 (+offline Bible browser research; contact via repo)",
+  "requestDelayMs": 3000,
+  "note": "Dated draft. Raw Bible Hub pages are cached locally (not committed) so extraction is reproducible without re-fetching. Retrieval permission (Berean team email) is separate from the public-domain dedication at https://berean.bible/terms.htm; see README.md.",
+  "pages": [
+    {
+      "passage": "GEN 1",
+      "book": "Genesis",
+      "chapter": 1,
+      "url": "https://biblehub.com/interlinear/genesis/1.htm",
+      "file": "source-pages/genesis-1.html",
+      "retrievedAt": "2026-09-30T12:37:39.692Z",
+      "httpStatus": 200,
+      "byteLength": 357153,
+      "sha256": "fee715dbb90970e11dd4e0837dd75edc7970884f31dc1034c71eb1d470f8b7c2",
+      "title": "Genesis 1 Interlinear Bible",
+      "breadcrumb": "Bible > BSB > Genesis 1",
+      "editionFooter": "Berean Interlinear Bible (BIB)"
+    },
+    {
+      "passage": "DAN 2",
+      "book": "Daniel",
+      "chapter": 2,
+      "url": "https://biblehub.com/interlinear/daniel/2.htm",
+      "file": "source-pages/daniel-2.html",
+      "retrievedAt": "2026-09-30T12:37:43.482Z",
+      "httpStatus": 200,
+      "byteLength": 678329,
+      "sha256": "5d6f457b73b3adc2cbc377819497eb5bc64b15b77353054b492b47d3e5949a9c",
+      "title": "Daniel 2 Interlinear Bible",
+      "breadcrumb": "Bible > BSB > Daniel 2",
+      "editionFooter": "Berean Interlinear Bible (BIB)"
+    },
+    {
+      "passage": "MAL 4",
+      "book": "Malachi",
+      "chapter": 4,
+      "url": "https://biblehub.com/interlinear/malachi/4.htm",
+      "file": "source-pages/malachi-4.html",
+      "retrievedAt": "2026-09-30T12:37:46.876Z",
+      "httpStatus": 200,
+      "byteLength": 81084,
+      "sha256": "d384fb2331deb470f63da3748b58f4c9bbb3830c7fbfcb8b7f032137baad1d65",
+      "title": "Malachi 4 Interlinear Bible",
+      "breadcrumb": "Bible > BSB > Malachi 4",
+      "editionFooter": "Berean Interlinear Bible (BIB)"
+    }
+  ]
+}

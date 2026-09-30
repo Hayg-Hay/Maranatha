@@ -1,0 +1,52 @@
+{
+  "note": "Curated, external annotations for the Berean Hebrew pilot. The three cached Bible Hub pages do not label language and, at the two inspected Daniel records below, do not mark Ketiv/Qere. These facts are supplied from outside the page and are referenced per record; they are never merged into the extracted surface/transliteration/gloss strings. This is limited to the three cached pages and the two inspected records — no general claim is made about Bible Hub or about other passages. The OSHB forms below are quoted from build/sources/oshb/Dan.xml for comparison only.",
+  "languageRules": [
+    {
+      "bookId": "DAN",
+      "chapter": 2,
+      "verse": 4,
+      "type": "transition-after-strongs",
+      "strongs": "762",
+      "before": "hebrew",
+      "after": "aramaic",
+      "evidence": "Daniel 2:4 is the verse where the text switches from Hebrew to Aramaic. The page's own word for 'in Aramaic' is Strong's 762 (אֲרָמִית); every record after it is Aramaic. The page does not label this transition."
+    },
+    {
+      "bookId": "DAN",
+      "chapter": 2,
+      "verse": 5,
+      "language": "aramaic",
+      "evidence": "Continues the Aramaic section begun mid-way through Daniel 2:4."
+    }
+  ],
+  "variants": [
+    {
+      "bookId": "DAN",
+      "chapter": 2,
+      "verse": 4,
+      "strongs": "5649",
+      "type": "ketiv-qere",
+      "sourceDisplays": "ketiv",
+      "sourceMarksVariant": false,
+      "provenance": "OSHB comparison (not supplied by Berean)",
+      "observedPageSurface": "לְעַבְדַּיִךְ",
+      "oshbKetiv": "ל/עבדי/ך",
+      "oshbQere": "לְ/עַבְדָ֖/ךְ",
+      "note": "The page shows a single surface (matching the OSHB Ketiv consonant skeleton, plural 'your servants') and a single gloss. It does not mark the written/read difference, so the Qere ('your servant', singular) cannot be recovered from this source. Do not split this into two reading words."
+    },
+    {
+      "bookId": "DAN",
+      "chapter": 2,
+      "verse": 5,
+      "strongs": "3779",
+      "type": "ketiv-qere",
+      "sourceDisplays": "ketiv",
+      "sourceMarksVariant": false,
+      "provenance": "OSHB comparison (not supplied by Berean)",
+      "observedPageSurface": "לְכַשְׂדָּיֵא",
+      "oshbKetiv": "ל/כשדי/א",
+      "oshbQere": "לְ/כַשְׂדָּאֵ֔/י",
+      "note": "The page shows a single surface (matching the OSHB Ketiv consonant skeleton) and glosses it contextually 'to the astrologers'. The Qere differs in letter order and is not marked on the page."
+    }
+  ]
+}
