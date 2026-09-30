@@ -12,6 +12,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { runFetch, validateDownloadedPage } from './berean-hebrew-fetch.mjs';
 import { parsePage, assemblePassage, buildFixture, partitionAnomalies, writeFixtureIfClean, FIXTURE, recordFingerprint, missingSourcePages, sourceCacheRecoveryMessage } from './berean-hebrew-extract.mjs';
+import { classifyVariant, sourceVerseFor } from './berean-hebrew-variants.mjs';
 
 const results = [];
 const skipped = [];
@@ -338,6 +339,58 @@ await test('assemble: a stale variant fingerprint is rejected as structural', ()
   const { passage, anomalies } = assemblePassage({ coverage, html, page, annotations: { languageRules: [] }, variantByKey: stale });
   assert(!passage.verseData[0].records[0].variant, 'stale variant not attached');
   assert(partitionAnomalies(anomalies).structural.some((a) => a.kind === 'stale-variant-fingerprint'), 'stale fingerprint flagged structural');
+});
+
+// ---------------------------------------------------------------------------
+// Ketiv/Qere matcher tests (pure; no cache needed)
+// ---------------------------------------------------------------------------
+const kqRec = (order, surface, strongsList = []) => ({ order, surface, transliteration: 't', gloss: 'g', morphology: 'm', strongsList });
+const kqPair = ({ ketiv, qere, kL = null, qL = null, before = '' }) => ({ oshbKetiv: ketiv, oshbQere: qere, ketivLemma: kL, qereLemma: qL, beforeSkeleton: before });
+
+await test('variant: preceding-word context resolves two candidate occurrences', () => {
+  // GEN 27:29: the Ketiv spelling occurs first (after "peoples"); the Qere
+  // spelling occurs later (after "your brothers").
+  const pair = kqPair({ ketiv: 'וישתחו', qere: 'וישתחוו', kL: 'c/7812', qL: 'c/7812', before: 'עמים' });
+  const recs = [kqRec(0, 'עמים'), kqRec(1, 'וישתחו', ['7812']), kqRec(2, 'לאחיך'), kqRec(3, 'וישתחוו', ['7812'])];
+  const r = classifyVariant(pair, recs);
+  eq(r.display, 'ketiv', 'chose the Ketiv occurrence');
+  eq(r.displayBy, 'context', 'chosen by context, not position');
+  eq(r.record.order, 1, 'selected the first occurrence');
+});
+
+await test('variant: a Strong\'s mismatch does not change a verified letter match', () => {
+  // GEN 30:11: displayed Ketiv letters, but the source tags the read form's Strong's.
+  const pair = kqPair({ ketiv: 'בגד', qere: 'בא', kL: 'b/1409', qL: '935', before: 'לאה' });
+  const recs = [kqRec(0, 'לאה'), kqRec(1, 'בגד', ['935'])];
+  const r = classifyVariant(pair, recs);
+  eq(r.display, 'ketiv', 'displayed letters are the Ketiv');
+  eq(r.strongsEvidence, 'other-reading', 'Strong\'s follows the other reading');
+  assert(!r.uncertain, 'still resolved');
+
+  // GEN 27:3: source tags a dictionary variant (neither lemma) — letters win.
+  const pair2 = kqPair({ ketiv: 'צידה', qere: 'ציד', kL: '6720', qL: '6720', before: 'לי' });
+  const r2 = classifyVariant(pair2, [kqRec(0, 'לי'), kqRec(1, 'צידה', ['6718'])]);
+  eq(r2.display, 'ketiv', 'letters verified');
+  eq(r2.strongsEvidence, 'none', 'dictionary-variant Strong\'s recorded as none');
+});
+
+await test('variant: identical consonant skeletons remain ambiguous', () => {
+  const pair = kqPair({ ketiv: 'אב', qere: 'אב', kL: '1', qL: '2', before: 'x' });
+  const r = classifyVariant(pair, [kqRec(0, 'x'), kqRec(1, 'אב', ['1'])]);
+  assert(r.uncertain, 'same skeleton cannot pick a reading');
+});
+
+await test('variant: ambiguous repeated words remain unresolved', () => {
+  // Two records share the Ketiv skeleton AND the same preceding word.
+  const pair = kqPair({ ketiv: 'וישתחו', qere: 'וישתחוו', kL: '7812', qL: '7812', before: 'א' });
+  const recs = [kqRec(0, 'א'), kqRec(1, 'וישתחו', ['7812']), kqRec(2, 'א'), kqRec(3, 'וישתחו', ['7812'])];
+  const r = classifyVariant(pair, recs);
+  assert(r.uncertain && /ambiguous/.test(r.uncertain), `expected ambiguity, got ${JSON.stringify(r)}`);
+});
+
+await test('variant: OSHB-to-English verse mapping from the KJV note', () => {
+  eq(sourceVerseFor('<note>KJV:Exod.22.5</note>', 22, 4), { chapter: 22, verse: 5 }, 'mapped OSHB 22:4 -> English 22:5');
+  eq(sourceVerseFor('<verse>no mapping</verse>', 16, 2), { chapter: 16, verse: 2 }, 'unmapped verse unchanged');
 });
 
 if (hasSourceCache) {

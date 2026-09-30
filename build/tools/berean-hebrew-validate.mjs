@@ -67,16 +67,16 @@ for (const page of manifest.pages) {
 check('every cached page hash matches the manifest', hashBad === 0, `${hashBad} bad`);
 
 // --- coverage & totals ------------------------------------------------------
-check('coverage string names Genesis 1-50 and Exodus 1-40 plus the retained verses',
-  fixture.coverage === 'Genesis 1\u201350; Exodus 1\u201340; Daniel 2:4\u20135; Malachi 4:5\u20136', fixture.coverage);
+check('coverage string names Genesis 1-50, Exodus 1-40 and Leviticus 1-27 plus the retained verses',
+  fixture.coverage === 'Genesis 1\u201350; Exodus 1\u201340; Leviticus 1\u201327; Daniel 2:4\u20135; Malachi 4:5\u20136', fixture.coverage);
 const t = fixture.totals;
-check('4 books imported', t.books === 4, `${t.books}`);
-check('92 chapters imported (50 GEN + 40 EXO + DAN 2 + MAL 4)', t.chapters === 92, `${t.chapters}`);
-check('2750 verses imported', t.verses === 2750, `${t.verses}`);
-check('37,383 records imported', t.records === 37383, `${t.records}`);
+check('5 books imported', t.books === 5, `${t.books}`);
+check('119 chapters imported (50 GEN + 40 EXO + 27 LEV + DAN 2 + MAL 4)', t.chapters === 119, `${t.chapters}`);
+check('3609 verses imported', t.verses === 3609, `${t.verses}`);
+check('49,333 records imported', t.records === 49333, `${t.records}`);
 check('no structural extraction errors', t.structuralErrors === 0, `${t.structuralErrors}`);
 
-for (const [bookId, chapters] of [['GEN', 50], ['EXO', 40]]) {
+for (const [bookId, chapters] of [['GEN', 50], ['EXO', 40], ['LEV', 27]]) {
   const passages = fixture.passages.filter((p) => p.bookId === bookId);
   const canonBook = canon.books.find((b) => b.id === bookId);
   let bad = 0;
@@ -110,7 +110,7 @@ for (const r of allRecords) {
 check('missing blanks are explicit nulls, intentional blanks are "-"', fieldErrors === 0, `${fieldErrors}`);
 
 // --- verified variants ------------------------------------------------------
-check('30 verified Ketiv/Qere variants', variants.variants.length === 30, `${variants.variants.length}`);
+check('35 verified Ketiv/Qere variants', variants.variants.length === 35, `${variants.variants.length}`);
 check('all covered Ketiv/Qere cases resolved (0 uncertain)', variants.uncertain.length === 0, `${variants.uncertain.length}`);
 let variantWired = 0;
 let fingerprintBad = 0;
@@ -121,7 +121,7 @@ for (const v of variants.variants) {
   if (!v.sourceFingerprint) fingerprintMissing++;
   else if (rec && recordFingerprint(rec) !== v.sourceFingerprint) fingerprintBad++;
 }
-check('every verified variant is wired to exactly its record', variantWired === 30, `${variantWired}/30`);
+check('every verified variant is wired to exactly its record', variantWired === 35, `${variantWired}/35`);
 check('every verified variant carries a source fingerprint', fingerprintMissing === 0, `${fingerprintMissing} missing`);
 check('every attached fingerprint matches its record', fingerprintBad === 0, `${fingerprintBad} stale`);
 const variantKeys = new Set(variants.variants.map((v) => `${v.bookId}:${v.chapter}:${v.verse}:${v.order}`));
@@ -136,7 +136,7 @@ for (const p of fixture.passages) {
     }
   }
 }
-check('only the 30 verified variants are attached to records', attached === 30 && attachedBad === 0, `attached ${attached}, unrecognised ${attachedBad}`);
+check('only the 35 verified variants are attached to records', attached === 35 && attachedBad === 0, `attached ${attached}, unrecognised ${attachedBad}`);
 check('variant letters match the displayed surface skeleton',
   variants.variants.every((v) => skeleton(v.observedPageSurface) === skeleton(v.oshbKetiv)), 'skeleton mismatch');
 
@@ -153,9 +153,14 @@ check('Genesis divine-name convention preserved (Yah·weh / YHWH)', yhwhGen && y
 const exo315 = fixture.passages.find((p) => p.bookId === 'EXO' && p.chapter === 3).verseData.find((v) => v.verse === 15).records;
 const yhwhExo = exo315.find((r) => r.strongsList.includes('3068'));
 check('Exodus divine-name convention preserved (Yah·weh / YHWH)', yhwhExo && yhwhExo.transliteration === 'Yah·weh' && yhwhExo.gloss === 'YHWH', JSON.stringify(yhwhExo));
+const lev11 = fixture.passages.find((p) => p.bookId === 'LEV' && p.chapter === 1).verseData.find((v) => v.verse === 1).records;
+const yhwhLev = lev11.find((r) => r.strongsList.includes('3068'));
+check('Leviticus divine-name convention preserved (Yah·weh / YHWH)', yhwhLev && yhwhLev.transliteration === 'Yah·weh' && yhwhLev.gloss === 'YHWH', JSON.stringify(yhwhLev));
 check('Genesis 8:17 variant present with the exact OSHB Qere', variantAt('GEN', 8, 17, '3318')?.oshbQere === 'הַיְצֵ֣א');
 const exo225 = variantAt('EXO', 22, 5, '1165');
 check('Exodus 22:5 variant present (OSHB 22:4 mapped to the English verse)', exo225 && exo225.oshbQere === 'בְּעִיר֔/וֹ' && exo225.oshbRef === 'Exod 22:4', JSON.stringify(exo225 && { q: exo225.oshbQere, ref: exo225.oshbRef }));
+const lev1621 = variantAt('LEV', 16, 21, '3027');
+check('Leviticus 16:21 variant present with the exact OSHB Qere', lev1621 && lev1621.oshbQere === 'יָדָ֗י/ו', JSON.stringify(lev1621 && lev1621.oshbQere));
 
 // --- report -----------------------------------------------------------------
 let failed = 0;

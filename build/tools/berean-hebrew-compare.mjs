@@ -5,7 +5,9 @@
 // and compares the result against the accepted fixture record by record:
 // references, record counts/order, surface, transliteration, gloss, morphology
 // and the COMPLETE Strong's list. It also checks chapter/verse coverage against
-// Maranatha's canon and prints the anomaly summary.
+// Maranatha's canon for the full books (Genesis, Exodus, Leviticus) and prints
+// the anomaly summary. Each page's jsdom window is closed after its plain
+// records are extracted (try/finally), so pages do not accumulate in memory.
 //
 // It deliberately does NOT import the extractor's parser.
 //
@@ -46,37 +48,43 @@ function normText(raw) {
 }
 
 // Independent DOM reader: returns { verses: { n: [ {order,surface,transliteration,gloss,morphology,strongsList} ] } }.
+// Only plain data is returned; the jsdom window is always closed (even if
+// extraction throws) so pages do not accumulate in memory.
 function readPageDom(html) {
   const dom = new JSDOM(html);
-  const { document } = dom.window;
-  const tables = [...document.querySelectorAll('table.tablefloatheb')];
-  const verses = {};
-  let currentVerse = 0;
-  for (const table of tables) {
-    // Verse reference: first ref span in this word block.
-    const refSpan = table.querySelector('span.reftop, span.reftrans, span.refheb, span.refbot, span.reftop2');
-    if (refSpan) {
-      const n = Number(refSpan.textContent.replace(/[^0-9]/g, ''));
-      if (n > 0) currentVerse = n;
-    }
-    const hebSpans = [...table.querySelectorAll('span.hebrew')];
-    const translitSpan = table.querySelector('span.translit');
-    const engSpan = table.querySelector('span.eng');
-    const morphLink = table.querySelector('a[href="/hebrewparse.htm"]');
-    const strongsList = [...table.querySelectorAll('a[href]')]
-      .map((a) => /^\/hebrew\/(\d+)\.htm$/.exec(a.getAttribute('href')))
-      .filter(Boolean)
-      .map((m) => m[1]);
+  try {
+    const { document } = dom.window;
+    const tables = [...document.querySelectorAll('table.tablefloatheb')];
+    const verses = {};
+    let currentVerse = 0;
+    for (const table of tables) {
+      // Verse reference: first ref span in this word block.
+      const refSpan = table.querySelector('span.reftop, span.reftrans, span.refheb, span.refbot, span.reftop2');
+      if (refSpan) {
+        const n = Number(refSpan.textContent.replace(/[^0-9]/g, ''));
+        if (n > 0) currentVerse = n;
+      }
+      const hebSpans = [...table.querySelectorAll('span.hebrew')];
+      const translitSpan = table.querySelector('span.translit');
+      const engSpan = table.querySelector('span.eng');
+      const morphLink = table.querySelector('a[href="/hebrewparse.htm"]');
+      const strongsList = [...table.querySelectorAll('a[href]')]
+        .map((a) => /^\/hebrew\/(\d+)\.htm$/.exec(a.getAttribute('href')))
+        .filter(Boolean)
+        .map((m) => m[1]);
 
-    if (!currentVerse) continue;
-    const surface = hebSpans.length === 1 ? normText(hebSpans[0].textContent) : null;
-    const transliteration = translitSpan ? normText(translitSpan.textContent) || null : null;
-    const gloss = engSpan ? normText(engSpan.textContent) || null : null;
-    const morphology = morphLink ? normText(morphLink.textContent) || null : null;
-    verses[currentVerse] = verses[currentVerse] || [];
-    verses[currentVerse].push({ order: verses[currentVerse].length, surface, transliteration, gloss, morphology, strongsList });
+      if (!currentVerse) continue;
+      const surface = hebSpans.length === 1 ? normText(hebSpans[0].textContent) : null;
+      const transliteration = translitSpan ? normText(translitSpan.textContent) || null : null;
+      const gloss = engSpan ? normText(engSpan.textContent) || null : null;
+      const morphology = morphLink ? normText(morphLink.textContent) || null : null;
+      verses[currentVerse] = verses[currentVerse] || [];
+      verses[currentVerse].push({ order: verses[currentVerse].length, surface, transliteration, gloss, morphology, strongsList });
+    }
+    return { verses };
+  } finally {
+    dom.window.close();
   }
-  return { verses };
 }
 
 function loadCanon() {
@@ -106,9 +114,9 @@ function main() {
   const coverageIssues = [];
 
   // Coverage vs canon, per covered book/chapter. Full-book imports (Genesis,
-  // Exodus) must match canon exactly; the retained partial books are not
-  // checked here.
-  const FULL_BOOKS = new Set(['GEN', 'EXO']);
+  // Exodus, Leviticus) must match canon exactly; the retained partial books are
+  // not checked here.
+  const FULL_BOOKS = new Set(['GEN', 'EXO', 'LEV']);
   const byBookChapter = new Map();
   for (const p of fixture.passages) byBookChapter.set(`${p.bookId}:${p.chapter}`, p);
   for (const [key, passage] of byBookChapter) {
@@ -156,7 +164,7 @@ function main() {
   }
 
   check('independent reader agrees with the fixture on every covered record', mismatches === 0, `${mismatches} mismatch(es)`);
-  check('full-book (Genesis/Exodus) chapter/verse coverage matches canon', coverageIssues.length === 0, JSON.stringify(coverageIssues.slice(0, 5)));
+  check('full-book (Genesis/Exodus/Leviticus) chapter/verse coverage matches canon', coverageIssues.length === 0, JSON.stringify(coverageIssues.slice(0, 5)));
   check('no structural extraction errors in the fixture', fixture.totals.structuralErrors === 0, `${fixture.totals.structuralErrors}`);
 
   // Anomaly summary (from the fixture) + uncertain variants.

@@ -661,6 +661,116 @@
       },
       "sourceFingerprint": "80bf298a022270500599884a35769bfd143071458a741f948d569353393f2572",
       "note": "Bible Hub displays the written (Ketiv) form; the OSHB Qere differs. Berean’s own surface/alignment is unchanged."
+    },
+    {
+      "bookId": "LEV",
+      "chapter": 11,
+      "verse": 21,
+      "order": 11,
+      "oshbRef": "Lev 11:21",
+      "strongs": "3808",
+      "type": "ketiv-qere",
+      "sourceDisplays": "ketiv",
+      "sourceMarksVariant": false,
+      "provenance": "OSHB comparison (not supplied by Berean)",
+      "observedPageSurface": "לֹא",
+      "oshbKetiv": "לא",
+      "oshbQere": "ל֤/וֹ",
+      "evidence": {
+        "displayBy": "skeleton",
+        "strongs": "display",
+        "vowels": "unresolved"
+      },
+      "sourceFingerprint": "dd049612aedf5852b83eab21abd65b5cbe55973fc897cfa8f50dae683ca876cd",
+      "note": "Bible Hub displays the written (Ketiv) form; the OSHB Qere differs. Berean’s own surface/alignment is unchanged."
+    },
+    {
+      "bookId": "LEV",
+      "chapter": 16,
+      "verse": 21,
+      "order": 4,
+      "oshbRef": "Lev 16:21",
+      "strongs": "3027",
+      "type": "ketiv-qere",
+      "sourceDisplays": "ketiv",
+      "sourceMarksVariant": false,
+      "provenance": "OSHB comparison (not supplied by Berean)",
+      "observedPageSurface": "יָדוֹ",
+      "oshbKetiv": "יד/ו",
+      "oshbQere": "יָדָ֗י/ו",
+      "evidence": {
+        "displayBy": "skeleton",
+        "strongs": "display",
+        "vowels": "unresolved"
+      },
+      "sourceFingerprint": "bfb3721704556f4caab6138df9879bffbae5c9ed304993ae90d82267f3ba0e66",
+      "note": "Bible Hub displays the written (Ketiv) form; the OSHB Qere differs. Berean’s own surface/alignment is unchanged."
+    },
+    {
+      "bookId": "LEV",
+      "chapter": 21,
+      "verse": 5,
+      "order": 1,
+      "oshbRef": "Lev 21:5",
+      "strongs": "7139",
+      "type": "ketiv-qere",
+      "sourceDisplays": "ketiv",
+      "sourceMarksVariant": false,
+      "provenance": "OSHB comparison (not supplied by Berean)",
+      "observedPageSurface": "יִקְרְחָה",
+      "oshbKetiv": "יקרחה",
+      "oshbQere": "יִקְרְח֤וּ",
+      "evidence": {
+        "displayBy": "skeleton",
+        "strongs": "display",
+        "vowels": "unresolved"
+      },
+      "sourceFingerprint": "82a3a7c17716e112a47f3c66b2a0db3cb9fb50bc0f15e005c4fd710585ba67da",
+      "note": "Bible Hub displays the written (Ketiv) form; the OSHB Qere differs. Berean’s own surface/alignment is unchanged."
+    },
+    {
+      "bookId": "LEV",
+      "chapter": 25,
+      "verse": 30,
+      "order": 13,
+      "oshbRef": "Lev 25:30",
+      "strongs": "3808",
+      "type": "ketiv-qere",
+      "sourceDisplays": "ketiv",
+      "sourceMarksVariant": false,
+      "provenance": "OSHB comparison (not supplied by Berean)",
+      "observedPageSurface": "לֹא",
+      "oshbKetiv": "לא",
+      "oshbQere": "ל֣/וֹ",
+      "evidence": {
+        "displayBy": "context",
+        "strongs": "display",
+        "vowels": "unresolved"
+      },
+      "sourceFingerprint": "604bac6a0f8870d95db4c855a70b5da4a1d5b9ac81fff088e8fa952c506c286a",
+      "note": "Bible Hub displays the written (Ketiv) form; the OSHB Qere differs. Berean’s own surface/alignment is unchanged."
+    },
+    {
+      "bookId": "LEV",
+      "chapter": 9,
+      "verse": 22,
+      "order": 3,
+      "oshbRef": "Lev 9:22",
+      "strongs": "3027",
+      "type": "ketiv-qere",
+      "sourceDisplays": "ketiv",
+      "sourceMarksVariant": false,
+      "provenance": "OSHB comparison (not supplied by Berean)",
+      "observedPageSurface": "יָדוֹ",
+      "oshbKetiv": "יד/ו",
+      "oshbQere": "יָדָ֛י/ו",
+      "evidence": {
+        "displayBy": "skeleton",
+        "strongs": "display",
+        "vowels": "unresolved"
+      },
+      "sourceFingerprint": "b504061a6e6dd91ade50b4aff9a8a2ab0b64811b40677bb5a8c69653f6aec89d",
+      "note": "Bible Hub displays the written (Ketiv) form; the OSHB Qere differs. Berean’s own surface/alignment is unchanged."
     }
   ],
   "uncertain": []

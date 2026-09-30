@@ -1,16 +1,11 @@
-# Berean Hebrew interlinear — Genesis + Exodus local preview (Bible Hub)
+# Berean Hebrew interlinear — Genesis + Exodus + Leviticus local preview (Bible Hub)
 
 This directory holds a **read-only local preview** of the Berean Interlinear
 Bible (BIB) Hebrew Old Testament extracted from Bible Hub. It covers **all 50
-chapters of Genesis** and **all 40 of Exodus**, plus the retained **Daniel 2:4–5**
-and **Malachi 4:5–6** records from the accepted pilot. The generated runtime files
-under `data/berean-hebrew/` are what the app loads.
-
-The work answers one question: does Bible Hub's Berean Hebrew interlinear
-preserve a reliable, per-word association between Hebrew/Aramaic surface,
-transliteration, morphology, Strong's number, contextual English gloss, verse
-reference and token order — and can it be extracted reproducibly, validated
-independently, and rendered faithfully for a local evaluation?
+chapters of Genesis**, **all 40 of Exodus**, and **all 27 of Leviticus**, plus
+the retained **Daniel 2:4–5** and **Malachi 4:5–6** records from the accepted
+pilot. The generated runtime files under `data/berean-hebrew/` are what the app
+loads.
 
 > **Status:** uncommitted work-in-progress on branch `codex/berean-hebrew-pilot`,
 > pending supervisor review. This is a **local evaluation, not publication
@@ -29,19 +24,18 @@ Every cached page is accepted only after the downloader checks all of:
 - the page `<title>` exactly identifies the requested book and chapter
   (`"<Book> <N> Interlinear Bible"`) — a wrong or redirect page is rejected.
 
-Covered pages (92 total, cached 2026‑09‑30):
+Covered pages (119 total, cached 2026‑09‑30):
 
 | Covered | URL pattern | Edition label |
 |---|---|---|
 | Genesis 1–50 | `https://biblehub.com/interlinear/genesis/<n>.htm` | BIB |
 | Exodus 1–40 | `https://biblehub.com/interlinear/exodus/<n>.htm` | BIB |
+| Leviticus 1–27 | `https://biblehub.com/interlinear/leviticus/<n>.htm` | BIB |
 | Daniel 2 | `https://biblehub.com/interlinear/daniel/2.htm` | BIB |
 | Malachi 4 | `https://biblehub.com/interlinear/malachi/4.htm` | BIB |
 
 The breadcrumb parent is **BSB** (Berean Study Bible), the same translation
-committee named in the footer. The pages print no machine-readable
-edition/revision, so identity rests on the footer, the BSB breadcrumb, and the
-title check.
+committee named in the footer.
 
 ## 2. Reuse terms (official sources inspected)
 
@@ -77,14 +71,14 @@ The data is a **dated draft** and no further email was sent.
 ## 3. Local cache
 
 Raw pages live in `source-pages/` (ignored via `.gitignore`, re-fetchable, **not
-committed** — they contain site markup and other content). `source-manifest.json`
-**is committed**: it records URL, book/chapter, retrieval date, HTTP status, byte
-length, sha256 and the title/breadcrumb/footer evidence for all 92 pages. The
-loader honours a 3-second delay between live requests, one request per page, a
-descriptive user agent, abort-on-block, resumable successes, atomic page/manifest
-replacement, manifest preservation and reuse of unchanged pages (original
-retrieval dates kept). A page whose bytes no longer match its hash is reported
-CORRUPT and never silently re-trusted.
+committed**). `source-manifest.json` **is committed**: it records URL,
+book/chapter, retrieval date, HTTP status, byte length, sha256 and the
+title/breadcrumb/footer evidence for all 119 pages. The loader honours a 3-second
+delay between live requests, one request per page, a descriptive user agent,
+abort-on-block, resumable successes, atomic page/manifest replacement, manifest
+preservation and reuse of unchanged pages (original retrieval dates kept). A page
+whose bytes no longer match its hash is reported CORRUPT and never silently
+re-trusted.
 
 ## 4. Tooling
 
@@ -92,20 +86,19 @@ CORRUPT and never silently re-trusted.
 |---|---|
 | `build/tools/berean-hebrew-fetch.mjs` | Crash-safe downloader. `--list`, `--refresh`, `--only <book>`, `--chapters <list>`. Network only. |
 | `build/tools/berean-hebrew-extract.mjs` | Offline parser + fixture builder. `build`, `dump <BOOK> <ch> <v>`. Verifies each page sha256 before parsing. |
-| `build/tools/berean-hebrew-variants.mjs` | Generates `variants.json`: verifies Ketiv/Qere correspondences against the OSHB XML explicit structure (context + fingerprints). `--check`. |
+| `build/tools/berean-hebrew-variants.mjs` | Generates `variants.json`: verifies Ketiv/Qere against the OSHB XML explicit structure (context + fingerprints). `--check`. |
 | `build/tools/berean-hebrew-validate.mjs` | Offline coverage/totals/anomaly/variant/fingerprint validation of the fixture. |
-| `build/tools/berean-hebrew-compare.mjs` | **Independent** DOM-based (jsdom) re-read of every cached page, compared record-by-record to the fixture. |
-| `build/tools/berean-hebrew-tests.mjs` | Offline tooling tests (fetch recovery, hash/no-table safeguards, parser edge cases, fingerprints). |
+| `build/tools/berean-hebrew-compare.mjs` | **Independent** DOM-based (jsdom) re-read of every cached page, compared record-by-record. |
+| `build/tools/berean-hebrew-tests.mjs` | Offline tooling + matcher tests (fetch recovery, safeguards, parser edge cases, fingerprints). |
 | `build/import-berean-hebrew.mjs` | Builds the runtime manifest + per-book chunks from the fixture. `--check`. |
-| `build/test-service-worker.mjs` | Proves a shell-cache update preserves the existing `maranatha-data-v3` cache and its files. |
+| `build/test-service-worker.mjs` | Proves a shell-cache update preserves `maranatha-data-v3` and all cached files. |
 | `build/test-berean-hebrew.mjs` | jsdom runtime tests for the local preview. |
 
 ```bash
-node build/tools/berean-hebrew-fetch.mjs --list          # print the 92 URLs, no network
+node build/tools/berean-hebrew-fetch.mjs --list          # print the 119 URLs, no network
 node build/tools/berean-hebrew-fetch.mjs                 # fetch missing chapters (resumable)
 node build/tools/berean-hebrew-extract.mjs build          # regenerate hebrew.fixture.json
 node build/tools/berean-hebrew-variants.mjs               # regenerate variants.json
-node build/tools/berean-hebrew-variants.mjs --check
 node build/tools/berean-hebrew-validate.mjs
 node build/tools/berean-hebrew-compare.mjs
 node build/import-berean-hebrew.mjs                       # write data/berean-hebrew/*
@@ -137,20 +130,14 @@ spans occur, no merging Ketiv/Qere into consecutive words.
 
 - **structural** (ambiguous/failed): `no-surface`, `multi-hebrew-span`,
   `malformed-verse-reference`, `verse-reference-out-of-order`,
-  `token-before-first-verse`, `unsupported-token-structure`, `no-transliteration-span`,
-  `no-morphology-span`, `no-gloss-span`, multi-* spans, and
-  `stale-variant-fingerprint`. **The build refuses to overwrite accepted output
-  while any structural error exists.**
+  `token-before-first-verse`, `unsupported-token-structure`,
+  `no-transliteration-span`, `no-morphology-span`, `no-gloss-span`, multi-* spans,
+  and `stale-variant-fingerprint`. **The build refuses to overwrite accepted
+  output while any structural error exists.**
 - **source-gap** (legitimate source omissions, explicit nulls + diagnostics):
   `missing-strongs`, `missing-gloss`, `missing-transliteration`,
   `missing-morphology`. Empty spans are gaps; **absent** spans are structural.
 - **info**: `multi-strongs` (all numbers retained).
-
-### Verse detection
-
-Bible Hub marks the first word of each verse with `ref…` spans; the extractor keys
-off those. Exodus has an OSHB↔English versification offset in two places (see
-§7), which the variant tool maps through the OSHB `KJV:` notes.
 
 ## 6. Record counts (actual, from the extracted records)
 
@@ -158,73 +145,81 @@ off those. Exodus has an OSHB↔English versification offset in two places (see
 |---|---|---|---|
 | Genesis | 50 | 1533 | 20613 |
 | Exodus | 40 | 1213 | 16713 |
+| Leviticus | 27 | 859 | 11950 |
 | Daniel 2:4–5 | 1 | 2 | 29 |
 | Malachi 4:5–6 | 1 | 2 | 28 |
-| **Total** | **92** | **2750** | **37383** |
+| **Total** | **119** | **3609** | **49333** |
 
-- Intentional untranslated `-` markers: **1300**.
-- Missing (empty) gloss records among the extracted verses: **4** (all Exodus).
-- Records with no Strong's: **770** → `strongsList: []`, `strongs: null`.
-- Records with empty transliteration: **1** (Genesis 14:17).
-- Records with empty morphology: **18** (compound-name components).
-- Genesis and Exodus chapter/verse coverage match Maranatha's canon exactly.
+- Intentional untranslated `-` markers: **1744**.
+- Missing (empty) gloss records among the extracted verses: **9**.
+- Records with no Strong's: **1021** → `strongsList: []`, `strongs: null`.
+- Records with empty transliteration: **1**; empty morphology: **18**.
+- Genesis, Exodus and Leviticus chapter/verse coverage match Maranatha's canon
+  exactly (0 mismatches).
+
+Awkward/missing source glosses are surfaced as explicit blanks, never improved:
+e.g. Leviticus 16:20 `אֶת־` (H853) has no supplied gloss, and Leviticus 11:12
+`ל֛וֹ` uses the intentional `-` marker — the two are kept distinct.
 
 ## 7. Ketiv/Qere findings (verified against the OSHB XML)
 
 `variants.json` is generated by `berean-hebrew-variants.mjs`, which reads the
 **OSHB XML's explicit `<w type="x-ketiv">` / `<rdg type="x-qere">` structure** and
 matches source records by **consonant skeleton for the same verse**, using the
-**preceding-word context** when both readings appear as distinct nearby words.
-Strong's and vowel-point comparison are recorded as `evidence`, never used as the
-sole key. **Every verified entry carries a source-record fingerprint**, and the
-extractor refuses (structural `stale-variant-fingerprint`) to attach an annotation
-whose fingerprint does not match the token — so a stale table can never attach to
-a changed token just because its index stayed the same.
+**preceding-word context** when both readings appear as distinct words, and the
+OSHB `KJV:` note for versification differences. Strong's and vowel-point
+comparison are recorded as `evidence`, never the sole key. **Every verified entry
+carries a source-record fingerprint**; the extractor refuses (structural
+`stale-variant-fingerprint`) to attach an annotation whose fingerprint does not
+match — so a stale table can never attach to a changed token just because its
+index stayed the same.
 
-- **30 verified variants, 0 unresolved** (all display the **written (Ketiv)**
-  form, as Bible Hub does).
-- **The five previously-uncertain Genesis cases are now resolved:**
-  - `GEN 27:29` — resolved by preceding-word context: the Ketiv spelling appears
-    as the first of two "bow down" words, and the second (Qere-spelled) word is a
-    distinct source record, not the variant site.
-  - `GEN 27:3` — displayed letters uniquely match the Ketiv (`צידה`); the source
-    tags H6718, a dictionary variant of the OSHB lemma, so `evidence.strongs:none`
-    does not block the letters-based correspondence.
-  - `GEN 30:11`, `GEN 36:5`, `GEN 36:14` — displayed letters uniquely match the
-    Ketiv while the source's transliteration/Strong's follow the read form
-    (`evidence.strongs:other-reading`), which is a documented source convention.
-- **Exodus** contributes 12 verified variants, including two that required the
-  OSHB→English versification mapping: `EXO 22:5` (OSHB 22:4) and `EXO 22:27`
-  (OSHB 22:26). The app shows each variant's exact OSHB Ketiv and Qere as
-  isolated RTL spans, labelled "OSHB comparison (not supplied by Berean)".
+- **35 verified variants, 0 unresolved** (all display the **written (Ketiv)**
+  form, as Bible Hub does): Genesis 16, Exodus 12, **Leviticus 5**, Daniel 2.
+- Leviticus pairs (all verified; the source shows the Ketiv): `LEV 9:22`,
+  `LEV 11:21`, `LEV 16:21`, `LEV 21:5`, `LEV 25:30` (the last resolved by
+  preceding-word context). No Leviticus versification remap was needed.
+- The app shows each variant's exact OSHB Ketiv and Qere as isolated RTL spans,
+  labelled "OSHB comparison (not supplied by Berean)". Berean's own surface,
+  transliteration, gloss and alignment are unchanged; no second reading word.
 
-## 8. Divine name & sample passages
+### Matcher tests
 
-The source's own convention is preserved, **not standardized**:
-`יְהוָה` (H3068) is transliterated **`Yah·weh`** and glossed **`YHWH`** (sometimes
-"of YHWH" / "[am] YHWH" contextually). This holds across Genesis (2:4) and Exodus
-(3:13–15, 6:2–3, 20:2, 34:6–7, 40:34–38). Genesis 1:1 glosses are exactly
+`build/tools/berean-hebrew-tests.mjs` covers: preceding-word context resolving
+two candidate occurrences; a Strong's mismatch not changing a verified letter
+match; identical consonant skeletons staying ambiguous; ambiguous repeated words
+staying unresolved; and OSHB→English verse mapping.
+
+## 8. Divine name & technical vocabulary
+
+The source's own convention is preserved, **not standardized**: `יְהוָה`
+(H3068) is transliterated **`Yah·weh`** and glossed **`YHWH`** (sometimes "of
+YHWH" / "to YHWH" contextually) across Genesis, Exodus and Leviticus. Sacrificial
+and purity terms (`עֹלָה` "burnt offering", `חַטָּאת` "sin offering", `אָשָׁם`
+"guilt offering", `שֶׁקֶץ` "detestable", `טָמֵא`/`טָהוֹר` "unclean"/"clean", …)
+are reproduced exactly as supplied. Genesis 1:1 glosses remain exactly
 `In the beginning / created / God / (blank) / the heavens / and / the earth`.
 
 ## 9. Validation and fidelity
 
 ```bash
-node build/tools/berean-hebrew-tests.mjs              # 26 tooling tests
+node build/tools/berean-hebrew-tests.mjs              # 31 tooling/matcher tests
 node build/tools/berean-hebrew-variants.mjs --check
-node build/tools/berean-hebrew-validate.mjs           # 37 checks
+node build/tools/berean-hebrew-validate.mjs           # 40 checks
 node build/tools/berean-hebrew-compare.mjs            # independent DOM comparison
 node build/import-berean-hebrew.mjs --check
-node build/test-service-worker.mjs                    # 20 checks
-node build/test-berean-hebrew.mjs                     # 66 runtime checks
+node build/test-service-worker.mjs                    # 21 checks
+node build/test-berean-hebrew.mjs                     # 72 runtime checks
 ```
 
 **Deterministic regeneration** (fixture, variants, runtime) proves
 *reproducibility*. Independent *fidelity* comes from
 `berean-hebrew-compare.mjs`, a separate jsdom DOM reader that does **not** import
-the extractor's parser: it re-reads all 92 cached pages and agrees with the
-fixture on **every one of the 37,383 records** (references, counts/order,
-surface, transliteration, gloss, morphology and the complete Strong's list), and
-confirms canon coverage for Genesis and Exodus.
+the extractor's parser: it re-reads all 119 cached pages, closes each page's
+jsdom window as soon as its plain records are extracted (try/finally), and agrees
+with the fixture on **every one of the 49,333 records** (references,
+counts/order, surface, transliteration, gloss, morphology, complete Strong's
+lists). It confirms canon coverage for Genesis, Exodus and Leviticus.
 
 ## 10. Remaining limitations
 
@@ -232,50 +227,52 @@ confirms canon coverage for Genesis and Exodus.
    third-party-derived morphology/Strong's/lexical fields are unresolved; raw
    pages stay local.
 2. **Draft volatility** — every page is date-stamped and expected to churn.
-3. **Missing fields** — 770 no-Strong's, 1 no-transliteration, 18 no-morphology
-   and 4 no-gloss records are genuine source gaps shown as explicit blanks.
+3. **Missing fields** — 1021 no-Strong's, 1 no-transliteration, 18 no-morphology
+   and 9 no-gloss records are genuine source gaps shown as explicit blanks.
 4. **Ketiv/Qere** — the source shows only one form; all covered cases are
    resolved, but new OSHB pairs may appear as upstream changes.
 5. **Own interlinear** — Berean Hebrew is its own interlinear, never
    positionally aligned onto OSHB.
-6. **Scope** — Genesis and Exodus only, plus the retained Daniel/Malachi verses.
+6. **Scope** — Genesis, Exodus and Leviticus only, plus the retained
+   Daniel/Malachi verses.
 
 ## 11. Local app preview
 
-- **Runtime data:** `data/berean-hebrew/manifest-v2.js`
+- **Runtime data:** `data/berean-hebrew/manifest-v3.js`
   (`MARANATHA_BEREAN_HEBREW_MANIFEST`) plus one chunk per book
-  (`data/berean-hebrew/GEN.js`, `EXO.js`, `DAN.js`, `MAL.js`). Generated
-  deterministically from the fixture by `build/import-berean-hebrew.mjs`.
-- **Selection:** tick **"Berean Hebrew (Genesis–Exodus, draft)"** under *Study
+  (`data/berean-hebrew/GEN-v2.js`, `EXO.js`, `LEV.js`, `DAN.js`, `MAL.js`).
+  Generated deterministically from the fixture by
+  `build/import-berean-hebrew.mjs`.
+- **Selection:** tick **"Berean Hebrew (Genesis–Leviticus, draft)"** under *Study
   tools* and choose **Reading** (dense cards) or **Study** (expandable). It is
   mutually exclusive with OSHB Hebrew; OSHB and both Greek interlinears behave
   exactly as before.
-- **Coverage:** Genesis 1–50 and Exodus 1–40 plus Daniel 2:4–5 and Malachi
-  4:5–6. Verses/chapters outside that (including other books) show a concise
-  coverage notice — never silent OSHB or dictionary cards, and no 404.
+- **Coverage:** Genesis 1–50, Exodus 1–40 and Leviticus 1–27, plus Daniel 2:4–5
+  and Malachi 4:5–6. Verses/chapters outside that (including other books) show a
+  concise coverage notice — never silent OSHB or dictionary cards, and no 404.
 - **Faithful rendering:** RTL Hebrew word order with LTR transliteration/gloss;
   complete Strong's lists; supplied morphology verbatim; intentional blanks stay
   blank; a missing gloss is an explicit, distinct marker that never falls back to
   dictionary prose; verified variant notes show the exact OSHB Ketiv/Qere.
-- **Caches:** raw HTML stays ignored/local. Runtime files are uniquely named and
-  route through the **existing `maranatha-data-v3` cache**; `DATA_CACHE_VERSION`
-  stays **v3** so users' already-downloaded translations and Berean Greek books
-  are not invalidated. Only the shell version was bumped (`CACHE_VERSION`
-  v32→v33). Because these files live at cache-first URLs, both the **manifest**
-  (`manifest-v2.js`) and the **changed GEN chunk** (`GEN-v2.js`, which gained the
-  five newly-resolved Genesis variants) are versioned; the manifest publishes
-  each book's current filename in `chunkFiles`, and the app builds the script URL
-  from it. Unchanged chunks (`EXO.js` is new; `DAN.js`/`MAL.js` are byte-identical
-  to the Genesis milestone) keep their names. The legacy `manifest.js`,
-  `GEN.js` / `berean-hebrew-pilot.js` entries are retained (never wiped) but no
-  longer requested.
+- **Caches:** raw HTML stays ignored/local. Runtime files route through the
+  **existing `maranatha-data-v3` cache**; `DATA_CACHE_VERSION` stays **v3** so
+  users' already-downloaded translations and Berean Greek books are not
+  invalidated. Only the shell version was bumped (`CACHE_VERSION` v33→v34).
+  Because these files live at cache-first URLs, the **manifest** is versioned
+  (`manifest-v3.js`) and the manifest publishes each book's current filename in
+  `chunkFiles`; the app builds the URL from it. Unchanged chunks keep their names
+  (`GEN-v2.js`, `EXO.js`, `DAN.js`, `MAL.js` are byte-identical to the Exodus
+  milestone); `LEV.js` is new. A chunk is loaded only when its book is viewed.
+  Legacy `manifest.js`/`manifest-v2.js`/`GEN.js`/`berean-hebrew-pilot.js` entries
+  are retained (never wiped) but no longer requested.
 
 ### Fresh checkout / ignored cache
 
 `npm test` includes the Hebrew tooling. The extraction-dependent checks
-(validator, comparator, variants, tooling tests' cache replay) need the ignored
-local cache. On a checkout without those pages they **skip with a clear
-explanation and recovery command** (they never download anything):
+(validator, comparator, variants, tooling tests' cache replay, the `buildFixture`
+tests) need the ignored local cache. On a checkout without those pages they
+**skip with a clear explanation and recovery command** (they never download
+anything):
 
 ```
 node build/tools/berean-hebrew-fetch.mjs

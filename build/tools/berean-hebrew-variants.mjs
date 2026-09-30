@@ -43,6 +43,7 @@ const OUT = path.join(SRC_DIR, 'variants.json');
 const BOOKS = [
   { bookId: 'GEN', osis: 'Gen', xml: 'Gen.xml' },
   { bookId: 'EXO', osis: 'Exod', xml: 'Exod.xml' },
+  { bookId: 'LEV', osis: 'Lev', xml: 'Lev.xml' },
   { bookId: 'DAN', osis: 'Dan', xml: 'Dan.xml' },
 ];
 
@@ -72,6 +73,14 @@ function decodeEntities(s) {
 }
 const stripTags = (s) => String(s).replace(/<[^>]*>/g, '');
 
+// OSHB records the English/KJV verse in a note (e.g. OSHB Exod 22:4 is KJV
+// Exod 22:5). Bible Hub uses the English numbering, so map through it. Pure and
+// exported for focused tests.
+export function sourceVerseFor(body, chapter, verse) {
+  const kjv = /KJV:([A-Za-z0-9]+)\.(\d+)\.(\d+)/.exec(body);
+  return kjv ? { chapter: Number(kjv[2]), verse: Number(kjv[3]) } : { chapter, verse };
+}
+
 // Every explicit Ketiv/Qere pair in one OSHB book, with the skeleton of the word
 // immediately preceding the variant (for context disambiguation).
 function oshbVariants(book) {
@@ -83,11 +92,9 @@ function oshbVariants(book) {
     const chapter = Number(m[1]);
     const verse = Number(m[2]);
     const body = m[3];
-    // OSHB records the English/KJV verse in a note (e.g. OSHB Exod 22:4 is KJV
-    // Exod 22:5). Bible Hub uses the English numbering, so map through it.
-    const kjv = /KJV:([A-Za-z0-9]+)\.(\d+)\.(\d+)/.exec(body);
-    const sourceChapter = kjv ? Number(kjv[2]) : chapter;
-    const sourceVerse = kjv ? Number(kjv[3]) : verse;
+    const sv = sourceVerseFor(body, chapter, verse);
+    const sourceChapter = sv.chapter;
+    const sourceVerse = sv.verse;
     let idx = 0;
     while ((idx = body.indexOf('<w type="x-ketiv"', idx)) !== -1) {
       const next = body.indexOf('<w type="x-ketiv"', idx + 12);
@@ -126,6 +133,48 @@ function isCovered(bookId, chapter, verse) {
   return true;
 }
 
+// Pure matcher: given one OSHB pair and the source records for its verse,
+// decide which form the page displays (or why that is unresolved). It never uses
+// raw position; "context" means the preceding-word skeleton.
+export function classifyVariant(pair, recs) {
+  const kSk = skeleton(pair.oshbKetiv);
+  const qSk = skeleton(pair.oshbQere);
+  if (!kSk || !qSk) return { uncertain: 'OSHB form missing' };
+  const candK = recs.filter((r) => skeleton(r.surface) === kSk);
+  const candQ = recs.filter((r) => skeleton(r.surface) === qSk);
+  const prevSk = (r) => (r.order > 0 ? skeleton(recs[r.order - 1].surface) : null);
+
+  let display = null;
+  let record = null;
+  let displayBy = null;
+  if (candK.length === 1 && candQ.length === 0) { display = 'ketiv'; record = candK[0]; displayBy = 'skeleton'; }
+  else if (candQ.length === 1 && candK.length === 0) { display = 'qere'; record = candQ[0]; displayBy = 'skeleton'; }
+  else if (!candK.length && !candQ.length) {
+    return { uncertain: 'no source record matches either the Ketiv or Qere skeleton' };
+  } else {
+    // Both readings appear as distinct source words nearby: choose by the
+    // preceding word (context), never by raw position.
+    const kCtx = candK.filter((r) => prevSk(r) === pair.beforeSkeleton);
+    const qCtx = candQ.filter((r) => prevSk(r) === pair.beforeSkeleton);
+    if (kCtx.length === 1 && qCtx.length === 0) { display = 'ketiv'; record = kCtx[0]; displayBy = 'context'; }
+    else if (qCtx.length === 1 && kCtx.length === 0) { display = 'qere'; record = qCtx[0]; displayBy = 'context'; }
+    else {
+      return { uncertain: `ambiguous match (ketiv=${candK.length}, qere=${candQ.length}); preceding-word context did not resolve it` };
+    }
+  }
+
+  const displayStrongs = strongsRoot(display === 'ketiv' ? pair.ketivLemma : pair.qereLemma);
+  const otherStrongs = strongsRoot(display === 'ketiv' ? pair.qereLemma : pair.ketivLemma);
+  const strongsEvidence = displayStrongs && record.strongsList.includes(displayStrongs) ? 'display'
+    : otherStrongs && record.strongsList.includes(otherStrongs) ? 'other-reading'
+      : 'none';
+  const vow = voweled(record.surface);
+  const vowQ = vow === voweled(pair.oshbQere);
+  const vowK = vow === voweled(pair.oshbKetiv);
+  const vowelsEvidence = vowQ && !vowK ? 'qere' : vowK && !vowQ ? 'ketiv' : 'unresolved';
+  return { display, record, displayBy, strongsEvidence, vowelsEvidence };
+}
+
 export function buildVariants() {
   const manifest = JSON.parse(fs.readFileSync(MANIFEST, 'utf8'));
   const variants = [];
@@ -144,46 +193,9 @@ export function buildVariants() {
         oshbKetiv: pair.oshbKetiv,
         oshbQere: pair.oshbQere,
       };
-      const kSk = skeleton(pair.oshbKetiv);
-      const qSk = skeleton(pair.oshbQere);
-      if (!kSk || !qSk) { uncertain.push({ ...base, reason: 'OSHB form missing' }); continue; }
-
-      const candK = recs.filter((r) => skeleton(r.surface) === kSk);
-      const candQ = recs.filter((r) => skeleton(r.surface) === qSk);
-      const prevSk = (r) => (r.order > 0 ? skeleton(recs[r.order - 1].surface) : null);
-
-      let display = null;
-      let record = null;
-      let displayBy = null;
-      if (candK.length === 1 && candQ.length === 0) { display = 'ketiv'; record = candK[0]; displayBy = 'skeleton'; }
-      else if (candQ.length === 1 && candK.length === 0) { display = 'qere'; record = candQ[0]; displayBy = 'skeleton'; }
-      else if (!candK.length && !candQ.length) {
-        uncertain.push({ ...base, reason: 'no source record matches either the Ketiv or Qere skeleton' });
-        continue;
-      } else {
-        // Both readings appear as distinct source words nearby: choose by the
-        // preceding word (context), never by raw position.
-        const kCtx = candK.filter((r) => prevSk(r) === pair.beforeSkeleton);
-        const qCtx = candQ.filter((r) => prevSk(r) === pair.beforeSkeleton);
-        if (kCtx.length === 1 && qCtx.length === 0) { display = 'ketiv'; record = kCtx[0]; displayBy = 'context'; }
-        else if (qCtx.length === 1 && kCtx.length === 0) { display = 'qere'; record = qCtx[0]; displayBy = 'context'; }
-        else {
-          uncertain.push({ ...base, reason: `ambiguous match (ketiv=${candK.length}, qere=${candQ.length}); preceding-word context did not resolve it` });
-          continue;
-        }
-      }
-
-      const displayStrongs = strongsRoot(display === 'ketiv' ? pair.ketivLemma : pair.qereLemma);
-      const otherStrongs = strongsRoot(display === 'ketiv' ? pair.qereLemma : pair.ketivLemma);
-      const strongsEvidence = displayStrongs && record.strongsList.includes(displayStrongs) ? 'display'
-        : otherStrongs && record.strongsList.includes(otherStrongs) ? 'other-reading'
-          : 'none';
-      const vow = voweled(record.surface);
-      const vowQ = vow === voweled(pair.oshbQere);
-      const vowK = vow === voweled(pair.oshbKetiv);
-      const vowelsEvidence = vowQ && !vowK ? 'qere' : vowK && !vowQ ? 'ketiv' : 'unresolved';
-
-      variants.push(variantEntry(book.bookId, pair, record, display, displayBy, strongsEvidence, vowelsEvidence));
+      const result = classifyVariant(pair, recs);
+      if (result.uncertain) { uncertain.push({ ...base, reason: result.uncertain }); continue; }
+      variants.push(variantEntry(book.bookId, pair, result.record, result.display, result.displayBy, result.strongsEvidence, result.vowelsEvidence));
     }
   }
 

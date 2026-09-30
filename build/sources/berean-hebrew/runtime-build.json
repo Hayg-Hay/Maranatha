@@ -1,24 +1,27 @@
 {
   "generatedBy": "build/import-berean-hebrew.mjs",
   "source": "build/sources/berean-hebrew/hebrew.fixture.json",
-  "sourceSha256": "a0ce072c43ce69d58b1b48b45923125480796303b22bc28c05080fd089c18d8d",
-  "recordCount": 37383,
+  "sourceSha256": "98ea5fe6f1ed6cce78c6ba33f5a0bcd6ad08a5abe7244186dfde4076cc4adbb4",
+  "recordCount": 49333,
   "books": [
     "GEN",
     "EXO",
+    "LEV",
     "DAN",
     "MAL"
   ],
   "booksRecordCount": {
     "GEN": 20613,
     "EXO": 16713,
+    "LEV": 11950,
     "DAN": 29,
     "MAL": 28
   },
   "files": {
-    "data/berean-hebrew/manifest-v2.js": "eb6786329030e941bbe37f9b04712a4662ca2dc20ca32ec97bcf29463b209c8d",
+    "data/berean-hebrew/manifest-v3.js": "5aa3d0c72fc19dd956f41758c47b8dffb8dec2f4de72fbf42dd33ca0d31f3e55",
     "data/berean-hebrew/GEN-v2.js": "664d428b83cf0fd5beafa37e13b951061158dc16ef13146f57276ab299519827",
     "data/berean-hebrew/EXO.js": "308f4978d626e824e01afb5c5b90efe8dc9afd59a89389ef3884a3f9aa182561",
+    "data/berean-hebrew/LEV.js": "a83a2560b9065d756609c558f1fb4cc425333840ce5377a4f024b872982454b7",
     "data/berean-hebrew/DAN.js": "2b6a2608363e339bdf52b91bcdbd04912501eea114ae1ac1b8496ca157313a7a",
     "data/berean-hebrew/MAL.js": "df28c36d6f0e7d67fe6fba859c4b99a94d7598d7c9198ff52c18c99c5392125c"
   }
