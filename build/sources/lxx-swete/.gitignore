@@ -1,0 +1,11 @@
+# Raw upstream snapshots are kept LOCAL and re-fetchable, not committed.
+#
+# A/ (nathans/lxx-swete) and B/ (OpenGreekAndLatin/First1KGreek) are bulk
+# checkouts fetched by fetch.mjs. They are pinned by commit SHA and verified
+# by SHA-256 in A-manifest.json and B-manifest.json; those manifests ARE
+# committed as the auditable record, so the exact sources stay reproducible
+# without publishing the raw caches.
+#
+# Run `node build/sources/lxx-swete/fetch.mjs` to (re)create A/ and B/.
+A/
+B/

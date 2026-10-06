@@ -2098,3 +2098,19 @@ and style.css changed); the data cache (`v3`) is preserved.
 **Still `file://`.** No runtime fetch/XHR, remote imports, CDN assets or network
 dependencies were introduced; the grouped control uses the same classic
 `<script>`-tag loader.
+
+### Phase 4 — LXX (Swete) source audit, Oct 2026 (audit only; no importer)
+
+- Source: First1KGreek tlg0527 @03776b39 (Swete, CC BY-SA 4.0 in every file header, verified).
+  nathans/lxx-swete rejected: no per-file license, Isaiah text is Ottley's not Swete's, build allows edition overwrites, derivative of the same transcription.
+- Ecclesiastes is absent upstream (tlg030 is metadata only). It stays a missing-book placeholder; no other edition is grafted in.
+- Witnesses: Judges = Alexandrinus text; Tobit = Vaticanus+Alexandrinus; Sirach uses grc2 (Swete; grc1 is Hart's).
+- Daniel: Theodotion matches WEB-C boundaries (Song 3:24-25, Susanna 13:64, Bel 14:1). Witness choice pending user approval.
+  Theodotion Bel is truncated upstream at 14:36 (mid-sentence); verses 37-42 are not available in this edition.
+- Source defects (disclosed, never corrected): Ps 115 has no label 6 (verse 5 holds canon 116:15) and a theta-upsilon typo; Ps 88 has label 84 where 48 belongs;
+  Ps 129:3 contains nested containers for 4-8; inline verse numerals in Ps 16:4 and 38:5; 1,028 ledger entries in total.
+- Mapping references: SIL Paratext (MIT) and Copenhagen Alliance (CC BY-SA 4.0) usable; STEP unusable (redistribution wording); SWORD GPL-2.0, counts only.
+  Neither SIL nor CA is validated: they mispredict Ps 115:5 and Baruch 6. WEB-C's numbering is not any standard scheme.
+- Evidence so far: BAR Letter n -> BAR 6:(n+1); DAN Theodotion 4:n -> 4:(n+3), 3:98-100 -> 4:1-3. 22 proposals, 572 containers unresolved.
+- Generic anchor tests (names/length/numerals/divine) flag 25-52% on identity-presumed control books: triage only, never validation.
+- Pending decisions: Daniel witness, tiered mapping approach, staged shipping. Per-translation versification is a blocking architecture requirement.

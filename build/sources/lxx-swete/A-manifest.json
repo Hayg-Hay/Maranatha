@@ -1,0 +1,313 @@
+{
+  "id": "A",
+  "repo": "nathans/lxx-swete",
+  "commit": "26bad3eb42bba98471d154c954e36a6f30a0279d",
+  "fetched": "2026-10-06T20:29:09.406Z",
+  "files": [
+    {
+      "path": ".gitignore",
+      "bytes": 769,
+      "sha256": "06db4ff28c89863c8c67cbc9744639763df73ebeac5fd9f6d10665da2bd25f64"
+    },
+    {
+      "path": "COPYING-Code",
+      "bytes": 1090,
+      "sha256": "ae21033db0eb664b0be84881d8993a32357e0cf66e6961a37bba0844b8e695d2"
+    },
+    {
+      "path": "data/01.Genesis.txt",
+      "bytes": 609070,
+      "sha256": "b5abf507f757de3c96f3e44944515dba46d6e5b9edd8e653d7ce6096588c5ce6"
+    },
+    {
+      "path": "data/02.Exodus.txt",
+      "bytes": 467921,
+      "sha256": "4bb3c26c12eca623d9a046a9555b64d02ece86395e80fd0771bd6a73da544b3f"
+    },
+    {
+      "path": "data/03.Leviticus.txt",
+      "bytes": 361378,
+      "sha256": "128bed9e2c43b66d66bd8346625b88a316e97f8beef52eddb951659e4b0889ea"
+    },
+    {
+      "path": "data/04.Numeri.txt",
+      "bytes": 482340,
+      "sha256": "0df68398862fdf9cba702d389cd35addde8a7e4abc242f65e4a2dc6087745d0a"
+    },
+    {
+      "path": "data/05.Deuteronomium.txt",
+      "bytes": 420583,
+      "sha256": "acd34130bb39d38761394187037519887c854beb4756213e86f71f3e4ac46a2d"
+    },
+    {
+      "path": "data/06.Josue.txt",
+      "bytes": 280046,
+      "sha256": "eed9d9f69c4d00d7a4f69b57b2363996534abaa032782a4e32a477df747e3718"
+    },
+    {
+      "path": "data/08.Judices.txt",
+      "bytes": 295617,
+      "sha256": "cbd80deb4b5277f4677eed288e6c42286f50cb4ccb7d47656e543502785ad6a5"
+    },
+    {
+      "path": "data/10.Ruth.txt",
+      "bytes": 38693,
+      "sha256": "74c76b5c6ce7e4743454012fb0d3d34b46422a3e763dca1ef072677c1f808ff2"
+    },
+    {
+      "path": "data/11.Regnorum_I.txt",
+      "bytes": 394487,
+      "sha256": "c09643dab2d81c2ec1b9f79d3804ab6d2487dc0629e8a2a10dc1dd33f7360aa8"
+    },
+    {
+      "path": "data/12.Regnorum_II.txt",
+      "bytes": 354314,
+      "sha256": "328d750ec1d4e913d49f14d853cf7b5494a5fd97f27b2a429245e749a5a121c6"
+    },
+    {
+      "path": "data/13.Regnorum_III.txt",
+      "bytes": 409463,
+      "sha256": "4b129f8d93e675c87974581febbac076cf42cba65d044fede612afe6efb06ac7"
+    },
+    {
+      "path": "data/14.Regnorum_IV.txt",
+      "bytes": 369273,
+      "sha256": "7303b2cd6ccdb6dab85a4db6c081f913a84ac15fe9b52c09b3e7a56a5a049859"
+    },
+    {
+      "path": "data/15.Paralipomenon_I.txt",
+      "bytes": 324032,
+      "sha256": "fb7410ec4fc50e7be9c8bb9bf156f90bf5ae011490b47636be0554be5cead132"
+    },
+    {
+      "path": "data/16.Paralipomenon_II.txt",
+      "bytes": 428359,
+      "sha256": "e9386c1e42b1b341af9bc5c70d531c3b55851ed1dcff7297afba0f39f6e8936b"
+    },
+    {
+      "path": "data/17.Esdras_A.txt",
+      "bytes": 179011,
+      "sha256": "f6c5eb90525214da21f03fce1cef9aa27d8c953fc0ad1c3808a4923bd291141c"
+    },
+    {
+      "path": "data/18.Esdras_B.txt",
+      "bytes": 259420,
+      "sha256": "d621cf1c1c9d5fc6b4c96aa1458e27c729f7d90afaff0eb826a6f7fb6a3dafd9"
+    },
+    {
+      "path": "data/19.Esther.txt",
+      "bytes": 119662,
+      "sha256": "1c0cddd3f52475f02041b629fd852aefbe3f7187de4767f22ca581a4d0df74b3"
+    },
+    {
+      "path": "data/20.Judith.txt",
+      "bytes": 182556,
+      "sha256": "ba3754992acd36d62bb33deb9e55d36c0afff9a0bd85a0477a6faa6346d14b65"
+    },
+    {
+      "path": "data/21.Tobias.txt",
+      "bytes": 108027,
+      "sha256": "8579c33a068422a483a0ed9f8a8c18ca4e47a939a8ed905cfeb781870fcd47a5"
+    },
+    {
+      "path": "data/23.Machabaeorum_i.txt",
+      "bytes": 378842,
+      "sha256": "eadb7e31bef384a95c04f1e87215161e888adcb0a1eb7c3b8ad622538f21d2dd"
+    },
+    {
+      "path": "data/24.Machabaeorum_ii.txt",
+      "bytes": 253718,
+      "sha256": "dfc6fa72df82fc9f7b7dddfba217bd9d23f594f2becbc842cea06ab67bef20e0"
+    },
+    {
+      "path": "data/25.Machabaeorum_iii.txt",
+      "bytes": 107467,
+      "sha256": "d25c51be1121d1bffa81f4ce9438c43f840aa3f8629be7fd903c0ca9434fda56"
+    },
+    {
+      "path": "data/26.Machabaeorum_iv.txt",
+      "bytes": 166277,
+      "sha256": "1e5ff49eb9a28401d97a23f876e42ff51b07871c7d28dd8668608f6549f50146"
+    },
+    {
+      "path": "data/27.Psalmi.txt",
+      "bytes": 716207,
+      "sha256": "d9a8fe86689e23c8b5b04d8edc857a1861362eccb03514e92560b7f048785e2e"
+    },
+    {
+      "path": "data/28.Odae.txt",
+      "bytes": 85098,
+      "sha256": "4bf8082210d4564fca47c9914401346dc50b36ce606f8f5559b863c799b477b3"
+    },
+    {
+      "path": "data/29.Proverbia.txt",
+      "bytes": 236102,
+      "sha256": "2141b7c391b9573761693b099434f697707c90b6e2d34327cec428de9f4147cf"
+    },
+    {
+      "path": "data/31.Canticum.txt",
+      "bytes": 38656,
+      "sha256": "44bb7caeefcf5b71c7c20ac2703461588df00c7f53b92dd9cb6b4753140288bb"
+    },
+    {
+      "path": "data/32.Job.txt",
+      "bytes": 274902,
+      "sha256": "9ec5ee80fdb7d13ee50a570204500d07a250db49005244948b34b7ded7590420"
+    },
+    {
+      "path": "data/33.Sapientia_Salomonis.txt",
+      "bytes": 142008,
+      "sha256": "7cc9ee8002a4779df009da3882cc375326326e30fad7e0d08554de9cb1577d49"
+    },
+    {
+      "path": "data/34.Ecclesiasticus.txt",
+      "bytes": 397505,
+      "sha256": "2f7dc2f23fee709008d56c25d8bcd55f708bc8c0412872463c46dbde876b3482"
+    },
+    {
+      "path": "data/35.Psalmi_Salomonis.txt",
+      "bytes": 98538,
+      "sha256": "c1fc63b38fa47c4122c748c25a00031072403622a4a8cf2c2028ce8404ac4855"
+    },
+    {
+      "path": "data/36.Osee.txt",
+      "bytes": 78218,
+      "sha256": "2395840e963c3ec4b1bae52f59fe6500c4fe89b12de290dff566eb60d1a45de9"
+    },
+    {
+      "path": "data/37.Amos.txt",
+      "bytes": 62756,
+      "sha256": "0381589d6b31fa0b7bf383ce84e03954922952884b06b29cf7bcf8962c0e394b"
+    },
+    {
+      "path": "data/38.Michaeas.txt",
+      "bytes": 45595,
+      "sha256": "1730de10cf2c11a98558ec51766b6e75f313cdfae02961b64c50e8a3ad5a8c1d"
+    },
+    {
+      "path": "data/39.Joel.txt",
+      "bytes": 31279,
+      "sha256": "82f9238818b107cf76ef9a85dbe3f7944b90b2916f5ba5e290e097c23084f03a"
+    },
+    {
+      "path": "data/40.Abdias.txt",
+      "bytes": 9030,
+      "sha256": "f2b8a9677b1db371cd8b1d2e4a0b397368f3b8dcc49408ab4315cca159646901"
+    },
+    {
+      "path": "data/41.Jonas.txt",
+      "bytes": 20200,
+      "sha256": "bbb412a35e93837ffa5c86b2a2a82cf3d03004e486f9da2b99dc0067691ca803"
+    },
+    {
+      "path": "data/42.Nahum.txt",
+      "bytes": 18679,
+      "sha256": "8d770110c51a202f704a3b8f12cf9006088e31bee1e507a09e3139e8b96a8430"
+    },
+    {
+      "path": "data/43.Habacuc.txt",
+      "bytes": 21567,
+      "sha256": "a15ef89d9cda964dd30f9c89a8c2938f71dced39ba988335e2bee2015294f0f7"
+    },
+    {
+      "path": "data/44.Sophonias.txt",
+      "bytes": 24214,
+      "sha256": "750e4ced569de1b40b1b9729ec50cd36f494dc0d61a06f7552c47bf7ec510514"
+    },
+    {
+      "path": "data/45.Aggaeus.txt",
+      "bytes": 18140,
+      "sha256": "5082f5767446b107cc06be42eacdf1130b0e2f676c263319bfed75d6a1ce9b70"
+    },
+    {
+      "path": "data/46.Zacharias.txt",
+      "bytes": 98453,
+      "sha256": "6d1c90bfc984ee5edec67185bf017c3fec4adeeee18f8584e0da2e86de84fc6a"
+    },
+    {
+      "path": "data/47.Malachias.txt",
+      "bytes": 27832,
+      "sha256": "658319fa9df4c1190f2fd311c0584069091f43034b407a373994758320f4f5be"
+    },
+    {
+      "path": "data/48.Isaias.txt",
+      "bytes": 553905,
+      "sha256": "e552647fd45e3c06ee506659536be1193fc88779e2c225ee8d963f97ecd4c5e0"
+    },
+    {
+      "path": "data/49.Jeremias.txt",
+      "bytes": 590067,
+      "sha256": "65eb6935b8c739b4043193d3086b069065672bb3ae54f450b763691d4266e49b"
+    },
+    {
+      "path": "data/50.Baruch.txt",
+      "bytes": 50760,
+      "sha256": "7bfcb974fee799e9494e3db0892c6d28f90e90e20f5bb8ec6c2125fb263f0b65"
+    },
+    {
+      "path": "data/51.Threni_seu_Lamentationes.txt",
+      "bytes": 50322,
+      "sha256": "9954dfed87259610e3a13505b920c36d3f476a41f1e587c54bd25efa2538a91d"
+    },
+    {
+      "path": "data/52.Epistula_Jeremiae.txt",
+      "bytes": 26169,
+      "sha256": "9259f2bf8f623730fe5c0ecb3c874c1433a71e3e8e38a48d3d4f51b5d1bbe587"
+    },
+    {
+      "path": "data/53.Ezechiel.txt",
+      "bytes": 594863,
+      "sha256": "3cadcb2c2e714c5af7a937d253b545c9f5982b77811910870529bf9d5c5c3dd6"
+    },
+    {
+      "path": "data/54.Susanna_translatio_Graeca.txt",
+      "bytes": 18210,
+      "sha256": "d2bb68ccf067fb56c89189a19e2a4c8ba3aa39ff2094597c3f49fcbbdef91d7a"
+    },
+    {
+      "path": "data/55.Susanna_Theodotionis_versio.txt",
+      "bytes": 22953,
+      "sha256": "6cda918133aac828d9bb80b1c2bc56ee8409bf242a916ef566e9c2a8e1e8c633"
+    },
+    {
+      "path": "data/56.Daniel_translatio_Graeca.txt",
+      "bytes": 219641,
+      "sha256": "7886e521a698af3fd2619b199fd2e1f1f6977bbd927ca66b79a3b50b64304c00"
+    },
+    {
+      "path": "data/57.Daniel_Theodotionis_versio.txt",
+      "bytes": 200591,
+      "sha256": "4d9fbcabb7991a1cbab6e703e2a5b906a630424fa60dd0011cc9cf21fb01569f"
+    },
+    {
+      "path": "data/58.Bel_et_Draco_translatio_Graeca.txt",
+      "bytes": 17452,
+      "sha256": "32c0d1d26d98cd93ceb57ba3b82f6ef9352deae12a79d17da2e03fb44f0d4df5"
+    },
+    {
+      "path": "data/59.Bel_et_Draco_Theodotionis_versio.txt",
+      "bytes": 14730,
+      "sha256": "53158038827e0b0d1c288ad7f9a759632d9a0cf5ab6bf7852d4211181e919f72"
+    },
+    {
+      "path": "README.md",
+      "bytes": 845,
+      "sha256": "ca5869019f542d01ae0ecd9e0381ddbfe6bd0a6c14ed7edf52b8d0973634c325"
+    },
+    {
+      "path": "utils/build.sh",
+      "bytes": 1367,
+      "sha256": "c05237a5acd15847f5af77ce325d7ff86a9f5ce7663085a970ed14c966cc2a74"
+    },
+    {
+      "path": "utils/convert-swete.py",
+      "bytes": 8780,
+      "sha256": "2d83b3bc3b146c07d16032482fccd19e9e68a1bdc0a336f079f7e97d59a9633e"
+    },
+    {
+      "path": "utils/README.md",
+      "bytes": 324,
+      "sha256": "627d1d0c85a318edda59040ce390263012e20b857bbe641a5254af9d300f84e1"
+    }
+  ]
+}
