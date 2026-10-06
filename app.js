@@ -278,6 +278,8 @@ const refs = {
     prevChapter: q('#prev-chapter-button'),
     nextChapter: q('#next-chapter-button'),
     fontsize: q('#fontsize'),
+    hebrewScript: q('#hebrew-script'),
+    hebrewScriptNote: q('#hebrew-script-note'),
 };
   const loaded = new Set();   // translation ids whose <script> has finished loading
   const loading = new Set();  // translation ids whose <script> is in flight
@@ -604,6 +606,12 @@ function init() {
         setFontSize();
     });
 
+    refs.hebrewScript.addEventListener('change', () => {
+        try { localStorage.setItem('maranatha-hebrew-script', refs.hebrewScript.value); } catch (error) {}
+        syncHebrewScriptNote();
+        render({ scrollToReference: false });
+    });
+
     refs.layout.addEventListener('change', () => {
         render({ scrollToReference: false });
     });
@@ -693,6 +701,10 @@ function init() {
     setTheme();
     setReading();
     setFontSize();
+    try {
+        if (localStorage.getItem('maranatha-hebrew-script') === 'paleo') refs.hebrewScript.value = 'paleo';
+    } catch (error) {} // file:// storage can be unavailable; session toggle still works.
+    syncHebrewScriptNote();
     restoreInterlinearMode(INTERLINEARS.greek);
     restoreInterlinearMode(INTERLINEARS.hebrew);
     restoreInterlinearMode(INTERLINEARS.berean);
@@ -719,6 +731,22 @@ function init() {
   function setReading() { document.documentElement.dataset.reading = refs.reading.value; }
 
   function setFontSize() { document.documentElement.dataset.fontsize = refs.fontsize.value; }
+
+  function syncHebrewScriptNote() {
+    refs.hebrewScriptNote.hidden = refs.hebrewScript.value !== 'paleo';
+  }
+
+  function verseDisplayText(text, translationId) {
+    return translationId === 'he' && refs.hebrewScript.value === 'paleo'
+      ? window.MARANATHA_HEBREW_SCRIPT.toPaleo(text) : text;
+  }
+
+  function styleHebrewVerse(element) {
+    element.dir = 'rtl';
+    element.lang = refs.hebrewScript.value === 'paleo' ? 'hbo-Phnx' : 'he';
+    element.classList.add('hebrew-verse');
+    element.classList.toggle('paleo-hebrew', refs.hebrewScript.value === 'paleo');
+  }
 
   function getStoredAppearance() {
       try {
@@ -975,11 +1003,9 @@ function init() {
 
   function fillCell(td, cell, tId) {
     if (cell.state === 'text') {
-      td.textContent = cell.text;
+      td.textContent = verseDisplayText(cell.text, tId);
       if (tId === 'he') {
-        td.dir = 'rtl';
-        td.lang = 'he';
-        td.classList.add('hebrew-verse');
+        styleHebrewVerse(td);
       } else if (tId === 'byz') {
         td.lang = 'el';
         td.classList.add('greek-verse');
@@ -1319,7 +1345,12 @@ function init() {
 
   function normalizeSearchText(text) {
     let out = '';
-    for (const ch of text) {
+    // Paleo-Hebrew has no separate final forms. Normalize both scripts to
+    // the same consonants so copied Paleo text can find the source spelling.
+    const square = window.MARANATHA_HEBREW_SCRIPT.toSquare(text)
+      .replace(/[ךםןףץ]/g, ch => ({ 'ך': 'כ', 'ם': 'מ', 'ן': 'נ', 'ף': 'פ', 'ץ': 'צ' })[ch])
+      .replace(/\u05BE/g, ' ');
+    for (const ch of square) {
       out += ch.normalize('NFD').replace(/[\u0300-\u036f\u0591-\u05c7]/g, '').toLowerCase();
     }
     return out;
@@ -1365,7 +1396,8 @@ function init() {
 
   // Appends `text` to `container`, wrapping each occurrence of `query` in
   // <mark>. Uses text nodes only (never innerHTML), so user input is safe.
-  function appendHighlighted(container, text, query) {
+  function appendHighlighted(container, text, query, translationId) {
+    const display = (part) => verseDisplayText(part, translationId);
     const needle = normalizeSearchText(query);
     const { form, map } = buildSearchForm(text);
     let from = 0;
@@ -1377,19 +1409,19 @@ function init() {
       const start = map[idx];
       const end = map[idx + needle.length - 1] + 1;
       if (!(start < end)) { from = idx + needle.length; continue; }
-      container.appendChild(document.createTextNode(text.slice(lastEnd, start)));
+      container.appendChild(document.createTextNode(display(text.slice(lastEnd, start))));
       const mark = document.createElement('mark');
-      mark.textContent = text.slice(start, end);
+      mark.textContent = display(text.slice(start, end));
       container.appendChild(mark);
       lastEnd = end;
       found = true;
       from = idx + needle.length;
     }
     if (!found) {
-      container.textContent = text;
+      container.textContent = display(text);
       return;
     }
-    container.appendChild(document.createTextNode(text.slice(lastEnd)));
+    container.appendChild(document.createTextNode(display(text.slice(lastEnd))));
   }
 
   const SEARCH_RESULT_CAP = 300;
@@ -1455,7 +1487,8 @@ function init() {
 
       const body = document.createElement('span');
       body.className = 'search-text';
-      appendHighlighted(body, m.text, s.query);
+      if (s.translationId === 'he') styleHebrewVerse(body);
+      appendHighlighted(body, m.text, s.query, s.translationId);
 
       hit.append(ref, body);
 
@@ -1533,14 +1566,12 @@ function init() {
 
       if (verseText) {
         if (t.id === 'he') {
-          text.dir = 'rtl';
-          text.lang = 'he';
-          text.classList.add('hebrew-verse');
+          styleHebrewVerse(text);
         } else if (t.id === 'byz') {
           text.lang = 'el';
           text.classList.add('greek-verse');
         }
-        appendHighlighted(text, verseText, query);
+        appendHighlighted(text, verseText, query, t.id);
       } else {
         text.classList.add('verse-placeholder');
         text.textContent = '(not available in this translation)';

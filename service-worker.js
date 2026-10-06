@@ -35,7 +35,7 @@
 // the new shell. The update is therefore user-driven, not a silent replacement
 // mid-read.
 
-const CACHE_VERSION = 'v36';      // bump when shell files change
+const CACHE_VERSION = 'v38';      // bump when shell files change (v37 reserved by Sirach fix)
 // Data cache intentionally stays at v3: the Berean Hebrew preview uses
 // versioned/uniquely named data files (data/berean-hebrew/manifest-v5.js and
 // data/berean-hebrew/<BOOK>.js), so new coverage is fetched fresh without
@@ -54,6 +54,7 @@ const SHELL_FILES = [
   './index.html',
   './style.css',
   './app.js',
+  './hebrew-script.js',
   './PROJECT_HISTORY.md',
   './data/canon.js',
   './data/locales/en.js',
@@ -62,6 +63,7 @@ const SHELL_FILES = [
   './Armenian-cross_2.png',
   './fonts/SILEOT.ttf',
   './fonts/Cardo-Regular.ttf',
+  './fonts/HebrewPaleoLakhish.ttf',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/apple-touch-icon.png',

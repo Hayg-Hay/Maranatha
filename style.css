@@ -87,7 +87,13 @@ th.reference { white-space:nowrap; }
   src: url('fonts/SILEOT.ttf') format('truetype');
   font-display: swap;
 }
+@font-face {
+  font-family: 'Maranatha Paleo Hebrew';
+  src: url('fonts/HebrewPaleoLakhish.ttf') format('truetype');
+  font-display: swap;
+}
 .hebrew-verse { font-family:'Ezra SIL','SBL Hebrew',serif; text-align:right; font-size:1.25rem; line-height:1.7; }
+.hebrew-verse.paleo-hebrew { font-family:'Maranatha Paleo Hebrew',serif; unicode-bidi:isolate; }
 @font-face {
   font-family: 'Cardo';
   src: url('fonts/Cardo-Regular.ttf') format('truetype');

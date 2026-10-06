@@ -1,5 +1,35 @@
 # Maranatha Project History
 
+## Paleo-Hebrew display — October 6, 2026
+
+Reading settings now offer Square Hebrew / Paleo-Hebrew for the existing
+Hebrew (OSHB) translation. This is the WLC/OSHB consonantal text transliterated
+letter by letter, not a separate translation or an ancient manuscript
+reconstruction. All consonants (including vowel letters) and source wording
+are retained. Final forms map to their ordinary letters; Masoretic points,
+cantillation, paseq and sof pasuq are omitted; maqqef becomes a space.
+Modern verse numbering and layout are retained for navigation.
+
+Conversion runs only when rendering verses, context, search hits and search
+comparison panels; `data/he.js` is unchanged. Search accepts square or
+Paleo-Hebrew and normalizes final forms on both sides. Search highlighting is
+computed against the source before converting each displayed fragment.
+Interlinear word surfaces and analysis retain their source script. The
+preference is saved when local storage is available and works for the session
+when it is not. Copying the display gives real Unicode Paleo-Hebrew characters.
+
+The unmodified Culmus Hebrew Paleo Lachish font by Yoram Gnat is bundled
+locally under GPL-2 with the font embedding exception; accompanying notices
+and source links are in `fonts/`. The converter and font are in the service
+worker shell cache; no new OT data or runtime network dependency is added.
+The view uses Unicode's Phoenician block with Paleo-Hebrew letterforms, in
+accordance with https://www.unicode.org/versions/Unicode16.0.0/core-spec/chapter-10/.
+
+Validation: `node build/test-paleo-hebrew.mjs`, `node build/test-service-worker.mjs`
+and the existing `npm test` suite. The Paleo test uses real file:// data to
+check both layouts, reference context, reversible display toggling, Hebrew
+and Paleo searches, comparison panels, source preservation and blocked storage.
+
 ## Overview
 
 Maranatha is an offline Bible browser, deliberately modeled on
