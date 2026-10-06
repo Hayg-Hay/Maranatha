@@ -1,3 +1,42 @@
+// Translation arrays are indexed by source verse number, never by the count
+// of surviving verses. Metadata also records references preserved in notes.
+class VerseAvailability {
+    static metadata(data, bookId, chapter, verse) {
+        return data?.verseMetadata?.[bookId]?.[chapter]?.[verse] || null;
+    }
+
+    static references(canon, translations, bookId, chapter) {
+        const refs = new Set();
+        let covered = false;
+        for (const data of Object.values(translations || {})) {
+            const verses = data.books?.[bookId]?.[chapter - 1];
+            if (!Array.isArray(verses)) continue;
+            covered = true;
+            verses.forEach((text, i) => { if (text) refs.add(i + 1); });
+            for (const v of Object.keys(data.verseMetadata?.[bookId]?.[chapter] || {})) {
+                if (/^[1-9]\d*$/.test(v)) refs.add(Number(v));
+            }
+        }
+        // The canon remains a navigation fallback for unloaded/uncovered books.
+        // Once a chapter is loaded its source references take precedence.
+        if (!covered) {
+            const count = canon.books.find(b => b.id === bookId)?.chapters[chapter - 1] || 0;
+            for (let v = 1; v <= count; v++) refs.add(v);
+        }
+        return refs;
+    }
+
+    static cell(data, bookId, chapter, verse) {
+        if (!data?.books?.[bookId]) return { state: 'missing-book' };
+        const text = data.books[bookId][chapter - 1]?.[verse - 1];
+        const meta = this.metadata(data, bookId, chapter, verse);
+        if (meta?.status === 'omitted') return { state: 'omitted', note: meta.note };
+        if (meta?.status === 'note') return { state: 'note', text: meta.text, note: meta.note };
+        if (text) return { state: meta?.status === 'additional' ? 'additional' : 'text', text, note: meta?.note };
+        return { state: 'missing-verse' };
+    }
+}
+
 class ReferenceParser {
 
     // Normalizes a book name/alias for lookup: lowercases; turns a leading
@@ -15,9 +54,10 @@ class ReferenceParser {
             .trim();
     }
 
-    constructor(canon, locale) {
+    constructor(canon, locale, translations = () => (typeof window === 'undefined' ? {} : window.MARANATHA_TRANSLATIONS || {})) {
 
         this.canon = canon;
+        this.translations = translations;
         this.bookMap = new Map();
 
         for (const book of canon.books) {
@@ -147,7 +187,8 @@ class ReferenceParser {
                 if (!Number.isInteger(chapter) || chapter < 1 || chapter > book.chapters.length)
                     throw new Error(`"${part}" — chapter ${chapterText} does not exist in this book.`);
 
-                const verseCount = book.chapters[chapter - 1];
+                const available = VerseAvailability.references(this.canon, this.translations(), bookId, chapter);
+                const verseCount = available.size ? Math.max(...available) : 0;
                 let ranges = null;
 
                 if (verseSpec) {
@@ -169,14 +210,14 @@ class ReferenceParser {
                                 : rangeMatch[2] === '' ? verseCount
                                 : Number(rangeMatch[2]);
 
-                            if (start < 1 || start > verseCount)
-                                throw new Error(`"${item}" in "${part}" is outside this chapter's ${verseCount} verses.`);
+                            if (start < 1 || !available.has(start))
+                                throw new Error(`"${item}" in "${part}" is not a reference available in this chapter of the loaded translations (last verse ${verseCount}).`);
 
                             if (end < start)
                                 throw new Error(`"${item}" in "${part}" has a reversed range — end comes before start.`);
 
-                            if (end > verseCount)
-                                throw new Error(`"${item}" in "${part}" is outside this chapter's ${verseCount} verses.`);
+                            if (!available.has(end))
+                                throw new Error(`"${item}" in "${part}" is not a reference available in this chapter of the loaded translations (last verse ${verseCount}).`);
 
                             return { start, end };
 
@@ -238,7 +279,7 @@ class ReferenceParser {
   // select); it keeps the version/register qualifier so a future LXX, Grabar or
   // Eastern Armenian entry does not collide.
   const TRANSLATIONS = [
-    { id: 'web', label: 'World English Bible', short: 'WEB', src: 'data/web.js' },
+    { id: 'web', label: 'World English Bible', short: 'WEB', src: 'data/web.js?v=sirach-20261005' },
     { id: 'kjv', label: 'King James Version', short: 'KJV', src: 'data/kjv.js' },
     { id: 'armwestern', label: 'Western Armenian NT (1853)', short: 'Western Armenian', src: 'data/armwestern.js', note: 'This translation is available for research, but it is not selected by default while its verse boundaries are being checked. Read the project history for details.' },
     { id: 'byz', label: 'Byzantine Majority Text (Greek NT)', short: 'Byzantine Greek', src: 'data/byz.js' },
@@ -964,18 +1005,35 @@ function init() {
   // 'missing-book' (translation loaded but doesn't cover this book at all),
   // or the verse text itself (possibly '' for a known source gap — see
   // import-kjv.mjs/import-web.mjs for real examples of both situations).
+  function chapterExtent(bookId, chapterNum) {
+    const numbers = VerseAvailability.references(canon, window.MARANATHA_TRANSLATIONS, bookId, chapterNum);
+    return numbers.size ? Math.max(...numbers) : 0;
+  }
+
   function cellFor(t, bookId, chapterNum, verseNum) {
     if (!loaded.has(t.id)) return { state: 'loading' };
-    const data = window.MARANATHA_TRANSLATIONS[t.id];
-    if (!data.books[bookId]) return { state: 'missing-book' };
-    const chapter = data.books[bookId][chapterNum - 1];
-    const text = chapter && chapter[verseNum - 1];
-    return text ? { state: 'text', text } : { state: 'missing-verse' };
+    const cell = VerseAvailability.cell(window.MARANATHA_TRANSLATIONS[t.id], bookId, chapterNum, verseNum);
+    if (!['text', 'additional', 'note'].includes(cell.state)) {
+      cell.availableIn = Object.entries(window.MARANATHA_TRANSLATIONS).filter(([id, data]) => {
+        if (id === t.id) return false;
+        const other = VerseAvailability.cell(data, bookId, chapterNum, verseNum);
+        return ['text', 'additional', 'note'].includes(other.state);
+      }).map(([id, data]) => TRANSLATIONS.find(t => t.id === id)?.label || data.label || id);
+    }
+    return cell;
   }
 
   function fillCell(td, cell, tId) {
-    if (cell.state === 'text') {
-      td.textContent = cell.text;
+    if (cell.state === 'text' || cell.state === 'additional' || cell.state === 'note') {
+      td.textContent = cell.text || '';
+      if (cell.state !== 'text' || cell.note) {
+        const note = document.createElement('small');
+        note.className = 'verse-source-note';
+        note.setAttribute('role', 'note');
+        note.textContent = [cell.state === 'additional' ? 'Additional verse in this translation.'
+          : cell.state === 'note' ? 'Included in a source note.' : '', cell.note].filter(Boolean).join(' ');
+        td.appendChild(note);
+      }
       if (tId === 'he') {
         td.dir = 'rtl';
         td.lang = 'he';
@@ -988,7 +1046,16 @@ function init() {
       td.className = 'verse-placeholder';
       td.textContent = cell.state === 'loading' ? '(loading…)'
         : cell.state === 'missing-book' ? '(not available in this translation)'
-        : '(not available)';
+        : cell.state === 'omitted' ? '(omitted in this translation)'
+        : '(verse not available in this translation)';
+      if (cell.note || cell.availableIn?.length) {
+        const note = document.createElement('small');
+        note.className = 'verse-source-note';
+        note.setAttribute('role', 'note');
+        note.textContent = [cell.note, cell.availableIn?.length
+          ? `Available in loaded translations: ${cell.availableIn.join(', ')}.` : ''].filter(Boolean).join(' ');
+        td.appendChild(note);
+      }
     }
   }
 
@@ -1222,7 +1289,7 @@ function init() {
     const book = currentBook();
     if (!book) return;
     const chapterNum = Number(refs.chapter.value);
-    const verseCount = book.chapters[chapterNum - 1];
+    const verseCount = chapterExtent(book.id, chapterNum);
     const name = (locale.books[book.id] && locale.books[book.id].name) || book.id;
 
     if (book.provisional) {
@@ -1277,7 +1344,7 @@ function init() {
     groups.forEach((group, index) => {
       const book = canon.books.find(b => b.id === group.bookId);
       const name = (locale.books[book.id] && locale.books[book.id].name) || book.id;
-      const verseCount = book.chapters[group.chapter - 1];
+      const verseCount = chapterExtent(book.id, group.chapter);
       const exactVerses = versesForGroup(group, verseCount);
 
       const exactSet = new Set(exactVerses);
@@ -2312,7 +2379,7 @@ function init() {
     if (!book) return;
     const chapterNum = group.chapter;
     const name = (locale.books[book.id] && locale.books[book.id].name) || book.id;
-    const verseCount = book.chapters[chapterNum - 1];
+    const verseCount = chapterExtent(book.id, chapterNum);
     const verseFilter = group.ranges ? new Set(versesForGroup(group, verseCount)) : null;
 
     const head = document.createElement('div');

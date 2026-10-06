@@ -442,7 +442,7 @@ async function openPilot(window, bookId, chapter, ref) {
   const shellList = (sw.match(/const SHELL_FILES = \[([\s\S]*?)\];/) || [])[1] || '';
   check('preview runtime files are not precached in the shell', !/berean-hebrew/.test(shellList));
   check('data cache version unchanged (v3)', /DATA_CACHE_VERSION\s*=\s*'v3'/.test(sw));
-  check('shell cache version bumped for the new coverage (v36)', /CACHE_VERSION\s*=\s*'v36'/.test(sw));
+  check('shell cache version includes the Sirach update (v37)', /CACHE_VERSION\s*=\s*'v37'/.test(sw));
 
   const { assemble } = await import('./import-berean-hebrew.mjs');
   const { files } = assemble();

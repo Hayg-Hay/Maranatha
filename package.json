@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test": "node build/tools/berean-hebrew-tests.mjs && node build/tools/berean-hebrew-variants.mjs --check && node build/tools/berean-hebrew-validate.mjs && node build/tools/berean-hebrew-compare.mjs && node build/import-berean-hebrew.mjs --check && node build/test-service-worker.mjs && node build/test-berean-hebrew.mjs && node build/validate-reviewed-greek-gloss.mjs && node build/validate-berean-interlinear.mjs && node build/test-reviewed-greek-gloss.mjs && node build/test-berean-interlinear.mjs && node build/test-berean-offline.mjs"
+    "test": "node build/audit-sirach.mjs && node build/test-sirach.mjs && node build/tools/berean-hebrew-tests.mjs && node build/tools/berean-hebrew-variants.mjs --check && node build/tools/berean-hebrew-validate.mjs && node build/tools/berean-hebrew-compare.mjs && node build/import-berean-hebrew.mjs --check && node build/test-service-worker.mjs && node build/test-berean-hebrew.mjs && node build/validate-reviewed-greek-gloss.mjs && node build/validate-berean-interlinear.mjs && node build/test-reviewed-greek-gloss.mjs && node build/test-berean-interlinear.mjs && node build/test-berean-offline.mjs"
   },
   "dependencies": {
     "fast-xml-parser": "^5.10.1"

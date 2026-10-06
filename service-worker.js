@@ -35,7 +35,7 @@
 // the new shell. The update is therefore user-driven, not a silent replacement
 // mid-read.
 
-const CACHE_VERSION = 'v36';      // bump when shell files change
+const CACHE_VERSION = 'v37';      // bump when shell files change
 // Data cache intentionally stays at v3: the Berean Hebrew preview uses
 // versioned/uniquely named data files (data/berean-hebrew/manifest-v5.js and
 // data/berean-hebrew/<BOOK>.js), so new coverage is fetched fresh without
@@ -185,7 +185,7 @@ self.addEventListener('fetch', (event) => {
 
 async function cacheFirst(request, cacheName, navigationFallbackUrl) {
   const cache = await caches.open(cacheName);
-  const cached = await cache.match(request, { ignoreSearch: true });
+  const cached = await cache.match(request, { ignoreSearch: cacheName !== DATA_CACHE });
   if (cached) return cached;
 
   try {
