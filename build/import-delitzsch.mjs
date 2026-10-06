@@ -345,8 +345,10 @@ async function main() {
   const jsPath = path.join(dir, '..', 'data', 'delitzsch.js');
 
   if (check) {
-    const actualJson = fs.existsSync(jsonPath) ? fs.readFileSync(jsonPath, 'utf8') : null;
-    const actualJs = fs.existsSync(jsPath) ? fs.readFileSync(jsPath, 'utf8') : null;
+    // Git may check generated files out with CRLF on Windows. Verify their
+    // content without treating the checkout's line endings as corpus changes.
+    const actualJson = fs.existsSync(jsonPath) ? fs.readFileSync(jsonPath, 'utf8').replace(/\r\n/g, '\n') : null;
+    const actualJs = fs.existsSync(jsPath) ? fs.readFileSync(jsPath, 'utf8').replace(/\r\n/g, '\n') : null;
     if (actualJson !== json) throw new Error(`${jsonPath} is not up to date with the cached source (run node build/import-delitzsch.mjs)`);
     if (actualJs !== js) throw new Error(`${jsPath} is not up to date with the cached source (run node build/import-delitzsch.mjs)`);
     console.log(`delitzsch --check OK: ${EXPECTED_NT_BOOKS} NT books, ${EXPECTED_NT_CHAPTERS} chapters, ${stats.ntRows} verse rows; JSON and JS match the cached source.`);

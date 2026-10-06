@@ -69,7 +69,7 @@ function buildExpected(rows) {
 function main() {
   const source = fs.readFileSync(VPL_TXT, 'utf8');
   const data = JSON.parse(fs.readFileSync(path.join(dir, '..', 'data', 'delitzsch.json'), 'utf8'));
-  const js = fs.readFileSync(path.join(dir, '..', 'data', 'delitzsch.js'), 'utf8');
+  const js = fs.readFileSync(path.join(dir, '..', 'data', 'delitzsch.js'), 'utf8').replace(/\r\n/g, '\n');
   const { rows, otRows, malformed } = sourceParse(source);
   const expected = buildExpected(rows);
 

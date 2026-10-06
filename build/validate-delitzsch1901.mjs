@@ -24,7 +24,7 @@ function main() {
   const corrections = new Map(manifest.entries.map((e) => [`${e.ref}`, e]));
   const { translation, stats } = buildTranslation(raw, corrections);
   const data = JSON.parse(fs.readFileSync(path.join(dir, '..', 'data', 'delitzsch1901.json'), 'utf8'));
-  const js = fs.readFileSync(path.join(dir, '..', 'data', 'delitzsch1901.js'), 'utf8');
+  const js = fs.readFileSync(path.join(dir, '..', 'data', 'delitzsch1901.js'), 'utf8').replace(/\r\n/g, '\n');
 
   // 1. shape
   assert.equal(Object.keys(translation.books).length, EXPECTED_BOOKS);

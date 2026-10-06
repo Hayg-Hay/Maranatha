@@ -78,7 +78,7 @@ check('2. full source reference sets and correction fidelity', true);
 // 4. JSON/JS equality + deterministic --check
 {
   const json = read('data/delitzsch1901.json');
-  const js = read('data/delitzsch1901.js');
+  const js = read('data/delitzsch1901.js').replace(/\r\n/g, '\n');
   assert.equal(js, `window.MARANATHA_TRANSLATIONS=window.MARANATHA_TRANSLATIONS||{};\nwindow.MARANATHA_TRANSLATIONS['delitzsch1901']=${JSON.stringify(JSON.parse(json), null, 2)};\n`);
   const out = execFileSync(process.execPath, ['build/import-delitzsch1901.mjs', '--check'], { cwd: ROOT, encoding: 'utf8' });
   assert.match(out, /--check OK/);
@@ -130,7 +130,7 @@ check('2. full source reference sets and correction fidelity', true);
   vm.runInContext(fnSrc + '\nthis.f = isTranslationFile;', sandbox);
   assert(sandbox.f('/data/delitzsch1901.js') === true);
   assert(sandbox.f('/data/canon.js') === false);
-  assert(/CACHE_VERSION\s*=\s*'v44'/.test(swSrc));
+  assert(/CACHE_VERSION\s*=\s*'v45'/.test(swSrc));
   check('13. service-worker routes delitzsch1901; shell version bumped', true);
 }
 

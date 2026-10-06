@@ -171,8 +171,9 @@ function main() {
   const jsPath = path.join(dir, '..', 'data', 'delitzsch1901.js');
 
   if (check) {
-    const actualJson = fs.existsSync(jsonPath) ? fs.readFileSync(jsonPath, 'utf8') : null;
-    const actualJs = fs.existsSync(jsPath) ? fs.readFileSync(jsPath, 'utf8') : null;
+    // Accept Git's Windows checkout line endings; all content must still match.
+    const actualJson = fs.existsSync(jsonPath) ? fs.readFileSync(jsonPath, 'utf8').replace(/\r\n/g, '\n') : null;
+    const actualJs = fs.existsSync(jsPath) ? fs.readFileSync(jsPath, 'utf8').replace(/\r\n/g, '\n') : null;
     if (actualJson !== json) throw new Error(`${jsonPath} is not up to date (run node build/import-delitzsch1901.mjs)`);
     if (actualJs !== js) throw new Error(`${jsPath} is not up to date (run node build/import-delitzsch1901.mjs)`);
     console.log(`delitzsch1901 --check OK: ${EXPECTED_BOOKS} books, ${EXPECTED_CHAPTERS} chapters, ${stats.rows} verses, ${stats.corrected} corrected verses.`);

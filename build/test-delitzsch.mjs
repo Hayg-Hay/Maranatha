@@ -86,7 +86,7 @@ check('2b. malformed/duplicate/invalid/empty/annotation failures', true);
 // 3. JSON/JS equality and deterministic --check
 {
   const json = read('data/delitzsch.json');
-  const js = read('data/delitzsch.js');
+  const js = read('data/delitzsch.js').replace(/\r\n/g, '\n');
   assert.equal(js, `window.MARANATHA_TRANSLATIONS=window.MARANATHA_TRANSLATIONS||{};\nwindow.MARANATHA_TRANSLATIONS['delitzsch']=${JSON.stringify(JSON.parse(json), null, 2)};\n`);
   const out = execFileSync(process.execPath, ['build/import-delitzsch.mjs', '--check'], { cwd: ROOT, encoding: 'utf8' });
   assert.match(out, /--check OK/);
@@ -156,7 +156,7 @@ check('6. Romans 14/16 placement and 3 John note-only metadata', true);
   vm.runInContext(fnSrc + '\nthis.f = isTranslationFile;', sandbox);
   assert(sandbox.f('/data/delitzsch.js') === true);
   assert(sandbox.f('/data/canon.js') === false);
-  assert(/CACHE_VERSION\s*=\s*'v44'/.test(swSrc));
+  assert(/CACHE_VERSION\s*=\s*'v45'/.test(swSrc));
   check('13. service-worker routes delitzsch and shell version bumped', true);
 }
 
