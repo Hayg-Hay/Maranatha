@@ -743,7 +743,8 @@ function init() {
     setReading();
     setFontSize();
     try {
-        if (localStorage.getItem('maranatha-hebrew-script') === 'paleo') refs.hebrewScript.value = 'paleo';
+        const savedScript = localStorage.getItem('maranatha-hebrew-script');
+        if (['paleo', 'proto'].includes(savedScript)) refs.hebrewScript.value = savedScript;
     } catch (error) {} // file:// storage can be unavailable; session toggle still works.
     syncHebrewScriptNote();
     restoreInterlinearMode(INTERLINEARS.greek);
@@ -774,12 +775,17 @@ function init() {
   function setFontSize() { document.documentElement.dataset.fontsize = refs.fontsize.value; }
 
   function syncHebrewScriptNote() {
-    refs.hebrewScriptNote.hidden = refs.hebrewScript.value !== 'paleo';
+    const proto = refs.hebrewScript.value === 'proto';
+    refs.hebrewScriptNote.hidden = refs.hebrewScript.value === 'square';
     if (refs.hebrewScriptNote.hidden) refs.hebrewScriptNote.open = false;
+    q('#hebrew-script-description').textContent = proto
+      ? 'A visual approximation using the Culmus Proto Canaanite font, inspired mainly by Sinai inscriptions. This is not a scholarly reconstruction of an ancient manuscript or its language. Existing WLC/OSHB consonants are shown with early-looking letterforms; vowel points and cantillation are hidden, and final letter forms are merged. Source wording is unchanged. Copied text uses the same character encoding as the Paleo display. Search accepts square Hebrew or copied display text; interlinear tools retain square Hebrew.'
+      : 'A visual approximation using the Noto Sans Phoenician font, not a scholarly reconstruction of an ancient manuscript. Existing WLC/OSHB consonants are displayed in Paleo-Hebrew letterforms; vowel points and cantillation are hidden, and final letter forms are merged. The source text is unchanged. Search accepts either script; interlinear tools retain square Hebrew.';
+    q('#hebrew-script-source').hidden = !proto;
   }
 
   function verseDisplayText(text, translationId) {
-    return translationId === 'he' && refs.hebrewScript.value === 'paleo'
+    return translationId === 'he' && ['paleo', 'proto'].includes(refs.hebrewScript.value)
       ? window.MARANATHA_HEBREW_SCRIPT.toPaleo(text) : text;
   }
 
@@ -788,6 +794,7 @@ function init() {
     element.lang = refs.hebrewScript.value === 'paleo' ? 'hbo-Phnx' : 'he';
     element.classList.add('hebrew-verse');
     element.classList.toggle('paleo-hebrew', refs.hebrewScript.value === 'paleo');
+    element.classList.toggle('proto-sinaitic', refs.hebrewScript.value === 'proto');
   }
 
   function getStoredAppearance() {

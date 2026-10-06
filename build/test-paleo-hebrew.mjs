@@ -61,6 +61,17 @@ for (const narrow of [false, true]) {
     assert.equal(toPaleo(raw), genesis);
     for (const layout of ['multicolumn', 'multirow']) {
       change(w, '#layout', layout);
+      for (const scriptMode of ['paleo', 'proto']) {
+        change(w, '#hebrew-script', scriptMode);
+        const className = scriptMode === 'proto' ? '.proto-sinaitic' : '.paleo-hebrew';
+        assert.equal(d.querySelector(className).textContent, genesis);
+        assert.equal(d.querySelector(className).dir, 'rtl');
+        assert.equal(d.querySelector('#hebrew-script-note').open, false);
+        assert.equal(d.querySelector('#hebrew-script-source').hidden, scriptMode !== 'proto');
+        change(w, '#hebrew-script', 'square');
+        assert.equal(d.querySelector('.hebrew-verse').textContent, raw);
+        assert(!d.querySelector('.proto-sinaitic'));
+      }
       change(w, '#hebrew-script', 'paleo');
       assert.equal(d.querySelector('.paleo-hebrew').textContent, genesis);
       assert.equal(d.querySelector('.paleo-hebrew').dir, 'rtl');
@@ -96,6 +107,26 @@ for (const narrow of [false, true]) {
     d.querySelector('.compare-toggle').click();
     assert(d.querySelector('.compare-text.paleo-hebrew'));
 
+    change(w, '#hebrew-script', 'proto');
+    d.querySelector('.compare-toggle').click();
+    assert(d.querySelector('.compare-text.proto-sinaitic'));
+    assert.match(d.querySelector('#hebrew-script-description').textContent, /Sinai inscriptions/);
+    assert.equal(await search('he', 'הארץ'), squareCount);
+    assert.equal(d.querySelector('.search-hit .search-text mark').textContent, '𐤄𐤀𐤓𐤑');
+    assert(d.querySelector('.search-text.proto-sinaitic'));
+    assert.equal(await search('he', '𐤄𐤀𐤓𐤑'), squareCount);
+    d.querySelector('#reference').value = 'Gen 1:2';
+    d.querySelector('#reference-go').click();
+    assert(d.querySelector('.proto-sinaitic'));
+    assert(d.querySelectorAll('.proto-sinaitic').length > 1, 'early-script context rendering');
+    d.querySelector('#reference').value = 'Exodus 20';
+    d.querySelector('#reference-go').click();
+    assert.deepEqual(
+      Array.from(d.querySelectorAll('.proto-sinaitic'), el => el.textContent),
+      Array.from(w.MARANATHA_TRANSLATIONS.he.books.EXO[19], verse => toPaleo(verse)),
+      'the Ten Commandments chapter retains every source consonant in the early-script view',
+    );
+
     // Consonants are preserved throughout every loaded OT chapter; no
     // source mutation, square letters or pointed remnants leak into display.
     for (const chapters of Object.values(w.MARANATHA_TRANSLATIONS.he.books)) {
@@ -112,13 +143,18 @@ for (const narrow of [false, true]) {
     await waitFor(() => d.querySelector('.iw-hebrew'));
     assert(/[א-ת]/u.test(d.querySelector('.iw-hebrew').textContent));
     assert(!d.querySelector('.iw-hebrew.paleo-hebrew'));
+    assert(!d.querySelector('.iw-hebrew.proto-sinaitic'));
   } finally { dom.window.close(); }
 }
 const blocked = await open({ blockedStorage: true });
 change(blocked.window, '#hebrew-script', 'paleo');
 assert.equal(blocked.window.document.querySelector('#hebrew-script-note').hidden, false);
 blocked.window.close();
+const protoRestored = await open({ saved: 'proto' });
+assert.equal(protoRestored.window.document.querySelector('#hebrew-script').value, 'proto');
+assert.equal(protoRestored.window.document.querySelector('#hebrew-script-source').hidden, false);
+protoRestored.window.close();
 const restored = await open({ saved: 'paleo' });
 assert.equal(restored.window.document.querySelector('#hebrew-script').value, 'paleo');
 restored.window.close();
-console.log('PASS Paleo-Hebrew: alphabet, full OT preservation, file:// desktop/mobile, layouts, context, search, comparison, interlinear and storage.');
+console.log('PASS Paleo-Hebrew and early-script display: alphabet, full OT preservation, Ten Commandments, file:// desktop/mobile, layouts, context, search, comparison, interlinear and storage.');

@@ -126,10 +126,11 @@
           <summary>Reading settings</summary>
           <div class="settings-row">
             <div class="hebrew-script-setting">
-              <label>Hebrew script <select id="hebrew-script" aria-describedby="hebrew-script-description"><option value="square">Square Hebrew</option><option value="paleo">Paleo-Hebrew</option></select></label>
+              <label>Hebrew script <select id="hebrew-script" aria-describedby="hebrew-script-description"><option value="square">Square Hebrew</option><option value="paleo">Paleo-Hebrew</option><option value="proto">Proto-Sinaitic (approx.)</option></select></label>
               <details id="hebrew-script-note" class="hebrew-script-info" hidden>
                 <summary>About this display</summary>
                 <p id="hebrew-script-description">A visual approximation using the Noto Sans Phoenician font, not a scholarly reconstruction of an ancient manuscript. Existing WLC/OSHB consonants are displayed in Paleo-Hebrew letterforms; vowel points and cantillation are hidden, and final letter forms are merged. The source text is unchanged. Search accepts either script; interlinear tools retain square Hebrew.</p>
+                <a id="hebrew-script-source" href="https://culmus.sourceforge.io/ancient/Samples/Proto-Canaanite.pdf" target="_blank" rel="noopener" hidden>Font documentation (Hebrew)</a>
               </details>
             </div>
             <label>Layout <select id="layout"><option value="auto">Automatic</option><option value="multicolumn">Multi-column</option><option value="multirow">Multi-row</option></select></label>

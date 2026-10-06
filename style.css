@@ -95,6 +95,12 @@ tbody td {
 .hebrew-verse { font-family:'Ezra SIL','SBL Hebrew',serif; text-align:right; font-size:1.25rem; line-height:1.7; }
 .hebrew-verse.paleo-hebrew { font-family:'Maranatha Paleo Hebrew',serif; unicode-bidi:isolate; }
 @font-face {
+  font-family: 'Maranatha Early Alphabet';
+  src: url('fonts/ProtoCanaanite.ttf') format('truetype');
+  font-display: swap;
+}
+.hebrew-verse.proto-sinaitic { font-family:'Maranatha Early Alphabet',serif; unicode-bidi:isolate; }
+@font-face {
   font-family: 'Cardo';
   src: url('fonts/Cardo-Regular.ttf') format('truetype');
   font-display: swap;
