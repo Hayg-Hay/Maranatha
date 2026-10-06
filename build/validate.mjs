@@ -30,6 +30,7 @@
 //     canon.js's provisional entries.
 
 import fs from 'node:fs';
+import { parseChapter } from './import-eng-web-c.mjs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -127,6 +128,23 @@ for (const book of canon.books) {
   }
   chapters.slice(0, realChapters).forEach((verses, i) => {
     const chapterNum = i + 1;
+    // Sirach is checked against this edition's independently verified source,
+    // including verse identities and omission metadata, never a global count.
+    if (book.id === 'SIR') {
+      if (translation.id !== 'web') {
+        console.error(`ERROR  ${translation.id} SIR: no independently verified source profile; add one before importing this edition`);
+        errors++;
+        return;
+      }
+      const source = fs.readFileSync(path.join(dir, 'sources', 'sirach-web', `SIR${String(chapterNum).padStart(2, '0')}.htm`), 'utf8');
+      const expected = parseChapter(source);
+      const metadata = translation.verseMetadata?.SIR?.[chapterNum] || {};
+      if (JSON.stringify(verses) !== JSON.stringify(expected.verses) || JSON.stringify(metadata) !== JSON.stringify(expected.metadata)) {
+        console.error(`ERROR  web SIR ${chapterNum}: source verse IDs, text or omission metadata differ from the verified publisher source`);
+        errors++;
+      }
+      return;
+    }
     const expected = book.chapters[i];
     const got = Array.isArray(verses) ? trimTrailing(verses) : typeof verses;
     if (got === expected) return;

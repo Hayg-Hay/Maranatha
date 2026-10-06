@@ -125,103 +125,61 @@ async function fetchChapter(code, chapterNum) {
 }
 
 // Extracts the plain verse-numbered text of one chapter page.
-function parseChapterVerses(html) {
-  // Every eng-web-c chapter page has the same nav row (a link back to the
-  // book's index.htm, plus prev/next chapter links) TWICE: once right
-  // before the verse text, once right after it (and before any footnotes
-  // — which may or may not exist for a given chapter). Slicing between the
-  // first and second occurrence of the nav row's book-index link isolates
-  // the verse content without needing footnotes to be present, which is
-  // what the earlier <p>...<hr> approach got wrong: short one-chapter
-  // books like Obadiah/Philemon/Jude/2 John often have NO translator
-  // footnotes, so there's no <hr> before the footer either, and that
-  // regex silently grabbed the wrong (or no) content for exactly those
-  // books — matching what validate.mjs actually reported.
-  const navLinks = [...html.matchAll(/href="[^"]*index\.htm"/g)];
-  let region = html;
-  if (navLinks.length >= 2) {
-    region = html.slice(navLinks[0].index, navLinks[1].index);
-  }
+// Verse arrays retain source IDs, including holes. A displayed marker such as
+// V19 / "19-27" describes nine references, not one verse of prose.
+function plainText(html) {
+  return html.replace(/<[^>]+>/g, ' ')
+    .replace(/&#(x[0-9a-f]+|[0-9]+);/gi, (_, n) => String.fromCodePoint(n[0].toLowerCase() === 'x' ? parseInt(n.slice(1), 16) : Number(n)))
+    .replace(/&nbsp;/g, ' ').replace(/&rsquo;/g, '’').replace(/&lsquo;/g, '‘')
+    .replace(/&ldquo;/g, '“').replace(/&rdquo;/g, '”').replace(/&amp;/g, '&')
+    .replace(/\s+/g, ' ').trim();
+}
 
-  // Strip footnote reference markers (inline anchors linking to #FNn,
-  // regardless of their visible symbol/text length).
-  region = region.replace(/<a[^>]*href="#FN\d+"[^>]*>.*?<\/a>/gs, '');
-
-  // Strip the nav row's own short links — book-index link text (e.g.
-  // "Tobit"), and the "<", ">", and bare chapter-number links are all far
-  // shorter than any real verse prose, so removing any anchor with <=3
-  // characters of visible text clears the nav chrome without needing to
-  // know its exact class/structure. (Footnote anchors are already gone
-  // from the step above, so this can't accidentally eat those instead.)
-  region = region.replace(/<a\b[^>]*>(.{0,3})<\/a>/gs, '');
-
-  const markerRegex = /<span\b[^>]*\bclass=(['"])verse\1[^>]*\bid=(['"])V(\d+)\2[^>]*>[\s\S]*?<\/span>/gi;
+export function parseChapter(html) {
+  const main = html.match(/<div\b[^>]*class=['"]main['"][^>]*>/i);
+  let region = main ? html.slice(main.index + main[0].length) : html;
+  const stop = region.search(/<(?:ul\b[^>]*class=['"]tnav['"]|div\b[^>]*class=['"](?:footnote|copyright)['"])/i);
+  if (stop >= 0) region = region.slice(0, stop);
+  const markers = [...region.matchAll(/<span\b[^>]*class=['"]verse['"][^>]*id=['"]V(\d+)['"][^>]*>([\s\S]*?)<\/span>/gi)];
   const verses = [];
-  const markers = [];
-  let match;
-
-  function normalizeVerseText(text) {
-    return text
-      .replace(/<sup[^>]*>.*?<\/sup>/gs, '')
-      .replace(/<[^>]+>/g, ' ')
-      .replace(/&#8217;|&rsquo;/g, '\u2019')
-      .replace(/&#8216;|&lsquo;/g, '\u2018')
-      .replace(/&#8220;|&ldquo;/g, '\u201c')
-      .replace(/&#8221;|&rdquo;/g, '\u201d')
-      .replace(/&amp;/g, '&')
-      .replace(/&nbsp;/g, ' ')
-      .replace(/\s+/g, ' ')
-      .trim();
-  }
-
-  function stripTrailingNavigationAnchors(html) {
-    return html.replace(/(?:\s*<a\b[^>]*>[\s\S]*?<\/a>)+\s*$/gi, '');
-  }
-
-  while ((match = markerRegex.exec(region)) !== null) {
-    const verseNum = Number(match[3]);
-    if (Number.isNaN(verseNum)) continue;
-    markers.push({ index: match.index, end: markerRegex.lastIndex });
-  }
-
-  if (!markers.length) return [];
-
-  let scriptureEnd = region.length;
-  const footerRegex = /<div\b[^>]*(?:\bclass=(['"])(?:(?!\1).)*\bfootnote\b(?:(?!\1).)*\1|\bid=(['"])(?:(?!\2).)*\bfootnote\b(?:(?!\2).)*\2|\bclass=(['"])(?:(?!\3).)*\bfooter\b(?:(?!\3).)*\3|\bclass=(['"])(?:(?!\4).)*\bbottom\b(?:(?!\4).)*\4|\bclass=(['"])(?:(?!\5).)*\bcopyright\b(?:(?!\5).)*\5)[^>]*>/i;
-  const footerMatch = footerRegex.exec(region);
-  if (footerMatch) {
-    scriptureEnd = footerMatch.index;
-  }
-
-  const navContainerRegex = /<ul\b[^>]*\bclass=(['"])(?:(?!\1).)*\btnav\b(?:(?!\1).)*\1[^>]*>/gi;
-  const lastMarkerEnd = markers[markers.length - 1].end;
-  let navContainerMatch;
-  let nextNavContainer;
-  while ((navContainerMatch = navContainerRegex.exec(region)) !== null) {
-    if (navContainerMatch.index > lastMarkerEnd) {
-      nextNavContainer = navContainerMatch;
-      break;
+  const metadata = {};
+  let lastVerse = 0;
+  markers.forEach((marker, i) => {
+    const start = Number(marker[1]);
+    const label = plainText(marker[2]);
+    const range = label.match(/^(\d+)(?:-(\d+))?$/);
+    if (!range || Number(range[1]) !== start) throw new Error(`Invalid source verse marker: ${label}`);
+    const end = Number(range[2] || start);
+    if (start <= lastVerse) throw new Error(`Duplicate or out-of-order source verse marker: ${label}`);
+    lastVerse = end;
+    if (end < start) throw new Error(`Reversed source verse marker: ${label}`);
+    const body = region.slice(marker.index + marker[0].length, markers[i + 1]?.index ?? region.length);
+    const notes = [...body.matchAll(/<a\b[^>]*href=['"]#FN\d+['"][^>]*>([\s\S]*?)<\/a>/gi)]
+      .map(m => plainText(m[1].replace(/^[^<]*/, ''))).filter(Boolean);
+    const text = plainText(body.replace(/<a\b[^>]*href=['"]#FN\d+['"][^>]*>[\s\S]*?<\/a>/gi, ''));
+    // A verse range cannot be collapsed into its first numbered slot.
+    if (end > start && text) throw new Error(`Unsupported combined verse text at ${label}`);
+    while (verses.length < end) verses.push(null);
+    if (text) verses[start - 1] = text;
+    const note = notes.join(' ');
+    if (!text && /omitted/i.test(note)) {
+      for (let v = start; v <= end; v++) metadata[v] = { status: 'omitted', note };
+    } else if (note) {
+      metadata[start] = { status: 'text', note };
     }
-  }
-  if (nextNavContainer && nextNavContainer.index < scriptureEnd) {
-    scriptureEnd = nextNavContainer.index;
-  }
+  });
+  return { verses, metadata };
+}
 
-  for (let i = 0; i < markers.length; i++) {
-    const start = markers[i].end;
-    const end = i + 1 < markers.length ? markers[i + 1].index : scriptureEnd;
-    const verseHtml = stripTrailingNavigationAnchors(region.slice(start, end));
-    verses.push(normalizeVerseText(verseHtml));
-  }
-
-  return verses;
+export function parseChapterVerses(html) {
+  return parseChapter(html).verses;
 }
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function importBook(canonId) {
+async function importBook(canonId, verseMetadata) {
   const code = ebibleCode(canonId);
   const chapters = [];
   let chapterNum = 1;
@@ -239,7 +197,11 @@ async function importBook(canonId) {
     const result = await fetchChapter(code, chapterNum);
     if (!result) break;
 
-    chapters.push(parseChapterVerses(result.html));
+    const parsed = parseChapter(result.html);
+    chapters.push(parsed.verses);
+    if (Object.keys(parsed.metadata).length) {
+      (verseMetadata[canonId] ||= {})[chapterNum] = parsed.metadata;
+    }
     await sleep(REQUEST_DELAY_MS);
     chapterNum++;
   }
@@ -261,17 +223,9 @@ function loadCanon() {
 
 async function main() {
   if (process.argv.includes('--smoke-test')) {
-    // IMPORTANT: run this FIRST, before the full import. The HTML-scraping
-    // regexes in parseChapterVerses() below were written against markdown-
-    // converted previews of eng-web-c pages (fetched from a sandboxed
-    // environment with no direct network access to ebible.org), not the
-    // real raw HTML bytes a browser or `fetch()` sees. They are a
-    // best-effort guess at the real markup, not a verified match. This
-    // mode fetches Tobit 1 (a chapter WITH footnotes) and Obadiah 1 (a
-    // one-chapter book with NO footnotes — the exact case that broke last
-    // time) and prints what got parsed for both, so you can catch a
-    // regression in either case before spending ~1,400 requests finding
-    // out the hard way.
+    // Check both a chapter with footnotes and a one-chapter book without
+    // them before a full import. The parser also has cached Sirach fixtures
+    // and regression tests for omitted ranges and preserved source IDs.
     console.log('Smoke-testing against Tobit 1 and Obadiah 1...\n');
 
     const tobit = await fetchChapter('TOB', 1);
@@ -302,10 +256,11 @@ async function main() {
 
   const canon = loadCanon();
   const books = {};
+  const verseMetadata = {};
   console.log('Fetching eng-web-c from ebible.org — this will take a while.');
 
   for (const book of canon.books) {
-    books[book.id] = await importBook(book.id);
+    books[book.id] = await importBook(book.id, verseMetadata);
   }
 
   writeTranslation({
@@ -313,6 +268,7 @@ async function main() {
     label: 'World English Bible',
     source: 'World English Bible Catholic Edition (eng-web-c), eBible.org — https://ebible.org/eng-web-c/. Public domain. Fetched via build/import-eng-web-c.mjs.',
     books,
+    verseMetadata,
   });
 
   console.log('\nDone fetching. Next steps:');
@@ -326,7 +282,7 @@ async function main() {
   console.log('     keeps loading it via <script>, never fetch().');
 }
 
-main().catch(err => {
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main().catch(err => {
   console.error(err);
   process.exit(1);
 });

@@ -145,6 +145,8 @@ async function main() {
   check('data cache version is v3 (unchanged by the Hebrew preview)', /DATA_CACHE_VERSION\s*=\s*'v3'/.test(swSource));
   check('shell cache version was bumped for the app change', /CACHE_VERSION\s*=\s*'v40'/.test(swSource));
 
+  check('data cache honors version query strings for corrected WEB data', /ignoreSearch: cacheName !== DATA_CACHE/.test(swSource));
+
   let failed = 0;
   for (const [name, ok, detail] of results) {
     if (ok) console.log(`PASS  ${name}`);

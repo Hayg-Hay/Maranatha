@@ -1,0 +1,448 @@
+{
+  "checked": "2026-10-05",
+  "translations": [
+    {
+      "id": "web",
+      "source": "World English Bible Catholic Edition (eng-web-c), eBible.org — https://ebible.org/eng-web-c/. Public domain. Fetched via build/import-eng-web-c.mjs.",
+      "containsSirach": true
+    },
+    {
+      "id": "kjv",
+      "source": "scrollmapper/bible_databases (2024 branch), json/t_kjv.json — public domain in the US. Standard 66-book edition; does not include the Catholic deuterocanonical books.",
+      "containsSirach": false
+    },
+    {
+      "id": "armwestern",
+      "source": "CrossWire SWORD module \"ArmWestern\" — 1853 Western Armenian NT, Public Domain. TextSource: Slavic Bible via unbound.biola.edu. New Testament only (27 books); no OT data exists in the source module. Decoded from SWORD zText format via pysword and cached at build/sources/armwestern/armwestern.source.json. 10 verses are genuinely blank in the source itself (see this script's header comment for the full list) and are written through as empty strings.",
+      "containsSirach": false
+    },
+    {
+      "id": "byz",
+      "source": "byztxt/byzantine-majority-text (GitHub), csv-unicode/ccat/no-variants/ — Robinson-Pierpont edition, Unlicense (public domain). 27 standard NT books. Pericope Adulterae (John 7:53-8:11) and the longer ending of Acts 24 are included in the main text as per the Byzantine manuscript tradition.",
+      "containsSirach": false
+    },
+    {
+      "id": "he",
+      "source": "Open Scriptures Hebrew Bible (OSHB). Original work of the Open Scriptures Hebrew Bible available at https://github.com/openscriptures/morphhb, licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Based on the Westminster Leningrad Codex (public domain). Morphological markup stripped during import — only surface text (consonants, niqqud, cantillation) retained. Covers the 39 protocanonical Old Testament books only; the 7 Catholic deuterocanonical books have no Hebrew source text and are not included.",
+      "containsSirach": false
+    },
+    {
+      "id": "luther1912",
+      "source": "eBible.org, deu1912_vpl.zip (BibleWorks VPL) — Lutherbibel 1912, public domain. Standard 66-book edition; does not include the Catholic deuterocanonical books.",
+      "containsSirach": false
+    },
+    {
+      "id": "segond1910",
+      "source": "eBible.org, fraLSG_vpl.zip (BibleWorks VPL) — Louis Segond 1910, public domain. Standard 66-book edition; does not include the Catholic deuterocanonical books.",
+      "containsSirach": false
+    }
+  ],
+  "chapters": [
+    {
+      "chapter": 1,
+      "highestVerse": 30,
+      "textVerses": 27,
+      "omitted": [
+        5,
+        7,
+        21
+      ],
+      "source": "https://ebible.org/eng-web-c/SIR01.htm"
+    },
+    {
+      "chapter": 2,
+      "highestVerse": 18,
+      "textVerses": 18,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR02.htm"
+    },
+    {
+      "chapter": 3,
+      "highestVerse": 31,
+      "textVerses": 30,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR03.htm"
+    },
+    {
+      "chapter": 4,
+      "highestVerse": 31,
+      "textVerses": 31,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR04.htm"
+    },
+    {
+      "chapter": 5,
+      "highestVerse": 15,
+      "textVerses": 15,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR05.htm"
+    },
+    {
+      "chapter": 6,
+      "highestVerse": 37,
+      "textVerses": 37,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR06.htm"
+    },
+    {
+      "chapter": 7,
+      "highestVerse": 36,
+      "textVerses": 36,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR07.htm"
+    },
+    {
+      "chapter": 8,
+      "highestVerse": 19,
+      "textVerses": 19,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR08.htm"
+    },
+    {
+      "chapter": 9,
+      "highestVerse": 18,
+      "textVerses": 18,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR09.htm"
+    },
+    {
+      "chapter": 10,
+      "highestVerse": 31,
+      "textVerses": 30,
+      "omitted": [
+        21
+      ],
+      "source": "https://ebible.org/eng-web-c/SIR10.htm"
+    },
+    {
+      "chapter": 11,
+      "highestVerse": 34,
+      "textVerses": 32,
+      "omitted": [
+        15,
+        16
+      ],
+      "source": "https://ebible.org/eng-web-c/SIR11.htm"
+    },
+    {
+      "chapter": 12,
+      "highestVerse": 18,
+      "textVerses": 18,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR12.htm"
+    },
+    {
+      "chapter": 13,
+      "highestVerse": 26,
+      "textVerses": 25,
+      "omitted": [
+        14
+      ],
+      "source": "https://ebible.org/eng-web-c/SIR13.htm"
+    },
+    {
+      "chapter": 14,
+      "highestVerse": 27,
+      "textVerses": 27,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR14.htm"
+    },
+    {
+      "chapter": 15,
+      "highestVerse": 20,
+      "textVerses": 20,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR15.htm"
+    },
+    {
+      "chapter": 16,
+      "highestVerse": 30,
+      "textVerses": 28,
+      "omitted": [
+        15,
+        16
+      ],
+      "source": "https://ebible.org/eng-web-c/SIR16.htm"
+    },
+    {
+      "chapter": 17,
+      "highestVerse": 32,
+      "textVerses": 27,
+      "omitted": [
+        5,
+        9,
+        16,
+        18,
+        21
+      ],
+      "source": "https://ebible.org/eng-web-c/SIR17.htm"
+    },
+    {
+      "chapter": 18,
+      "highestVerse": 33,
+      "textVerses": 32,
+      "omitted": [
+        3
+      ],
+      "source": "https://ebible.org/eng-web-c/SIR18.htm"
+    },
+    {
+      "chapter": 19,
+      "highestVerse": 30,
+      "textVerses": 27,
+      "omitted": [
+        18,
+        19,
+        21
+      ],
+      "source": "https://ebible.org/eng-web-c/SIR19.htm"
+    },
+    {
+      "chapter": 20,
+      "highestVerse": 32,
+      "textVerses": 30,
+      "omitted": [
+        3,
+        32
+      ],
+      "source": "https://ebible.org/eng-web-c/SIR20.htm"
+    },
+    {
+      "chapter": 21,
+      "highestVerse": 28,
+      "textVerses": 28,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR21.htm"
+    },
+    {
+      "chapter": 22,
+      "highestVerse": 27,
+      "textVerses": 25,
+      "omitted": [
+        9,
+        10
+      ],
+      "source": "https://ebible.org/eng-web-c/SIR22.htm"
+    },
+    {
+      "chapter": 23,
+      "highestVerse": 28,
+      "textVerses": 27,
+      "omitted": [
+        28
+      ],
+      "source": "https://ebible.org/eng-web-c/SIR23.htm"
+    },
+    {
+      "chapter": 24,
+      "highestVerse": 34,
+      "textVerses": 32,
+      "omitted": [
+        18,
+        24
+      ],
+      "source": "https://ebible.org/eng-web-c/SIR24.htm"
+    },
+    {
+      "chapter": 25,
+      "highestVerse": 26,
+      "textVerses": 25,
+      "omitted": [
+        12
+      ],
+      "source": "https://ebible.org/eng-web-c/SIR25.htm"
+    },
+    {
+      "chapter": 26,
+      "highestVerse": 29,
+      "textVerses": 20,
+      "omitted": [
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27
+      ],
+      "source": "https://ebible.org/eng-web-c/SIR26.htm"
+    },
+    {
+      "chapter": 27,
+      "highestVerse": 30,
+      "textVerses": 30,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR27.htm"
+    },
+    {
+      "chapter": 28,
+      "highestVerse": 26,
+      "textVerses": 26,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR28.htm"
+    },
+    {
+      "chapter": 29,
+      "highestVerse": 28,
+      "textVerses": 28,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR29.htm"
+    },
+    {
+      "chapter": 30,
+      "highestVerse": 25,
+      "textVerses": 25,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR30.htm"
+    },
+    {
+      "chapter": 31,
+      "highestVerse": 31,
+      "textVerses": 31,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR31.htm"
+    },
+    {
+      "chapter": 32,
+      "highestVerse": 24,
+      "textVerses": 24,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR32.htm"
+    },
+    {
+      "chapter": 33,
+      "highestVerse": 33,
+      "textVerses": 33,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR33.htm"
+    },
+    {
+      "chapter": 34,
+      "highestVerse": 26,
+      "textVerses": 26,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR34.htm"
+    },
+    {
+      "chapter": 35,
+      "highestVerse": 20,
+      "textVerses": 20,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR35.htm"
+    },
+    {
+      "chapter": 36,
+      "highestVerse": 26,
+      "textVerses": 26,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR36.htm"
+    },
+    {
+      "chapter": 37,
+      "highestVerse": 31,
+      "textVerses": 31,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR37.htm"
+    },
+    {
+      "chapter": 38,
+      "highestVerse": 34,
+      "textVerses": 34,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR38.htm"
+    },
+    {
+      "chapter": 39,
+      "highestVerse": 35,
+      "textVerses": 35,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR39.htm"
+    },
+    {
+      "chapter": 40,
+      "highestVerse": 30,
+      "textVerses": 30,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR40.htm"
+    },
+    {
+      "chapter": 41,
+      "highestVerse": 24,
+      "textVerses": 24,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR41.htm"
+    },
+    {
+      "chapter": 42,
+      "highestVerse": 25,
+      "textVerses": 25,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR42.htm"
+    },
+    {
+      "chapter": 43,
+      "highestVerse": 33,
+      "textVerses": 33,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR43.htm"
+    },
+    {
+      "chapter": 44,
+      "highestVerse": 23,
+      "textVerses": 23,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR44.htm"
+    },
+    {
+      "chapter": 45,
+      "highestVerse": 26,
+      "textVerses": 26,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR45.htm"
+    },
+    {
+      "chapter": 46,
+      "highestVerse": 20,
+      "textVerses": 20,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR46.htm"
+    },
+    {
+      "chapter": 47,
+      "highestVerse": 25,
+      "textVerses": 25,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR47.htm"
+    },
+    {
+      "chapter": 48,
+      "highestVerse": 25,
+      "textVerses": 25,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR48.htm"
+    },
+    {
+      "chapter": 49,
+      "highestVerse": 16,
+      "textVerses": 16,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR49.htm"
+    },
+    {
+      "chapter": 50,
+      "highestVerse": 29,
+      "textVerses": 29,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR50.htm"
+    },
+    {
+      "chapter": 51,
+      "highestVerse": 30,
+      "textVerses": 30,
+      "omitted": [],
+      "source": "https://ebible.org/eng-web-c/SIR51.htm"
+    }
+  ]
+}
