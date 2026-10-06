@@ -71,6 +71,9 @@ fieldset { border:0; padding:0; margin:0; min-width:0; } legend { font-size:.9re
 .notice summary:hover { background:var(--hover); }
 .notice summary:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:2px; }
 .notice[open] summary { margin-bottom:8px; }
+/* Edition-specific versification disclosure: shown before a table whose verse
+   numbering differs from the canon, so rows are not read as equivalent verses. */
+.versification-notice { border-inline-start:4px solid var(--accent); }
 .result-head { display:flex; flex-wrap:wrap; justify-content:space-between; gap:12px; align-items:baseline; margin:20px 0 8px; } .result-head h2 { margin:0; }
 #results table { border-collapse:collapse; width:100%; table-layout:fixed; background:var(--paper); margin-bottom:20px; }
 th, td { border:1px solid var(--line); padding:9px; vertical-align:top; text-align:left; overflow-wrap:break-word; }
@@ -125,6 +128,14 @@ code { font-family:Consolas, monospace; }
 .chapter-bar label,
 .settings-row label { display:grid; gap:4px; font-size:.85rem; }
 .hebrew-script-setting { min-width:0; flex:1 1 8rem; }
+.hebrew-script-label { display:block; margin-bottom:4px; font-size:.85rem; }
+.hebrew-script-picker { position:relative; }
+.hebrew-script-picker > summary { padding:8px 10px; border:1px solid var(--border); background:var(--paper); cursor:pointer; font-size:1rem; }
+.hebrew-script-picker > summary:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+.hebrew-script-choices { position:absolute; inset-inline-start:0; top:calc(100% + 4px); z-index:20; width:max-content; max-width:calc(100vw - 48px); padding:10px 12px; border:1px solid var(--border); background:var(--paper); box-shadow:0 4px 12px rgba(0,0,0,.15); }
+.hebrew-script-choices legend { padding:0 4px; font-size:.75rem; color:var(--muted); }
+.settings-row .hebrew-script-choices label { display:flex; align-items:center; gap:8px; padding:5px 0; font-size:.85rem; }
+.hebrew-script-choices input { margin:0; accent-color:var(--accent); }
 .hebrew-script-info { margin-top:5px; font-size:.78rem; }
 .hebrew-script-info > summary { cursor:pointer; color:var(--accent); }
 .hebrew-script-info > summary:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
@@ -145,6 +156,18 @@ code { font-family:Consolas, monospace; }
 .translation-warning summary { display:inline-block; padding:1px 6px; border:1px solid var(--notice-border); background:var(--notice-bg); color:var(--accent); cursor:pointer; }
 .translation-warning summary::marker { content:""; }
 .translation-warning p { width:min(28rem, 100%); margin:7px 0 2px; padding:8px 10px; border-inline-start:3px solid var(--notice-border); color:var(--muted); background:var(--notice-bg); }
+/* Grouped translation control: one checkbox + an edition dropdown. The
+   dropdown stays usable (keyboard and pointer) whether or not the checkbox is
+   ticked, and the whole control wraps cleanly on narrow screens. */
+.translation-group { align-items:baseline; row-gap:6px; }
+.edition-label { display:inline-flex; align-items:baseline; gap:5px; font-size:.9rem; }
+.edition-select { max-width:100%; font:inherit; }
+/* Source explanation: distinct from the audit warning, and not presented as a
+   warning. Used by documented public-domain translations (Delitzsch). */
+.translation-source { min-width:0; font-size:.78rem; }
+.translation-source summary { display:inline-block; padding:1px 6px; border:1px solid var(--line); background:var(--paper); color:var(--accent); cursor:pointer; }
+.translation-source summary::marker { content:""; }
+.translation-source p { width:min(28rem, 100%); margin:7px 0 2px; padding:8px 10px; border-inline-start:3px solid var(--line); color:var(--muted); background:var(--paper); }
 .study-row,
 .settings-row { display:flex; flex-wrap:wrap; align-items:flex-end; gap:10px 14px; }
 /* ----------------------------------------------------------
@@ -404,6 +427,10 @@ code { font-family:Consolas, monospace; }
   .translation-option { width:100%; }
   .translation-warning { max-width:100%; }
   .translation-warning p { width:100%; overflow-wrap:anywhere; }
+  .translation-source { max-width:100%; }
+  .translation-source p { width:100%; overflow-wrap:anywhere; }
+  .edition-label { flex:1 1 100%; }
+  .edition-select { width:100%; }
   .settings-row label { flex:1 1 8rem; }
   .settings-row select { width:100%; }
   .reference { width:5.5rem; }

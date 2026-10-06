@@ -1,0 +1,72 @@
+{
+  "archiveItem": "hebrewnewtestam00deli",
+  "archiveDetails": "https://archive.org/details/hebrewnewtestam00deli",
+  "leafFormula": "printedPage + 8",
+  "server": "ia801602.us.archive.org",
+  "dir": "/31/items/hebrewnewtestam00deli",
+  "leaves": [
+    {
+      "leaf": 5,
+      "label": "title-page",
+      "printedPage": null,
+      "note": "Title page: 12th edition, British & Foreign Bible Society, Berlin 1901.",
+      "file": "scan-0005-title-page.jpg",
+      "url": "https://ia801602.us.archive.org/BookReader/BookReaderImages.php?zip=/31/items/hebrewnewtestam00deli/hebrewnewtestam00deli_jp2.zip&file=hebrewnewtestam00deli_jp2/hebrewnewtestam00deli_0005.jp2&id=hebrewnewtestam00deli&scale=2&rotate=0",
+      "sha256": "26d1d723a4edf74f27c2dee71fd6afb379da9df9cb40f65628d7a97aabe30cc6"
+    },
+    {
+      "leaf": 7,
+      "label": "table-of-contents",
+      "printedPage": null,
+      "note": "Table of contents: John begins at p.163, 3 John at p.453.",
+      "file": "scan-0007-table-of-contents.jpg",
+      "url": "https://ia801602.us.archive.org/BookReader/BookReaderImages.php?zip=/31/items/hebrewnewtestam00deli/hebrewnewtestam00deli_jp2.zip&file=hebrewnewtestam00deli_jp2/hebrewnewtestam00deli_0007.jp2&id=hebrewnewtestam00deli&scale=2&rotate=0",
+      "sha256": "fffc34562caafaed57a32ad6c7d0aed0329e6d5da3fc552a614c8b4c31dc5463"
+    },
+    {
+      "leaf": 171,
+      "label": "john-01-start",
+      "printedPage": 163,
+      "note": "John 1:1-18.",
+      "file": "scan-0171-john-01-start.jpg",
+      "url": "https://ia801602.us.archive.org/BookReader/BookReaderImages.php?zip=/31/items/hebrewnewtestam00deli/hebrewnewtestam00deli_jp2.zip&file=hebrewnewtestam00deli_jp2/hebrewnewtestam00deli_0171.jp2&id=hebrewnewtestam00deli&scale=2&rotate=0",
+      "sha256": "cc4524f443fe4ba4c24e66f27608888ad6d0fc60f0cc4aa6a09577799b1c3abc"
+    },
+    {
+      "leaf": 172,
+      "label": "john-01-b",
+      "printedPage": 164,
+      "note": "John 1:19-37; v20 has no closing parenthesis; v37 single vowel.",
+      "file": "scan-0172-john-01-b.jpg",
+      "url": "https://ia801602.us.archive.org/BookReader/BookReaderImages.php?zip=/31/items/hebrewnewtestam00deli/hebrewnewtestam00deli_jp2.zip&file=hebrewnewtestam00deli_jp2/hebrewnewtestam00deli_0172.jp2&id=hebrewnewtestam00deli&scale=2&rotate=0",
+      "sha256": "8e0d9971a651c3ec8a6ae3fed7914ddd3067259a4e78c6ffc4ebe5d7a5d8a27f"
+    },
+    {
+      "leaf": 173,
+      "label": "john-01-c",
+      "printedPage": 165,
+      "note": "John 1:38-52 (chapter runs to 52, not canon 51).",
+      "file": "scan-0173-john-01-c.jpg",
+      "url": "https://ia801602.us.archive.org/BookReader/BookReaderImages.php?zip=/31/items/hebrewnewtestam00deli/hebrewnewtestam00deli_jp2.zip&file=hebrewnewtestam00deli_jp2/hebrewnewtestam00deli_0173.jp2&id=hebrewnewtestam00deli&scale=2&rotate=0",
+      "sha256": "ea528b552d12d4dad84090183f0291eec9378a67becdd2346a179806768e88da"
+    },
+    {
+      "leaf": 297,
+      "label": "romans-08-a",
+      "printedPage": 289,
+      "note": "Romans 8:1-14; v1 parenthetical clause is genuine.",
+      "file": "scan-0297-romans-08-a.jpg",
+      "url": "https://ia801602.us.archive.org/BookReader/BookReaderImages.php?zip=/31/items/hebrewnewtestam00deli/hebrewnewtestam00deli_jp2.zip&file=hebrewnewtestam00deli_jp2/hebrewnewtestam00deli_0297.jp2&id=hebrewnewtestam00deli&scale=2&rotate=0",
+      "sha256": "6d4fe457b9aa1772b6ab7c8e5b2445d4eb1e45ced50774b1240101cdff2a8240"
+    },
+    {
+      "leaf": 461,
+      "label": "3john",
+      "printedPage": 453,
+      "note": "3 John; the closing greeting is numbered verse 15.",
+      "file": "scan-0461-3john.jpg",
+      "url": "https://ia801602.us.archive.org/BookReader/BookReaderImages.php?zip=/31/items/hebrewnewtestam00deli/hebrewnewtestam00deli_jp2.zip&file=hebrewnewtestam00deli_jp2/hebrewnewtestam00deli_0461.jp2&id=hebrewnewtestam00deli&scale=2&rotate=0",
+      "sha256": "a5747e7ea3ff820e52c79457e0dc307091af386f66a1b0725337e0588c4cbe70"
+    }
+  ]
+}

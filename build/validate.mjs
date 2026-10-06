@@ -149,6 +149,18 @@ for (const book of canon.books) {
     const got = Array.isArray(verses) ? trimTrailing(verses) : typeof verses;
     if (got === expected) return;
 
+    // Some editions declare their own, independently verified versification for
+    // a chapter (e.g. the vocalized Delitzsch 1901). A mismatch that exactly
+    // matches the edition's declared source extent is an edition-specific fact,
+    // not an import defect, and is reported as info rather than an error. This
+    // uses per-translation evidence, not a blanket exception.
+    const declared = translation.versification?.[book.id]?.[chapterNum];
+    if (declared && Number(declared.source) === got) {
+      console.log(`INFO   ${book.id} ${chapterNum}: ${got} verses (declared edition versification — ${declared.note})`);
+      info++;
+      return;
+    }
+
     const variant = variantsByKey.get(`${book.id}:${chapterNum}`);
     if (variant && variant.acceptedCounts.includes(got)) {
       console.log(`INFO   ${book.id} ${chapterNum}: ${got} verses (known variant — ${variant.reason})`);

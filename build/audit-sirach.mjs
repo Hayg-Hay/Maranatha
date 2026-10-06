@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseChapter } from './import-eng-web-c.mjs';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const ids = ['web', 'kjv', 'armwestern', 'byz', 'he', 'luther1912', 'segond1910'];
+const ids = ['web', 'kjv', 'armwestern', 'byz', 'he', 'luther1912', 'segond1910', 'delitzsch', 'delitzsch1901'];
 const translations = ids.map(id => JSON.parse(fs.readFileSync(path.join(root, 'data', `${id}.json`))));
 const web = translations[0];
 const chapters = [];

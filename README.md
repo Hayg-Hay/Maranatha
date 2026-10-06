@@ -125,9 +125,158 @@ Patriarchs, etc. are explicitly out of scope).
   "Open Scriptures Hebrew Bible, https://github.com/openscriptures/morphhb".
   Morphological markup stripped during import; only surface text
   (consonants, niqqud, cantillation) retained.
+- Delitzsch Hebrew NT (two editions, public domain) — 27 NT books in Hebrew.
+  Both editions are independent translations and appear under a **single
+  "Delitzsch Hebrew NT" checkbox with an edition dropdown** (see "The grouped
+  Delitzsch control" below):
+  - **1901 — with vowels** (default) — vocalized/niqqud text imported via
+    `build/import-delitzsch1901.mjs` from the Sermon-Online transcription of the
+    British & Foreign Bible Society 1901 (twelfth) edition.
+  - **eBible — without vowels** — the unpointed text imported via
+    `build/import-delitzsch.mjs` from eBible.org's `heb_vpl.zip`.
+
+  The two are distinct editions, not a vowel-display toggle. Their IDs, text,
+  numbering, metadata, source disclosures and versification handling are
+  independent.
 
 RSV-CE is explicitly excluded: copyrighted by the National Council of
 Churches, not freely redistributable.
+
+## Delitzsch Hebrew NT (1877)
+
+A Hebrew translation of the **Greek** New Testament by **Franz Delitzsch
+(1813–1890)**, first published in **1877**. It is a 19th-century translation,
+presented as such: it is **not** an ancient Hebrew New Testament manuscript and
+**not** a recovered "original Hebrew" New Testament.
+
+**Selected digital source.** eBible.org's `heb` edition, *The Holy Bible in
+Modern Hebrew* — the NT subset of <https://ebible.org/Scriptures/heb_vpl.zip>
+(BibleWorks VPL; corroborated by <https://ebible.org/Scriptures/heb_usfm.zip>).
+eBible attributes the text to Delitzsch and declares it public domain, but
+**does not identify its underlying print edition**; this is therefore an
+unpointed eBible digital text, not a verified transcription of the 1877 first
+edition. Archive/file hashes and full provenance (including the fact that the
+hashes identify the inspected digital artifacts, not a print edition) are in
+`build/sources/delitzsch/source-info.json` and
+`build/sources/delitzsch/README.md`.
+
+- Primary archive SHA-256
+  `77bfc46d373403f722aef77621e3b40d9195e59fd08bdcc3f5185a8db726bc9d`; USFM
+  archive SHA-256
+  `416ebf82794853a5a2c7721a736189315034baf6fd60240047ddbdb6e16fcb9e`.
+- **Public-domain evidence:** <https://ebible.org/heb/copyright.htm> and the
+  cached publisher notices `build/sources/delitzsch/heb_about.htm` ("Public
+  Domain"; "Translation by: Franz Delitzsch (1813–1890)").
+
+**Coverage and text shape.** NT only (27 books / 260 chapters / 7,957 verse
+rows); the package's 39 Hebrew OT books are recognized and excluded, never
+merged with the OSHB OT. Verse bodies are **unpointed** — consonants, final
+forms and sof pasuq only, with no niqqud or te'amim; no vocalization is
+fabricated or borrowed from another edition.
+
+**Versification.** Romans 14 ends at the source's verse 23 (not padded to 26)
+and Romans 16 carries verses 1–27 including verse 24 and the doxology at
+25–27; both are accepted by `data/known-variants.js`. In 3 John, source verse 14
+ends with a labelled `(III John 1:15)` publisher annotation (encoded inline in
+the USFM `\v 14`, not a `\f` footnote). It is retained as note-only
+`verseMetadata` at 3 John 1:15 and shown once, never promoted to a numbered
+main-text verse.
+
+**Commands.**
+
+```bash
+node build/import-delitzsch.mjs               # regenerate data/delitzsch.{json,js}
+node build/import-delitzsch.mjs --check        # verify; no write, no network
+node build/import-delitzsch.mjs --download     # (re)acquire the cached source
+node build/validate.mjs data/delitzsch.json
+node build/validate-delitzsch.mjs              # source-aware validation
+node build/test-delitzsch.mjs
+```
+
+The app still opens `index.html` directly under `file://`; the Delitzsch data
+loads through the same classic `<script>`-tag path as every other translation
+(no runtime `fetch()`, `XMLHttpRequest`, remote imports, CDNs or external
+fonts). The OT Paleo/Proto display choice never affects it: Delitzsch stays
+square Hebrew.
+
+## Delitzsch 1901 (vocalized)
+
+A second, independent Delitzsch entry: the **vocalized (niqqud)** Hebrew
+translation of the Greek New Testament by **Franz Delitzsch** (first published
+1877), imported from the **British & Foreign Bible Society 1901 (twelfth)
+edition, Berlin**. This is a historical translation, not an ancient manuscript
+or recovered original, and is kept separate from the unpointed eBible Delitzsch
+above.
+
+**Source and evidence.** Import text: Sermon-Online's verse-per-line
+transcription
+(<https://info2.sermon-online.com/hebrew/Bible/Hebrew-The_New_Testament_Franz_Delitzsch_1901.txt>,
+sha256 `c592cae6…be8a7`). Edition identity was verified against the University
+of Toronto scan of the 1901 print
+(<https://archive.org/details/hebrewnewtestam00deli>): the cached title page,
+table of contents, John 1, Romans 8 and 3 John page images are in
+`build/sources/delitzsch1901/evidence/`, with full provenance in
+`source-info.json`. Reuse basis: the 1901 text is public domain (author died
+1890) and the host grants free redistribution of its files unless otherwise
+noted. CrossWire `HebDelitzsch` (1885/2003 revision) was **not** used.
+
+**Corrections.** The transcription contains 43 verified transcription artifacts,
+corrected through the reviewed manifest `corrections.json`: 34 verses with a
+doubled identical Hebrew combining mark (collapse to one) and 9 verses with a
+stray unmatched `)`. Genuine editorial parentheses are preserved (verified, e.g.
+Romans 8:1).
+
+**Versification.** Source verse numbers are preserved exactly. Seven chapters
+differ from canon.js and are **declared and disclosed** rather than renumbered:
+John 1 = 52, Romans 7 = 26, Romans 14 = 23, 1 Corinthians 13 = 14,
+2 Corinthians 13 = 13, 2 Thessalonians 3 = 19, 3 John 1 = 15. In the reading
+view an affected chapter is rendered in a separate, source-numbered block with a
+visible notice, so rows are never mistaken for equivalent verses across
+translations.
+
+**Commands.**
+
+```bash
+node build/fetch-delitzsch1901.mjs          # (re)acquire the cached source (network, build-time)
+node build/import-delitzsch1901.mjs         # regenerate data/delitzsch1901.{json,js}
+node build/import-delitzsch1901.mjs --check  # verify; no write, no network
+node build/validate.mjs data/delitzsch1901.json
+node build/validate-delitzsch1901.mjs        # source-aware validation
+node build/test-delitzsch1901.mjs
+```
+
+Like every other translation it loads through a local classic `<script>` tag and
+works under `file://` with no runtime network access; the OT Paleo/Proto setting
+never affects it.
+
+## The grouped Delitzsch control
+
+Both Delitzsch editions are chosen through one control rather than two separate
+checkboxes:
+
+- one **"Delitzsch Hebrew NT"** checkbox, plus an **Edition** dropdown labelled
+  and associated with the select (`<label for>`), usable by keyboard even while
+  the checkbox is unticked;
+- options **"1901 — with vowels"** (default) and **"eBible — without vowels"**;
+- the two IDs (`delitzsch1901`, `delitzsch`) and their data files are unchanged —
+  grouping is a control-layer concern only.
+
+Behaviour:
+
+- Startup selection is unchanged (WEB is the only default; the Delitzsch group is
+  unticked and neither edition is loaded until ticked).
+- While **unticked**, changing the dropdown only changes the chosen edition — it
+  never selects or loads it.
+- While **ticked**, changing the edition replaces the active Delitzsch
+  translation, loads its local script if needed, and refreshes the current view;
+  the chosen edition is kept across untick/re-tick.
+- The current reference, context setting and other selected translations are
+  preserved on switch. The active edition's Source explanation is shown, and the
+  1901 chapter-numbering notices apply only when the 1901 edition is active.
+- A reference that exists only in the previous edition is shown as unavailable
+  (or reported out of range) — another verse is never silently substituted.
+- Search selectors/state, comparison panels and interlinear captions all follow
+  the active edition, including when the edition is switched during a search.
 
 ## Project structure
 

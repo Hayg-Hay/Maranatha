@@ -7,7 +7,7 @@
 //   node build/test-service-worker.mjs
 //
 // It asserts:
-//   - install precaches the NEW shell (maranatha-shell-v41);
+//   - install precaches the NEW shell (maranatha-shell-v45);
 //   - activate keeps the existing data cache (maranatha-data-v3) and every file
 //     already stored in it (previously downloaded translations / Greek books);
 //   - activate deletes the OLD shell cache (maranatha-shell-v29);
@@ -102,9 +102,9 @@ async function main() {
   await fire(env.listeners, 'install');
   await fire(env.listeners, 'activate');
 
-  check('install creates the new shell cache (maranatha-shell-v41)', caches.store.has('maranatha-shell-v41'));
-  check('new shell cache is populated', (caches.store.get('maranatha-shell-v41') || new Map()).size > 0);
-  check('Paleo converter and font are precached for offline reading', ['./hebrew-script.js', './fonts/NotoSansPhoenician-Regular.ttf', './fonts/ProtoCanaanite.ttf'].every(url => caches.store.get('maranatha-shell-v41')?.has(url)));
+  check('install creates the new shell cache (maranatha-shell-v45)', caches.store.has('maranatha-shell-v45'));
+  check('new shell cache is populated', (caches.store.get('maranatha-shell-v45') || new Map()).size > 0);
+  check('Paleo converter and font are precached for offline reading', ['./hebrew-script.js', './fonts/NotoSansPhoenician-Regular.ttf', './fonts/ProtoCanaanite.ttf'].every(url => caches.store.get('maranatha-shell-v45')?.has(url)));
   check('activation preserves the existing data cache (maranatha-data-v3)', caches.store.has('maranatha-data-v3'));
   check('activation deletes the old shell cache (maranatha-shell-v29)', !caches.store.has('maranatha-shell-v29'));
 
@@ -129,6 +129,8 @@ async function main() {
   const oldPilotRouted = vm.runInContext('isTranslationFile("/data/berean-hebrew-pilot.js")', env.sandbox);
   const canonRouted = vm.runInContext('isTranslationFile("/data/canon.js")', env.sandbox);
   const translationsRouted = vm.runInContext('isTranslationFile("/data/web.js")', env.sandbox);
+  const delitzschRouted = vm.runInContext('isTranslationFile("/data/delitzsch.js")', env.sandbox);
+  const delitzsch1901Routed = vm.runInContext('isTranslationFile("/data/delitzsch1901.js")', env.sandbox);
   const localeRouted = vm.runInContext('isTranslationFile("/data/locales/en.js")', env.sandbox);
   check('versioned/plain Hebrew preview chunks are routed through the data cache', genV3Routed === true && exoV2Routed === true && levRouted === true && numRouted === true && deuRouted === true);
   check('versioned Hebrew preview manifest is routed through the data cache', manifestRouted === true);
@@ -137,13 +139,16 @@ async function main() {
   check('canon.js is not treated as a translation data file', canonRouted === false);
   check('locales are not treated as translation data files', localeRouted === false);
   check('ordinary translation files are still data-cache routed', translationsRouted === true);
+  check('the Delitzsch translation is data-cache routed (not shell-precached)', delitzschRouted === true);
+  check('the vocalized Delitzsch 1901 is data-cache routed (not shell-precached)', delitzsch1901Routed === true);
   check('the changed GEN/EXO chunks are re-versioned so old copies cannot shadow the new variants',
     './data/berean-hebrew/GEN-v3.js' !== './data/berean-hebrew/GEN-v2.js' && './data/berean-hebrew/EXO-v2.js' !== './data/berean-hebrew/EXO.js');
 
   const shellList = (swSource.match(/const SHELL_FILES = \[([\s\S]*?)\];/) || [])[1] || '';
   check('Hebrew preview files are not precached into the shell', !/berean-hebrew/.test(shellList));
+  check('the large Delitzsch translations are not precached into the shell', !/delitzsch/.test(shellList));
   check('data cache version is v3 (unchanged by the Hebrew preview)', /DATA_CACHE_VERSION\s*=\s*'v3'/.test(swSource));
-  check('shell cache version was bumped for the app change', /CACHE_VERSION\s*=\s*'v41'/.test(swSource));
+  check('shell cache version was bumped for the app change', /CACHE_VERSION\s*=\s*'v45'/.test(swSource));
 
   check('data cache honors version query strings for corrected WEB data', /ignoreSearch: cacheName !== DATA_CACHE/.test(swSource));
 

@@ -1,0 +1,92 @@
+{
+  "translation": "The New Testament - Franz Delitzsch (vocalized, 1901)",
+  "machineId": "delitzsch1901",
+  "attributedTranslator": "Franz Delitzsch (1813–1890)",
+  "firstPublication": 1877,
+  "importedEdition": "1901 (twelfth edition, British & Foreign Bible Society, Berlin)",
+  "language": "he",
+  "direction": "rtl",
+  "license": "Public Domain",
+  "fetched": "2026-10-06",
+  "positioning": "A historical Hebrew translation of the Greek New Testament by a 19th-century translator. It is NOT an ancient Hebrew New Testament manuscript, NOT a recovered original, and NOT the same edition as the unpointed eBible 'delitzsch' translation.",
+  "primarySource": {
+    "role": "import source (vocalized verse-per-line text)",
+    "url": "https://info2.sermon-online.com/hebrew/Bible/Hebrew-The_New_Testament_Franz_Delitzsch_1901.txt",
+    "catalog": "https://www.sermon-online.com/de/contents/31592",
+    "file": "Hebrew-The_New_Testament_Franz_Delitzsch_1901.txt",
+    "size": 1792212,
+    "sha256": "c592cae600a34ed57689ca0d5905c26b45ad5e0c5eeed83fe3f37d37ee6be8a7",
+    "licenseEvidence": "Sermon-Online FAQ (en): \"Unless otherwise noted, all files can be downloaded and given away free of charge.\" The catalog entry for this item notes no restriction. The underlying 1901 text is public domain (author died 1890; published 1901). Cached: evidence/sermon-online-faq.html, evidence/sermon-online-catalog.html.",
+    "reuseBasis": "Underlying historical text is public domain; the host grants free redistribution of its files unless otherwise noted, and no restriction is noted here; the transcription is a faithful verse-per-line reproduction, not a new creative work."
+  },
+  "editionEvidence": {
+    "printedScan": "https://archive.org/details/hebrewnewtestam00deli",
+    "archiveIdentifier": "hebrewnewtestam00deli",
+    "archiveMetadata": "https://archive.org/metadata/hebrewnewtestam00deli",
+    "creator": "Delitzsch, Franz, 1813-1890",
+    "publisher": "Berlin, British and Foreign Bible Society",
+    "date": "1901",
+    "pageProgression": "rl",
+    "pages": 504,
+    "verifiedAgainstPrint": [
+      "Title page (evidence/scan-0005-title-page.jpg): 'The Holy Books of the New Covenant, translated from Greek into Hebrew by ... Franz Delitzsch ... twelfth edition, brought to press by the British and Foreign Bible Society, Berlin 1901.'",
+      "Table of contents (evidence/scan-0007-table-of-contents.jpg): John begins p.163, Romans p.278, 3 John p.453.",
+      "John 1:1-18 (evidence/scan-0171-john-01-start.jpg) matches the transcription's wording and pointing.",
+      "John 1:19-37 (evidence/scan-0172-john-01-b.jpg): printed v20 has NO closing parenthesis (transcription stray ')' is an artifact); printed v37 has a single hataf-patah under the ayin (transcription tripled it).",
+      "John 1:38-52 (evidence/scan-0173-john-01-c.jpg): chapter runs to verse 52, not canon's 51.",
+      "Romans 8:1 (evidence/scan-0297-romans-08-a.jpg): the parenthetical clause '(המתהלכים שלא כבשר אלא לפי הרוח)' is genuine and is preserved.",
+      "3 John (evidence/scan-0461-3john.jpg): the closing greeting is numbered verse 15, matching the transcription."
+    ],
+    "leafFormula": "archive leaf = printed page + 8 (verified against the page-number index)",
+    "uncertainty": "The transcription was verified at the sampled passages above but is not a page-for-page facsimile; the print edition's own underlying Vorlage is the British & Foreign Bible Society twelfth edition (1901). The transcription derives from this edition's wording; verse divisions match the print at John 1 and 3 John, and the seven extent differences versus canon.js are treated as edition-specific facts."
+  },
+  "corroboratingTranscriptions": {
+    "note": "delitz.fr (https://delitz.fr/12/) and Kirjasilta (https://www.kirjasilta.net/ha-berit/) share the same sampled anomalies and are treated as RELATED transcriptions, not independent witnesses. They were not used as sources.",
+    "excluded": "CrossWire HebDelitzsch was NOT used: it is based on an 1885/2003 revision and its distribution permission is granted specifically to CrossWire."
+  },
+  "audit": {
+    "books": 27,
+    "chapters": 260,
+    "verseRows": 7961,
+    "duplicateRefs": 0,
+    "malformedRows": 0,
+    "emptyTexts": 0,
+    "replacementChars": 0,
+    "niqqudVerses": 7961,
+    "sameMarkRepeatOccurrences": 35,
+    "sameMarkRepeatNote": "35 runs of an identical Hebrew combining mark repeated consecutively (33 niqqud/te'amim runs plus 2 doubled maqef punctuation runs), across 34 verses. All are transcription artifacts; collapse each run to one mark.",
+    "strayClosingParenVerses": 9,
+    "strayParenNote": "Nine verses end with a lone ')' and no matching '(' (John 1:20; 2:20,21; 3:20,21; 4:20,21; 5:20,21). John 1:20 was verified against the print (no parenthesis); the rest share the pattern. Genuine editorial parentheses (balanced, or cross-verse pairs such as John 5:3-4, Acts 9:5-6, Acts 24:6-8, Luke 9:55-56) are preserved.",
+    "lonePeriod": "1 Timothy 6:21 contains one ASCII period mid-verse. It is left in place (harmless punctuation) and documented here rather than silently removed, because it was not verified against the print."
+  },
+  "corrections": {
+    "file": "corrections.json",
+    "sha256": "13c7a619baebd73028eadb7de0a7731030a351a909662d80d4efcae68006c2d3",
+    "entries": 43,
+    "rules": [
+      "Collapse a run of an identical repeated Hebrew combining mark (niqqud/te'amim, including doubled maqef) to a single mark.",
+      "Remove a ')' only when it occurs with zero running paren balance in its chapter; balanced and cross-verse brackets are preserved."
+    ]
+  },
+  "versification": {
+    "note": "Preserved as source numbering; never compacted, renumbered or padded. Differences versus canon.js are declared in data/delitzsch1901.json.versification and disclosed in the UI.",
+    "chapters": [
+      "John 1: 52 (canon 51)",
+      "Romans 7: 26 (canon 25)",
+      "Romans 14: 23 (canon 26; doxology at end of ch16)",
+      "1 Corinthians 13: 14 (canon 13)",
+      "2 Corinthians 13: 13 (canon 14)",
+      "2 Thessalonians 3: 19 (canon 18)",
+      "3 John 1: 15 (canon 14)"
+    ]
+  },
+  "commands": {
+    "acquire": "node build/fetch-delitzsch1901.mjs",
+    "regenerate": "node build/import-delitzsch1901.mjs",
+    "check": "node build/import-delitzsch1901.mjs --check",
+    "deriveCorrections": "node build/derive-delitzsch1901-corrections.mjs",
+    "validateGeneral": "node build/validate.mjs data/delitzsch1901.json",
+    "validateSourceAware": "node build/validate-delitzsch1901.mjs",
+    "test": "node build/test-delitzsch1901.mjs"
+  }
+}

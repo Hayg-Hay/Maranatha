@@ -1797,3 +1797,304 @@ first *modern* translation import whose source versification was reconciled to
 canon.js, and the second reconciliation project overall after the OSHB Hebrew
 import; unlike OSHB's embedded `<note>KJV:…>` annotations, the cross-reference
 had to be derived and verified structurally.
+
+## 2026-09-26 — ArmEastern (Eastern Armenian) audited, held before import
+
+**Sourcing.** The Eastern Armenian Bible was pulled from CrossWire's raw SWORD
+repository as `ftp.crosswire.org/pub/sword/raw/packages/ArmEastern.zip`
+(327 KB, 2013), confirmed by directory listing rather than assumed. The raw zip
+is cached at `build/sources/arm-eastern/ArmEastern.zip` (sha256
+`21d6d381734458e584416af6552d762f366a6cfadb2f7710d855b83a19f2f689`), with
+`armeastern.conf`, a `source-info.json`, and `AUDIT.md`. The module was decoded
+once with `pysword` 0.2.8 against the unzipped module — the same procedure used
+for ArmWestern — and deliberately **not** re-derived from stepbible.org HTML.
+
+**License.** `mods.d/armeastern.conf` declares `DistributionLicense=Public
+Domain` and `TextSource="Slavic Bible via http://unbound.biola.edu"`. Gentoo
+portage metadata and STEPBible label the same module **freedist** (freely
+distributable). Both labels are permissive and are recorded rather than
+collapsed to one.
+
+**Scope — the expected content gap, confirmed at the byte level.** The conf's
+About line says "Includes Genesis, Exodus, and the Gospels", and that is exactly
+what the container holds: `ot.bzs` has 2 blocks, `nt.bzs` has 4, i.e. **6 books
+only — GEN, EXO, MAT, MRK, LUK, JHN**. Every other canon book is empty, so the
+other 67 books are simply absent (the same shape as WEB's 7 missing
+deuterocanonical books and the same handling `cellFor()` already provides via
+`missing-book`). This is a real content gap in the source, not an import bug —
+the Eastern Armenian module does not ship the rest of the Bible. It is *not*
+yet registered in `app.js`; see the hold below.
+
+**Encoding — clean.** The conf declares `Encoding=UTF-8`, and all 6 decompressed
+blocks strict-decode as valid UTF-8: no BOM, no U+FFFD replacement characters,
+no NUL bytes, no control characters. The character inventory is Armenian
+letters, spaces, and punctuation only (no Latin letters, digits, or mojibake) —
+per-block numbers in `source-info.json`.
+
+**Why it was held rather than imported.** The byte audit found problems inside
+the 6 present books, beyond the expected per-book gaps:
+
+- **47 zero-length verses**, all at chapter tails (Luke 1:60-80, Luke 2:49-52,
+  Luke 3:37-38, Luke 11:53-54, Matt 12:47-50, Matt 16:28/17:27/23:39,
+  Mark 9:48-50, Mark 11:33, John 7:53/11:57/14:31, Gen 21:34/49:33,
+  Exo 25:40/40:38). The Magnificat (Luke 1:47-55) and Benedictus (1:68-79) are
+  absent from the module's own bytes.
+- **Intra-chapter verse renumbering**, the serious one: non-empty verses after
+  an omission are renumbered sequentially, so they no longer sit under the
+  correct canon/KJV verse number, and the shortfall is padded as the zero-length
+  tails above. Confirmed against the KJV-aligned `data/armwestern.json` in this
+  repo: ArmEastern `Luke 1:47` holds canon `Luke 1:56`'s text, ArmEastern
+  `Luke 1:59` holds `Luke 1:80`'s, `Mark 9:44` holds `Mark 9:47`, and
+  `Matthew 12:43` holds `Matthew 12:47`.
+- **Self-duplicated verses**, at least Gen 21:30, Gen 21:31, Gen 49:31,
+  Exo 25:38, John 8:1, John 11:56, John 19:25 — each repeats its whole text
+  twice in the module data (not a decode artifact).
+
+A plain SWORD/KJV-index import would preserve chapter/verse *counts* (so
+`validate.mjs` would report 0 errors once the blanks are marked) but would
+place **wrong text under canon verse numbers** in every affected chapter. That
+is the same class of verse-boundary defect that got ArmWestern pulled from
+default display, not a clean missing-book/missing-verse gap. Following the
+project's standing rule against patching Scripture or inventing wording, the
+import was stopped: no `data/arm-eastern.*`, no `app.js` `TRANSLATIONS` entry,
+no `validate.mjs` run against imported data. The raw cache and full audit are
+committed under `build/sources/arm-eastern/`, and the next step is a deliberate
+choice between (a) importing as-is with the 47 blanks marked `???Missing???`
+and an explicit verse-boundary warning, or (b) a Segond-1910-style
+versification reconciliation that re-chunks the shifted verses back to canon
+positions before import.
+
+## 2026-10-06 — Delitzsch Hebrew New Testament (1877) imported
+
+**What it is.** A Hebrew translation of the **Greek** New Testament by **Franz
+Delitzsch (1813–1890)**, first published in **1877**. It is registered as
+`delitzsch`, labelled *Delitzsch Hebrew NT (1877)*, and must be described as a
+19th-century translation — never as an ancient Hebrew NT manuscript or a
+recovered original Hebrew NT.
+
+**Selected digital artifact, and an explicit uncertainty.** The source is the
+NT subset of eBible.org's `heb` / *The Holy Bible in Modern Hebrew* edition:
+<https://ebible.org/Scriptures/heb_vpl.zip> (BibleWorks VPL; corroborated by
+<https://ebible.org/Scriptures/heb_usfm.zip>). eBible attributes the text to
+Delitzsch and declares it public domain, but **does not identify the underlying
+print edition**. This is documented rather than papered over: the text is
+treated as an unpointed eBible digital edition attributed to Delitzsch, **not**
+a verified transcription of the 1877 first edition. (Deliberately not used:
+`delitz.fr`'s vocalized 1901 transcription, `HebrewNewTestament/HebDelitzsch`'s
+1885/2003 revision, or any unspecified "modern Hebrew NT".) Archives and files
+are hash-pinned in `build/sources/delitzsch/source-info.json`; the SHA-256
+values identify the inspected digital artifacts, not a print edition.
+
+- Primary VPL archive SHA-256
+  `77bfc46d373403f722aef77621e3b40d9195e59fd08bdcc3f5185a8db726bc9d`.
+- Corroborating USFM archive SHA-256
+  `416ebf82794853a5a2c7721a736189315034baf6fd60240047ddbdb6e16fcb9e`.
+- `heb_vpl.txt` SHA-256
+  `71255aad99b91b24494a2d4f90daf34afb06f4681a2feb979c2e1514e1c62237`.
+
+**Public-domain evidence.** <https://ebible.org/heb/copyright.htm>, plus cached
+`build/sources/delitzsch/heb_about.htm` ("Public Domain"; "Translation by:
+Franz Delitzsch (1813–1890)"; dated 2022-06-14) and `usfm/copr.htm`.
+
+**Coverage and text shape.** NT only — 27 books / 260 chapters / **7,957 verse
+rows**. The same VPL package carries 39 unpointed Hebrew OT books; those are
+explicitly recognized and excluded in `build/import-delitzsch.mjs`, never
+silently dropped, and never combined with the existing OSHB OT. Verse bodies
+are **unpointed**: consonants, final forms and sof pasuq (U+05C3) only, with
+**zero niqqud/te'amim** and zero U+FFFD. (Some publisher headings carry
+niqqud; the "BIBLE TEXT ONLY" VPL dump excludes them from verse bodies, and no
+vowels are fabricated or borrowed.) Source verse IDs are retained at their
+zero-based indices; nothing is compacted or renumbered.
+
+**Versification.** Romans 14 ends at the source's verse 23 and is **not padded**
+to canon's 26; Romans 16 has verses 1–27 including verse 24 and the doxology at
+25–27. Both already pass `data/known-variants.js` (ROM 14 accepts 23/26, ROM 16
+accepts 24/27). In 3 John, source verse 14 ends with a literal bracketed
+publisher annotation, `[ (III John 1:15) … ]`; the corroborating USFM encodes
+this **inside `\v 14`**, not as a `\f` footnote. The transformation is narrow
+and checked: verse 14's main text stays at index 13, the labelled bracket
+content becomes verse 15 in `verseMetadata` with `status: "note"` and its exact
+Hebrew text, and it is shown once as note-only text — never promoted to a
+numbered main-text verse. If the annotation label changes, the importer fails.
+Note-only metadata is **not** searchable (the search scans main-text arrays
+only); it is never silently indexed as main-text verse 15.
+
+**Rendering and search.** A `description` field on the translation registry
+entry renders a distinct "Source" disclosure (the existing `note` field still
+renders the separate "Under audit" disclosure, so Delitzsch is not mislabelled).
+Hebrew-language styling is now separate from the OT display-script choice:
+`styleHebrewLanguageVerse` sets square Hebrew (`lang="he"`, `dir="rtl"`,
+`.hebrew-verse`) for Delitzsch, while `verseDisplayText`'s Paleo/Proto
+conversion remains restricted to ID `he`. Delitzsch stays square even when the
+OSHB Paleo/Proto setting changes. `fillCell`, `renderSearchResults`,
+`buildComparePanel` and `appendInterlinearCaption` all apply the Delitzsch
+style, and the compare panel / interlinear caption now read through
+`VerseAvailability` so the 3 John note-only reference displays accurately
+instead of as missing or as ordinary text. While testing this, the shared
+search highlighter was found to orphan a trailing Hebrew combining mark when the
+last matched base letter carried niqqud; `appendHighlighted` now extends the
+match over trailing `\p{M}` marks (smallest shared fix), with the OSHB Hebrew
+regressions still passing.
+
+**Commands.** `node build/import-delitzsch.mjs` regenerates
+`data/delitzsch.{json,js}` deterministically from the cached source;
+`--check` verifies JSON/JS with no write and no network; `--download` is the
+only path that touches the network and refuses a changed archive hash unless
+`--accept-changed-source` is given. `node build/validate-delitzsch.mjs`
+re-derives every chapter's exact reference set and text from the cached VPL and
+cross-checks the 3 John transformation against the USFM.
+
+**Still `file://`.** Delitzsch loads through the same classic dynamically
+created `<script>` tag as every other translation — no runtime `fetch()`,
+`XMLHttpRequest`, remote imports, CDN assets or external fonts. The service
+worker's shell `CACHE_VERSION` was bumped to `v42` for the shell change; the
+data cache is unchanged (`v3`) and the existing `isTranslationFile` matcher
+already routes `data/delitzsch.js` through the data cache, so no large
+translation is forced into mandatory shell precaching. `build/audit-sirach.mjs`
+now includes `delitzsch` and confirms Sirach is absent.
+
+**Locale.** The only locale change is adding `Rom` as an English alias for
+Romans (so `Rom 8:1` parses); `data/locales/en.{json,js}` were regenerated and
+the Armenian locale was intentionally left untouched (the translation being
+Hebrew is not a reason to add a Hebrew UI locale).
+
+## 2026-10-06 — Vocalized Delitzsch 1901 NT investigated and imported
+
+**What was added.** A second, separate Delitzsch entry, `delitzsch1901`
+(*Delitzsch Hebrew NT (1901, vocalized)*): the niqqud-pointed Hebrew
+translation of the Greek New Testament by **Franz Delitzsch (1813–1890)**,
+first published **1877**, imported from the **British & Foreign Bible Society
+1901 (twelfth) edition, Berlin**. The existing unpointed eBible Delitzsch
+(`delitzsch`, see the entry above) is untouched and remains independent.
+
+**Candidate and hash.** The candidate was Sermon-Online's verse-per-line text
+`Hebrew-The_New_Testament_Franz_Delitzsch_1901.txt`
+(<https://info2.sermon-online.com/hebrew/Bible/Hebrew-The_New_Testament_Franz_Delitzsch_1901.txt>).
+Its SHA-256 matched the value from Codex's inspection exactly
+(`c592cae600a34ed57689ca0d5905c26b45ad5e0c5eeed83fe3f37d37ee6be8a7`). Properties
+confirmed from the bytes: 27 books, 260 chapters, 7,961 verse rows, no duplicate
+references, no U+FFFD, niqqud throughout.
+
+**Edition identity, verified against the print.** The transcription was compared
+with the University of Toronto scan of the 1901 print
+(<https://archive.org/details/hebrewnewtestam00deli>; creator Delitzsch; Berlin,
+British and Foreign Bible Society; date 1901; 504 pages). The title page reads
+"twelfth edition … brought to press by the British and Foreign Bible Society,
+Berlin 1901"; the table of contents gives John at p.163 and 3 John at p.453.
+Cached page images (title, TOC, John 1, Romans 8, 3 John) and full metadata live
+in `build/sources/delitzsch1901/evidence/`. 3 John's closing greeting is printed
+as verse 15, matching the transcription.
+
+**Reuse basis.** The underlying 1901 text is public domain (Delitzsch died 1890;
+published 1901). The host's FAQ states files "can be downloaded and given away
+free of charge" unless otherwise noted, and the catalog entry notes no
+restriction. The transcription is a faithful verse-per-line reproduction, not a
+new creative work. Evidence is cached. CrossWire `HebDelitzsch` was **not** used
+(1885/2003 revision; permission granted specifically to CrossWire); `delitz.fr`
+and Kirjasilta were treated as related transcriptions sharing the anomalies, not
+as independent witnesses.
+
+**Transcription anomalies — reviewed correction manifest.** Byte inspection
+found 35 consecutive runs of an identical Hebrew combining mark (33 niqqud
+runs + 2 doubled maqef) across 34 verses, and nine verses ending in a stray
+unmatched `)`, plus one isolated mid-verse period (1 Tim 6:21). Rather than
+strip punctuation blindly, the corrections are explicit and evidence-backed in
+`build/sources/delitzsch1901/corrections.json` (43 entries, each with original
+text, corrected text, reason and scan evidence): collapse a run of an identical
+repeated combining mark to one; remove a `)` only when the chapter's running
+paren balance is zero. **Genuine editorial parentheses are preserved** — verified
+against the print at Romans 8:1, whose parenthetical clause is real, and at the
+cross-verse pairs John 5:3-4, Acts 9:5-6/24:6-8 and Luke 9:55-56. John 1:20 (no
+`)` in the print) and John 1:37 (single hataf-patah in the print) were checked
+page-by-page. The lone period is left in place and documented, not silently
+removed.
+
+**Versification.** Source verse numbers are preserved exactly — nothing is
+compacted, renumbered or padded. Seven chapters differ from canon.js: John 1 = 52
+(51), Romans 7 = 26 (25), Romans 14 = 23 (26), 1 Corinthians 13 = 14 (13),
+2 Corinthians 13 = 13 (14), 2 Thessalonians 3 = 19 (18), 3 John 1 = 15 (14).
+These are declared in `data/delitzsch1901.json.versification` with reasons;
+`build/validate.mjs` now honours a translation's declared edition versification
+(evidence-backed, not a blanket exception) and reports them as info. In the UI,
+an affected chapter is rendered in its **own, source-numbered block** with a
+prominent notice ("uses a different verse numbering in this chapter … not
+aligned row-for-row"), so equal row positions are never mistaken for equivalent
+verses. Aligned chapters render normally.
+
+**Rendering.** The vocalized text uses the same square-Hebrew path as the
+unpointed Delitzsch (`styleHebrewLanguageVerse`, `lang="he"`, `dir="rtl"`,
+`.hebrew-verse`, bundled SIL font); it is independent of the OSHB Paleo/Proto
+display setting, and search normalisation strips niqqud/folds finals so pointed
+and unpointed queries both work. A distinct "Source" disclosure is shown for the
+translation (the `note` "Under audit" field is not used). No morphology,
+Strong's data or alignment was added.
+
+**Pipeline.** `build/fetch-delitzsch1901.mjs` (build-time network only) caches
+the bytes and evidence; `build/derive-delitzsch1901-corrections.mjs` derives the
+reviewed manifest; `build/import-delitzsch1901.mjs` is deterministic with a
+non-writing `--check`; `build/validate-delitzsch1901.mjs` re-derives every verse
+from the cached source + manifest. `build/test-delitzsch1901.mjs` (14 checks)
+covers source fidelity, corrections, niqqud, JSON/JS equality, all seven
+versification chapters, parsing (Jn 1:1, Acts 3:15, Rom 8:1, 3 Jn 1:15),
+cross-edition agreement, switching translations, context, search with/without
+vowels, comparison panels, interlinear captions, desktop/mobile, OT placeholders,
+Paleo/Proto independence and blocked remote access. The shell service-worker
+`CACHE_VERSION` was bumped `v42 → v43`; the data cache (`v3`) is unchanged and
+`data/delitzsch1901.js` routes through the existing data-cache matcher, never
+shell precache. `build/audit-sirach.mjs` now lists `delitzsch1901` (Sirach
+absent).
+
+**Honest limitations.** The transcription is verified at the sampled pages, not
+page-for-page; residual minor pointing irregularities beyond the two correction
+classes may remain (they do not change consonants). A real-browser visual check
+(font shaping / bidi) could not be performed in this environment.
+
+## 2026-10-06 — Delitzsch editions consolidated into one grouped control
+
+**What changed.** The two Delitzsch checkboxes (`delitzsch`, `delitzsch1901`)
+were consolidated into a single **"Delitzsch Hebrew NT"** checkbox with an
+**Edition** dropdown ("1901 — with vowels" default, "eBible — without vowels").
+This is a control-layer change only: both translations keep their IDs, data
+files, text, numbering, metadata, source disclosures and versification handling.
+They remain distinct editions, not a vowel-display toggle.
+
+**How it works.** The registry entries gained a `group` field and a new
+`TRANSLATION_GROUPS` config declares the group label, default edition and option
+order. `populateTranslationCheckboxes()` now renders one grouped control per
+group (via `appendTranslationGroup`) and standalone checkboxes otherwise. The
+group checkbox carries `data-translation-group`; `selectedTranslations()` — the
+single consumer every view depends on — resolves a checked grouped control to
+its **active edition** via the `groupEditions` map, so no view needed separate
+patching. The active edition's Source text, the edition dropdown and the
+currently selected translation are kept in sync.
+
+**Behaviour verified.** Default edition is 1901 with startup selection unchanged
+(WEB only; the group is unticked and neither edition loads until ticked). While
+unticked, changing the dropdown only changes the chosen edition (no load, no
+select). While ticked, switching editions loads the other local script and
+refreshes the view; the choice is kept across untick/re-tick without reloading.
+The current reference, context setting and other selected translations are
+preserved. A reference that exists only in the previous edition is shown as
+unavailable (and, in a fresh session where only the eBible edition is chosen,
+`John 1:52` is reported out of range) — never silently substituted. Search
+selectors/state, comparison panels and interlinear captions follow the active
+edition, including when the edition is switched during a search (the search is
+re-run in the new edition and the "Search in" selector is updated). The 1901
+chapter-numbering notices appear only when the 1901 edition is active. The
+dropdown is a real `<select>` with an associated `<label for>`, so it is
+keyboard-accessible while the checkbox is unticked, and the control wraps for
+mobile.
+
+**Tests.** New `build/test-delitzsch-group.mjs` (10 behavioral checks over the
+real `file://` app) covers the grouped control, default edition, checked/
+unchecked switching, view/context/reference preservation, edition-specific
+references, source disclosures, search (including switching mid-search),
+comparison and interlinear captions, and desktop/mobile with remote access
+blocked. The existing `build/test-delitzsch.mjs` and
+`build/test-delitzsch1901.mjs` were updated to drive the grouped control without
+weakening their coverage. Shell `CACHE_VERSION` was bumped `v43 → v44` (app.js
+and style.css changed); the data cache (`v3`) is preserved.
+
+**Still `file://`.** No runtime fetch/XHR, remote imports, CDN assets or network
+dependencies were introduced; the grouped control uses the same classic
+`<script>`-tag loader.

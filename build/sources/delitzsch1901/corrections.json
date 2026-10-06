@@ -1,0 +1,312 @@
+{
+  "_provenance": "Reviewed correction manifest for the vocalized Delitzsch 1901 transcription. Each entry records the full original and corrected verse text, the reason, and the scan evidence; import-delitzsch1901.mjs applies these exactly and fails if the original does not match.",
+  "_scanEvidence": "build/sources/delitzsch1901/evidence/ (title page, TOC, John 1, Romans 8, 3 John)",
+  "counts": {
+    "repeatedMarkVerses": 34,
+    "strayParenVerses": 9,
+    "total": 43
+  },
+  "entries": [
+    {
+      "ref": "1Corinthians 4:7",
+      "original": "כִּי מִי הִפְלִיא אוֹתְךָ וּמֶה בְיָדְךָ וְלֹא נִתַּן לָךְ וְאִם־נִתַּן לְְךָ לָמָּה תִתְהַלֵּל כְּמִי שֶׁלּא נִתַּן לוֹ׃",
+      "corrected": "כִּי מִי הִפְלִיא אוֹתְךָ וּמֶה בְיָדְךָ וְלֹא נִתַּן לָךְ וְאִם־נִתַּן לְךָ לָמָּה תִתְהַלֵּל כְּמִי שֶׁלּא נִתַּן לוֹ׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B0U+5B0]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "1Corinthians 4:8",
+      "original": "הֵן כְּבָר שְׂבַַעְתֶּם כְּבָר עֲשַׁרְתֶּם וּבִלְעָדֵינוּ מְלַכְתֶּם וְלוּ מְלַכְתֶּם לְמַעַן נִמְלֹךְ אִתְּכֶם גַּם־אֲנָחְנוּ׃",
+      "corrected": "הֵן כְּבָר שְׂבַעְתֶּם כְּבָר עֲשַׁרְתֶּם וּבִלְעָדֵינוּ מְלַכְתֶּם וְלוּ מְלַכְתֶּם לְמַעַן נִמְלֹךְ אִתְּכֶם גַּם־אֲנָחְנוּ׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B7U+5B7]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "1Corinthians 8:4",
+      "original": "וְעַל־דְּבַר אֲכִילַת זִבְחֵי הָאֱֱלִילִים יָדַעְנוּ כִּי־אֵין אֱלִיל בָּעוֹלָם וְאֵין אֱלֹהִים בִּלְתִּי אֶחָד׃",
+      "corrected": "וְעַל־דְּבַר אֲכִילַת זִבְחֵי הָאֱלִילִים יָדַעְנוּ כִּי־אֵין אֱלִיל בָּעוֹלָם וְאֵין אֱלֹהִים בִּלְתִּי אֶחָד׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B1U+5B1]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "1Corinthians 9:18",
+      "original": "וְעַתָּה מַה־שְּׂכָרִי הֲלֹא שֶׁאֲבַשֵּׂר בְּשׂוֹרַת הַמָּשִׁיחַ בְּלֹא־מְחִיר לְבִלְתִּי הִשְׁתַּמֵּשׁ לַהֲנָאַת עַצְמִי בָּרְשׁוּת הַנִּתְּנָה־־לִּי בַּבְּשׂוֹרָה׃",
+      "corrected": "וְעַתָּה מַה־שְּׂכָרִי הֲלֹא שֶׁאֲבַשֵּׂר בְּשׂוֹרַת הַמָּשִׁיחַ בְּלֹא־מְחִיר לְבִלְתִּי הִשְׁתַּמֵּשׁ לַהֲנָאַת עַצְמִי בָּרְשׁוּת הַנִּתְּנָה־לִּי בַּבְּשׂוֹרָה׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5BEU+5BE]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "1Corinthians 16:12",
+      "original": "וְאַפּוֹלוֹס אָחִינוּ הִפְְצַרְתִּי־בוֹ לָבוֹא אֲלֵיכֶם עִם־הָאַחִים וְלֹא־רָצָה לָבוֹא עַתָּה וְיָבוֹא כְּשֶׁיַּעֲלֶה בְיָדוֹ׃",
+      "corrected": "וְאַפּוֹלוֹס אָחִינוּ הִפְצַרְתִּי־בוֹ לָבוֹא אֲלֵיכֶם עִם־הָאַחִים וְלֹא־רָצָה לָבוֹא עַתָּה וְיָבוֹא כְּשֶׁיַּעֲלֶה בְיָדוֹ׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B0U+5B0]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "2Corinthians 2:3",
+      "original": "וְזֹאת כָּתַבְתִּי לָכֶם פֶּן־אָבֹא וְהָיָה־לִי עֶצֶֶב מֵאֹתָם אֲשֶׁר הָיָה־לִי לִשְׂמֹחַ עֲלֵיהֶם וּבֹטֵחַ אֲנִי בְּכֻלְּכֶם שֶׁשִּׂמְחָתִי הִיא שִׂמְחַת כֻּלְּכֶם׃",
+      "corrected": "וְזֹאת כָּתַבְתִּי לָכֶם פֶּן־אָבֹא וְהָיָה־לִי עֶצֶב מֵאֹתָם אֲשֶׁר הָיָה־לִי לִשְׂמֹחַ עֲלֵיהֶם וּבֹטֵחַ אֲנִי בְּכֻלְּכֶם שֶׁשִּׂמְחָתִי הִיא שִׂמְחַת כֻּלְּכֶם׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B6U+5B6]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "2Corinthians 7:5",
+      "original": "כִּי גַּם־בְּבֹאֵנוּ אֶל־מַקְדּוֹנְיָא לֹא־הָיְתָה מַרְגֵֵּעָה לִבְשָׂרֵנוּ רַק־נִלְחַצְנוּ בַכֹּל מִחוּץ מִלְחָמוֹת וּמִבַּיִת אֵימָה׃",
+      "corrected": "כִּי גַּם־בְּבֹאֵנוּ אֶל־מַקְדּוֹנְיָא לֹא־הָיְתָה מַרְגֵּעָה לִבְשָׂרֵנוּ רַק־נִלְחַצְנוּ בַכֹּל מִחוּץ מִלְחָמוֹת וּמִבַּיִת אֵימָה׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B5U+5B5]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "2Corinthians 8:2",
+      "original": "כִּי בְּרָב־נִסְיוֹן צָרָתָם רָבְתָה שִׂמְחָתָם וְשִׁפְלוּת עֲנִיּוּתָם הֶעְְדִּיפָה לְהַרְאוֹת עשֶׁר תֻּמָּתָם׃",
+      "corrected": "כִּי בְּרָב־נִסְיוֹן צָרָתָם רָבְתָה שִׂמְחָתָם וְשִׁפְלוּת עֲנִיּוּתָם הֶעְדִּיפָה לְהַרְאוֹת עשֶׁר תֻּמָּתָם׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B0U+5B0]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "2Corinthians 9:8",
+      "original": "וֵאלֹהִים יָכֹל לְהַַשְׁפִּיעַ עֲלֵיכֶם חֶסֶד שֶׁיִּהְיֶה לָכֶם בְּכָל־עֵת דֵּי סִפּוּקְכֶם בַּכֹּל וְתוֹתִירוּ בְּכָל־מַעֲשֶׂה טוֹב׃",
+      "corrected": "וֵאלֹהִים יָכֹל לְהַשְׁפִּיעַ עֲלֵיכֶם חֶסֶד שֶׁיִּהְיֶה לָכֶם בְּכָל־עֵת דֵּי סִפּוּקְכֶם בַּכֹּל וְתוֹתִירוּ בְּכָל־מַעֲשֶׂה טוֹב׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B7U+5B7]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "2Thessalonians 1:8",
+      "original": "בְּאֵשׁ לֶֶהָבָה לְהָשִׁיב נָקָם לַאֲשֶׁר לֹא־יָדְעוּ אֶת־הָאֱלֹהִים וְלֹא שָׁמְעוּ לִבְשׂוֹרַת אֲדֹנֵינוּ יֵשׁוּעַ הַמָּשִׁיחַ׃",
+      "corrected": "בְּאֵשׁ לֶהָבָה לְהָשִׁיב נָקָם לַאֲשֶׁר לֹא־יָדְעוּ אֶת־הָאֱלֹהִים וְלֹא שָׁמְעוּ לִבְשׂוֹרַת אֲדֹנֵינוּ יֵשׁוּעַ הַמָּשִׁיחַ׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B6U+5B6]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "2Timothy 1:18",
+      "original": "יִתְּנֶנּוּ הָאָדוֹן לְרַחֲמִים לִפְנֵי יְהוָָֹה בַּיּוֹם הַהוּא וְרֹב שֵׁרוּתוֹ אֲשֶׁר שֵׁרֵת בְּאֶפְסוֹס אַתָּה יָדַעְתָּ הֵיטֵב׃",
+      "corrected": "יִתְּנֶנּוּ הָאָדוֹן לְרַחֲמִים לִפְנֵי יְהוָֹה בַּיּוֹם הַהוּא וְרֹב שֵׁרוּתוֹ אֲשֶׁר שֵׁרֵת בְּאֶפְסוֹס אַתָּה יָדַעְתָּ הֵיטֵב׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B8U+5B8]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "Acts 23:10",
+      "original": "וְהָרִיב הוֹלֵךְ וְחָזֵק וְשַׂר־הָאֶלֶף יָרֵא פֶּן־יְשַׁסְּעוּ אֶת־פּוֹלוֹס וַיְצַו אֶת־אַנְשֵׁי הַצָּבָא לָרֶדֶת וְלַחֲטֹף אֹתוֹ מִתּוֹכָם וּלְְהֲבִיאוֹ אֶל־הַמְצָד׃",
+      "corrected": "וְהָרִיב הוֹלֵךְ וְחָזֵק וְשַׂר־הָאֶלֶף יָרֵא פֶּן־יְשַׁסְּעוּ אֶת־פּוֹלוֹס וַיְצַו אֶת־אַנְשֵׁי הַצָּבָא לָרֶדֶת וְלַחֲטֹף אֹתוֹ מִתּוֹכָם וּלְהֲבִיאוֹ אֶל־הַמְצָד׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B0U+5B0]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "Hebrews 4:12",
+      "original": "כִּי־דְבַר הָאֱלֹהִים חַי הוּא וּפֹעֵל גְּבוּרוֹת וְחַד מִכָּל־חֶֶרֶב פִּיפִיּוֹת וְיֹרֵד עַד־לְהַבְדִּיל בֵּין־הַנֶּפֶשׁ וּבֵין הָרוּחַ בֵּין הַדְּבָקִים וּבֵין־הַמּוֹחַ וּבֹחֵן מַחְשְׁבוֹת לֵבָב וּמְזִמּוֹתָיו׃",
+      "corrected": "כִּי־דְבַר הָאֱלֹהִים חַי הוּא וּפֹעֵל גְּבוּרוֹת וְחַד מִכָּל־חֶרֶב פִּיפִיּוֹת וְיֹרֵד עַד־לְהַבְדִּיל בֵּין־הַנֶּפֶשׁ וּבֵין הָרוּחַ בֵּין הַדְּבָקִים וּבֵין־הַמּוֹחַ וּבֹחֵן מַחְשְׁבוֹת לֵבָב וּמְזִמּוֹתָיו׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B6U+5B6]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "Hebrews 9:14",
+      "original": "אַף כִּי־דַם הַמָּשִׁיחַ אֲשֶׁר־הִקְרִיב אֶת־עַצְמוֹ לֵאלֹהִים בְּרוּחַ נִצְחִי וּבְלִי־מוּם יְטַהֵר לִבְּכֶם מִמַַּעֲשֵׂי מָוֶת לַעֲבֹד אֶת־אֱלֹהִים חַיִּים׃",
+      "corrected": "אַף כִּי־דַם הַמָּשִׁיחַ אֲשֶׁר־הִקְרִיב אֶת־עַצְמוֹ לֵאלֹהִים בְּרוּחַ נִצְחִי וּבְלִי־מוּם יְטַהֵר לִבְּכֶם מִמַּעֲשֵׂי מָוֶת לַעֲבֹד אֶת־אֱלֹהִים חַיִּים׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B7U+5B7]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "Hebrews 9:15",
+      "original": "וּבַעֲבוּר זֹאת הוּא מְתַַוֵךְ לִבְרִית חֲדָשָׁה לְמַעַן אֲשֶׁר־יִירְשׁוּ הַמְקֹרָאִים אֶת־הַבְטָחַת נַחֲלַת עוֹלָם אַחֲרֵי אֲשֶׁר־מֵת לִפְדוֹת מִן־הַפְּשָׁעִים אֲשֶׁר נַעֲשׂוּ בִּימֵי הַבְּרִית הָרִאשׁוֹנָה׃",
+      "corrected": "וּבַעֲבוּר זֹאת הוּא מְתַוֵךְ לִבְרִית חֲדָשָׁה לְמַעַן אֲשֶׁר־יִירְשׁוּ הַמְקֹרָאִים אֶת־הַבְטָחַת נַחֲלַת עוֹלָם אַחֲרֵי אֲשֶׁר־מֵת לִפְדוֹת מִן־הַפְּשָׁעִים אֲשֶׁר נַעֲשׂוּ בִּימֵי הַבְּרִית הָרִאשׁוֹנָה׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B7U+5B7]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "John 1:20",
+      "original": "וְהוּא הוֹדָה וְלֹא כִחֵשׁ וַיּוֹדֶה לֵאמֹר לֹא הַמָּשִׁיחַ אָנִי׃)",
+      "corrected": "וְהוּא הוֹדָה וְלֹא כִחֵשׁ וַיּוֹדֶה לֵאמֹר לֹא הַמָּשִׁיחַ אָנִי׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Unbalanced stray closing parenthesis (no matching opening bracket in the chapter sequence); printed 1901 edition has no such mark."
+    },
+    {
+      "ref": "John 1:37",
+      "original": "וּשְׁנֵי תַלְמִידָיו שָׁמְעוּ אֶת־דְּבָרוֹ וַיֵּלְכוּ אַחֲֲֲרֵי יֵשׁוּעַ׃",
+      "corrected": "וּשְׁנֵי תַלְמִידָיו שָׁמְעוּ אֶת־דְּבָרוֹ וַיֵּלְכוּ אַחֲרֵי יֵשׁוּעַ׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B2U+5B2U+5B2]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "John 2:10",
+      "original": "וַיֹּאמֶר אֵלָיו כָּל־אִישׁ יִתֵּן בָּרִאשׁוֹנָה אֶת־הַיַּיִן הַטּוֹב וְאַחֲרֵי שְׁתוֹתָם לִרְוָיָה יִתֵּן לָהֶם אֶת־הַגָּרוּעַ וְאַַתָּה צָפַנְתָּ הַיַּיִן הַטּוֹב עַד־עָתָּה׃",
+      "corrected": "וַיֹּאמֶר אֵלָיו כָּל־אִישׁ יִתֵּן בָּרִאשׁוֹנָה אֶת־הַיַּיִן הַטּוֹב וְאַחֲרֵי שְׁתוֹתָם לִרְוָיָה יִתֵּן לָהֶם אֶת־הַגָּרוּעַ וְאַתָּה צָפַנְתָּ הַיַּיִן הַטּוֹב עַד־עָתָּה׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B7U+5B7]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "John 2:20",
+      "original": "וַיּאֹמְרוּ הַיְּהוּדִים הִנֵּה אַרְבָּעִים וָשֵׁשׁ שָׁנָה נִבְנָה הַהֵיכָל הַזֶּה וְאַתָּה בִּשְׁלשָׁה יָמִים תְּקִימֶנּוּ׃)",
+      "corrected": "וַיּאֹמְרוּ הַיְּהוּדִים הִנֵּה אַרְבָּעִים וָשֵׁשׁ שָׁנָה נִבְנָה הַהֵיכָל הַזֶּה וְאַתָּה בִּשְׁלשָׁה יָמִים תְּקִימֶנּוּ׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Unbalanced stray closing parenthesis (no matching opening bracket in the chapter sequence); printed 1901 edition has no such mark."
+    },
+    {
+      "ref": "John 2:21",
+      "original": "וְהוּא דִּבֶּר עַל־הֵיכַל גְּוִיָּתוֹ׃)",
+      "corrected": "וְהוּא דִּבֶּר עַל־הֵיכַל גְּוִיָּתוֹ׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Unbalanced stray closing parenthesis (no matching opening bracket in the chapter sequence); printed 1901 edition has no such mark."
+    },
+    {
+      "ref": "John 3:20",
+      "original": "כִּי כָל־פֹּעֵל עַוְלָה שֹׂנֵא אֶת־הָאוֹר וְלֹא יָבֹא לָאוֹר פֶּן־יִוָּכַח עַל־מַעֲשָׂיו׃)",
+      "corrected": "כִּי כָל־פֹּעֵל עַוְלָה שֹׂנֵא אֶת־הָאוֹר וְלֹא יָבֹא לָאוֹר פֶּן־יִוָּכַח עַל־מַעֲשָׂיו׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Unbalanced stray closing parenthesis (no matching opening bracket in the chapter sequence); printed 1901 edition has no such mark."
+    },
+    {
+      "ref": "John 3:21",
+      "original": "אֲבָל עֹשֵׂה הָאֱמֶת יָבֹא לָאוֹר לְמַעַן יִגָּלוּ מַעֲשָׂיו כִּי נַעֲשׂוֹּ בֵּאלֹהִים׃)",
+      "corrected": "אֲבָל עֹשֵׂה הָאֱמֶת יָבֹא לָאוֹר לְמַעַן יִגָּלוּ מַעֲשָׂיו כִּי נַעֲשׂוֹּ בֵּאלֹהִים׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Unbalanced stray closing parenthesis (no matching opening bracket in the chapter sequence); printed 1901 edition has no such mark."
+    },
+    {
+      "ref": "John 4:1",
+      "original": "וַיְהִי כַּאֲֲשֶׁר נוֹדַע לָאָדוֹן כִּי שָׁמְעוּ הַפְּרוּשִׁים אֲשֶׁר יֵשׁוּעַ הֶעֱמִיד וְגַם הִטְבִּיל תַּלְמִידִים הַרְבֵּה מיּוֹחָנָן׃",
+      "corrected": "וַיְהִי כַּאֲשֶׁר נוֹדַע לָאָדוֹן כִּי שָׁמְעוּ הַפְּרוּשִׁים אֲשֶׁר יֵשׁוּעַ הֶעֱמִיד וְגַם הִטְבִּיל תַּלְמִידִים הַרְבֵּה מיּוֹחָנָן׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B2U+5B2]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "John 4:12",
+      "original": "הֲֲגָדוֹל אַתָּה מִיַּעֲקֹב אָבִינוּ אֲשֶׁר נָתַן־לָנוּ אֶת־הַבְּאֵר הַזֹּאת וַיֵּשְׁתְּ מִמֶּנָּה הוּא וּבָנָיו וּבְעִירוֹ׃",
+      "corrected": "הֲגָדוֹל אַתָּה מִיַּעֲקֹב אָבִינוּ אֲשֶׁר נָתַן־לָנוּ אֶת־הַבְּאֵר הַזֹּאת וַיֵּשְׁתְּ מִמֶּנָּה הוּא וּבָנָיו וּבְעִירוֹ׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B2U+5B2]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "John 4:20",
+      "original": "אֲבוֹתֵינוּ הִשְׁתַּחֲווּ בָּהָר הַזֶּה וְאַתֶּם אֹמְרִים יְרוּשָׁלַיִם הִיא הַמָּקוֹם הַנִּבְחָר לְהִשְׁתַּחֲוֹת שָׁמָּה׃)",
+      "corrected": "אֲבוֹתֵינוּ הִשְׁתַּחֲווּ בָּהָר הַזֶּה וְאַתֶּם אֹמְרִים יְרוּשָׁלַיִם הִיא הַמָּקוֹם הַנִּבְחָר לְהִשְׁתַּחֲוֹת שָׁמָּה׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Unbalanced stray closing parenthesis (no matching opening bracket in the chapter sequence); printed 1901 edition has no such mark."
+    },
+    {
+      "ref": "John 4:21",
+      "original": "וַיֹּאמֶר אֵלֶיהָ יֵשׁוּעַ אִשָּׁה הַאֲמִינִי לִי כִּי תָבוֹא שָׁעָה אֲשֶׁר לֹא תִשְׁתַּחֲווּ לָאָב בָּהָר הַזֶּה וְלֹא בִירוּשָׁלָיִם׃)",
+      "corrected": "וַיֹּאמֶר אֵלֶיהָ יֵשׁוּעַ אִשָּׁה הַאֲמִינִי לִי כִּי תָבוֹא שָׁעָה אֲשֶׁר לֹא תִשְׁתַּחֲווּ לָאָב בָּהָר הַזֶּה וְלֹא בִירוּשָׁלָיִם׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Unbalanced stray closing parenthesis (no matching opening bracket in the chapter sequence); printed 1901 edition has no such mark."
+    },
+    {
+      "ref": "John 5:14",
+      "original": "וַיְהִי אַחֲֲרֵי־כֵן וַיִּמְצָאֵהוּ יֵשׁוּעַ בְּבֵית הַמִּקְדָּשׁ וַיֹּאמֶר אֵלָיו הִנֵּה נִרְפָּא־לָךְ אַל־תּוֹסִיף לַחֲטֹא פֶּן־תְּאֻנֶּה אֵלֶיךָ רָעָה גְּדוֹלָה מִזֹּאת׃",
+      "corrected": "וַיְהִי אַחֲרֵי־כֵן וַיִּמְצָאֵהוּ יֵשׁוּעַ בְּבֵית הַמִּקְדָּשׁ וַיֹּאמֶר אֵלָיו הִנֵּה נִרְפָּא־לָךְ אַל־תּוֹסִיף לַחֲטֹא פֶּן־תְּאֻנֶּה אֵלֶיךָ רָעָה גְּדוֹלָה מִזֹּאת׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B2U+5B2]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "John 5:20",
+      "original": "כִּי הָאָב אֹהֵב אֶת־הַבֵּן וּמוֹרֶה אֹתוֹ כֹּל אֲשֶׁר יַעֲשֶׂה וְעוֹד מַעֲשִׂים גְּדוֹלִים מֵאֵלֶּה יוֹרֵהוּ לְמַעַן תִּתַּמָּהוּ׃)",
+      "corrected": "כִּי הָאָב אֹהֵב אֶת־הַבֵּן וּמוֹרֶה אֹתוֹ כֹּל אֲשֶׁר יַעֲשֶׂה וְעוֹד מַעֲשִׂים גְּדוֹלִים מֵאֵלֶּה יוֹרֵהוּ לְמַעַן תִּתַּמָּהוּ׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Unbalanced stray closing parenthesis (no matching opening bracket in the chapter sequence); printed 1901 edition has no such mark."
+    },
+    {
+      "ref": "John 5:21",
+      "original": "כִּי כַּאֲשֶׁר הָאָב יָעִיר וְיחַיֶּה אֶת־הַמֵּתִים כֵּן גַּם־הַבֵּן יְחַיֶּה אֶת־אֲשֶׁר יֶחְפָּץ׃)",
+      "corrected": "כִּי כַּאֲשֶׁר הָאָב יָעִיר וְיחַיֶּה אֶת־הַמֵּתִים כֵּן גַּם־הַבֵּן יְחַיֶּה אֶת־אֲשֶׁר יֶחְפָּץ׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Unbalanced stray closing parenthesis (no matching opening bracket in the chapter sequence); printed 1901 edition has no such mark."
+    },
+    {
+      "ref": "John 6:31",
+      "original": "אֲבוֹתֵינוּ אָכְלוּ אֶת־הַמָּן בַּמִּדְבָּר כַּכָּתוּב לֶחֶם מִן־הַשָּׁמַיִם נָתַן־לָמוֹ לֶאֱֱכֹל׃",
+      "corrected": "אֲבוֹתֵינוּ אָכְלוּ אֶת־הַמָּן בַּמִּדְבָּר כַּכָּתוּב לֶחֶם מִן־הַשָּׁמַיִם נָתַן־לָמוֹ לֶאֱכֹל׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B1U+5B1]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "John 6:70",
+      "original": "וַיֹּאמֶר אֲלֵיהֶם יֵשׁוּעַ הֲלֹא בָחַרְתִּי אֲנִי בָכֶם שְׁנֵים הֶעָשָָֹׂר וְאֶחָד מִכֶּם שָׂטָן הוּא׃",
+      "corrected": "וַיֹּאמֶר אֲלֵיהֶם יֵשׁוּעַ הֲלֹא בָחַרְתִּי אֲנִי בָכֶם שְׁנֵים הֶעָשָֹׂר וְאֶחָד מִכֶּם שָׂטָן הוּא׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B8U+5B8]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "John 7:20",
+      "original": "וַיַּעַן הָעָם וַַיֹּאמַר שֵׁד בָּךְ מִי מְבַקֵּשׁ לְהָרְגֶךָ׃",
+      "corrected": "וַיַּעַן הָעָם וַיֹּאמַר שֵׁד בָּךְ מִי מְבַקֵּשׁ לְהָרְגֶךָ׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B7U+5B7]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "John 8:6",
+      "original": "וְהֵם לְנַסּוֹת אֹתוֹ דִּבְּרוּ־זֹאת לִמְצֹא עָלָיו שִׂטְנָה וַיִִּתְכּוֹפֵף יֵשׁוּעַ לְמַטָּה וַיְתָו בְּאֶצְבָּעוֹ עַל־הַקַּרְקָע׃",
+      "corrected": "וְהֵם לְנַסּוֹת אֹתוֹ דִּבְּרוּ־זֹאת לִמְצֹא עָלָיו שִׂטְנָה וַיִּתְכּוֹפֵף יֵשׁוּעַ לְמַטָּה וַיְתָו בְּאֶצְבָּעוֹ עַל־הַקַּרְקָע׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B4U+5B4]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "John 8:26",
+      "original": "רַבּוֹת עִמִּי לְדַבֵּר וְלִשְׁפֹּט עֲלֵיכֶם אָכֵן שֹׁלְחִי נֶאֱמָן הוּא וַאֲשֶׁר שָׁמַעְתִּי מִמֶֶּנּוּ אֹתוֹ אֲדַבֵּר אֶל־הָעוֹלָם׃",
+      "corrected": "רַבּוֹת עִמִּי לְדַבֵּר וְלִשְׁפֹּט עֲלֵיכֶם אָכֵן שֹׁלְחִי נֶאֱמָן הוּא וַאֲשֶׁר שָׁמַעְתִּי מִמֶּנּוּ אֹתוֹ אֲדַבֵּר אֶל־הָעוֹלָם׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B6U+5B6]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "John 8:42",
+      "original": "וַיֹּאמֶר אֲלֵיהֶם יֵשׁוּעַ לוּ הָיָה אֱלֹהִים אֲבִיכֶם כִּי־עַתָּה אֲהַבְְתֶּם אֹתִי כִּי אָנֹכִי יָצָאתִי וּבָאתִי מֵאֵת הָאֱלֹהִים הֵן־לֹא־מִמֶּנִּי בָאתִי אַךְ־הוּא שְׁלָחָנִי׃",
+      "corrected": "וַיֹּאמֶר אֲלֵיהֶם יֵשׁוּעַ לוּ הָיָה אֱלֹהִים אֲבִיכֶם כִּי־עַתָּה אֲהַבְתֶּם אֹתִי כִּי אָנֹכִי יָצָאתִי וּבָאתִי מֵאֵת הָאֱלֹהִים הֵן־לֹא־מִמֶּנִּי בָאתִי אַךְ־הוּא שְׁלָחָנִי׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B0U+5B0]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "John 9:19",
+      "original": "וַיִּשְׁאֲלוּ אֹתָם לֵאמֹר הֲזֶה בִנְכֶם אֲשֶׁר אֲֲמַַרְתֶּם נוֹלַד עִוֵּר וְאֵיכָה הוּא רֹאֶה עָתָּה׃",
+      "corrected": "וַיִּשְׁאֲלוּ אֹתָם לֵאמֹר הֲזֶה בִנְכֶם אֲשֶׁר אֲמַרְתֶּם נוֹלַד עִוֵּר וְאֵיכָה הוּא רֹאֶה עָתָּה׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B2U+5B2; U+5B7U+5B7]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "John 9:22",
+      "original": "כָּזֹאת דִבְּרוּ יוֹלְדָיו מִיִּרְאָתָם אֶת־הַיְּהוּדִים כִּי הַיְּהוּדִים כְּבָר נוֹעֲצוּ לְנַדּוֹת אֶת־כָּל־אֲשֶׁר יוֹדֶה כִּי הוּא הַמָּשִִׁיחַ׃",
+      "corrected": "כָּזֹאת דִבְּרוּ יוֹלְדָיו מִיִּרְאָתָם אֶת־הַיְּהוּדִים כִּי הַיְּהוּדִים כְּבָר נוֹעֲצוּ לְנַדּוֹת אֶת־כָּל־אֲשֶׁר יוֹדֶה כִּי הוּא הַמָּשִׁיחַ׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B4U+5B4]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "John 20:14",
+      "original": "וַיְהִי כְּכַלּוֹתָהּ לְדַבֵּר זֹאת וַתֵּפֶן אַחֲרֶיהָ וַתֵּרֶא וְהִנֵֵּה יֵשׁוּעַ עֹמֵד וְלֹא יָדְעָה כִּי יֵשׁוּעַ הוּא׃",
+      "corrected": "וַיְהִי כְּכַלּוֹתָהּ לְדַבֵּר זֹאת וַתֵּפֶן אַחֲרֶיהָ וַתֵּרֶא וְהִנֵּה יֵשׁוּעַ עֹמֵד וְלֹא יָדְעָה כִּי יֵשׁוּעַ הוּא׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B5U+5B5]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "Luke 9:42",
+      "original": "וַיְהִי אַךְ הִקְרִיב לָבוֹא הִפִּילוֹ הַשֵּׁד וַיְרוֹצֲצֵֵהוּ וְיֵשׁוּעַ גָּעַר בָּרוּחַ הַטָּמֵא וַיְרַפֵּא אֶת־הַנַּעַר וַיְשִׁיבֵהוּ לְאָבִיו׃",
+      "corrected": "וַיְהִי אַךְ הִקְרִיב לָבוֹא הִפִּילוֹ הַשֵּׁד וַיְרוֹצֲצֵהוּ וְיֵשׁוּעַ גָּעַר בָּרוּחַ הַטָּמֵא וַיְרַפֵּא אֶת־הַנַּעַר וַיְשִׁיבֵהוּ לְאָבִיו׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B5U+5B5]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "Luke 20:34",
+      "original": "וַיַּעַן יֵשׁוּעַ וַיֹּאמֶר אֲלֵיהֶם בְּנֵי הָעוֹלָם הַַזֶּה יִשְׂאוּ נָשִׁים וְתִנָּשֶׂאנָה׃",
+      "corrected": "וַיַּעַן יֵשׁוּעַ וַיֹּאמֶר אֲלֵיהֶם בְּנֵי הָעוֹלָם הַזֶּה יִשְׂאוּ נָשִׁים וְתִנָּשֶׂאנָה׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B7U+5B7]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "Mark 2:7",
+      "original": "מַַה־לָּזֶה כִּי יְדַבֵּר גִּדּוּפִים כָּאֵלֶּה מִי יָכֹל לִסְלֹחַ לַחֲטָאִים כִּי אִם הָאֱלֹהִים לְבַדּוֹ׃",
+      "corrected": "מַה־לָּזֶה כִּי יְדַבֵּר גִּדּוּפִים כָּאֵלֶּה מִי יָכֹל לִסְלֹחַ לַחֲטָאִים כִּי אִם הָאֱלֹהִים לְבַדּוֹ׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B7U+5B7]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "Matthew 27:40",
+      "original": "וַיֹּאמְרוּ אַתָּה הַהֹרֵס אֶת־־הַהֵיכָל וּבֹנֵהוּ בִּשְׁלֹשֶׁת יָמִים הוֹשַׁע לְנַפְשֶׁךָ וְאִם בֶּן־הָאֱלֹהִים אַתָּה רְדָה מִן־הַצְּלוּב׃",
+      "corrected": "וַיֹּאמְרוּ אַתָּה הַהֹרֵס אֶת־הַהֵיכָל וּבֹנֵהוּ בִּשְׁלֹשֶׁת יָמִים הוֹשַׁע לְנַפְשֶׁךָ וְאִם בֶּן־הָאֱלֹהִים אַתָּה רְדָה מִן־הַצְּלוּב׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5BEU+5BE]; printed 1901 edition carries a single mark."
+    },
+    {
+      "ref": "Romans 7:3",
+      "original": "וְעַל־כֵּן אִם־תִּהְיֶה לְאִישׁ אַחֵר בְְּחַיֵּי בַעְלָהּ נֹאֶפֶת יִקָּרֵא לָהּ וּבְמוֹת בַּעְלָהּ חָפְשִׁית הִיא מִן־הַתּוֹרָה וְאֵינֶנָּה נֹאֶפֶת בִּהְיוֹתָהּ לְאִישׁ אַחֵר׃",
+      "corrected": "וְעַל־כֵּן אִם־תִּהְיֶה לְאִישׁ אַחֵר בְּחַיֵּי בַעְלָהּ נֹאֶפֶת יִקָּרֵא לָהּ וּבְמוֹת בַּעְלָהּ חָפְשִׁית הִיא מִן־הַתּוֹרָה וְאֵינֶנָּה נֹאֶפֶת בִּהְיוֹתָהּ לְאִישׁ אַחֵר׃",
+      "scanPage": "see evidence/scan-index.json",
+      "reason": "Doubled identical Hebrew combining mark(s) [U+5B0U+5B0]; printed 1901 edition carries a single mark."
+    }
+  ]
+}

@@ -126,7 +126,16 @@
           <summary>Reading settings</summary>
           <div class="settings-row">
             <div class="hebrew-script-setting">
-              <label>Hebrew script <select id="hebrew-script" aria-describedby="hebrew-script-description"><option value="square">Square Hebrew</option><option value="paleo">Paleo-Hebrew</option><option value="proto">Proto-Sinaitic (approx.)</option></select></label>
+              <span class="hebrew-script-label">Hebrew scripts</span>
+              <details id="hebrew-scripts" class="hebrew-script-picker">
+                <summary id="hebrew-script-summary">Square Hebrew</summary>
+                <fieldset class="hebrew-script-choices" aria-describedby="hebrew-script-description">
+                  <legend>Select one or more scripts</legend>
+                  <label><input type="checkbox" value="square" checked> Square Hebrew</label>
+                  <label><input type="checkbox" value="paleo"> Paleo-Hebrew — Noto</label>
+                  <label><input type="checkbox" value="proto"> Proto-Sinaitic (approx.)</label>
+                </fieldset>
+              </details>
               <details id="hebrew-script-note" class="hebrew-script-info" hidden>
                 <summary>About this display</summary>
                 <p id="hebrew-script-description">A visual approximation using the Noto Sans Phoenician font, not a scholarly reconstruction of an ancient manuscript. Existing WLC/OSHB consonants are displayed in Paleo-Hebrew letterforms; vowel points and cantillation are hidden, and final letter forms are merged. The source text is unchanged. Search accepts either script; interlinear tools retain square Hebrew.</p>

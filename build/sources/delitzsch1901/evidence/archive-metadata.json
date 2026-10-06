@@ -1,0 +1,23 @@
+{
+  "identifier": "hebrewnewtestam00deli",
+  "title": "[Hebrew New Testament",
+  "creator": "Delitzsch, Franz, 1813-1890",
+  "publisher": "Berlin, Britain and Foreign Bible Society]",
+  "date": "1901",
+  "language": [
+    "heb",
+    "grc"
+  ],
+  "pageProgression": "rl",
+  "imagecount": "504",
+  "contributor": "Robarts - University of Toronto",
+  "collection": [
+    "robarts",
+    "toronto",
+    "university_of_toronto"
+  ],
+  "externalIdentifier": "urn:oclc:record:848608347",
+  "server": "ia801602.us.archive.org",
+  "dir": "/31/items/hebrewnewtestam00deli",
+  "fetchedBy": "build/fetch-delitzsch1901.mjs"
+}

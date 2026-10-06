@@ -286,6 +286,28 @@ class ReferenceParser {
     { id: 'he', label: 'Hebrew (OSHB)', short: 'Hebrew (OSHB)', src: 'data/he.js' },
     { id: 'luther1912', label: 'Luther Bible 1912', short: 'Luther 1912', src: 'data/luther1912.js' },
     { id: 'segond1910', label: 'Louis Segond (1910)', short: 'Segond 1910', src: 'data/segond1910.js' },
+    // `description` is the visible source explanation. It is deliberately a
+    // separate field from `note` (which renders the "Under audit" disclosure);
+    // the Delitzsch text is not under audit, it is a documented public-domain
+    // translation whose print edition eBible does not identify.
+    { id: 'delitzsch', label: 'Delitzsch Hebrew NT (1877)', short: 'Delitzsch', src: 'data/delitzsch.js', group: 'delitzsch', description: 'Hebrew translation of the Greek New Testament by Franz Delitzsch, first published in 1877. This unpointed eBible digital text does not identify its underlying print edition.' },
+    { id: 'delitzsch1901', label: 'Delitzsch Hebrew NT (1901, vocalized)', short: 'Delitzsch 1901', src: 'data/delitzsch1901.js', group: 'delitzsch', description: 'Vocalized Hebrew translation of the Greek New Testament by Franz Delitzsch, first published in 1877 and imported from the British & Foreign Bible Society 1901 (twelfth) edition, Berlin. Public domain. Its verse numbering differs from canon.js in seven chapters; each is disclosed in the reading view.' },
+  ];
+
+  // Grouped translations share ONE checkbox with an edition dropdown. Each
+  // member keeps its own ID, data file, text, numbering, metadata and source
+  // disclosure; grouping is a control-layer concern only. The default edition
+  // is chosen here, and is also what the checkbox selects when first ticked.
+  const TRANSLATION_GROUPS = [
+    {
+      id: 'delitzsch',
+      label: 'Delitzsch Hebrew NT',
+      defaultEdition: 'delitzsch1901',
+      editions: [
+        { id: 'delitzsch1901', label: '1901 — with vowels' },
+        { id: 'delitzsch', label: 'eBible — without vowels' },
+      ],
+    },
   ];
 
   const canon = window.MARANATHA_CANON;
@@ -319,11 +341,14 @@ const refs = {
     prevChapter: q('#prev-chapter-button'),
     nextChapter: q('#next-chapter-button'),
     fontsize: q('#fontsize'),
-    hebrewScript: q('#hebrew-script'),
+    hebrewScript: q('#hebrew-scripts'),
     hebrewScriptNote: q('#hebrew-script-note'),
 };
   const loaded = new Set();   // translation ids whose <script> has finished loading
   const loading = new Set();  // translation ids whose <script> is in flight
+  // Active edition per grouped control (group id -> selected translation id).
+  // Initialised from each group's defaultEdition in populateTranslationCheckboxes.
+  const groupEditions = new Map();
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
   const narrowScreen = window.matchMedia('(max-width: 700px)');
 
@@ -648,9 +673,22 @@ function init() {
     });
 
     refs.hebrewScript.addEventListener('change', () => {
-        try { localStorage.setItem('maranatha-hebrew-script', refs.hebrewScript.value); } catch (error) {}
+        if (!refs.hebrewScript.querySelector('input:checked')) {
+          refs.hebrewScript.querySelector('input[value="square"]').checked = true;
+        }
+        try { localStorage.setItem('maranatha-hebrew-scripts', JSON.stringify(selectedHebrewScripts())); } catch (error) {}
         syncHebrewScriptNote();
         render({ scrollToReference: false });
+    });
+    document.addEventListener('click', event => {
+        if (!refs.hebrewScript.contains(event.target)) refs.hebrewScript.open = false;
+    });
+    refs.hebrewScript.addEventListener('keydown', event => {
+        if (event.key === 'Escape') {
+          refs.hebrewScript.open = false;
+          refs.hebrewScript.querySelector('summary').focus();
+          event.preventDefault();
+        }
     });
 
     refs.layout.addEventListener('change', () => {
@@ -743,8 +781,12 @@ function init() {
     setReading();
     setFontSize();
     try {
-        const savedScript = localStorage.getItem('maranatha-hebrew-script');
-        if (['paleo', 'proto'].includes(savedScript)) refs.hebrewScript.value = savedScript;
+        const saved = localStorage.getItem('maranatha-hebrew-scripts');
+        const legacy = localStorage.getItem('maranatha-hebrew-script');
+        const scripts = saved ? JSON.parse(saved) : [legacy || 'square'];
+        if (Array.isArray(scripts) && scripts.some(script => ['square', 'paleo', 'proto'].includes(script))) {
+          refs.hebrewScript.querySelectorAll('input').forEach(box => { box.checked = scripts.includes(box.value); });
+        }
     } catch (error) {} // file:// storage can be unavailable; session toggle still works.
     syncHebrewScriptNote();
     restoreInterlinearMode(INTERLINEARS.greek);
@@ -774,9 +816,29 @@ function init() {
 
   function setFontSize() { document.documentElement.dataset.fontsize = refs.fontsize.value; }
 
+  function selectedHebrewScripts() {
+    return [...refs.hebrewScript.querySelectorAll('input:checked')].map(box => box.value);
+  }
+
+  function primaryHebrewScript() { return selectedHebrewScripts()[0] || 'square'; }
+
+  function displayTranslations(translations) {
+    return translations.flatMap(t => t.id === 'he'
+      ? selectedHebrewScripts().map(scriptMode => ({
+          ...t, scriptMode,
+          label: `${t.label} — ${scriptMode === 'square' ? 'Square Hebrew' : scriptMode === 'paleo' ? 'Paleo-Hebrew' : 'Proto-Sinaitic (approx.)'}`,
+        }))
+      : [t]);
+  }
+
   function syncHebrewScriptNote() {
-    const proto = refs.hebrewScript.value === 'proto';
-    refs.hebrewScriptNote.hidden = refs.hebrewScript.value === 'square';
+    const scripts = selectedHebrewScripts();
+    const proto = scripts.includes('proto');
+    const labels = { square: 'Square Hebrew', paleo: 'Paleo-Hebrew — Noto', proto: 'Proto-Sinaitic (approx.)' };
+    q('#hebrew-script-summary').textContent = scripts.length === 1 ? labels[scripts[0]] : `${scripts.length} selected`;
+    q('#hebrew-script-summary').setAttribute('aria-label', `Hebrew scripts: ${q('#hebrew-script-summary').textContent}`);
+    refs.hebrewScript.querySelectorAll('input').forEach(box => { box.disabled = scripts.length === 1 && box.checked; });
+    refs.hebrewScriptNote.hidden = scripts.length === 1 && scripts[0] === 'square';
     if (refs.hebrewScriptNote.hidden) refs.hebrewScriptNote.open = false;
     q('#hebrew-script-description').textContent = proto
       ? 'A visual approximation using the Culmus Proto Canaanite font, inspired mainly by Sinai inscriptions. This is not a scholarly reconstruction of an ancient manuscript or its language. Existing WLC/OSHB consonants are shown with early-looking letterforms; vowel points and cantillation are hidden, and final letter forms are merged. Source wording is unchanged. Copied text uses the same character encoding as the Paleo display. Search accepts square Hebrew or copied display text; interlinear tools retain square Hebrew.'
@@ -784,18 +846,29 @@ function init() {
     q('#hebrew-script-source').hidden = !proto;
   }
 
-  function verseDisplayText(text, translationId) {
-    return translationId === 'he' && ['paleo', 'proto'].includes(refs.hebrewScript.value)
+  function verseDisplayText(text, translationId, scriptMode = primaryHebrewScript()) {
+    return translationId === 'he' && ['paleo', 'proto'].includes(scriptMode)
       ? window.MARANATHA_HEBREW_SCRIPT.toPaleo(text) : text;
   }
 
-  function styleHebrewVerse(element) {
+  function styleHebrewVerse(element, scriptMode = primaryHebrewScript()) {
     element.dir = 'rtl';
-    element.lang = refs.hebrewScript.value === 'paleo' ? 'hbo-Phnx' : 'he';
+    element.lang = scriptMode === 'paleo' ? 'hbo-Phnx' : 'he';
     element.classList.add('hebrew-verse');
-    element.classList.toggle('paleo-hebrew', refs.hebrewScript.value === 'paleo');
-    element.classList.toggle('proto-sinaitic', refs.hebrewScript.value === 'proto');
+    element.classList.toggle('paleo-hebrew', scriptMode === 'paleo');
+    element.classList.toggle('proto-sinaitic', scriptMode === 'proto');
   }
+
+  // Hebrew-language styling for translations that are Hebrew text but are NOT
+  // the OSHB OT: they always stay square Hebrew and are never affected by the
+  // OT Paleo/Proto display-script choice above. Both Delitzsch editions use this.
+  function styleHebrewLanguageVerse(element) {
+    element.dir = 'rtl';
+    element.lang = 'he';
+    element.classList.add('hebrew-verse');
+  }
+
+  function isSquareHebrew(id) { return id === 'delitzsch' || id === 'delitzsch1901'; }
 
   function getStoredAppearance() {
       try {
@@ -923,44 +996,180 @@ function init() {
     }
   }
 
+  function translationGroup(groupId) {
+    return TRANSLATION_GROUPS.find(g => g.id === groupId) || null;
+  }
+
+  function defaultEditionFor(groupId) {
+    const group = translationGroup(groupId);
+    return group ? group.defaultEdition : null;
+  }
+
+  function activeEditionId(groupId) {
+    return groupEditions.get(groupId) || defaultEditionFor(groupId);
+  }
+
+  function activeEditionEntry(groupId) {
+    return TRANSLATIONS.find(t => t.id === activeEditionId(groupId)) || null;
+  }
+
+  // Renders one standalone translation checkbox (unchanged behaviour), with its
+  // optional "Under audit" and "Source" disclosures.
+  function appendTranslationOption(t, i) {
+    const option = document.createElement('div');
+    option.className = 'translation-option';
+    const label = document.createElement('label');
+    label.className = 'version';
+    const box = document.createElement('input');
+    box.type = 'checkbox';
+    box.value = t.id;
+    // First translation on by default. Audit-flagged translations are never
+    // auto-checked, regardless of where they sit in the registry.
+    box.checked = i === 0 && !t.note;
+    box.addEventListener('change', () => {
+      const refreshInPlace = () => render({ scrollToReference: false });
+      if (box.checked) loadTranslation(t, refreshInPlace);
+      else refreshInPlace();
+    });
+    label.append(box, ' ', t.label);
+    option.append(label);
+    if (t.note) {
+      const disclosure = document.createElement('details');
+      disclosure.className = 'translation-warning';
+      const summary = document.createElement('summary');
+      summary.textContent = 'Under audit';
+      const note = document.createElement('p');
+      note.textContent = t.note;
+      disclosure.append(summary, note);
+      option.append(disclosure);
+    }
+    if (t.description) {
+      const disclosure = document.createElement('details');
+      disclosure.className = 'translation-source';
+      const summary = document.createElement('summary');
+      summary.textContent = 'Source';
+      const note = document.createElement('p');
+      note.textContent = t.description;
+      disclosure.append(summary, note);
+      option.append(disclosure);
+    }
+    refs.translations.appendChild(option);
+    if (box.checked) loadTranslation(t, render);
+  }
+
+  // Renders the grouped control: ONE checkbox plus an edition dropdown and the
+  // active edition's Source disclosure. The two editions remain distinct
+  // translations underneath; only the control is merged. The dropdown is a
+  // real <select> associated with a <label>, so it is keyboard accessible even
+  // while the checkbox is unchecked.
+  function appendTranslationGroup(groupId, memberIndex) {
+    const group = translationGroup(groupId);
+    const option = document.createElement('div');
+    option.className = 'translation-option translation-group';
+    option.dataset.translationGroup = groupId;
+
+    const label = document.createElement('label');
+    label.className = 'version';
+    label.htmlFor = `translation-group-${groupId}`;
+    const box = document.createElement('input');
+    box.type = 'checkbox';
+    box.id = `translation-group-${groupId}`;
+    box.value = groupId;
+    box.dataset.translationGroup = groupId;
+    box.checked = memberIndex === 0 && !activeEditionEntry(groupId).note;
+    label.append(box, ' ', group.label);
+
+    const editionLabel = document.createElement('label');
+    editionLabel.className = 'edition-label';
+    editionLabel.htmlFor = `edition-${groupId}`;
+    editionLabel.textContent = 'Edition';
+    const select = document.createElement('select');
+    select.id = `edition-${groupId}`;
+    select.className = 'edition-select';
+    select.dataset.translationGroup = groupId;
+    for (const ed of group.editions) {
+      const opt = document.createElement('option');
+      opt.value = ed.id;
+      opt.textContent = ed.label;
+      select.appendChild(opt);
+    }
+
+    const details = document.createElement('details');
+    details.className = 'translation-source';
+    const summary = document.createElement('summary');
+    summary.textContent = 'Source';
+    const note = document.createElement('p');
+    details.append(summary, note);
+
+    // Reflect the chosen edition in both the dropdown and the Source text,
+    // whether or not the group is checked.
+    const syncEditionUI = () => {
+      const id = activeEditionId(groupId);
+      select.value = id;
+      const t = TRANSLATIONS.find(x => x.id === id);
+      note.textContent = (t && t.description) || '';
+    };
+
+    box.addEventListener('change', () => {
+      if (box.checked) loadTranslation(activeEditionEntry(groupId), () => render({ scrollToReference: false }));
+      else render({ scrollToReference: false });
+    });
+
+    select.addEventListener('change', () => {
+      const previous = activeEditionId(groupId);
+      const next = select.value;
+      groupEditions.set(groupId, next);
+      syncEditionUI();
+      // While unchecked, choosing an edition must NOT select or load anything.
+      if (!box.checked) return;
+      const t = TRANSLATIONS.find(x => x.id === next);
+      if (!t) return;
+      loadTranslation(t, () => {
+        // If the active search was running in the edition we just left, re-run
+        // it in the newly active edition so search state follows the edition.
+        if (viewState.mode === 'search' && viewState.search && viewState.search.translationId === previous
+          && window.MARANATHA_TRANSLATIONS && window.MARANATHA_TRANSLATIONS[next]) {
+          const { matches, total } = searchVerses(window.MARANATHA_TRANSLATIONS[next], viewState.search.query);
+          viewState.search = { ...viewState.search, translationId: next, translationLabel: t.label, matches, total };
+        }
+        render({ scrollToReference: false });
+        // Keep the "Search in" selector pointing at the translation that
+        // actually produced the visible results.
+        if (viewState.mode === 'search') refs.searchTranslation.value = viewState.search.translationId;
+      });
+    });
+
+    option.append(label, editionLabel, select, details);
+    refs.translations.appendChild(option);
+    syncEditionUI();
+    if (box.checked) loadTranslation(activeEditionEntry(groupId), render);
+  }
+
   function populateTranslationCheckboxes() {
     refs.translations.innerHTML = '';
+    groupEditions.clear();
+    for (const g of TRANSLATION_GROUPS) groupEditions.set(g.id, g.defaultEdition);
+    const renderedGroups = new Set();
     TRANSLATIONS.forEach((t, i) => {
-      const option = document.createElement('div');
-      option.className = 'translation-option';
-      const label = document.createElement('label');
-      label.className = 'version';
-      const box = document.createElement('input');
-      box.type = 'checkbox';
-      box.value = t.id;
-      // First translation on by default. Audit-flagged translations are never
-      // auto-checked, regardless of where they sit in the registry.
-      box.checked = i === 0 && !t.note;
-      box.addEventListener('change', () => {
-        const refreshInPlace = () => render({ scrollToReference: false });
-        if (box.checked) loadTranslation(t, refreshInPlace);
-        else refreshInPlace();
-      });
-      label.append(box, ' ', t.label);
-      option.append(label);
-      if (t.note) {
-        const disclosure = document.createElement('details');
-        disclosure.className = 'translation-warning';
-        const summary = document.createElement('summary');
-        summary.textContent = 'Under audit';
-        const note = document.createElement('p');
-        note.textContent = t.note;
-        disclosure.append(summary, note);
-        option.append(disclosure);
+      if (t.group) {
+        if (renderedGroups.has(t.group)) return;
+        renderedGroups.add(t.group);
+        appendTranslationGroup(t.group, i);
+        return;
       }
-      refs.translations.appendChild(option);
-      if (box.checked) loadTranslation(t, render);
+      appendTranslationOption(t, i);
     });
   }
 
   function selectedTranslations() {
-    return [...refs.translations.querySelectorAll('input:checked')]
-      .map(box => TRANSLATIONS.find(t => t.id === box.value))
+    return [...refs.translations.querySelectorAll('input[type="checkbox"]:checked')]
+      .map(box => {
+        // A grouped control contributes exactly one translation: its active
+        // edition. Standalone checkboxes resolve directly by value.
+        const groupId = box.dataset.translationGroup;
+        const id = groupId ? activeEditionId(groupId) : box.value;
+        return TRANSLATIONS.find(t => t.id === id);
+      })
       .filter(Boolean);
   }
 
@@ -1046,6 +1255,35 @@ function init() {
     return numbers.size ? Math.max(...numbers) : 0;
   }
 
+  // Edge cases for translations that declare an edition-specific versification
+  // for a chapter (e.g. the vocalized Delitzsch 1901). These are deliberately
+  // NOT row-aligned with canon-numbered translations; they are rendered in their
+  // own block under their own (source) verse numbers with a visible notice, so
+  // equal row positions are never mistaken for equivalent verses.
+  function versificationEntry(t, bookId, chapterNum) {
+    const datasets = window.MARANATHA_TRANSLATIONS || {};
+    return datasets[t.id]?.versification?.[bookId]?.[chapterNum] || null;
+  }
+
+  function extentForTranslations(translations, bookId, chapterNum) {
+    const datasets = window.MARANATHA_TRANSLATIONS || {};
+    const subset = {};
+    for (const t of translations) {
+      if (datasets[t.id]) subset[t.id] = datasets[t.id];
+    }
+    const numbers = VerseAvailability.references(canon, subset, bookId, chapterNum);
+    return numbers.size ? Math.max(...numbers) : 0;
+  }
+
+  function partitionByVersification(translations, bookId, chapterNum) {
+    const aligned = [];
+    const mismatched = [];
+    for (const t of translations) {
+      (versificationEntry(t, bookId, chapterNum) ? mismatched : aligned).push(t);
+    }
+    return { aligned, mismatched };
+  }
+
   function cellFor(t, bookId, chapterNum, verseNum) {
     if (!loaded.has(t.id)) return { state: 'loading' };
     const cell = VerseAvailability.cell(window.MARANATHA_TRANSLATIONS[t.id], bookId, chapterNum, verseNum);
@@ -1059,9 +1297,9 @@ function init() {
     return cell;
   }
 
-  function fillCell(td, cell, tId) {
+  function fillCell(td, cell, tId, scriptMode) {
     if (cell.state === 'text' || cell.state === 'additional' || cell.state === 'note') {
-      td.textContent = verseDisplayText(cell.text || '', tId);
+      td.textContent = verseDisplayText(cell.text || '', tId, scriptMode);
       if (cell.state !== 'text' || cell.note) {
         const note = document.createElement('small');
         note.className = 'verse-source-note';
@@ -1071,7 +1309,9 @@ function init() {
         td.appendChild(note);
       }
       if (tId === 'he') {
-        styleHebrewVerse(td);
+        styleHebrewVerse(td, scriptMode);
+      } else if (isSquareHebrew(tId)) {
+        styleHebrewLanguageVerse(td);
       } else if (tId === 'byz') {
         td.lang = 'el';
         td.classList.add('greek-verse');
@@ -1168,7 +1408,7 @@ function init() {
       tr.append(ref);
       translations.forEach(t => {
         const td = document.createElement('td');
-        fillCell(td, cellFor(t, bookId, chapterNum, v), t.id);
+        fillCell(td, cellFor(t, bookId, chapterNum, v), t.id, t.scriptMode);
         tr.append(td);
       });
       body.append(tr);
@@ -1215,7 +1455,7 @@ function init() {
         label.className = 'translation-label';
         label.textContent = t.label;
         const td = document.createElement('td');
-        fillCell(td, cellFor(t, bookId, chapterNum, v), t.id);
+        fillCell(td, cellFor(t, bookId, chapterNum, v), t.id, t.scriptMode);
         tr.append(ref, label, td);
         body.append(tr);
       });
@@ -1262,7 +1502,7 @@ function init() {
         }
         const text = document.createElement('div');
         text.className = 'mobile-verse-text';
-        fillCell(text, cellFor(t, bookId, chapterNum, v), t.id);
+        fillCell(text, cellFor(t, bookId, chapterNum, v), t.id, t.scriptMode);
         row.append(text);
         article.append(row);
       });
@@ -1276,7 +1516,7 @@ function init() {
   // reference mode (one block per group, restricted verses, highlighted).
   // When exactVerses is provided (reference mode) an individual per-block
   // context-toggle button is added beside the heading.
-  function appendResultBlock({ bookId, chapterNum, name, verseCount, verses, translations, layout, highlight, anchorFirst, exactVerses = null, showContext = false, showContextToggle = false }) {
+  function appendResultBlock({ bookId, chapterNum, name, verseCount, verses, translations, layout, highlight, anchorFirst, exactVerses = null, showContext = false, showContextToggle = false, versificationDisclosure = false }) {
     const head = document.createElement('div');
     head.className = 'result-head';
     let verseLabel;
@@ -1311,6 +1551,21 @@ function init() {
       head.appendChild(toggleBtn);
     }
 
+    // Visible disclosure for an edition whose verse numbering differs from the
+    // canon: shown before the table so a reader is never misled into treating a
+    // row as the same reference across translations.
+    if (versificationDisclosure) {
+      for (const t of translations) {
+        const v = versificationEntry(t, bookId, chapterNum);
+        if (!v) continue;
+        const notice = document.createElement('p');
+        notice.className = 'notice versification-notice';
+        notice.setAttribute('role', 'note');
+        notice.textContent = `${t.label} uses a different verse numbering in this chapter (${v.source} verses; canon.js expects ${v.canon}). ${v.note} Its verses below are numbered as in the source edition and are not aligned row-for-row with canon-numbered translations.`;
+        refs.results.appendChild(notice);
+      }
+    }
+
     const content = layout === 'multicolumn'
       ? multiColumn(bookId, chapterNum, verses, translations, { highlight, anchorFirst, exactVerses })
       : layout === 'multirow'
@@ -1338,18 +1593,24 @@ function init() {
       ? new Set([hv.verse])
       : null;
 
-    appendResultBlock({
-      bookId: book.id,
-      chapterNum,
-      name,
-      verseCount,
-      verses: Array.from({ length: verseCount }, (_, i) => i + 1),
-      translations,
-      layout,
-      highlight: !!highlightSet,
-      anchorFirst: !!highlightSet,
-      exactVerses: highlightSet,
-    });
+    const { aligned, mismatched } = partitionByVersification(translations, book.id, chapterNum);
+    const blocks = aligned.length && mismatched.length ? [aligned, mismatched] : [translations];
+    for (const group of blocks) {
+      const groupVerseCount = extentForTranslations(group, book.id, chapterNum);
+      appendResultBlock({
+        bookId: book.id,
+        chapterNum,
+        name,
+        verseCount: groupVerseCount,
+        verses: Array.from({ length: groupVerseCount }, (_, i) => i + 1),
+        translations: group,
+        layout,
+        highlight: !!highlightSet,
+        anchorFirst: !!highlightSet,
+        exactVerses: highlightSet,
+        versificationDisclosure: mismatched.some(t => group.includes(t)),
+      });
+    }
 
     const bottomNav = document.createElement('div');
     bottomNav.className = 'chapter-nav-bottom';
@@ -1378,32 +1639,38 @@ function init() {
     groups.forEach((group, index) => {
       const book = canon.books.find(b => b.id === group.bookId);
       const name = (locale.books[book.id] && locale.books[book.id].name) || book.id;
-      const verseCount = chapterExtent(book.id, group.chapter);
-      const exactVerses = versesForGroup(group, verseCount);
+      const { aligned, mismatched } = partitionByVersification(translations, book.id, group.chapter);
+      const blocks = aligned.length && mismatched.length ? [aligned, mismatched] : [translations];
 
-      const exactSet = new Set(exactVerses);
       const blockKey = `${book.id}-${group.chapter}`;
       const effectiveContext = blockContext(blockKey);
 
-      let displayVerses = exactVerses;
-      if (effectiveContext) {
-        const expanded = expandWithContext(exactVerses, verseCount);
-        displayVerses = expanded.verses;
-      }
+      blocks.forEach((subset, blockIndex) => {
+        const verseCount = extentForTranslations(subset, book.id, group.chapter);
+        const exactVerses = versesForGroup(group, verseCount);
+        const exactSet = new Set(exactVerses);
 
-      appendResultBlock({
-        bookId: book.id,
-        chapterNum: group.chapter,
-        name,
-        verseCount,
-        verses: displayVerses,
-        translations,
-        layout,
-        highlight: true,
-        anchorFirst: index === 0,
-        exactVerses: exactSet,
-        showContext: effectiveContext,
-        showContextToggle: true,
+        let displayVerses = exactVerses;
+        if (effectiveContext) {
+          const expanded = expandWithContext(exactVerses, verseCount);
+          displayVerses = expanded.verses;
+        }
+
+        appendResultBlock({
+          bookId: book.id,
+          chapterNum: group.chapter,
+          name,
+          verseCount,
+          verses: displayVerses,
+          translations: subset,
+          layout,
+          highlight: true,
+          anchorFirst: index === 0 && blockIndex === 0,
+          exactVerses: exactSet,
+          showContext: effectiveContext,
+          showContextToggle: true,
+          versificationDisclosure: mismatched.some(t => subset.includes(t)),
+        });
       });
     });
   }
@@ -1471,8 +1738,8 @@ function init() {
 
   // Appends `text` to `container`, wrapping each occurrence of `query` in
   // <mark>. Uses text nodes only (never innerHTML), so user input is safe.
-  function appendHighlighted(container, text, query, translationId) {
-    const display = (part) => verseDisplayText(part, translationId);
+  function appendHighlighted(container, text, query, translationId, scriptMode) {
+    const display = (part) => verseDisplayText(part, translationId, scriptMode);
     const needle = normalizeSearchText(query);
     const { form, map } = buildSearchForm(text);
     let from = 0;
@@ -1482,7 +1749,11 @@ function init() {
       const idx = form.indexOf(needle, from);
       if (idx === -1) break;
       const start = map[idx];
-      const end = map[idx + needle.length - 1] + 1;
+      let end = map[idx + needle.length - 1] + 1;
+      // A matched base letter may carry trailing combining marks (e.g. Hebrew
+      // niqqud). Keep them inside the highlight rather than orphaning them in
+      // the following text node. Shared by every translation's highlighting.
+      while (end < text.length && /\p{M}/u.test(text[end])) end++;
       if (!(start < end)) { from = idx + needle.length; continue; }
       container.appendChild(document.createTextNode(display(text.slice(lastEnd, start))));
       const mark = document.createElement('mark');
@@ -1560,12 +1831,22 @@ function init() {
       const bookName = (locale.books[m.bookId] && locale.books[m.bookId].name) || m.bookId;
       ref.textContent = `${bookName} ${m.chapter}:${m.verse}`;
 
-      const body = document.createElement('span');
-      body.className = 'search-text';
-      if (s.translationId === 'he') styleHebrewVerse(body);
-      appendHighlighted(body, m.text, s.query, s.translationId);
-
-      hit.append(ref, body);
+      hit.append(ref);
+      const scriptModes = s.translationId === 'he' ? selectedHebrewScripts() : [undefined];
+      for (const scriptMode of scriptModes) {
+        const body = document.createElement('span');
+        body.className = 'search-text';
+        if (s.translationId === 'he') styleHebrewVerse(body, scriptMode);
+        else if (isSquareHebrew(s.translationId)) styleHebrewLanguageVerse(body);
+        if (scriptModes.length > 1) {
+          const label = document.createElement('small');
+          label.className = 'mobile-translation-label';
+          label.textContent = scriptMode === 'square' ? 'Square Hebrew' : scriptMode === 'paleo' ? 'Paleo-Hebrew' : 'Proto-Sinaitic (approx.)';
+          hit.append(label);
+        }
+        appendHighlighted(body, m.text, s.query, s.translationId, scriptMode);
+        hit.append(body);
+      }
 
       const openHit = () => jumpToVerse(m.bookId, m.chapter, m.verse);
       hit.addEventListener('click', openHit);
@@ -1622,7 +1903,7 @@ function init() {
     const panel = document.createElement('div');
     panel.className = 'compare-panel';
 
-    const others = selectedTranslations().filter((t) =>
+    const others = displayTranslations(selectedTranslations()).filter((t) =>
       t.id !== excludeId && loaded.has(t.id) && window.MARANATHA_TRANSLATIONS[t.id]);
 
     for (const t of others) {
@@ -1636,17 +1917,30 @@ function init() {
       const text = document.createElement('span');
       text.className = 'compare-text';
       const data = window.MARANATHA_TRANSLATIONS[t.id];
-      const chapter = data.books[match.bookId] && data.books[match.bookId][match.chapter - 1];
-      const verseText = chapter && chapter[match.verse - 1];
+      // Use the shared availability semantics, not a raw array read, so a
+      // note-only source reference (e.g. 3 John 1:15 in Delitzsch) is shown as
+      // its note rather than as missing or as ordinary main text.
+      const cell = VerseAvailability.cell(data, match.bookId, match.chapter, match.verse);
+      const verseText = cell.state === 'text' || cell.state === 'additional' || cell.state === 'note'
+        ? (cell.text || '') : '';
 
       if (verseText) {
         if (t.id === 'he') {
-          styleHebrewVerse(text);
+          styleHebrewVerse(text, t.scriptMode);
+        } else if (isSquareHebrew(t.id)) {
+          styleHebrewLanguageVerse(text);
         } else if (t.id === 'byz') {
           text.lang = 'el';
           text.classList.add('greek-verse');
         }
-        appendHighlighted(text, verseText, query, t.id);
+        appendHighlighted(text, verseText, query, t.id, t.scriptMode);
+        if (cell.state === 'note') {
+          const note = document.createElement('small');
+          note.className = 'verse-source-note';
+          note.setAttribute('role', 'note');
+          note.textContent = ['Included in a source note.', cell.note].filter(Boolean).join(' ');
+          text.appendChild(note);
+        }
       } else {
         text.classList.add('verse-placeholder');
         text.textContent = '(not available in this translation)';
@@ -2401,14 +2695,23 @@ function init() {
   function appendInterlinearCaption(block, bookId, chapterNum, verseNum, translation) {
     if (!translation) return;
     const tv = window.MARANATHA_TRANSLATIONS[translation.id];
-    const tch = tv && tv.books[bookId] && tv.books[bookId][chapterNum - 1];
-    const ttext = tch && tch[verseNum - 1];
-    if (!ttext) return;
+    // Availability semantics (not a raw array read) so a note-only source
+    // reference (e.g. 3 John 1:15 in Delitzsch) is shown accurately.
+    const cell = VerseAvailability.cell(tv, bookId, chapterNum, verseNum);
+    if (!['text', 'additional', 'note'].includes(cell.state) || !cell.text) return;
     const caption = document.createElement('div');
     caption.className = 'interlinear-caption';
     caption.dir = 'auto';
-    caption.textContent = ttext;
+    if (isSquareHebrew(translation.id)) styleHebrewLanguageVerse(caption);
+    caption.textContent = cell.text;
     block.appendChild(caption);
+    if (cell.state === 'note') {
+      const note = document.createElement('small');
+      note.className = 'verse-source-note';
+      note.setAttribute('role', 'note');
+      note.textContent = ['Included in a source note.', cell.note].filter(Boolean).join(' ');
+      block.appendChild(note);
+    }
   }
 
   // Renders one book/chapter block of an interlinear view, optionally
@@ -2625,7 +2928,7 @@ function init() {
   }
 
   function render({ scrollToReference = true } = {}) {
-    const translations = selectedTranslations();
+    const translations = displayTranslations(selectedTranslations());
 
     refs.results.innerHTML = '';
 

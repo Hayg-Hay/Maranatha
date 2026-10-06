@@ -19,7 +19,7 @@ assert.equal(toSquare('𐤀𐤁𐤂𐤃𐤄𐤅𐤆𐤇𐤈𐤉𐤊𐤋𐤌𐤍�
 assert.equal(toPaleo('<& English 123'), '<& English 123');
 
 const file = path.join(ROOT, 'index.html');
-async function open({ blockedStorage = false, saved = null, narrow = false } = {}) {
+async function open({ blockedStorage = false, saved = null, savedScripts = null, narrow = false } = {}) {
   const dom = await JSDOM.fromFile(file, {
     resources: 'usable', runScripts: 'dangerously', pretendToBeVisual: true,
     beforeParse(w) {
@@ -27,6 +27,7 @@ async function open({ blockedStorage = false, saved = null, narrow = false } = {
       w.scrollTo = () => {};
       w.HTMLElement.prototype.scrollIntoView = () => {};
       const prefs = new Map(saved ? [['maranatha-hebrew-script', saved]] : []);
+      if (savedScripts) prefs.set('maranatha-hebrew-scripts', JSON.stringify(savedScripts));
       Object.defineProperty(w, 'localStorage', { value: {
         getItem(key) { if (blockedStorage) throw new Error('Storage blocked'); return prefs.get(key) || null; },
         setItem(key, value) { if (blockedStorage) throw new Error('Storage blocked'); prefs.set(key, value); },
@@ -45,6 +46,12 @@ async function waitFor(fn) {
   throw new Error('Timed out waiting for app');
 }
 function change(w, selector, value) {
+  if (selector === '#hebrew-script') {
+    const picker = w.document.querySelector('#hebrew-scripts');
+    picker.querySelectorAll('input').forEach(box => { box.checked = box.value === value; });
+    picker.querySelector('input').dispatchEvent(new w.Event('change', { bubbles: true }));
+    return;
+  }
   const el = w.document.querySelector(selector);
   if (el.type === 'checkbox') el.checked = value; else el.value = value;
   el.dispatchEvent(new w.Event('change'));
@@ -139,6 +146,46 @@ for (const narrow of [false, true]) {
       }
     }
     assert.equal(JSON.stringify(w.MARANATHA_TRANSLATIONS.he), source);
+
+    // One source, three independently styled reading views; no duplicate loads.
+    const picker = d.querySelector('#hebrew-scripts');
+    picker.open = true;
+    for (const value of ['square', 'paleo']) {
+      const box = picker.querySelector(`input[value="${value}"]`);
+      box.checked = true;
+      box.dispatchEvent(new w.Event('change', { bubbles: true }));
+    }
+    assert.equal(picker.open, true, 'picker stays open while selecting several scripts');
+    assert.equal(d.querySelector('#hebrew-script-summary').textContent, '3 selected');
+    d.querySelector('#reference').value = 'Gen 1:1';
+    for (const layout of ['multicolumn', 'multirow']) {
+      change(w, '#layout', layout);
+      d.querySelector('#reference-go').click();
+      assert(d.querySelector('.hebrew-verse:not(.paleo-hebrew):not(.proto-sinaitic)'));
+      assert.equal(d.querySelector('.paleo-hebrew').textContent, genesis);
+      assert.equal(d.querySelector('.proto-sinaitic').textContent, genesis);
+      assert.match(d.querySelector('#results').textContent, /OSHB.*Square Hebrew/s);
+      assert.match(d.querySelector('#results').textContent, /OSHB.*Paleo-Hebrew/s);
+      assert.match(d.querySelector('#results').textContent, /OSHB.*Proto-Sinaitic/s);
+    }
+    assert.equal(Array.from(d.scripts).filter(el => el.src.includes('/data/he.js')).length, 1);
+    assert.equal(await search('he', 'הארץ'), squareCount);
+    const firstHit = d.querySelector('.search-hit');
+    assert.equal(firstHit.querySelectorAll('.search-text').length, 3);
+    assert.equal(firstHit.querySelector('.search-text.paleo-hebrew mark').textContent, '𐤄𐤀𐤓𐤑');
+    assert.equal(firstHit.querySelector('.search-text.proto-sinaitic mark').textContent, '𐤄𐤀𐤓𐤑');
+    await search('web', 'earth');
+    d.querySelector('.compare-toggle').click();
+    assert.equal(d.querySelectorAll('.compare-text.hebrew-verse').length, 3);
+    picker.dispatchEvent(new w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    assert.equal(picker.open, false);
+    picker.open = true;
+    d.querySelector('#reference').click();
+    assert.equal(picker.open, false, 'outside click closes the picker');
+    change(w, '#hebrew-script', 'square');
+    assert.equal(picker.querySelector('input[value="square"]').disabled, true, 'at least one script remains selected');
+    assert.equal(JSON.stringify(w.MARANATHA_TRANSLATIONS.he), source);
+
     change(w, '#interlinear-he', true);
     await waitFor(() => d.querySelector('.iw-hebrew'));
     assert(/[א-ת]/u.test(d.querySelector('.iw-hebrew').textContent));
@@ -149,12 +196,20 @@ for (const narrow of [false, true]) {
 const blocked = await open({ blockedStorage: true });
 change(blocked.window, '#hebrew-script', 'paleo');
 assert.equal(blocked.window.document.querySelector('#hebrew-script-note').hidden, false);
+const blockedProto = blocked.window.document.querySelector('#hebrew-scripts input[value="proto"]');
+blockedProto.checked = true;
+blockedProto.dispatchEvent(new blocked.window.Event('change', { bubbles: true }));
+assert.equal(blocked.window.document.querySelector('#hebrew-script-summary').textContent, '2 selected');
 blocked.window.close();
 const protoRestored = await open({ saved: 'proto' });
-assert.equal(protoRestored.window.document.querySelector('#hebrew-script').value, 'proto');
+assert.equal(protoRestored.window.document.querySelector('#hebrew-scripts input:checked').value, 'proto');
 assert.equal(protoRestored.window.document.querySelector('#hebrew-script-source').hidden, false);
 protoRestored.window.close();
 const restored = await open({ saved: 'paleo' });
-assert.equal(restored.window.document.querySelector('#hebrew-script').value, 'paleo');
+assert.equal(restored.window.document.querySelector('#hebrew-scripts input:checked').value, 'paleo');
 restored.window.close();
+const multipleRestored = await open({ savedScripts: ['square', 'proto'] });
+assert.equal(multipleRestored.window.document.querySelectorAll('#hebrew-scripts input:checked').length, 2);
+assert.equal(multipleRestored.window.document.querySelector('#hebrew-script-summary').textContent, '2 selected');
+multipleRestored.window.close();
 console.log('PASS Paleo-Hebrew and early-script display: alphabet, full OT preservation, Ten Commandments, file:// desktop/mobile, layouts, context, search, comparison, interlinear and storage.');
