@@ -125,7 +125,13 @@
         <details class="tool-section">
           <summary>Reading settings</summary>
           <div class="settings-row">
-            <label>Hebrew script <select id="hebrew-script" aria-describedby="hebrew-script-note"><option value="square">Square Hebrew</option><option value="paleo">Paleo-Hebrew</option></select></label>
+            <div class="hebrew-script-setting">
+              <label>Hebrew script <select id="hebrew-script" aria-describedby="hebrew-script-description"><option value="square">Square Hebrew</option><option value="paleo">Paleo-Hebrew</option></select></label>
+              <details id="hebrew-script-note" class="hebrew-script-info" hidden>
+                <summary>About this display</summary>
+                <p id="hebrew-script-description">A visual approximation using the Noto Sans Phoenician font, not a scholarly reconstruction of an ancient manuscript. Existing WLC/OSHB consonants are displayed in Paleo-Hebrew letterforms; vowel points and cantillation are hidden, and final letter forms are merged. The source text is unchanged. Search accepts either script; interlinear tools retain square Hebrew.</p>
+              </details>
+            </div>
             <label>Layout <select id="layout"><option value="auto">Automatic</option><option value="multicolumn">Multi-column</option><option value="multirow">Multi-row</option></select></label>
             <label>Color scheme <select id="theme"><option value="">Default</option><option value="red">Red</option><option value="orange">Orange</option><option value="yellow">Yellow</option><option value="green">Green</option><option value="blue">Blue</option><option value="indigo">Indigo</option><option value="violet">Violet</option><option value="rose">Rose</option></select></label>
             <label>Reading <select id="reading"><option value="">Default</option><option value="warm">Warm / Sepia</option><option value="low-contrast">Low contrast</option></select></label>
@@ -138,7 +144,6 @@
               <option value="largest">Largest</option>
             </select></label>
           </div>
-          <p id="hebrew-script-note" class="hint" hidden>WLC/OSHB Hebrew verse text displayed in Paleo-Hebrew script. Wording and consonantal spelling are preserved; vowel points and cantillation are omitted, and final letter forms are merged. This is a script conversion, not an ancient manuscript reconstruction. Search accepts either script. Interlinear study tools retain their source script.</p>
         </details>
       </div>
     </section>

@@ -1,6 +1,6 @@
 // Display transliteration of the existing WLC/OSHB consonantal text, not a
 // reconstruction of an ancient manuscript. Unicode's Phoenician block also
-// encodes Paleo-Hebrew; the bundled font supplies Lachish letterforms.
+// encodes Paleo-Hebrew; the bundled font supplies Phoenician letterforms.
 (() => {
   'use strict';
   const alphabet = Array.from('אבגדהוזחטיכלמנסעפצקרשת');

@@ -734,6 +734,7 @@ function init() {
 
   function syncHebrewScriptNote() {
     refs.hebrewScriptNote.hidden = refs.hebrewScript.value !== 'paleo';
+    if (refs.hebrewScriptNote.hidden) refs.hebrewScriptNote.open = false;
   }
 
   function verseDisplayText(text, translationId) {
@@ -1363,7 +1364,7 @@ function init() {
     let form = '';
     const map = [];
     for (let i = 0; i < text.length; i++) {
-      const kept = text[i].normalize('NFD').replace(/[\u0300-\u036f\u0591-\u05c7]/g, '').toLowerCase();
+      const kept = normalizeSearchText(text[i]);
       for (let k = 0; k < kept.length; k++) {
         form += kept[k];
         map.push(i);

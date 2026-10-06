@@ -89,7 +89,7 @@ th.reference { white-space:nowrap; }
 }
 @font-face {
   font-family: 'Maranatha Paleo Hebrew';
-  src: url('fonts/HebrewPaleoLakhish.ttf') format('truetype');
+  src: url('fonts/NotoSansPhoenician-Regular.ttf') format('truetype');
   font-display: swap;
 }
 .hebrew-verse { font-family:'Ezra SIL','SBL Hebrew',serif; text-align:right; font-size:1.25rem; line-height:1.7; }
@@ -118,6 +118,11 @@ code { font-family:Consolas, monospace; }
 .chapter-bar { display:flex; flex-wrap:wrap; align-items:end; gap:14px; padding:14px 0; }
 .chapter-bar label,
 .settings-row label { display:grid; gap:4px; font-size:.85rem; }
+.hebrew-script-setting { min-width:0; flex:1 1 8rem; }
+.hebrew-script-info { margin-top:5px; font-size:.78rem; }
+.hebrew-script-info > summary { cursor:pointer; color:var(--accent); }
+.hebrew-script-info > summary:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+.hebrew-script-info p { margin:6px 0 0; color:var(--muted); }
 .chapter-actions { display:flex; flex-wrap:wrap; gap:12px; }
 .tool-sections { display:grid; grid-template-columns:minmax(0, 1.6fr) minmax(10rem, .7fr) minmax(10rem, .7fr); gap:8px; }
 .tool-section { min-width:0; border:1px solid var(--line); background:var(--paper); }

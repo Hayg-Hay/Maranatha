@@ -18,9 +18,8 @@ Interlinear word surfaces and analysis retain their source script. The
 preference is saved when local storage is available and works for the session
 when it is not. Copying the display gives real Unicode Paleo-Hebrew characters.
 
-The unmodified Culmus Hebrew Paleo Lachish font by Yoram Gnat is bundled
-locally under GPL-2 with the font embedding exception; accompanying notices
-and source links are in `fonts/`. The converter and font are in the service
+The unmodified Noto Sans Phoenician font is bundled locally under the
+SIL Open Font License 1.1; accompanying notices and source links are in `fonts/`. The converter and font are in the service
 worker shell cache; no new OT data or runtime network dependency is added.
 The view uses Unicode's Phoenician block with Paleo-Hebrew letterforms, in
 accordance with https://www.unicode.org/versions/Unicode16.0.0/core-spec/chapter-10/.

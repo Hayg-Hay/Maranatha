@@ -66,6 +66,8 @@ for (const narrow of [false, true]) {
       assert.equal(d.querySelector('.paleo-hebrew').dir, 'rtl');
       assert.equal(d.querySelector('.paleo-hebrew').lang, 'hbo-Phnx');
       assert.equal(d.querySelector('#hebrew-script-note').hidden, false);
+      assert.equal(d.querySelector('#hebrew-script-note').open, false, 'display explanation starts collapsed');
+      assert.match(d.querySelector('#hebrew-script-description').textContent, /not a scholarly reconstruction/);
       change(w, '#hebrew-script', 'square');
       assert.equal(d.querySelector('.hebrew-verse').textContent, raw);
     }
@@ -84,7 +86,7 @@ for (const narrow of [false, true]) {
     }
     const squareCount = await search('he', 'הארץ');
     const hits = Array.from(d.querySelectorAll('.search-text'), el => el.textContent);
-    assert.equal(d.querySelector('.search-text mark').textContent, '𐤄𐤀𐤓𐤑');
+    assert.equal(d.querySelector('.search-hit .search-text').querySelector('mark')?.textContent, '𐤄𐤀𐤓𐤑', 'first hit highlights the word including its final letter');
     assert.equal(await search('he', '𐤄𐤀𐤓𐤑'), squareCount);
     assert.deepEqual(Array.from(d.querySelectorAll('.search-text'), el => el.textContent), hits);
     change(w, '#hebrew-script', 'square');
