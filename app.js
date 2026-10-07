@@ -3276,8 +3276,10 @@ function init() {
   }
 
   function updateReferenceHint() {
+    // The LXX examples are deliberately not comma-separated: the native parser
+    // accepts exactly ONE reference, so a list would imply unsupported input.
     refs.reference.placeholder = refs.viewMode.value === 'lxx'
-      ? 'Genesis 1, Psalm 88:84, Letter of Jeremiah 1'
+      ? 'One native LXX reference only — e.g. Genesis 1 or Psalm 88:84'
       : 'John 3:16, Genesis 1, Psalm 23';
   }
 
@@ -3457,6 +3459,10 @@ function init() {
   function render({ scrollToReference = true } = {}) {
     const lxx = refs.viewMode.value === 'lxx';
     const parallel = refs.viewMode.value === 'parallel';
+    // Keep the reference hint in step with the actual view on every render,
+    // including programmatic transitions (reference actions, search returning
+    // to Canon) and locale redraws — not only the View select's change event.
+    updateReferenceHint();
     // Exactly one Book/Chapter mechanism is shown at a time: the canon bar in
     // canon view, the LXX bar in the LXX view, and the two independent pane
     // controls in the parallel view. The View selector stays visible in all.

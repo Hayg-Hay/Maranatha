@@ -161,8 +161,11 @@ const message = (d) => d.querySelector('#message').textContent;
   await sleep(10);
   out('bare-genesis-first-chapter-1', lxxBookValue(d) === 'GEN' && lxxChapterValue(d) === '1');
 
-  // Placeholder follows the view.
-  out('reference-placeholder-native-in-lxx', /Psalm 88:84/.test(d.querySelector('#reference').placeholder));
+  // Placeholder follows the view and marks the native query as ONE reference.
+  const nativeHint = d.querySelector('#reference').placeholder;
+  out('reference-placeholder-native-in-lxx',
+    /one native LXX reference/i.test(nativeHint) && /Psalm 88:84/.test(nativeHint) && !nativeHint.includes(','),
+    nativeHint);
   change(w, d, '#view-mode', 'canon');
   out('reference-placeholder-canon', /John 3:16/.test(d.querySelector('#reference').placeholder));
   change(w, d, '#view-mode', 'lxx');
@@ -206,6 +209,21 @@ const message = (d) => d.querySelector('#message').textContent;
   const w = dom.window;
   const d = w.document;
   await waitFor(() => d.querySelector('#results h2'));
+
+  // Regression: an LXX text search returns to Canon and must restore the Canon
+  // placeholder (the hint is synced from render(), not only from the select).
+  change(w, d, '#view-mode', 'lxx');
+  await waitFor(() => d.querySelector('#results .lxx-verses'));
+  const inLxx = d.querySelector('#reference').placeholder;
+  d.querySelector('#search').value = 'God';
+  d.querySelector('#search-go').click();
+  out('lxx-then-search-restores-canon-placeholder',
+    /native LXX reference/i.test(inLxx)
+      && d.querySelector('#view-mode').value === 'canon'
+      && /John 3:16/.test(d.querySelector('#reference').placeholder)
+      && !/native LXX/i.test(d.querySelector('#reference').placeholder),
+    `${inLxx} -> ${d.querySelector('#reference').placeholder}`);
+
   change(w, d, '#view-mode', 'canon');
   submit(w, d, 'John 3:16');
   out('canon-reference-unchanged', d.querySelector('#view-mode').value === 'canon' && /3:16/.test(d.querySelector('#results').textContent) && d.querySelector('#book').value === 'JHN');

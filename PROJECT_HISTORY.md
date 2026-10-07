@@ -2548,3 +2548,16 @@ Stage1 15/15, native 8/8, Stage1b 45/45, both independent checkers 0 failures,
 service-worker 26/26, full `npm test` exit 0 (ignored log
 `build/cache/lxx-native-reference-npm.log`). No merge, push or deletion; the
 real-browser/phone test remains the user's and Codex verifies in a fresh clone.
+
+**Follow-up review fix (placeholder sync, 2026-10-07).** Codex's independent
+checker found that after an LXX text search returned to Canon the reference
+placeholder still showed the LXX examples, because `updateReferenceHint()` ran
+only at setup and on the View select change, not on programmatic view
+transitions. The hint is now synced from the shared `render()` path, so reference
+actions, search returning to Canon and locale redraws all restore it. The LXX hint
+now reads "One native LXX reference only — e.g. Genesis 1 or Psalm 88:84" (no
+comma-separated examples, so it cannot imply unsupported multiple references) and
+the Canon hint is unchanged. `build/check-lxx-native-reference.mjs` gained an
+LXX → search → Canon placeholder-restoration case (43 PASS). Native checker,
+`check-stage1.mjs` canon regression and both independent checkers pass; no data,
+numbering, search, Canon/Parallel navigation or shell version changed.

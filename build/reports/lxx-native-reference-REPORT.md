@@ -60,7 +60,7 @@ it was updated to `v51` with no behavioural assertion changed.
 
 | Check | Result |
 |---|---|
-| `build/check-lxx-native-reference.mjs` (new) | 42 pass / 0 fail |
+| `build/check-lxx-native-reference.mjs` (new) | 43 pass / 0 fail |
 | `build/check-lxx-disclosures.mjs` | 39 pass / 0 fail |
 | `build/check-stage1.mjs` | 15 pass / 0 fail |
 | `build/validate-lxx-native.mjs` | 8 pass / 0 fail |
@@ -83,7 +83,9 @@ and leaves Canon and the footer untouched; Canon and Parallel references keep
 their previous behaviour; the ten-chapter WEB+KJV Canon regression is
 byte-identical to the **actual existing** pre-change baseline
 `build/cache/stage1b-before.json`; and the data hash/counts/flags and all three
-disclosures are unchanged.
+disclosures are unchanged. The hint is asserted to name **one** native reference
+and to contain no comma-separated example list, and an LXX → search → Canon
+transition is asserted to restore the Canon placeholder.
 
 ## Deviations
 
@@ -92,6 +94,20 @@ disclosures are unchanged.
   behavioural check was altered or weakened.
 - No existing test asserted the intentionally superseded LXX-exit behaviour, so
   none needed changing for that reason.
+
+## Review fix (independent checker, `bd7c23a`)
+
+Codex's independent checker found that the reference placeholder stayed on the
+LXX examples after an LXX text search returned to Canon: `updateReferenceHint()`
+ran only at setup and on the View select's `change`, not on programmatic view
+transitions. Fixed by syncing the hint from the shared `render()` path (covering
+reference actions, search returning to Canon and locale redraws). The LXX hint now
+reads "One native LXX reference only — e.g. Genesis 1 or Psalm 88:84" — no
+comma-separated examples, so it cannot imply unsupported multiple references; the
+Canon hint is unchanged (`John 3:16, Genesis 1, Psalm 23`). A regression case for
+LXX → search → Canon placeholder restoration was added to
+`build/check-lxx-native-reference.mjs` (now 43 PASS). No data, numbering, search
+semantics, Canon/Parallel navigation or shell version changed.
 
 ## Remaining acceptance
 
