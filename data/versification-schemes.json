@@ -9,6 +9,14 @@
     "attribution": "Scheme declarations: Maranatha Stage 2a. Greek: First1KGreek / Swete, CC BY-SA 4.0; Hebrew: OSHB, CC BY 4.0; WEB Catholic Edition and imported KJV: source declarations in the shipped datasets.",
     "changes": "Editorial scheme declarations only; no Scripture text changed."
   },
+  "comparisonCoverage": {
+    "editions": [
+      "web",
+      "kjv",
+      "he"
+    ],
+    "note": "Only WEB/KJV/OSHB are compared in the Genesis 1 pilot. Target coordinates follow the Maranatha navigation canon anchored to WEB-C; selecting any other edition compares the Greek pilot against unreviewed, edition-specific numbering."
+  },
   "schemes": [
     {
       "id": "lxx-swete-native",
@@ -39,6 +47,54 @@
       "note": "Comparison coverage in this pilot is limited to the Genesis 1 proposals; the edition covers the 39 protocanonical books only."
     },
     {
+      "id": "byz-greek",
+      "label": "Byzantine Majority Text (Greek NT)",
+      "kind": "canon",
+      "dataset": "byz",
+      "reviewed": false,
+      "note": "Greek New Testament, edition-specific numbering. Unreviewed against the Genesis 1 pilot."
+    },
+    {
+      "id": "luther-1912",
+      "label": "Luther Bible 1912",
+      "kind": "canon",
+      "dataset": "luther1912",
+      "reviewed": false,
+      "note": "Own chapter/verse numbering. Unreviewed against the Genesis 1 pilot."
+    },
+    {
+      "id": "segond-1910",
+      "label": "Louis Segond (1910)",
+      "kind": "canon",
+      "dataset": "segond1910",
+      "reviewed": false,
+      "note": "Own chapter/verse numbering. Unreviewed against the Genesis 1 pilot."
+    },
+    {
+      "id": "delitzsch-1877",
+      "label": "Delitzsch Hebrew NT (1877)",
+      "kind": "canon",
+      "dataset": "delitzsch",
+      "reviewed": false,
+      "note": "Hebrew New Testament. Unreviewed against the Genesis 1 pilot."
+    },
+    {
+      "id": "delitzsch-1901",
+      "label": "Delitzsch Hebrew NT (1901, vocalized)",
+      "kind": "canon",
+      "dataset": "delitzsch1901",
+      "reviewed": false,
+      "note": "Own numbering differing from canon.js in seven New Testament chapters. Unreviewed against the Genesis 1 pilot."
+    },
+    {
+      "id": "armwestern-1853",
+      "label": "Western Armenian NT (1853)",
+      "kind": "canon",
+      "dataset": "armwestern",
+      "reviewed": false,
+      "note": "Under verse-boundary audit. Unreviewed against the Genesis 1 pilot."
+    },
+    {
       "id": "lxx-aligned",
       "label": "LXX alignment pilot (Genesis 1)",
       "kind": "virtual",
@@ -52,6 +108,12 @@
     "lxx-aligned": "lxx-aligned",
     "web": "web-c",
     "kjv": "kjv",
-    "he": "oshb"
+    "he": "oshb",
+    "byz": "byz-greek",
+    "luther1912": "luther-1912",
+    "segond1910": "segond-1910",
+    "delitzsch": "delitzsch-1877",
+    "delitzsch1901": "delitzsch-1901",
+    "armwestern": "armwestern-1853"
   }
 }

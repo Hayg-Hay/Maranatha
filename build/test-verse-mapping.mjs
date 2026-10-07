@@ -98,6 +98,39 @@ function mutationChecks() {
       m.entries.push({ source: { book: 'JOB', chapter: '16', kind: 'unnumbered', segmentIndex: 99 }, groupId: 'TMP', to: [{ book: 'JOB', chapter: 16, verse: 1 }], status: 'proposal', provenance: { ledger: 'x', rowId: 'x', textHashes: { greek: hex } } });
       return m;
     },
+    // The six independently reproduced validator holes.
+    'reject-verified-top-without-human': () => { const m = clone(mapping); m.status = 'verified'; return m; },
+    'reject-verified-group-without-human': () => { const m = clone(mapping); m.groups[0].status = 'verified'; return m; },
+    'reject-verified-entry-without-human': () => { const m = clone(mapping); m.entries[0].status = 'verified'; return m; },
+    'reject-invented-evidence-row': () => { const m = clone(mapping); m.entries[0].provenance.rowId = 'does-not-exist'; return m; },
+    'reject-wrong-bound-text-hashes': () => {
+      const m = clone(mapping);
+      Object.keys(m.entries[0].provenance.textHashes).forEach((k) => { m.entries[0].provenance.textHashes[k] = '0'.repeat(64); });
+      return m;
+    },
+    'reject-unknown-top-status': () => { const m = clone(mapping); m.status = 'bogus'; return m; },
+    // Missing member, wrong unnumbered kind/index, conflicts.
+    'reject-missing-group-member': () => {
+      const m = clone(mapping);
+      const i = m.entries.findIndex((e) => e.provenance.rowId === 'GEN1-6');
+      m.entries.splice(i, 1);
+      return m;
+    },
+    'reject-unnumbered-kind-on-verse-segment': () => {
+      const m = clone(mapping);
+      m.groups.push({ id: 'BADU', sources: [{ book: 'GEN', chapter: '1', kind: 'unnumbered', segmentIndex: 0 }], targets: [{ book: 'GEN', chapter: 1, verse: 2 }], evidence: ['x'], status: 'proposal' });
+      m.entries.push({ source: { book: 'GEN', chapter: '1', kind: 'unnumbered', segmentIndex: 0 }, groupId: 'BADU', to: [{ book: 'GEN', chapter: 1, verse: 2 }], status: 'proposal', provenance: { ledger: 'x', rowId: 'x', textHashes: { greek: hex } } });
+      return m;
+    },
+    'reject-conflicting-groups': () => {
+      const m = clone(mapping);
+      m.groups.push({ id: 'CLASH', sources: [{ book: 'GEN', chapter: '1', kind: 'verse', label: '1' }], targets: [{ book: 'GEN', chapter: 1, verse: 1 }], evidence: ['x'], status: 'proposal' });
+      return m;
+    },
+    // Forged bindings and unsupported scheme declaration.
+    'reject-forged-ledger-binding': () => { const m = clone(mapping); m.bindings.ledger.sha256 = hex; return m; },
+    'reject-forged-corpus-binding': () => { const m = clone(mapping); m.bindings.web.sha256 = hex; return m; },
+    'reject-unsupported-scheme': () => { const m = clone(mapping); m.sourceScheme = 'not-a-registered-scheme'; return m; },
   };
   for (const [name, make] of Object.entries(cases)) {
     let result;
@@ -144,6 +177,87 @@ function syntheticShapeChecks() {
     negativeAssertions: [],
   };
   ok(unnumbered, 'accept-unnumbered');
+
+  const attestedNegative = {
+    status: 'proposal', review: { humanApproval: null },
+    groups: [{ id: 'N1', sources: [{ book: 'GEN', chapter: '1', kind: 'verse', label: '1' }], targets: [{ book: 'GEN', chapter: 1, verse: 1 }], evidence: ['x'], collective: false, status: 'proposal' }],
+    entries: [{ source: { book: 'GEN', chapter: '1', kind: 'verse', label: '1' }, groupId: 'N1', to: [{ book: 'GEN', chapter: 1, verse: 1 }], status: 'proposal', provenance: prov }],
+    negativeAssertions: [{ target: { book: 'GEN', chapter: 2, verse: 1 }, attestation: 'No Greek counterpart in the covered pilot edition.', provenance: { source: 'fixture' } }],
+  };
+  ok(attestedNegative, 'accept-attested-negative');
+
+  // A fully verifiable synthetic document: explicit valid human approval on
+  // every scope. This is a clearly synthetic fixture and does not touch or
+  // elevate the real still-proposed Genesis 1 pilot.
+  const verified = {
+    status: 'verified', review: { humanApproval: { approvedBy: 'fixture-reviewer', date: '2026-10-07' } },
+    groups: [{ id: 'V1', sources: [{ book: 'GEN', chapter: '1', kind: 'verse', label: '1' }], targets: [{ book: 'GEN', chapter: 1, verse: 1 }], evidence: ['x'], collective: false, status: 'verified' }],
+    entries: [{ source: { book: 'GEN', chapter: '1', kind: 'verse', label: '1' }, groupId: 'V1', to: [{ book: 'GEN', chapter: 1, verse: 1 }], status: 'verified', provenance: prov }],
+    negativeAssertions: [],
+  };
+  ok(verified, 'accept-synthetic-verified-with-human');
+
+  const inconsistentVerified = clone(verified);
+  inconsistentVerified.entries[0].status = 'proposal';
+  const inconsistent = validateMapping(inconsistentVerified, { native, canon, checkBindings: false });
+  out('reject-verified-document-with-proposal-entry', !inconsistent.ok, inconsistent.errors[0] || 'rejected');
+}
+
+// ---------------------------------------------------------------------------
+// Resolver safety: conflicting, missing-member and unattested metadata fail
+// closed instead of guessing.
+// ---------------------------------------------------------------------------
+function resolverSafetyChecks() {
+  const ctx = { window: {} };
+  vm.runInNewContext(fs.readFileSync(path.join(root, 'verse-mapping.js'), 'utf8'), ctx);
+  const api = ctx.window.MARANATHA_VERSE_MAPPING;
+
+  const conflicting = {
+    status: 'proposal', review: { humanApproval: null },
+    groups: [
+      { id: 'A', sources: [{ book: 'GEN', chapter: '1', kind: 'verse', label: '1' }], targets: [{ book: 'GEN', chapter: 1, verse: 1 }], evidence: ['x'], status: 'proposal' },
+      { id: 'B', sources: [{ book: 'GEN', chapter: '1', kind: 'verse', label: '2' }], targets: [{ book: 'GEN', chapter: 1, verse: 1 }], evidence: ['x'], status: 'proposal' },
+    ],
+    entries: [
+      { source: { book: 'GEN', chapter: '1', kind: 'verse', label: '1' }, groupId: 'A', to: [{ book: 'GEN', chapter: 1, verse: 1 }], status: 'proposal', provenance: {} },
+      { source: { book: 'GEN', chapter: '1', kind: 'verse', label: '2' }, groupId: 'B', to: [{ book: 'GEN', chapter: 1, verse: 1 }], status: 'proposal', provenance: {} },
+    ],
+    negativeAssertions: [],
+  };
+  const r1 = api.createResolver(conflicting, { native });
+  out('resolver-conflicting-targets-fail-closed', r1.resolveTarget('GEN', 1, 1).state === 'ambiguous-metadata');
+
+  const missing = {
+    status: 'proposal', review: { humanApproval: null },
+    groups: [{ id: 'M', sources: [{ book: 'GEN', chapter: '1', kind: 'verse', label: '1' }, { book: 'GEN', chapter: '1', kind: 'verse', label: '404' }], targets: [{ book: 'GEN', chapter: 1, verse: 1 }], evidence: ['x'], collective: true, status: 'proposal' }],
+    entries: [
+      { source: { book: 'GEN', chapter: '1', kind: 'verse', label: '1' }, groupId: 'M', to: [{ book: 'GEN', chapter: 1, verse: 1 }], status: 'proposal', provenance: {} },
+      { source: { book: 'GEN', chapter: '1', kind: 'verse', label: '404' }, groupId: 'M', to: [{ book: 'GEN', chapter: 1, verse: 1 }], status: 'proposal', provenance: {} },
+    ],
+    negativeAssertions: [],
+  };
+  const r2 = api.createResolver(missing, { native });
+  out('resolver-missing-member-retains-missing-state', r2.resolveTarget('GEN', 1, 1).state === 'missing-source-text');
+
+  const unattested = {
+    status: 'proposal', review: { humanApproval: null },
+    groups: [], entries: [],
+    negativeAssertions: [{ target: { book: 'GEN', chapter: 1, verse: 1 }, attestation: '', provenance: {} }],
+  };
+  const r3 = api.createResolver(unattested, { native });
+  out('resolver-unattested-negative-not-definitive', r3.resolveTarget('GEN', 1, 1).state !== 'no-corresponding-verse');
+
+  const duplicateSource = {
+    status: 'proposal', review: { humanApproval: null },
+    groups: [{ id: 'D', sources: [{ book: 'GEN', chapter: '1', kind: 'verse', label: '1' }], targets: [{ book: 'GEN', chapter: 1, verse: 1 }], evidence: ['x'], status: 'proposal' }],
+    entries: [
+      { source: { book: 'GEN', chapter: '1', kind: 'verse', label: '1' }, groupId: 'D', to: [{ book: 'GEN', chapter: 1, verse: 1 }], status: 'proposal', provenance: {} },
+      { source: { book: 'GEN', chapter: '1', kind: 'verse', label: '1' }, groupId: 'D', to: [{ book: 'GEN', chapter: 1, verse: 1 }], status: 'proposal', provenance: {} },
+    ],
+    negativeAssertions: [],
+  };
+  const r4 = api.createResolver(duplicateSource, { native });
+  out('resolver-duplicate-source-fails-closed', r4.resolveSource({ book: 'GEN', chapter: '1', kind: 'verse', label: '1' }).ambiguous === true);
 }
 
 // ---------------------------------------------------------------------------
@@ -180,6 +294,7 @@ validatorChecks();
 mutationChecks();
 syntheticShapeChecks();
 resolverChecks();
+resolverSafetyChecks();
 
 let failed = 0;
 for (const [name, ok, detail] of results) {

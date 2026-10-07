@@ -30,10 +30,15 @@
     "edges": "Each source member names its group's complete target set. A group is a collective passage correspondence, not a claim of exact individual equivalence."
   },
   "schemes": "data/versification-schemes.json",
+  "sourceScheme": "lxx-swete-native",
+  "targetScheme": "web-c",
+  "targetSchemeNote": "Target coordinates are the Maranatha navigation canon anchored to the WEB Catholic Edition. They do not assert that every edition or manuscript shares that numbering; Genesis 1 is the only proposal-covered passage.",
+  "hashMethod": "sha256-lf",
   "bindings": {
     "lxx": {
       "path": "data/lxx-swete.json",
       "sha256": "fd52aa2f5f65f7e0a9c76d9cf203756c66f43ac1a91396d928be3b30d8ed1f2e",
+      "hash": "sha256-lf",
       "source": {
         "repo": "OpenGreekAndLatin/First1KGreek",
         "commit": "03776b39f4047c5cff06f5296fae4b2bae4b08fb",
@@ -232,28 +237,37 @@
     },
     "web": {
       "path": "data/web.json",
-      "sha256": "de46e03f964e8b83c811b871f5af5382fd2b787a0e0ffc0bd7b1a967cc05f2e2",
+      "sha256": "86ae26ece1aa53ddb3d30f83d300ccc89e6cb64bf20b8b751b0f5d652ac8e0a6",
+      "hash": "sha256-lf",
       "source": "World English Bible Catholic Edition (eng-web-c), eBible.org — https://ebible.org/eng-web-c/. Public domain. Fetched via build/import-eng-web-c.mjs.",
-      "declaredSha256": "de46e03f964e8b83c811b871f5af5382fd2b787a0e0ffc0bd7b1a967cc05f2e2"
+      "declaredSha256": "de46e03f964e8b83c811b871f5af5382fd2b787a0e0ffc0bd7b1a967cc05f2e2",
+      "rebound": true
     },
     "he": {
       "path": "data/he.json",
-      "sha256": "fcdb6acd521597a0e201c3e583e66797f23f1486b30449684658cae0580092d9",
+      "sha256": "67d76652c281683c3273626b7af1e222c1383313557d3b56abfd75d88a8930a7",
+      "hash": "sha256-lf",
       "source": "Open Scriptures Hebrew Bible (OSHB). Original work of the Open Scriptures Hebrew Bible available at https://github.com/openscriptures/morphhb, licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Based on the Westminster Leningrad Codex (public domain). Morphological markup stripped during import — only surface text (consonants, niqqud, cantillation) retained. Covers the 39 protocanonical Old Testament books only; the 7 Catholic deuterocanonical books have no Hebrew source text and are not included.",
-      "declaredSha256": "fcdb6acd521597a0e201c3e583e66797f23f1486b30449684658cae0580092d9"
+      "declaredSha256": "fcdb6acd521597a0e201c3e583e66797f23f1486b30449684658cae0580092d9",
+      "rebound": true
     },
     "kjv": {
       "path": "data/kjv.json",
-      "sha256": "080d934d970ed646fce1c0f93f15dc280b14194ede81094f803038037ea2c43a",
+      "sha256": "93645e66fc275684f5e5f463808686473ea5000c8aea0213757aa3b1d0aff29a",
+      "hash": "sha256-lf",
       "source": "scrollmapper/bible_databases (2024 branch), json/t_kjv.json — public domain in the US. Standard 66-book edition; does not include the Catholic deuterocanonical books.",
-      "declaredSha256": "93645e66fc275684f5e5f463808686473ea5000c8aea0213757aa3b1d0aff29a",
-      "rebound": true
+      "declaredSha256": "93645e66fc275684f5e5f463808686473ea5000c8aea0213757aa3b1d0aff29a"
     },
     "canon": {
       "path": "data/canon.js",
-      "sha256": "8a0a8a6ab439cc30d14b2ab51bdada78ebc3ca2648277e51f503e38579cc7ecf",
-      "declaredSha256": "43b872548d902238cb0584fc55e6c3b81861e6d9ec14e1a240da722b9652f094",
-      "rebound": true
+      "sha256": "43b872548d902238cb0584fc55e6c3b81861e6d9ec14e1a240da722b9652f094",
+      "hash": "sha256-lf",
+      "declaredSha256": "43b872548d902238cb0584fc55e6c3b81861e6d9ec14e1a240da722b9652f094"
+    },
+    "ledger": {
+      "path": "build/reviews/lxx-genesis1-evidence.json",
+      "sha256": "1ae0b0ada5dfa1824627cdfa3c506b7a3d4c23ee1eb9281e4276e343556c04f7",
+      "hash": "sha256-lf"
     }
   },
   "groups": [

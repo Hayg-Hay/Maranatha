@@ -564,6 +564,8 @@ const refs = {
   };
   const ALIGNMENT_MAP_URL = 'data/lxx-swete-alignment.js?v=stage2a-20261007';
   const ALIGNMENT_SCHEMES_URL = 'data/versification-schemes.js?v=stage2a-20261007';
+  const ALIGNMENT_NOTICE_DEFAULT =
+    'Canon view only. AI-proposed correspondences awaiting human review; the Greek is read from the native Swete text and is never guessed.';
 
   const viewState = {
     mode: 'browse',       // 'browse' | 'reference' | 'search'
@@ -1516,6 +1518,7 @@ function init() {
       : cell.state === 'no-corresponding-verse' ? '(no corresponding verse)'
       : cell.state === 'missing-source-text' ? '(source text not loaded)'
       : cell.state === 'missing-edition' ? '(not available in this edition)'
+      : cell.state === 'ambiguous-metadata' ? '(alignment metadata is ambiguous)'
       : '(loading\u2026)';
     const note = document.createElement('small');
     note.className = 'verse-source-note';
@@ -1526,9 +1529,11 @@ function init() {
         ? 'The Swete Septuagint source does not cover this book.'
         : cell.state === 'missing-source-text'
           ? 'The native source segment could not be read.'
-          : cell.state === 'no-corresponding-verse'
-            ? (cell.note || '')
-            : '';
+          : cell.state === 'ambiguous-metadata'
+            ? 'The alignment metadata for this reference conflicts; no correspondence is shown.'
+            : cell.state === 'no-corresponding-verse'
+              ? (cell.note || '')
+              : '';
     td.append(note);
   }
 
@@ -3219,6 +3224,26 @@ function init() {
     return { id: 'lxx-aligned', label: 'LXX alignment (Genesis 1)', short: 'LXX alignment', virtual: true };
   }
 
+  // Warns, before reading the pilot, when a currently selected edition has no
+  // Genesis 1 proposal coverage. Those editions are compared as unreviewed,
+  // edition-specific numbering; no Greek correspondence is asserted against
+  // them. The coverage set comes from the compiled scheme registry.
+  function updateAlignmentNotice() {
+    const note = refs.alignmentNotice;
+    if (!note) return;
+    if (!alignmentEnabled()) { note.textContent = ALIGNMENT_NOTICE_DEFAULT; return; }
+    const registry = window.MARANATHA_VERSIFICATION_SCHEMES;
+    const coverage = new Set(
+      (registry && registry.comparisonCoverage && registry.comparisonCoverage.editions) || ['web', 'kjv', 'he'],
+    );
+    const unreviewed = displayTranslations(selectedTranslations())
+      .map((t) => t.id)
+      .filter((id) => id !== 'lxx-swete' && !coverage.has(id));
+    note.textContent = unreviewed.length
+      ? `Warning: the Genesis 1 pilot is compared only with WEB/KJV/OSHB. Selected edition(s) ${unreviewed.join(', ')} use unreviewed, edition-specific numbering; no Greek correspondence is asserted against them.`
+      : ALIGNMENT_NOTICE_DEFAULT;
+  }
+
   // Loads the scheme and mapping metadata exactly once, then the native Greek
   // corpus through the shared queued loader. Every caller is notified; a script
   // is never added twice while a load is in flight or already complete.
@@ -3657,6 +3682,7 @@ function init() {
     // including programmatic transitions (reference actions, search returning
     // to Canon) and locale redraws — not only the View select's change event.
     updateReferenceHint();
+    updateAlignmentNotice();
     // Exactly one Book/Chapter mechanism is shown at a time: the canon bar in
     // canon view, the LXX bar in the LXX view, and the two independent pane
     // controls in the parallel view. The View selector stays visible in all.

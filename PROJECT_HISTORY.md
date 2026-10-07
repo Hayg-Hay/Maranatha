@@ -2661,4 +2661,30 @@ Presentation tests12/12, Stage2a UI checks37/37, resolver tests28/28. All source
 texts/labels/flags and existing corpora/importers remain unchanged. Six independent
 validator failures still block overall Stage2a acceptance. This branch is only
 an unfinished local draft; no merge, push or deletion authorized or performed.
+
+### 2026-10-07 — Stage2a validator/evidence repair and resolver hardening
+
+Continuing the unfinished Stage2a draft (f2b6b68) in the isolated checkout
+build/cache/lxx-stage2a-implementation on codex/lxx-stage2a. The accepted
+one-verse-per-row Genesis1:6/7 presentation is preserved unchanged (12/12
+desktop/mobile verse-row checks; check-stage2a 37/37). Six independently
+reproduced default-validator holes are closed: a verified document, group or
+entry without valid human approval, an invented provenance.rowId, wrong bound
+text hashes, and an unsupported status are all rejected; `--require-verified`
+still rejects the still-proposed pilot. The validator now loads and hash-binds
+the proposal ledger, resolves each rowId, and checks the source ref, complete
+target set and text hashes against the ledger and the bound source/comparison
+corpora (target locations proven by content hash, never by matching verse
+numbers); collective6-7 is jointly substantiated by both rows. The resolver
+fails closed on conflicting/duplicate claims, retains missing-source state when
+any group member is absent, refuses unattested "no counterpart" claims, and
+validates unnumbered kind/index. Bindings use a documented canonical
+`sha256-lf` (CRLF→LF) hash so fresh clones verify; the compiler now binds the
+ledger itself. Mapping and registry metadata declare source/target schemes and
+warn when the pilot is compared against an unreviewed edition. Mutation
+coverage: validator 47/47 (independent probe 0 failures), check-stage2a 37/37,
+verse-rows 12/12, and all Stage1/Stage1b/native/disclosures/native-reference
+checks pass with full npm test exit0 and no skips. No merge, push or deletion;
+human adjudication and phone testing remain open. Report:
+build/reports/stage2a-REPORT.md.
 See build/reports/stage2a-DRAFT-STATUS.md for the precise scope and blockers.
