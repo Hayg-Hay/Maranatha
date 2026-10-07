@@ -675,6 +675,9 @@ function init() {
         try {
             groups = parser.parseMulti(refs.reference.value);
         } catch (error) {
+            // Invalid input still switches the visible panes to Canon: the
+            // selector already changed, so the DOM must follow it.
+            render({ scrollToReference: false });
             setMessage(error.message);
             return;
         }
@@ -1866,18 +1869,22 @@ function init() {
   const SEARCH_RESULT_CAP = 300;
 
   function performSearch() {
+    // Text search is canon-only (it indexes canon-numbered translations):
+    // invoking it from the LXX or parallel view returns to the canon view.
+    // This happens before the empty/error returns too, and the view is
+    // re-rendered so the visible panes always match the selector.
+    refs.viewMode.value = 'canon';
     const query = refs.search.value.trim();
     if (!query) {
+      render({ scrollToReference: false });
       setMessage('Enter a word or phrase to search for.');
       return;
     }
-    // Text search is canon-only (it indexes canon-numbered translations):
-    // invoking it from the LXX or parallel view returns to the canon view.
-    refs.viewMode.value = 'canon';
     populateSearchTranslations();
     const t = TRANSLATIONS.find(x => x.id === refs.searchTranslation.value);
     const data = t && window.MARANATHA_TRANSLATIONS[t.id];
     if (!t || !data) {
+      render({ scrollToReference: false });
       setMessage('Select a loaded translation to search.');
       return;
     }
@@ -3181,7 +3188,10 @@ function init() {
       refs.parallelLxxBook,
       refs.parallelLxxChapter,
       refs.parallelLxxContent,
-      () => renderParallelLxxPane(),
+      // Guard the late lazy-load callback: if the user left the parallel view
+      // before the 7.5 MB LXX file finished, do not render its pane (which
+      // would otherwise reveal the LXX footer attribution in Canon view).
+      () => { if (refs.viewMode.value === 'parallel') renderParallelLxxPane(); },
     );
   }
 
@@ -3202,7 +3212,11 @@ function init() {
     }
 
     const chapterNum = Number(refs.parallelChapter.value) || 1;
-    const verseCount = chapterExtent(book.id, chapterNum);
+    // Scope the verse extent to the pane's chosen translation. Using the global
+    // chapterExtent() would let another loaded edition with a longer chapter
+    // (e.g. Delitzsch 1901's 52-verse John 1) add phantom rows to an edition
+    // that ends earlier (Delitzsch eBible has 51).
+    const verseCount = extentForTranslations([t], book.id, chapterNum);
     const name = (locale.books[book.id] && locale.books[book.id].name) || book.id;
     const layout = narrowScreen.matches ? 'mobile' : 'multicolumn';
     renderInto(container, () => {

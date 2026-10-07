@@ -551,6 +551,10 @@ code { font-family:Consolas, monospace; }
 .lxx-segment.lxx-unnumbered .lxx-text { font-style:italic; color:var(--muted); }
 .lxx-flag { flex:0 0 auto; color:var(--accent); cursor:help; font-size:.8em; }
 #lxx-attribution { display:block; margin-top:6px; }
+/* An ID selector's display:block outranks the user-agent [hidden]{display:none},
+   so the footer attribution needs the same explicit hidden rule the chapter bar
+   got — otherwise a late LXX load can show it in Canon view. */
+#lxx-attribution[hidden] { display:none; }
 @media (max-width:700px) {
   .lxx-text { font-size:1.05rem; }
   .lxx-verse-num { min-width:2em; }
