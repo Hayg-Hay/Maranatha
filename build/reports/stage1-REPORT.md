@@ -28,22 +28,25 @@ SIR 1, MAT 5, JHN 1 (baseline captured from the base app before any change).
 ## git diff --stat (lxx-audit..HEAD)
 
 ```
- .gitignore                    |   1 +
- PROJECT_HISTORY.md            |  63 ++++++++
- README.md                     |  26 ++-
- app.js                        | 154 ++++++++++++++++++
- build/check-stage1.mjs        | 315 ++++++++++++++++++++++++++++++++++++
- build/import-lxx-swete.mjs    | 365 ++++++++++++++++++++++++++++++++++++++++++
- build/test-service-worker.mjs |  10 +-
- build/validate-lxx-native.mjs | 130 +++++++++++++++
- data/LICENSE-lxx-swete.md     |  55 +++++++
- data/lxx-swete.js             |   2 +
- data/lxx-swete.json           |   1 +
- index.html                    |  17 +-
- package.json                  |   1 +
- service-worker.js             |   2 +-
- style.css                     |  21 +++
- 15 files changed, 1153 insertions(+), 10 deletions(-)
+ .gitignore                     |   1 +
+ PROJECT_HISTORY.md             |  63 +++++++
+ README.md                      |  26 ++-
+ app.js                         | 154 +++++++++++++++++
+ build/check-stage1.mjs         | 315 +++++++++++++++++++++++++++++++++++
+ build/import-lxx-swete.mjs     | 365 +++++++++++++++++++++++++++++++++++++++++
+ build/reports/stage1-REPORT.md | 100 +++++++++++
+ build/test-delitzsch.mjs       |   2 +-
+ build/test-delitzsch1901.mjs   |   2 +-
+ build/test-service-worker.mjs  |  10 +-
+ build/validate-lxx-native.mjs  | 130 +++++++++++++++
+ data/LICENSE-lxx-swete.md      |  55 +++++++
+ data/lxx-swete.js              |   2 +
+ data/lxx-swete.json            |   1 +
+ index.html                     |  17 +-
+ package.json                   |   1 +
+ service-worker.js              |   2 +-
+ style.css                      |  21 +++
+ 18 files changed, 1255 insertions(+), 12 deletions(-)
 ```
 
 ## Data file size
@@ -65,9 +68,11 @@ SIR 1, MAT 5, JHN 1 (baseline captured from the base app before any change).
    was added beyond the six listed invariants; the regression also gained an LXX
    smoke path.
 4. **Shell cache bumped v45 -> v46** (app.js/index.html/style.css are shell
-   files) and `build/test-service-worker.mjs` expectations updated accordingly.
-   The translation data cache (`v3`) is unchanged; `data/lxx-swete.js` routes
-   through the existing data-cache matcher, never the shell precache.
+   files) and the hardcoded version expectations in `test-service-worker.mjs`,
+   `test-delitzsch.mjs` and `test-delitzsch1901.mjs` updated accordingly. Full
+   `npm test` passes. The translation data cache (`v3`) is unchanged;
+   `data/lxx-swete.js` routes through the existing data-cache matcher, never the
+   shell precache.
 5. **`package.json`**: added only `"check:stage1"`. Existing `test` unchanged.
    `check-stage1`/`validate-lxx-native` are intentionally not in `npm test`
    because they read the raw B snapshots, which are not committed.
