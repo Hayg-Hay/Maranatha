@@ -561,6 +561,24 @@ code { font-family:Consolas, monospace; }
 }
 
 /* ----------------------------------------------------------
+   LXX alignment pilot (opt-in Canon column)
+
+   A virtual column inside the Canon comparison table. Greek text is
+   shown from the native Swete source. Genesis 1:6/7 follow the user's
+   verse-row presentation choice with a compact boundary note.
+---------------------------------------------------------- */
+.alignment-pilot { margin-top:10px; }
+.alignment-notice { margin:6px 0 0; max-width:60ch; }
+.aligned-cell { vertical-align:top; }
+.aligned-source { display:block; }
+.aligned-source + .aligned-source { margin-top:4px; }
+.aligned-source-ref { display:inline-block; margin-inline-end:.4em; color:var(--muted); font-size:.78rem; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.aligned-cell .lxx-text { font-size:1.05rem; }
+.aligned-note { display:block; margin-top:.4em; font-size:.8em; opacity:.85; }
+.mobile-verse-text.aligned-cell { display:block; }
+.alignment-notice[hidden] { display:none; }
+
+/* ----------------------------------------------------------
    Parallel reading (independent numbering)
 
    Two independent panes on desktop; stacked LXX then translation on

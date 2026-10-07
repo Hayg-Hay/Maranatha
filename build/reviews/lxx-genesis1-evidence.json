@@ -1,0 +1,1318 @@
+{
+  "version": 1,
+  "status": "proposal",
+  "review": {
+    "humanApproval": null,
+    "reviewers": [
+      {
+        "id": "codex",
+        "kind": "ai",
+        "role": "textual proposal author"
+      }
+    ],
+    "requirement": "Human adjudication before correspondences are described as verified."
+  },
+  "license": {
+    "id": "CC-BY-SA-4.0",
+    "attribution": "Greek: First1KGreek / Swete, CC BY-SA 4.0; Hebrew: Open Scriptures Hebrew Bible, CC BY 4.0; WEB Catholic Edition and imported KJV: source declarations in shipped datasets.",
+    "changes": "Editorial correspondence proposals only; no Scripture text changed."
+  },
+  "bindings": {
+    "lxx": {
+      "path": "data/lxx-swete.json",
+      "sha256": "fd52aa2f5f65f7e0a9c76d9cf203756c66f43ac1a91396d928be3b30d8ed1f2e",
+      "source": {
+        "repo": "OpenGreekAndLatin/First1KGreek",
+        "commit": "03776b39f4047c5cff06f5296fae4b2bae4b08fb",
+        "files": [
+          {
+            "path": "data/tlg0527/tlg001/tlg0527.tlg001.1st1K-grc1.xml",
+            "sha256": "6e410d3e8eae24874f103b63047ac89c7227c2733474cddbb592cf6c37e717f3"
+          },
+          {
+            "path": "data/tlg0527/tlg002/tlg0527.tlg002.1st1K-grc1.xml",
+            "sha256": "11c5f357ec79815948c6a13b723c95a25328bb64f8f9861e168ee6cb74f8e2ec"
+          },
+          {
+            "path": "data/tlg0527/tlg003/tlg0527.tlg003.1st1K-grc1.xml",
+            "sha256": "e6507fd4800bbbcc2ac58a78b404f89a5504aec0743046ba0c2dff3c57a6de16"
+          },
+          {
+            "path": "data/tlg0527/tlg004/tlg0527.tlg004.1st1K-grc1.xml",
+            "sha256": "78aa544fa5bdc31723404848adc637a795d2826a8941a2350137d21e2ef099b7"
+          },
+          {
+            "path": "data/tlg0527/tlg005/tlg0527.tlg005.1st1K-grc1.xml",
+            "sha256": "dc146a0f8906279494134040ae3727360cefcfedeeb931aeaec91cec03eb72fa"
+          },
+          {
+            "path": "data/tlg0527/tlg006/tlg0527.tlg006.1st1K-grc1.xml",
+            "sha256": "2d74abf95ff9250dbdd00eba4b948c218bf68fd9a63e587a07747040025b9476"
+          },
+          {
+            "path": "data/tlg0527/tlg008/tlg0527.tlg008.1st1K-grc1.xml",
+            "sha256": "3d9f8fb6efc66edda5014fa189271fab7fbde403b73f5aa6461958f77579ac24"
+          },
+          {
+            "path": "data/tlg0527/tlg010/tlg0527.tlg010.1st1K-grc1.xml",
+            "sha256": "c69973e18bf87ba98e7fdef8ea0456a0d478b99b0291033da726f8acb648a484"
+          },
+          {
+            "path": "data/tlg0527/tlg011/tlg0527.tlg011.1st1K-grc1.xml",
+            "sha256": "445a1d88e416260803f1a6f8e52df1110aa991456238f283ac7cc6af6d769089"
+          },
+          {
+            "path": "data/tlg0527/tlg012/tlg0527.tlg012.1st1K-grc1.xml",
+            "sha256": "bfd1967042513a024858d5a15af9da9e783d8585f43cfda479c881ebd04662f1"
+          },
+          {
+            "path": "data/tlg0527/tlg013/tlg0527.tlg013.1st1K-grc1.xml",
+            "sha256": "3bd50974a1da62204f3bc617b546511b538634dceeabaf58122f053eabcde1b7"
+          },
+          {
+            "path": "data/tlg0527/tlg014/tlg0527.tlg014.1st1K-grc1.xml",
+            "sha256": "3eec1a02a061f9a6d9ec4311d355ef40866b5d710caf2d10152267babd53a3d5"
+          },
+          {
+            "path": "data/tlg0527/tlg015/tlg0527.tlg015.1st1K-grc1.xml",
+            "sha256": "0ddcd6201d3b3745611cf589801c528772c37e57580c5b8cf0ece26184d425a5"
+          },
+          {
+            "path": "data/tlg0527/tlg016/tlg0527.tlg016.1st1K-grc1.xml",
+            "sha256": "5513988b3e57eb0a889692b785092b683ad81564bbcbfd16e7723fd007c7481b"
+          },
+          {
+            "path": "data/tlg0527/tlg018/tlg0527.tlg018.1st1K-grc1.xml",
+            "sha256": "c2854296300a227c0c09cb39ea0743b933df0fd0ea1d1fb6d566c107ccf31250"
+          },
+          {
+            "path": "data/tlg0527/tlg019/tlg0527.tlg019.1st1K-grc1.xml",
+            "sha256": "82f2b01ea74646fa0f6d3d80a7470a1edf8095a11fc1e13a10e2d88678de0cb4"
+          },
+          {
+            "path": "data/tlg0527/tlg020/tlg0527.tlg020.1st1K-grc1.xml",
+            "sha256": "7e755379d0b3f04627597f47d154da8c2320850d35e33ecb6b674273e5049aaa"
+          },
+          {
+            "path": "data/tlg0527/tlg021/tlg0527.tlg021.1st1K-grc1.xml",
+            "sha256": "380bca2fc080d613a82cc8a468d83841d1af759b62aea0b609ef9aaa60d0a787"
+          },
+          {
+            "path": "data/tlg0527/tlg023/tlg0527.tlg023.1st1K-grc1.xml",
+            "sha256": "278fcb432ca9ff870510971a8377e7c57fc76d926bd279f9b6ce403bb1c82445"
+          },
+          {
+            "path": "data/tlg0527/tlg024/tlg0527.tlg024.1st1K-grc1.xml",
+            "sha256": "cdfe0b3033d4f20abcf160266c0efbee84e536f7e2331a9338f3af0bc2830c11"
+          },
+          {
+            "path": "data/tlg0527/tlg027/tlg0527.tlg027.1st1K-grc1.xml",
+            "sha256": "a028f5bccc6f23ed0b77f9d578cb08b91ca7b6b4f6dda6ed24efe790a8a9987c"
+          },
+          {
+            "path": "data/tlg0527/tlg029/tlg0527.tlg029.1st1K-grc1.xml",
+            "sha256": "d88896708e735578a1c1a5681f1a703d98e48de4d2877bc5d7fc5304493aa333"
+          },
+          {
+            "path": "data/tlg0527/tlg031/tlg0527.tlg031.1st1K-grc1.xml",
+            "sha256": "8c54d2269d065b517d41f6ba69d9e80e8390ef07583b84433968667a309bf4af"
+          },
+          {
+            "path": "data/tlg0527/tlg032/tlg0527.tlg032.1st1K-grc1.xml",
+            "sha256": "b38bd7b2005362f43e639c79ba7c54056ecb1dcae97fc6b12001f7b985a03da5"
+          },
+          {
+            "path": "data/tlg0527/tlg033/tlg0527.tlg033.1st1K-grc1.xml",
+            "sha256": "a4e14aeeafb3c88a6dc8e71bc62cb71d2026b95fb1a014f7e14609db394fa297"
+          },
+          {
+            "path": "data/tlg0527/tlg034/tlg0527.tlg034.1st1K-grc2.xml",
+            "sha256": "554121f0ed01f9754eb0a3910c28e7ffd9337fe59bf4cadcc54f6b13857ca7a1"
+          },
+          {
+            "path": "data/tlg0527/tlg036/tlg0527.tlg036.1st1K-grc1.xml",
+            "sha256": "f24de79f1c96b0577ed304d42001e9f53fef3199cc102d054df7729795272d99"
+          },
+          {
+            "path": "data/tlg0527/tlg037/tlg0527.tlg037.1st1K-grc1.xml",
+            "sha256": "ab1ee5a06f686e5b76245782cacc3e4da763f0b0e58eacea96f3f51d780f022f"
+          },
+          {
+            "path": "data/tlg0527/tlg038/tlg0527.tlg038.1st1K-grc1.xml",
+            "sha256": "bbbc5402e38b8c3d732436be69837ee1134afdcf05953df10829a88567bb19de"
+          },
+          {
+            "path": "data/tlg0527/tlg039/tlg0527.tlg039.1st1K-grc1.xml",
+            "sha256": "0d162e8ab6419b97d54ecbb874e8d4cdfd7fe9193f9b34854596d58e8ae539c9"
+          },
+          {
+            "path": "data/tlg0527/tlg040/tlg0527.tlg040.1st1K-grc1.xml",
+            "sha256": "ba9ebe6a8f84261a5c7bf40625248c21dc730c572aae0d8a6a546d17621b611d"
+          },
+          {
+            "path": "data/tlg0527/tlg041/tlg0527.tlg041.1st1K-grc1.xml",
+            "sha256": "7f4a3f090fcd4b2697515c5a59cb1ffc81718c42d9028223bc844c6d51098731"
+          },
+          {
+            "path": "data/tlg0527/tlg042/tlg0527.tlg042.1st1K-grc1.xml",
+            "sha256": "b0c232fefdbfd9e33862157e20f12137ae50227556fa01668561cfb5864a8359"
+          },
+          {
+            "path": "data/tlg0527/tlg043/tlg0527.tlg043.1st1K-grc1.xml",
+            "sha256": "41d53a9ba5343d4b6a1659f0b30574690343d7d88b2893355f931c57c53aa3de"
+          },
+          {
+            "path": "data/tlg0527/tlg044/tlg0527.tlg044.1st1K-grc1.xml",
+            "sha256": "c80657e88e5c59c466bf8c301b9b9442a5277762e9a0dbbf987c75e52465cbf1"
+          },
+          {
+            "path": "data/tlg0527/tlg045/tlg0527.tlg045.1st1K-grc1.xml",
+            "sha256": "70cc0ef34a4c12a280c3407249ca682dc5b8cd777dbf7d31456a7355da1a7a94"
+          },
+          {
+            "path": "data/tlg0527/tlg046/tlg0527.tlg046.1st1K-grc1.xml",
+            "sha256": "797fb6e785dcabcb1b59acbe9d3e2df54d133c78059edf638b6087a16600831a"
+          },
+          {
+            "path": "data/tlg0527/tlg047/tlg0527.tlg047.1st1K-grc1.xml",
+            "sha256": "a96a9a52d4469b74d3365371a96bca27858c8072db6a0466f6f414fa411e533a"
+          },
+          {
+            "path": "data/tlg0527/tlg048/tlg0527.tlg048.1st1K-grc1.xml",
+            "sha256": "0c9cbad97585c5eb8927867d9ce6de6f612bc48b5f13fb0a2ef70a4801e2dca5"
+          },
+          {
+            "path": "data/tlg0527/tlg049/tlg0527.tlg049.1st1K-grc1.xml",
+            "sha256": "6beecdc05482e53bd899d49274e323c234ccad9e6aadd1d89dc98c4f5ee1c6d5"
+          },
+          {
+            "path": "data/tlg0527/tlg050/tlg0527.tlg050.1st1K-grc1.xml",
+            "sha256": "5970c69ac576fbab9ab3ccb5edfa2175417ed5566f8404eb25cfe4071a5f6bd1"
+          },
+          {
+            "path": "data/tlg0527/tlg051/tlg0527.tlg051.1st1K-grc1.xml",
+            "sha256": "b2c2712ff7668f1b1a9bd85e548f3dd01e10f70d14c7e8a26a17f96c9b8de998"
+          },
+          {
+            "path": "data/tlg0527/tlg052/tlg0527.tlg052.1st1K-grc1.xml",
+            "sha256": "07b2e94928153b4d928b685c8121a0c9f685fc2956753b2c3cc62db294b3c44e"
+          },
+          {
+            "path": "data/tlg0527/tlg053/tlg0527.tlg053.1st1K-grc1.xml",
+            "sha256": "579c1c683cf79bfcab72629faa59aa65b59948a31dbcae7f2d53d04116401533"
+          },
+          {
+            "path": "data/tlg0527/tlg055/tlg0527.tlg055.1st1K-grc1.xml",
+            "sha256": "436dc7bdfcba0e551492d04689b89ed3fa51920bbf7c60bcfb437a542cc3dfec"
+          },
+          {
+            "path": "data/tlg0527/tlg057/tlg0527.tlg057.1st1K-grc1.xml",
+            "sha256": "7a2f052ef94ce28968f978a13c35f3199ce4a9e5adfbf32fce36d5a76002621c"
+          },
+          {
+            "path": "data/tlg0527/tlg059/tlg0527.tlg059.1st1K-grc1.xml",
+            "sha256": "2af9b536e2cf12e1f6bc52a6ceae10f02e7c75290d4f35623f40c35bc78a8453"
+          }
+        ]
+      }
+    },
+    "web": {
+      "path": "data/web.json",
+      "sha256": "de46e03f964e8b83c811b871f5af5382fd2b787a0e0ffc0bd7b1a967cc05f2e2",
+      "source": "World English Bible Catholic Edition (eng-web-c), eBible.org — https://ebible.org/eng-web-c/. Public domain. Fetched via build/import-eng-web-c.mjs."
+    },
+    "he": {
+      "path": "data/he.json",
+      "sha256": "fcdb6acd521597a0e201c3e583e66797f23f1486b30449684658cae0580092d9",
+      "source": "Open Scriptures Hebrew Bible (OSHB). Original work of the Open Scriptures Hebrew Bible available at https://github.com/openscriptures/morphhb, licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Based on the Westminster Leningrad Codex (public domain). Morphological markup stripped during import — only surface text (consonants, niqqud, cantillation) retained. Covers the 39 protocanonical Old Testament books only; the 7 Catholic deuterocanonical books have no Hebrew source text and are not included."
+    },
+    "kjv": {
+      "path": "data/kjv.json",
+      "sha256": "93645e66fc275684f5e5f463808686473ea5000c8aea0213757aa3b1d0aff29a",
+      "source": "scrollmapper/bible_databases (2024 branch), json/t_kjv.json — public domain in the US. Standard 66-book edition; does not include the Catholic deuterocanonical books."
+    },
+    "canon": {
+      "path": "data/canon.js",
+      "sha256": "43b872548d902238cb0584fc55e6c3b81861e6d9ec14e1a240da722b9652f094"
+    }
+  },
+  "rows": [
+    {
+      "id": "GEN1-1",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "1"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 1
+        }
+      ],
+      "groupId": "GEN1-1",
+      "reason": "Beginning: God creates heaven/heavens and earth.",
+      "differences": [
+        "Greek singular heaven versus English/Hebrew heavens is a wording difference, not a numbering change."
+      ],
+      "texts": {
+        "greek": "ΕΝ ΑΡΧΗ ἐποίησεν ὁ θεὸς τὸν οὐρανὸν καὶ τὴν γῆν.",
+        "web": "In the beginning, God created the heavens and the earth.",
+        "he": "בְּרֵאשִׁ֖ית בָּרָ֣א אֱלֹהִ֑ים אֵ֥ת הַשָּׁמַ֖יִם וְאֵ֥ת הָאָֽרֶץ׃",
+        "kjv": "In the beginning God created the heaven and the earth."
+      },
+      "textHashes": {
+        "greek": "c586391c88f0a00ef023085dbcef044cf07e9cefbf3027cda6e3f922d81fa0b8",
+        "web": "e1e1f5e1738c9f78a106da32b1b203168c41b74d4a4f8d3e0ef4d1f7759ea766",
+        "he": "707c96583d95fb1957b4916673ab36ec2d6cfdc168b97a7f7e2125f4d0f23647",
+        "kjv": "6f785a86b2716dcc5a48caa0de944396ba871d5c7f3bf776993648335fcb2bb2"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-2",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "2"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 2
+        }
+      ],
+      "groupId": "GEN1-2",
+      "reason": "Earth's initial condition, darkness over the deep, and divine spirit over waters.",
+      "differences": [
+        "Greek invisible/unprepared wording differs from formless/empty; retain both readings."
+      ],
+      "texts": {
+        "greek": "ἡ δὲ γῆ ἦν ἀόρατος καὶ ἀκατασκεύαστος, καὶ σκότος ἐπάνω τῆς ἀβύσσου· καὶ πνεῦμα θεοῦ ἐπεφέρετο ἐπάνω τοῦ ὕδατος.",
+        "web": "The earth was formless and empty. Darkness was on the surface of the deep and God’s Spirit was hovering over the surface of the waters.",
+        "he": "וְהָאָ֗רֶץ הָיְתָ֥ה תֹ֨הוּ֙ וָבֹ֔הוּ וְחֹ֖שֶׁךְ עַל־פְּנֵ֣י תְה֑וֹם וְר֣וּחַ אֱלֹהִ֔ים מְרַחֶ֖פֶת עַל־פְּנֵ֥י הַמָּֽיִם׃",
+        "kjv": "And the earth was without form, and void; and darkness was upon the face of the deep. And the Spirit of God moved upon the face of the waters."
+      },
+      "textHashes": {
+        "greek": "7c28455850a8eb044bbb7dde2ed14ea3379bf2ad795b024ea2a400868bf7c33a",
+        "web": "9d91d29443beddc745b58a90073f1a3a72a256fb74589ed13227eaed540642e7",
+        "he": "b98a95e859e0e89df38725b20422e520b2d40e65c4dcce402c920a2c596b53f3",
+        "kjv": "3164732a2a2f2fcb68d7dec5be737b18c66c8d743a98d34c8bb8eb866d822d4b"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-3",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "3"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 3
+        }
+      ],
+      "groupId": "GEN1-3",
+      "reason": "Command for light and its fulfillment in the same verse.",
+      "differences": [],
+      "texts": {
+        "greek": "καὶ εἶπεν ὁ θεός Γενηθήτω φῶς· καὶ ἐγένετο φῶς.",
+        "web": "God said, “Let there be light,” and there was light.",
+        "he": "וַיֹּ֥אמֶר אֱלֹהִ֖ים יְהִ֣י א֑וֹר וַֽיְהִי־אֽוֹר׃",
+        "kjv": "And God said, Let there be light: and there was light."
+      },
+      "textHashes": {
+        "greek": "7a89f47abc12937d8244e7a3c55b802330c803d5ef7e585367c083e608e334a2",
+        "web": "cb4a1430431bea285e7b033d04f804b09c7668deadba586d3626b0683ad7441c",
+        "he": "15da9f05ea03b1fbc8f4414eca91856d9951bd98efb5de14cc731fd2bab4a044",
+        "kjv": "cb548ddda54d247e18490056cf4de91c26531b9cce58851ca16841ec4c28f3bb"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-4",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "4"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 4
+        }
+      ],
+      "groupId": "GEN1-4",
+      "reason": "Light judged good, then separated from darkness.",
+      "differences": [],
+      "texts": {
+        "greek": "καὶ ἴδεν ὁ θεὸς τὸ φῶς ὅτι καλόν· καὶ διεχώρισεν ὁ θεὸς ἀνὰ μέσον τοῦ φωτὸς καὶ ἀνὰ μέσον τοῦ σκότους.",
+        "web": "God saw the light, and saw that it was good. God divided the light from the darkness.",
+        "he": "וַיַּ֧רְא אֱלֹהִ֛ים אֶת־הָא֖וֹר כִּי־ט֑וֹב וַיַּבְדֵּ֣ל אֱלֹהִ֔ים בֵּ֥ין הָא֖וֹר וּבֵ֥ין הַחֹֽשֶׁךְ׃",
+        "kjv": "And God saw the light, that it was good: and God divided the light from the darkness."
+      },
+      "textHashes": {
+        "greek": "56bb1a3b888d417627fb5dc20d29113cbb75e011cc43366b2b4e145fd3daf7f1",
+        "web": "3c41138c7007002504deb57c0b6eb993af328252c61ee2fd39937123e1be71f6",
+        "he": "b763364452ed7b5b725bb2b2c94e0922fad7105843fb72edde7e46e1ef47327a",
+        "kjv": "c7f4eaa2516c827656cee88fd3a1dd18f8854f601ba9931b7be38ebd27b4e3d9"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-5",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "5"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 5
+        }
+      ],
+      "groupId": "GEN1-5",
+      "reason": "Light/day and darkness/night named; evening/morning closes day one.",
+      "differences": [],
+      "texts": {
+        "greek": "καὶ ἐκάλεσεν ὁ θεὸς τὸ φῶς ἡμέραν, καὶ τὸ σκότος ἐκάλεσεν νύκτα. καὶ ἐγένετο ἑσπέρα καὶ ἐγένετο πρωί, ἡμέρα μία.",
+        "web": "God called the light “day”, and the darkness he called “night”. There was evening and there was morning, the first day.",
+        "he": "וַיִּקְרָ֨א אֱלֹהִ֤ים ׀ לָאוֹר֙ י֔וֹם וְלַחֹ֖שֶׁךְ קָ֣רָא לָ֑יְלָה וַֽיְהִי־עֶ֥רֶב וַֽיְהִי־בֹ֖קֶר י֥וֹם אֶחָֽד׃",
+        "kjv": "And God called the light Day, and the darkness he called Night. And the evening and the morning were the first day."
+      },
+      "textHashes": {
+        "greek": "71b2601a7d71a516801d3b984b23d6fd5d4cdebcf7f966bea37efabc24d320e9",
+        "web": "0dce18f172a1a967fd2892300f6e619c8c25fb12e77ad233243170498c5aa9aa",
+        "he": "8e646115991c68ec7158051cbd53130ac241f7fb80919fe2643d4391f95816f6",
+        "kjv": "e7e654aa7e64c7804c0d80f68bd47f0fad0c7623a7d7ded5a2e67804186ce1fc"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-6",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "6"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 6
+        },
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 7
+        }
+      ],
+      "groupId": "GEN1-6-7",
+      "reason": "Expanse command, division of waters and narrative fulfillment form a two-verse passage with 7.",
+      "differences": [
+        "Greek 'and it was so' closes source6; WEB/KJV/OSHB place the fulfillment formula at7. Treat6-7 as a group; do not assert exact individual boundaries."
+      ],
+      "texts": {
+        "greek": "Καὶ εἶπεν ὁ θεός Γενηθήτω στερέωμα ἐν μέσῳ τοῦ ὕδατος, καὶ ἔστω διαχωρίζον ἀνὰ μέσον ὕδατος καὶ ὕδατος· καὶ ἐγένετο οὕτως.",
+        "web": "God said, “Let there be an expanse in the middle of the waters, and let it divide the waters from the waters.”",
+        "he": "וַיֹּ֣אמֶר אֱלֹהִ֔ים יְהִ֥י רָקִ֖יעַ בְּת֣וֹךְ הַמָּ֑יִם וִיהִ֣י מַבְדִּ֔יל בֵּ֥ין מַ֖יִם לָמָֽיִם׃",
+        "kjv": "And God said, Let there be a firmament in the midst of the waters, and let it divide the waters from the waters."
+      },
+      "textHashes": {
+        "greek": "4b1fa7674897227e4068219df1ac8158ca6baf20d8973be292249e383570eebb",
+        "web": "1a09781f4a36790638ee0ccccf97702e940d4c62599a829f8624d1c4267cc444",
+        "he": "e12a9eb31bc91566101e8c722decc5ebf09db364313211f10b4d2014a077c642",
+        "kjv": "cf4e1d6641c75fb22db52e245c7c36d453bbbc539d35a2f0c80899f3879f2970"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-7",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "7"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 6
+        },
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 7
+        }
+      ],
+      "groupId": "GEN1-6-7",
+      "reason": "Making the expanse and separating waters above/below completes the command in6.",
+      "differences": [
+        "The fulfillment formula falls at different verse boundaries; whole source6-7 corresponds to target6-7."
+      ],
+      "texts": {
+        "greek": "καὶ ἐποίησεν ὁ θεὸς τὸ στερέωμα· καὶ διεχώρισεν ὁ θεὸς ἀνὰ μέσον τοῦ ὕδατος ὃ ἦν ὑποκάτω τοῦ στερεώματος, καὶ ἀνὰ μέσον τοῦ ὕδατος τοῦ ἐπάνω τοῦ στερεώματος.",
+        "web": "God made the expanse, and divided the waters which were under the expanse from the waters which were above the expanse; and it was so.",
+        "he": "וַיַּ֣עַשׂ אֱלֹהִים֮ אֶת־הָרָקִיעַ֒ וַיַּבְדֵּ֗ל בֵּ֤ין הַמַּ֨יִם֙ אֲשֶׁר֙ מִתַּ֣חַת לָרָקִ֔יעַ וּבֵ֣ין הַמַּ֔יִם אֲשֶׁ֖ר מֵעַ֣ל לָרָקִ֑יעַ וַֽיְהִי־כֵֽן׃",
+        "kjv": "And God made the firmament, and divided the waters which were under the firmament from the waters which were above the firmament: and it was so."
+      },
+      "textHashes": {
+        "greek": "344926dd15e2d862ead937265646f7906f31d5091c37894295fd4870bb033820",
+        "web": "d4c4e54ff5126daefa9e922e47d2e28a571affaa99f8dccf90b4d16658ae1370",
+        "he": "7d6775d76509ed45c91be466447c45ae56812747d892323d66cfe18afaec87a4",
+        "kjv": "199c4036de39622e4d6aec9c894f0554bec10e1e663f79e0e3c0059bd5afd6b4"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-8",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "8"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 8
+        }
+      ],
+      "groupId": "GEN1-8",
+      "reason": "Expanse named sky/heaven; evening/morning closes day two.",
+      "differences": [
+        "Greek additionally says God saw it was good; WEB/KJV/OSHB8 lack that clause."
+      ],
+      "texts": {
+        "greek": "καὶ ἐκάλεσεν ὁ θεὸς τὸ στερέωμα οὐρανόν· καὶ ἴδεν ὁ θεὸς ὅτι καλόν. καὶ ἐγένετο ἑσπέρα καὶ ἐγένετο πρωί, ἡμέρα δευτέρα.",
+        "web": "God called the expanse “sky”. There was evening and there was morning, a second day.",
+        "he": "וַיִּקְרָ֧א אֱלֹהִ֛ים לָֽרָקִ֖יעַ שָׁמָ֑יִם וַֽיְהִי־עֶ֥רֶב וַֽיְהִי־בֹ֖קֶר י֥וֹם שֵׁנִֽי׃",
+        "kjv": "And God called the firmament Heaven. And the evening and the morning were the second day."
+      },
+      "textHashes": {
+        "greek": "9644560711f86f0f52a29567aebfb304ddbf1420ad38b906a839657cf37baf8f",
+        "web": "17d461567661ae09dec4ccd27051147422a9d54964622b2b273c2e6001175fcc",
+        "he": "fb56a88ff5fd737941d88c6ce05182c4b7f5fa4b987ff54ebd562c97ad2d0738",
+        "kjv": "b81a0cf4aea052c2d8107decff4df4ff611488c48afaa31207e92bfb9a51511e"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-9",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "9"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 9
+        }
+      ],
+      "groupId": "GEN1-9",
+      "reason": "Gathering waters beneath heaven and appearance of dry land.",
+      "differences": [
+        "Greek additionally narrates the actual gathering and appearance after the fulfillment formula."
+      ],
+      "texts": {
+        "greek": "Καὶ εἶπεν ὁ θεός Συναχθήτω τὸ ὕδωρ τὸ ὑποκάτω τοῦ οὐρανοῦ εἰς συναγωγὴν μίαν, καὶ ὀφθήτω ἡ ξηρά· καὶ ἐγένετο οὕτως. καὶ συνήχθη τὸ ὕδωρ τὸ ὑποκάτω τοῦ οὐρανοῦ εἰς τὰς συναγωγὰς αὐτῶν, καὶ ὤφθη ἡ ξηρά.",
+        "web": "God said, “Let the waters under the sky be gathered together to one place, and let the dry land appear;” and it was so.",
+        "he": "וַיֹּ֣אמֶר אֱלֹהִ֗ים יִקָּו֨וּ הַמַּ֜יִם מִתַּ֤חַת הַשָּׁמַ֨יִם֙ אֶל־מָק֣וֹם אֶחָ֔ד וְתֵרָאֶ֖ה הַיַּבָּשָׁ֑ה וַֽיְהִי־כֵֽן׃",
+        "kjv": "And God said, Let the waters under the heaven be gathered together unto one place, and let the dry land appear: and it was so."
+      },
+      "textHashes": {
+        "greek": "d6bec8440d267663d1153eb7243f14bd8e41e5500c9a39867ef7dee3b5920b9d",
+        "web": "e16388ee6b4f40f740649e00fc6bc63cb96c284bc67039e5be4e9f7230ee6f9d",
+        "he": "32df9690c1ea4d75965d9864fd192af4cba9fb6acb4b6c578cbb25cc446af103",
+        "kjv": "47afd14e20ac2a18276c603b4dbaef8426e71b5a3cb8cd7281c1021cba0a52bd"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-10",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "10"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 10
+        }
+      ],
+      "groupId": "GEN1-10",
+      "reason": "Dry land named earth and gathered waters named seas; approval follows.",
+      "differences": [],
+      "texts": {
+        "greek": "καὶ ἐκάλεσεν ὁ θεὸς τὴν ξηρὰν γῆν, καὶ τὰ συστέματα τῶν ὑδάτων ἐκάλεσεν θαλάσσας· καὶ ἴδεν ὁ θεὸς ὅτι καλόν.",
+        "web": "God called the dry land “earth”, and the gathering together of the waters he called “seas”. God saw that it was good.",
+        "he": "וַיִּקְרָ֨א אֱלֹהִ֤ים ׀ לַיַּבָּשָׁה֙ אֶ֔רֶץ וּלְמִקְוֵ֥ה הַמַּ֖יִם קָרָ֣א יַמִּ֑ים וַיַּ֥רְא אֱלֹהִ֖ים כִּי־טֽוֹב׃",
+        "kjv": "And God called the dry land Earth; and the gathering together of the waters called he Seas: and God saw that it was good."
+      },
+      "textHashes": {
+        "greek": "96cf95499dda2126d6f63a5acaff67f0c4695aa483c4c7108e0ef711c1d9aeea",
+        "web": "ee8b26c604c3b462226eeea8a648106f7cb7d3ee7f9d06260b21010af7aa5aef",
+        "he": "41870bc70f712c4c43b31da2461f5ca953dfe56eff6336c5c3f1200771c7fe5e",
+        "kjv": "4e330418a7d2d455358befc7941622c9aad328c4aa803ca466aaa5ede7792aac"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-11",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "11"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 11
+        }
+      ],
+      "groupId": "GEN1-11",
+      "reason": "Command for earth to produce seed-bearing vegetation and fruit trees by kind.",
+      "differences": [
+        "Greek likeness wording is additional; source spellings are not corrected."
+      ],
+      "texts": {
+        "greek": "καὶ εἶπεν ὁ θεός Βλαστησάτω ἡ γῆ βοτάνην χόρτου, σπεῖρον σπέρμα κατὰ γένος καὶ καθ’ ὁμοιότητα, καὶ ξύλον κόρπιμον ποιοῦν καρπόν, οὗ τὸ σπέρμα αὐτοῦ ἐν αὐτῷ κατὰ γένος εἰς ὁμοιότητα ἐπὶ τῆς γῆς· καὶ ἐγένετο οὕτως.",
+        "web": "God said, “Let the earth yield grass, herbs yielding seeds, and fruit trees bearing fruit after their kind, with their seeds in it, on the earth;” and it was so.",
+        "he": "וַיֹּ֣אמֶר אֱלֹהִ֗ים תַּֽדְשֵׁ֤א הָאָ֨רֶץ֙ דֶּ֔שֶׁא עֵ֚שֶׂב מַזְרִ֣יעַ זֶ֔רַע עֵ֣ץ פְּרִ֞י עֹ֤שֶׂה פְּרִי֙ לְמִינ֔וֹ אֲשֶׁ֥ר זַרְעוֹ־ב֖וֹ עַל־הָאָ֑רֶץ וַֽיְהִי־כֵֽן׃",
+        "kjv": "And God said, Let the earth bring forth grass, the herb yielding seed, and the fruit tree yielding fruit after his kind, whose seed is in itself, upon the earth: and it was so."
+      },
+      "textHashes": {
+        "greek": "7aaae9d04d53ab0b8359c53885797b0b94018722a3a975b11f19a82467ceda48",
+        "web": "fd63ed83beab088fbc4a39926f29f2e5b7b0bee2163da93e7b5ff6678deb20d3",
+        "he": "924c5b82f0734e26c8821b1b832298c8ad954435df51eca25685c60374fd3b03",
+        "kjv": "daa9240ba8dae065602337da7e6964a00258b6f8db1401ea24d3f895ff0078f5"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-12",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "12"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 12
+        }
+      ],
+      "groupId": "GEN1-12",
+      "reason": "Earth produces vegetation/fruit trees with seeds by kind; approval follows.",
+      "differences": [
+        "Greek likeness wording is retained."
+      ],
+      "texts": {
+        "greek": "καὶ ἐξήνεγκεν ἡ γῆ βοτάνην χόρτου, σπεῖρον σπέρμα κατὰ γένος καὶ καθ’ ὁμοιότητα, καὶ ξύλον κάρπιμον ποιοῦν καρπόν, οὗ τὸ σπέρμα αὐτοῦ ἐν αὐτῷ κατὰ γένος ἐπὶ τῆς γῆς. καὶ ἴδεν ὁ θεὸς ὅτι καλόν.",
+        "web": "The earth yielded grass, herbs yielding seed after their kind, and trees bearing fruit, with their seeds in it, after their kind; and God saw that it was good.",
+        "he": "וַתּוֹצֵ֨א הָאָ֜רֶץ דֶּ֠שֶׁא עֵ֣שֶׂב מַזְרִ֤יעַ זֶ֨רַע֙ לְמִינֵ֔הוּ וְעֵ֧ץ עֹֽשֶׂה־פְּרִ֛י אֲשֶׁ֥ר זַרְעוֹ־ב֖וֹ לְמִינֵ֑הוּ וַיַּ֥רְא אֱלֹהִ֖ים כִּי־טֽוֹב׃",
+        "kjv": "And the earth brought forth grass, and herb yielding seed after his kind, and the tree yielding fruit, whose seed was in itself, after his kind: and God saw that it was good."
+      },
+      "textHashes": {
+        "greek": "afda44134630af2491333266091f46484009ea074fd3b44166cb36cd3998fb65",
+        "web": "f12ab3db5d82e47379e7e01dd2fc5e565bd57be8cf511642a1986e4fa3d19819",
+        "he": "3ea147db44a96762c8f1c18361328c6e048763f5370b03f31d10c13102613027",
+        "kjv": "cb94e86fa0bc88d59c6e7f0984eb1779fb5f614e2fc9b625b4bbda329722ff39"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-13",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "13"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 13
+        }
+      ],
+      "groupId": "GEN1-13",
+      "reason": "Evening/morning closes day three.",
+      "differences": [
+        "Source section symbol is retained."
+      ],
+      "texts": {
+        "greek": "καὶ ἐγένετο §ἐσπέρα καὶ ἐγένετο πρωί, ἡμέρα τρίτη.",
+        "web": "There was evening and there was morning, a third day.",
+        "he": "וַֽיְהִי־עֶ֥רֶב וַֽיְהִי־בֹ֖קֶר י֥וֹם שְׁלִישִֽׁי׃",
+        "kjv": "And the evening and the morning were the third day."
+      },
+      "textHashes": {
+        "greek": "45b7e6344dd3fce9b16dc8ae9163cacf06c434a0de65b8239c916012c9c260b8",
+        "web": "8b620e78609124414fdd8a82a353f68faab4001e542a456b7787df2b1a6aee4c",
+        "he": "974d3e84108f84949f7f34160965c4cfb8d31d05c09685bd11933deb3dacf644",
+        "kjv": "52788427d7efa43d2cfb6e561b8a7cfe03c267eebe16c56a15758a5acb985b3d"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-14",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "14"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 14
+        }
+      ],
+      "groupId": "GEN1-14",
+      "reason": "Lights divide day/night and mark signs, seasons, days and years.",
+      "differences": [
+        "Greek includes illumination/governance wording also developed in15/18; correspondence is passage-level, not word equality. Source section symbol/spellings are retained."
+      ],
+      "texts": {
+        "greek": "καὶ § εἶπεν ὁ θεός Γενηθήτωσαν φωστῆρες ἐν τῷ στερεώματι τοῦ οὐρανοῦ εἰς φαῦσιν τῆς γῆς, καὶ ἄρχεῖν τῆς ἡμέρας καὶ τῆς νυκτὸς καὶ διαχωρίζειν ἀνὰ μέσον τῆς ἡμέρας καὶ ἀνὰ μέσον τῆς νυκτός· καὶ ἔστωσαν εἰς σημεῖα καὶ εἰς καιροὺς καὶ εἰς ἡμέρας καὶ εἰς ἐνιαυτούς·",
+        "web": "God said, “Let there be lights in the expanse of the sky to divide the day from the night; and let them be for signs to mark seasons, days, and years;",
+        "he": "וַיֹּ֣אמֶר אֱלֹהִ֗ים יְהִ֤י מְאֹרֹת֙ בִּרְקִ֣יעַ הַשָּׁמַ֔יִם לְהַבְדִּ֕יל בֵּ֥ין הַיּ֖וֹם וּבֵ֣ין הַלָּ֑יְלָה וְהָי֤וּ לְאֹתֹת֙ וּלְמ֣וֹעֲדִ֔ים וּלְיָמִ֖ים וְשָׁנִֽים׃",
+        "kjv": "And God said, Let there be lights in the firmament of the heaven to divide the day from the night; and let them be for signs, and for seasons, and for days, and years:"
+      },
+      "textHashes": {
+        "greek": "fa38fa77849f885a267b7f93203020dd91d44c3832f2f186d185993183155dbb",
+        "web": "dfa30e898605ad6ded03d5e2e3c6a3caa00a2ff3208c44f594c5ce340186fb16",
+        "he": "090bfb1c11866d77db46818a60288cf6327d56bf0a02cef3a5fff9e2711e4d3d",
+        "kjv": "206822d521aab9ee18d131b794fd1668665af8df1d7e36ec837bc2513ce5cb1c"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-15",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "15"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 15
+        }
+      ],
+      "groupId": "GEN1-15",
+      "reason": "Lights in the sky illuminate earth; fulfillment formula follows.",
+      "differences": [],
+      "texts": {
+        "greek": "καὶ ἔστωσαν εἰς φαῦσιν ἐν τῷ στερεώματι τοῦ οὐρανοῦ, ὥστε φαίνειν ἐπὶ τῆς γῆς. καὶ ἐγένετο οὕτως.",
+        "web": "and let them be for lights in the expanse of the sky to give light on the earth;” and it was so.",
+        "he": "וְהָי֤וּ לִמְאוֹרֹת֙ בִּרְקִ֣יעַ הַשָּׁמַ֔יִם לְהָאִ֖יר עַל־הָאָ֑רֶץ וַֽיְהִי־כֵֽן׃",
+        "kjv": "And let them be for lights in the firmament of the heaven to give light upon the earth: and it was so."
+      },
+      "textHashes": {
+        "greek": "8f269ad3ad5a2cd4650999fa698cc869aebc9277cffe4683c3f0a98726e7d091",
+        "web": "313b40cd238466a504f28994df52c89317aac4d21962d3d0eeed304c989b9d41",
+        "he": "a58b4e8a3e5b6dffdb7ed533ac86b6d71c0ab09d1cd031c3c3b2ac0d8eb0485b",
+        "kjv": "610b1fec2770ca5b58135b3eb1f27e9bff29fbeb9d989fb8bea6b265f3428006"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-16",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "16"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 16
+        }
+      ],
+      "groupId": "GEN1-16",
+      "reason": "Two great lights, greater for day and lesser for night, plus stars.",
+      "differences": [],
+      "texts": {
+        "greek": "καὶ ἐποίησεν ὁ θεὸς τοὺς δύο φωστῆρας τοὺς μεγάλους, τὸν φωστῆρα τὸν μέγαν εἰς ἀρχὰς τῆς ἡμέρας καὶ τὸν φωστῆρα τὸν ἐλάσσω εἰς ἀρχὰς τῆς νυκτός, καὶ τοὺς ἀστέρας.",
+        "web": "God made the two great lights: the greater light to rule the day, and the lesser light to rule the night. He also made the stars.",
+        "he": "וַיַּ֣עַשׂ אֱלֹהִ֔ים אֶת־שְׁנֵ֥י הַמְּאֹרֹ֖ת הַגְּדֹלִ֑ים אֶת־הַמָּא֤וֹר הַגָּדֹל֙ לְמֶמְשֶׁ֣לֶת הַיּ֔וֹם וְאֶת־הַמָּא֤וֹר הַקָּטֹן֙ לְמֶמְשֶׁ֣לֶת הַלַּ֔יְלָה וְאֵ֖ת הַכּוֹכָבִֽים׃",
+        "kjv": "And God made two great lights; the greater light to rule the day, and the lesser light to rule the night: he made the stars also."
+      },
+      "textHashes": {
+        "greek": "c225fc8393c32a934b1f9abd7733a9d40751dcfb0c62d36c73b7ecd5d86bd967",
+        "web": "f94df4c41ab3d51c5a0efe812cbab138ed9c75c23ab357d250cd564fcc2a3331",
+        "he": "817d6787483ae065c1468bc47d07f0eac43becadfaac61a256928c8f93ec2046",
+        "kjv": "fe61c0c61ab63c47a24f9054c176046227318b4460caab87719b0c017e901de5"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-17",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "17"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 17
+        }
+      ],
+      "groupId": "GEN1-17",
+      "reason": "God places the lights in the sky to illuminate earth.",
+      "differences": [],
+      "texts": {
+        "greek": "καὶ ἔθετο αὐτοὺς ὁ θεὸς ἐν τῷ στερεώματι τοῦ οὐρανοῦ, ὥστε φαίνειν ἐπὶ τῆς γῆς,",
+        "web": "God set them in the expanse of the sky to give light to the earth,",
+        "he": "וַיִּתֵּ֥ן אֹתָ֛ם אֱלֹהִ֖ים בִּרְקִ֣יעַ הַשָּׁמָ֑יִם לְהָאִ֖יר עַל־הָאָֽרֶץ׃",
+        "kjv": "And God set them in the firmament of the heaven to give light upon the earth,"
+      },
+      "textHashes": {
+        "greek": "eb9f0229f3130ad2f7f20d63e9fb62c7fff341f68423ef0a95aa0c14fe179ef3",
+        "web": "e35391d6a46cd671d1b9099cda0c7b3463055dc3fd64e36d657f3b3fcbdcd646",
+        "he": "60fac8317e86eee6695570591290f3fab2f80fa4ae732e5672c1f089c82afd4f",
+        "kjv": "20fd94e696664df72f725d1f902713559167e9fc9d726b9f09acbcf0eedf338a"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-18",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "18"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 18
+        }
+      ],
+      "groupId": "GEN1-18",
+      "reason": "Lights govern day/night and divide light/darkness; approval follows.",
+      "differences": [],
+      "texts": {
+        "greek": "καὶ ἄρχειν τῆς ἡμέρας καὶ τῆς νυκτός, καὶ διαχωρίζειν ἀνὰ μέσον τοῦ φωτὸς καὶ ἀνὰ μέσον τοῦ σκότους· καὶ ἴδεν ὁ θεὸς ὅτι καλόν.",
+        "web": "and to rule over the day and over the night, and to divide the light from the darkness. God saw that it was good.",
+        "he": "וְלִמְשֹׁל֙ בַּיּ֣וֹם וּבַלַּ֔יְלָה וּֽלֲהַבְדִּ֔יל בֵּ֥ין הָא֖וֹר וּבֵ֣ין הַחֹ֑שֶׁךְ וַיַּ֥רְא אֱלֹהִ֖ים כִּי־טֽוֹב׃",
+        "kjv": "And to rule over the day and over the night, and to divide the light from the darkness: and God saw that it was good."
+      },
+      "textHashes": {
+        "greek": "4440d7ecf89b69dfd90b42d5d3208025a6496f0cfb7ed73405b8aafed97fa244",
+        "web": "2f11e02e74bef5a8849be476de1ebead263d940bdb08a058ba229a1be272f631",
+        "he": "5174ed20181a5db1f70601cdf7b0efb57bff5f4d4e88314c724448f05f2d357a",
+        "kjv": "8fae82cb6c725dae48d41d10717da5ef2257c6765a0b60821c2fef10b5bd86ae"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-19",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "19"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 19
+        }
+      ],
+      "groupId": "GEN1-19",
+      "reason": "Evening/morning closes day four.",
+      "differences": [
+        "Source paragraph symbol is retained."
+      ],
+      "texts": {
+        "greek": "καὶ ἐγένετο ἑσπέρα καὶ ἐγένετο πρωί, ἡμέρα τετάρτη. ¶",
+        "web": "There was evening and there was morning, a fourth day.",
+        "he": "וַֽיְהִי־עֶ֥רֶב וַֽיְהִי־בֹ֖קֶר י֥וֹם רְבִיעִֽי׃",
+        "kjv": "And the evening and the morning were the fourth day."
+      },
+      "textHashes": {
+        "greek": "e4f9b8e27a894a5effaab6757ae0434384a213db92955251e746bbf63836cc58",
+        "web": "6481f93e0dedd680ed467207af68e906d080039c43818f34c62132c4893c191d",
+        "he": "d766287d9a632ee24a3768daab6174c11010f469be7b010c6e7c8d88e30afca6",
+        "kjv": "c42dd30c4ffe83c141802436cd9f9fee639304fd506ee373e44342fd53d2bc4a"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-20",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "20"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 20
+        }
+      ],
+      "groupId": "GEN1-20",
+      "reason": "Command for living water creatures and birds flying above earth.",
+      "differences": [
+        "Greek adds fulfillment formula; brackets and source spelling are retained, not reconstructed."
+      ],
+      "texts": {
+        "greek": "Καὶ εἶπεν ὁ θεός Ἑξαγαγέτω τὰ ὕδατα ἑρπετὰ ψυχῶν ζωσῶν καὶ πετεινὰ πετόμεν[α] ἐπὶ τῆς γῆς κατὰ τὸ στερέωμ[α του] οὐρανοῦ • καὶ ἐγένετο οὕτως.",
+        "web": "God said, “Let the waters abound with living creatures, and let birds fly above the earth in the open expanse of the sky.”",
+        "he": "וַיֹּ֣אמֶר אֱלֹהִ֔ים יִשְׁרְצ֣וּ הַמַּ֔יִם שֶׁ֖רֶץ נֶ֣פֶשׁ חַיָּ֑ה וְעוֹף֙ יְעוֹפֵ֣ף עַל־הָאָ֔רֶץ עַל־פְּנֵ֖י רְקִ֥יעַ הַשָּׁמָֽיִם׃",
+        "kjv": "And God said, Let the waters bring forth abundantly the moving creature that hath life, and fowl that may fly above the earth in the open firmament of heaven."
+      },
+      "textHashes": {
+        "greek": "396efa45758460841220307cc940e6b9add9f5539c7bc9da32edefc195782a31",
+        "web": "806a25f1130f4f0d3baf88402baf559057481884d08ea0b3a44613b4351a1a5d",
+        "he": "3d938fa8dcd4f783766554c7d5a673ddae02c66b75a0161b952e6202494004e4",
+        "kjv": "bf644ea6a308bc6fb58706baeaf05d8957e3ca8ca260f9a4a679130cae7d9ce6"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-21",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "21"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 21
+        }
+      ],
+      "groupId": "GEN1-21",
+      "reason": "Creation of great sea creatures and living/winged kinds, followed by approval.",
+      "differences": [
+        "Greek transcription's brackets are retained exactly."
+      ],
+      "texts": {
+        "greek": "καὶ ἐποίησεν ὁ θεὸς τὰ κήτη [τὰ με]γάλα καὶ πᾶσαν ψυχὴν [ζῴων ἑρπε]τῶν, ἃ ἐξήγαγεν [τὰ ὕδατα κατὰ γένη αὐτῶν], καὶ πᾶν πετεινὸν πτ[ερωτὸν] κατὰ γένος· καὶ ἴδεν ὁ [θεὸς ὅτι καλά].",
+        "web": "God created the large sea creatures and every living creature that moves, with which the waters swarmed, after their kind, and every winged bird after its kind. God saw that it was good.",
+        "he": "וַיִּבְרָ֣א אֱלֹהִ֔ים אֶת־הַתַּנִּינִ֖ם הַגְּדֹלִ֑ים וְאֵ֣ת כָּל־נֶ֣פֶשׁ הַֽחַיָּ֣ה ׀ הָֽרֹמֶ֡שֶׂת אֲשֶׁר֩ שָׁרְצ֨וּ הַמַּ֜יִם לְמִֽינֵהֶ֗ם וְאֵ֨ת כָּל־ע֤וֹף כָּנָף֙ לְמִינֵ֔הוּ וַיַּ֥רְא אֱלֹהִ֖ים כִּי־טֽוֹב׃",
+        "kjv": "And God created great whales, and every living creature that moveth, which the waters brought forth abundantly, after their kind, and every winged fowl after his kind: and God saw that it was good."
+      },
+      "textHashes": {
+        "greek": "8ab660b740e7385efa4e4cc59d56c89e05014978cd49d3476f9600d663dc21c5",
+        "web": "3be75aac28ddb619af9f8a0d2e6363b901b9fc6eb0613a3af2500f37ef1ae937",
+        "he": "01520c80082a02fcc123367d31c462f61411272125704a447c5a25e51c056963",
+        "kjv": "8282bab8a0bff0a270673c8907135223e644f83dbfde9de1e7bd23ffd04a1cf9"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-22",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "22"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 22
+        }
+      ],
+      "groupId": "GEN1-22",
+      "reason": "Blessing: multiply, fill seas, and birds multiply on earth.",
+      "differences": [
+        "Greek transcription's brackets are retained exactly."
+      ],
+      "texts": {
+        "greek": "καὶ ηὐλόγησεν αὐτὰ ὁ θ[εὸς λέγων] Αὐξάνεσθε καὶ πληθ[ύνεσθε, καὶ] πληρώσατε τὰ ὕδατα [ἐν ταῖς θα]λάσσαις, καὶ τὰ πετε[ινὰ πληθυ]νέσθωσαν ἐπὶ τῆς γῆς.",
+        "web": "God blessed them, saying, “Be fruitful, and multiply, and fill the waters in the seas, and let birds multiply on the earth.”",
+        "he": "וַיְבָ֧רֶךְ אֹתָ֛ם אֱלֹהִ֖ים לֵאמֹ֑ר פְּר֣וּ וּרְב֗וּ וּמִלְא֤וּ אֶת־הַמַּ֨יִם֙ בַּיַּמִּ֔ים וְהָע֖וֹף יִ֥רֶב בָּאָֽרֶץ׃",
+        "kjv": "And God blessed them, saying, Be fruitful, and multiply, and fill the waters in the seas, and let fowl multiply in the earth."
+      },
+      "textHashes": {
+        "greek": "43e4e9e35efd7d2398fe9f7d230a62f2b02ba3d37483e4a56e26ef378e0f203a",
+        "web": "51d5aa6f24769252cd65c116d43b1aadcc7371093efa27eaafc5a5e940194ce1",
+        "he": "37c4b5db54b2188adcc8129382219c312464ae5b7f46a27e6ea59062c7c31447",
+        "kjv": "592e90b256f3d1161747c1e092bf57625ec66a00f120b27c92be48725e27c4c4"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-23",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "23"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 23
+        }
+      ],
+      "groupId": "GEN1-23",
+      "reason": "Evening/morning closes day five.",
+      "differences": [
+        "Source brackets and spelling are retained exactly."
+      ],
+      "texts": {
+        "greek": "καὶ ἐγέ]νετο ἑσπέρα καὶ εγ[ένετο πρωί], ἡμέρα πέμπτη.",
+        "web": "There was evening and there was morning, a fifth day.",
+        "he": "וַֽיְהִי־עֶ֥רֶב וַֽיְהִי־בֹ֖קֶר י֥וֹם חֲמִישִֽׁי׃",
+        "kjv": "And the evening and the morning were the fifth day."
+      },
+      "textHashes": {
+        "greek": "d95a1d769231172256b4cdc0ba2385aae7c33771a13074ef5592f6410a48e6fb",
+        "web": "ece50165416e6e15ba95462c8460be45b416fab5a8a012438a583ee547118e77",
+        "he": "61e6c395854b63eb762e447c1ffb7baa85e976fcf166fd28569d8f5fe09cea33",
+        "kjv": "cae40ebeb3b664ce7641880d8c8341e8710a1c8d6a0d3d8ce9100bca3c15fc17"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-24",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "24"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 24
+        }
+      ],
+      "groupId": "GEN1-24",
+      "reason": "Command for terrestrial creatures: livestock, creeping things and wild animals by kind.",
+      "differences": [
+        "Source brackets are retained exactly."
+      ],
+      "texts": {
+        "greek": "Καὶ εἶπεν ὁ θεός Ἐξαγαγ[έτω ἡ γῆ ψυχὴν] ζῶσαν κατὰ γένος, [τετράποδα] καὶ ἑρπετὰ καὶ θηρί[α τῆς γῆς κατὰ] γένος, καὶ ἐγένετο [οὕτως].",
+        "web": "God said, “Let the earth produce living creatures after their kind, livestock, creeping things, and animals of the earth after their kind;” and it was so.",
+        "he": "וַיֹּ֣אמֶר אֱלֹהִ֗ים תּוֹצֵ֨א הָאָ֜רֶץ נֶ֤פֶשׁ חַיָּה֙ לְמִינָ֔הּ בְּהֵמָ֥ה וָרֶ֛מֶשׂ וְחַֽיְתוֹ־אֶ֖רֶץ לְמִינָ֑הּ וַֽיְהִי־כֵֽן׃",
+        "kjv": "And God said, Let the earth bring forth the living creature after his kind, cattle, and creeping thing, and beast of the earth after his kind: and it was so."
+      },
+      "textHashes": {
+        "greek": "3ebf98741c32b0dd23337a22a0ae9b05172e2856b2f5473e7b6f32aa4f3a835d",
+        "web": "f78d7db2401173b77db62006f85a17ca16f328f8e48898bdd05c676ff13ba758",
+        "he": "3c14b52f426df03946fb9ce093e08091053b0c8d773cef0e42523bca77620f72",
+        "kjv": "6adca8c882984b4ba1f483d630af6b8a4ee775becfae70702574d690401a61fb"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-25",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "25"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 25
+        }
+      ],
+      "groupId": "GEN1-25",
+      "reason": "Making terrestrial animals/livestock/creeping kinds and judging them good.",
+      "differences": [
+        "Source brackets are retained exactly."
+      ],
+      "texts": {
+        "greek": "καὶ ἐποίησεν ὁ θεὸς τὰ [θηρία τῆς γῆς] κατὰ γένος καὶ τὰ κτ[ήνη κατὰ γέ]νος καὶ πάντα τὰ ἑρπ[ετὰ τῆς γῆς] κατὰ γένος αὐτῶν· καὶ ἴδεν ὁ θεὸς ὅτι καλά.",
+        "web": "God made the animals of the earth after their kind, and the livestock after their kind, and everything that creeps on the ground after its kind. God saw that it was good.",
+        "he": "וַיַּ֣עַשׂ אֱלֹהִים֩ אֶת־חַיַּ֨ת הָאָ֜רֶץ לְמִינָ֗הּ וְאֶת־הַבְּהֵמָה֙ לְמִינָ֔הּ וְאֵ֛ת כָּל־רֶ֥מֶשׂ הָֽאֲדָמָ֖ה לְמִינֵ֑הוּ וַיַּ֥רְא אֱלֹהִ֖ים כִּי־טֽוֹב׃",
+        "kjv": "And God made the beast of the earth after his kind, and cattle after their kind, and every thing that creepeth upon the earth after his kind: and God saw that it was good."
+      },
+      "textHashes": {
+        "greek": "c557be7777f70c329ca0b7194ec80f09f67188b9dd4db6ba1948266c5d5e71ac",
+        "web": "3bad1c0b945e1508f3438525dcc9df16cff4dbade55d978dd9e26c3e339c6d47",
+        "he": "adb943138ab2d2de7c6900ab3dc4d48d654d69f9d5e977370c0d68b9b7150bf7",
+        "kjv": "f4e462fcd5b988829ba409e844c9ae6aa518471890e222c1de780db58d6c18e4"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-26",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "26"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 26
+        }
+      ],
+      "groupId": "GEN1-26",
+      "reason": "Human creation proposed in God's image/likeness with dominion over creatures/earth.",
+      "differences": [
+        "Source section symbol and spellings are retained; no repair is inferred from English."
+      ],
+      "texts": {
+        "greek": "§καὶ εἶπεν ὁ θεός Ποιήσωμεν ἄνθρωπον κατ’ εἰκόνα ἡμετέραν καὶ κἀθ᾽ ὁμοίωσιν· καὶ ἀρχέτωσαν τῶν ἰχθύων τῆς θαλάσσης καὶ τῶν πετεινῶν τοῦ οὐρανοῦ καὶ τῶν κτηνῶν καὶ πάτης τῆς γῆς καὶ πάντων τῶν ἑρπετῶν τῶν ἑρπόντων ἐπὶ τῆς γῆς.",
+        "web": "God said, “Let’s make man in our image, after our likeness. Let them have dominion over the fish of the sea, and over the birds of the sky, and over the livestock, and over all the earth, and over every creeping thing that creeps on the earth.”",
+        "he": "וַיֹּ֣אמֶר אֱלֹהִ֔ים נַֽעֲשֶׂ֥ה אָדָ֛ם בְּצַלְמֵ֖נוּ כִּדְמוּתֵ֑נוּ וְיִרְדּוּ֩ בִדְגַ֨ת הַיָּ֜ם וּבְע֣וֹף הַשָּׁמַ֗יִם וּבַבְּהֵמָה֙ וּבְכָל־הָאָ֔רֶץ וּבְכָל־הָרֶ֖מֶשׂ הָֽרֹמֵ֥שׂ עַל־הָאָֽרֶץ׃",
+        "kjv": "And God said, Let us make man in our image, after our likeness: and let them have dominion over the fish of the sea, and over the fowl of the air, and over the cattle, and over all the earth, and over every creeping thing that creepeth upon the earth."
+      },
+      "textHashes": {
+        "greek": "c172747597ec6a6b64914f238dae52c540aa17bfd066aa42eb9e3c82358ebc5d",
+        "web": "973db03ae1d955f6320c3829b6338872e68d932e364a37528bcfdd3e06953a4d",
+        "he": "51e1585e76b5861b65d4ca1a7d2b19e2955f9226b8806ad36f449a1d5227ccc9",
+        "kjv": "87cc6a6a32700ef89ce8deac215f0d9b3c6806cb8740d4679c4cc98085edb137"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-27",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "27"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 27
+        }
+      ],
+      "groupId": "GEN1-27",
+      "reason": "Humanity created in God's image, male and female.",
+      "differences": [],
+      "texts": {
+        "greek": "καὶ ἐποίησεν ὁ θεὸς τὸν ἄνθρωπον, κατ’ εἰκόνα θεοῦ ἐποίησεν αὐτόν· ἄρσεν καὶ θῆλυ ἐποίησεν αὐτούς.",
+        "web": "God created man in his own image. In God’s image he created him; male and female he created them.",
+        "he": "וַיִּבְרָ֨א אֱלֹהִ֤ים ׀ אֶת־הָֽאָדָם֙ בְּצַלְמ֔וֹ בְּצֶ֥לֶם אֱלֹהִ֖ים בָּרָ֣א אֹת֑וֹ זָכָ֥ר וּנְקֵבָ֖ה בָּרָ֥א אֹתָֽם׃",
+        "kjv": "So God created man in his own image, in the image of God created he him; male and female created he them."
+      },
+      "textHashes": {
+        "greek": "6fe7def8ea7f26d2f1bb9f8fe6efb2bb82b62b3dc54658c6da6cdb3b7cda7b1d",
+        "web": "0887ac5f6e71332daf0b2104d32cf16bba238d9b62ebac6de244b9c7b534f9fe",
+        "he": "0ab8abadfc52e78227164c9144edaad1d987d2048682d9e1d38adfe711a09425",
+        "kjv": "b4e3886a552f937500c418cfc6b5f49f6d15f25b0020f9df3223c2866abba25e"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-28",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "28"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 28
+        }
+      ],
+      "groupId": "GEN1-28",
+      "reason": "Human blessing to multiply, fill/subdue earth and exercise dominion.",
+      "differences": [
+        "Greek lists additional dominion categories; this is correspondence, not identical wording."
+      ],
+      "texts": {
+        "greek": "καὶ ηὐλόγησεν αὐτοὺς ὁ θεὸς λέγων Αὐξάνεσθε καὶ πληθύνεσθε, καὶ πληρώσατε τὴν γῆν καὶ κατακυριεύσατε αὐτῆς, καὶ ἄρχετε τῶν ἰχθύων τῆς θαλάσσης καὶ τῶν πετεινῶν τοῦ οὐρανοῦ καὶ πάντων τῶν κτηνῶν καὶ πάσης τῆς γῆς καὶ πάντων τῶν ἑρπετῶν τῶν ἑρπόντων ἐπὶ τῆς γῆς.",
+        "web": "God blessed them. God said to them, “Be fruitful, multiply, fill the earth, and subdue it. Have dominion over the fish of the sea, over the birds of the sky, and over every living thing that moves on the earth.”",
+        "he": "וַיְבָ֣רֶךְ אֹתָם֮ אֱלֹהִים֒ וַיֹּ֨אמֶר לָהֶ֜ם אֱלֹהִ֗ים פְּר֥וּ וּרְב֛וּ וּמִלְא֥וּ אֶת־הָאָ֖רֶץ וְכִבְשֻׁ֑הָ וּרְד֞וּ בִּדְגַ֤ת הַיָּם֙ וּבְע֣וֹף הַשָּׁמַ֔יִם וּבְכָל־חַיָּ֖ה הָֽרֹמֶ֥שֶׂת עַל־הָאָֽרֶץ׃",
+        "kjv": "And God blessed them, and God said unto them, Be fruitful, and multiply, and replenish the earth, and subdue it: and have dominion over the fish of the sea, and over the fowl of the air, and over every living thing that moveth upon the earth."
+      },
+      "textHashes": {
+        "greek": "6ccdcf1db67a8ed02304730f4e924a785ee99196994c315639f2414a52c1998b",
+        "web": "e7ea9268ed6fa33279a83c91397e494abc251432ecb1d3f69223dca303c211f2",
+        "he": "00d85747bdfeedb02cd6b310aedd7d27d8537f23d44a4f4af7653842b88deeee",
+        "kjv": "b0f6791f3a897bd2418416f4336afbfeee6ddcd7462783ac9e9cec3a39f80044"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-29",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "29"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 29
+        }
+      ],
+      "groupId": "GEN1-29",
+      "reason": "Seed-bearing plants and fruit trees assigned as human food.",
+      "differences": [
+        "Source brackets are retained exactly."
+      ],
+      "texts": {
+        "greek": "καὶ εἶπεν ὁ θεός ἰδοὺ δέδωκα ὑμῖν πᾶν χόρτον σπόριμον σπεῖρον σπέρμα, ὅ ἐστιν ἐπάνω πάσης τῆς γῆς· καὶ πᾶν ξύλον, ὃ ἔχει ἐν ἑαυτῷ καρπὸν σπέρματος σπορίμου· [ὑ]μῖν ἔσται εἰς βρῶσιν,",
+        "web": "God said, “Behold, I have given you every herb yielding seed, which is on the surface of all the earth, and every tree, which bears fruit yielding seed. It will be your food.",
+        "he": "וַיֹּ֣אמֶר אֱלֹהִ֗ים הִנֵּה֩ נָתַ֨תִּי לָכֶ֜ם אֶת־כָּל־עֵ֣שֶׂב ׀ זֹרֵ֣עַ זֶ֗רַע אֲשֶׁר֙ עַל־פְּנֵ֣י כָל־הָאָ֔רֶץ וְאֶת־כָּל־הָעֵ֛ץ אֲשֶׁר־בּ֥וֹ פְרִי־עֵ֖ץ זֹרֵ֣עַ זָ֑רַע לָכֶ֥ם יִֽהְיֶ֖ה לְאָכְלָֽה׃",
+        "kjv": "And God said, Behold, I have given you every herb bearing seed, which is upon the face of all the earth, and every tree, in the which is the fruit of a tree yielding seed; to you it shall be for meat."
+      },
+      "textHashes": {
+        "greek": "6fd2e6ba8f4d3f1a1319b3f096f619ff9a088fd0493ac1ba2f4c09ea40dcc6be",
+        "web": "f6f7759d75d3867d4c8053a9a63dd26f11d15ad377e484d225030efb0e58db8d",
+        "he": "777aa685670420186ce84cfa0904263a157f6dd20c5a3501b867dcaa2d168b1d",
+        "kjv": "9b330fa47edb7c2e54efc1d04b0f4b8653f92399b29d9787d61d111f55b7cc26"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-30",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "30"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 30
+        }
+      ],
+      "groupId": "GEN1-30",
+      "reason": "Green vegetation assigned as food to living land creatures and birds; fulfillment follows.",
+      "differences": [
+        "Source brackets are retained exactly."
+      ],
+      "texts": {
+        "greek": "καὶ πᾶσι [τοῖ]ς θηρίοις τῆς γῆς καὶ πᾶσι [τοῖ]ς πετεινοῖς τοῦ οὐρανοῦ [καὶ π]αντὶ ἑρπετῷ τῷ ἕρπον[τι ἐπὶ τῆς] γῆς, ὃ ἔχει ἐν ἑαυτῷ [ψυχὴ]ν ζωῆς· καὶ πάντα χόρ[τον χλ]ωρὸν εἰς βρῶσιν. καὶ [ἐγένετ]ο οὕτως.",
+        "web": "To every animal of the earth, and to every bird of the sky, and to everything that creeps on the earth, in which there is life, I have given every green herb for food;” and it was so.",
+        "he": "וּֽלְכָל־חַיַּ֣ת הָ֠אָרֶץ וּלְכָל־ע֨וֹף הַשָּׁמַ֜יִם וּלְכֹ֣ל ׀ רוֹמֵ֣שׂ עַל־הָאָ֗רֶץ אֲשֶׁר־בּוֹ֙ נֶ֣פֶשׁ חַיָּ֔ה אֶת־כָּל־יֶ֥רֶק עֵ֖שֶׂב לְאָכְלָ֑ה וַֽיְהִי־כֵֽן׃",
+        "kjv": "And to every beast of the earth, and to every fowl of the air, and to every thing that creepeth upon the earth, wherein there is life, I have given every green herb for meat: and it was so."
+      },
+      "textHashes": {
+        "greek": "4b525a6af52d2c95c39dd14c580b8000dbe577fbdda76640f41da2832c2c2dca",
+        "web": "7d89a6edf5f63f87e9b2a884fc0e29cd516c2dc3f549b99919900ad966ca3251",
+        "he": "1ad72003422c52f019865dc6211d2210fcc4343a80b0035bab0f6bd76fe22cb6",
+        "kjv": "a8305101b2c623022008dc7f45e3bff678daf0319e78bd2672dfc1d7a4dfdf08"
+      },
+      "sourceFlags": []
+    },
+    {
+      "id": "GEN1-31",
+      "status": "proposal",
+      "from": {
+        "book": "GEN",
+        "chapter": "1",
+        "kind": "verse",
+        "label": "31"
+      },
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 1,
+          "verse": 31
+        }
+      ],
+      "groupId": "GEN1-31",
+      "reason": "All creation judged very good; evening/morning closes day six.",
+      "differences": [
+        "Greek duplicated day-word and malformed bracket are retained exactly, not silently repaired."
+      ],
+      "texts": {
+        "greek": "[καὶ ἴδεν ὁ] θεὸς τὰ πάντα ὅσα ἐποίη[σεν, καὶ] ἰδοὺ καλὰ λίαν. καὶ ἐγέ[νετο ἑσ]πέρα καὶ ἐγένετο πρωί, ἡμέρα ἡμέρα ἕ]κτη.",
+        "web": "God saw everything that he had made, and, behold, it was very good. There was evening and there was morning, a sixth day.",
+        "he": "וַיַּ֤רְא אֱלֹהִים֙ אֶת־כָּל־אֲשֶׁ֣ר עָשָׂ֔ה וְהִנֵּה־ט֖וֹב מְאֹ֑ד וַֽיְהִי־עֶ֥רֶב וַֽיְהִי־בֹ֖קֶר י֥וֹם הַשִּׁשִּֽׁי׃",
+        "kjv": "And God saw every thing that he had made, and, behold, it was very good. And the evening and the morning were the sixth day."
+      },
+      "textHashes": {
+        "greek": "be67e9ba24ae747806196578d5a2fc0126fae7faca33f61ad4c918df00079964",
+        "web": "b9dabbe63dc223776af6e73e209bde13521c8bc1531ca0173fdb25c2938b65e8",
+        "he": "5bab56fca9cf12337d479e44e2319c5add84e63625e8f3f270172d93c73901a7",
+        "kjv": "67c821b497f91cff9ddf49410abda3916c1e81ba28d186c66c5ef69fd8efa23d"
+      },
+      "sourceFlags": []
+    }
+  ]
+}

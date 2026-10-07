@@ -334,6 +334,8 @@ const refs = {
     results: q('#results'),
     message: q('#message'),
     translations: q('#translations'),
+    alignmentPilot: q('#lxx-alignment-pilot'),
+    alignmentNotice: q('#lxx-alignment-notice'),
     contextBtn: q('#context-toggle'),
     search: q('#search'),
     searchGo: q('#search-go'),
@@ -550,6 +552,20 @@ const refs = {
   // contextEnabled for that block alone.  The global toggle clears this
   // map so that every block returns to following the global flag.
   const blockContextOverrides = new Map();
+
+  // LXX alignment pilot state (declared before init() runs so render() can read
+  // it; the pilot itself stays off and loads nothing until the checkbox ticks).
+  const alignmentState = {
+    enabled: false,
+    status: 'idle',        // idle | loading | ready | error
+    resolver: null,
+    generation: 0,
+    callbacks: [],
+  };
+  const ALIGNMENT_MAP_URL = 'data/lxx-swete-alignment.js?v=stage2a-20261007';
+  const ALIGNMENT_SCHEMES_URL = 'data/versification-schemes.js?v=stage2a-20261007';
+  const ALIGNMENT_NOTICE_DEFAULT =
+    'Canon view only. AI-proposed correspondences awaiting human review; the Greek is read from the native Swete text and is never guessed.';
 
   const viewState = {
     mode: 'browse',       // 'browse' | 'reference' | 'search'
@@ -769,6 +785,26 @@ function init() {
 
     refs.layout.addEventListener('change', () => {
         render({ scrollToReference: false });
+    });
+
+    refs.alignmentPilot.addEventListener('change', () => {
+        alignmentState.enabled = refs.alignmentPilot.checked;
+        // Any in-flight load from a previous tick is superseded: the callback
+        // below only activates the column if this is still the latest request,
+        // the option is still checked, and the reader is still in Canon view.
+        const generation = (alignmentState.generation += 1);
+        if (!alignmentState.enabled) {
+            render({ scrollToReference: false });
+            return;
+        }
+        setMessage('Loading the LXX alignment pilot\u2026');
+        loadAlignmentPilot(() => {
+            if (!alignmentState.enabled
+                || alignmentState.generation !== generation
+                || refs.viewMode.value !== 'canon') return;
+            setMessage('');
+            render({ scrollToReference: false });
+        });
     });
 
     refs.interlinear.addEventListener('change', () => {
@@ -1405,6 +1441,13 @@ function init() {
   }
 
   function cellFor(t, bookId, chapterNum, verseNum) {
+    // The virtual LXX-alignment column resolves through the mapping resolver,
+    // never through a translation global, so no fabricated books[] dataset is
+    // ever added and legacy index lookup is never called on it.
+    if (t.virtual) {
+      const resolver = alignmentResolver();
+      return resolver ? resolver.resolveTarget(bookId, chapterNum, verseNum) : { state: 'loading' };
+    }
     if (!loaded.has(t.id)) return { state: 'loading' };
     const cell = VerseAvailability.cell(window.MARANATHA_TRANSLATIONS[t.id], bookId, chapterNum, verseNum);
     if (!['text', 'additional', 'note'].includes(cell.state)) {
@@ -1417,7 +1460,88 @@ function init() {
     return cell;
   }
 
+  // Renders one virtual aligned cell. Greek text, labels and flags come from
+  // the native Swete dataset verbatim. The user's explicit Genesis 1:6/7
+  // presentation choice shows each native verse once with a boundary notice;
+  // the underlying collective proposal stays unchanged. Other groups retain
+  // their complete membership; this is not a general ordinal-matching rule.
+  function fillVirtualCell(td, cell) {
+    td.classList.add('aligned-cell');
+    if (cell.state === 'correspondence') {
+      td.classList.add('aligned-correspondence');
+      if (cell.collective) td.classList.add('aligned-collective');
+      let displayedMembers = cell.members || [];
+      const target = cell.requestedTarget;
+      let verseRows = false;
+      if (cell.groupId === 'GEN1-6-7' && target && target.book === 'GEN'
+          && Number(target.chapter) === 1 && [6, 7].includes(Number(target.verse))) {
+        const member = displayedMembers.find((m) => m.source.book === 'GEN'
+          && String(m.source.chapter) === '1' && m.source.kind === 'verse'
+          && m.source.label === String(target.verse));
+        if (member) { displayedMembers = [member]; verseRows = true; }
+      }
+      for (const member of displayedMembers) {
+        const row = document.createElement('span');
+        row.className = 'aligned-source';
+        const ref = document.createElement('span');
+        ref.className = 'aligned-source-ref';
+        ref.textContent = member.refLabel;
+        const text = document.createElement('span');
+        text.className = 'lxx-text';
+        text.lang = 'el';
+        text.textContent = member.text || '';
+        row.append(ref, document.createTextNode(' '), text);
+        for (const flag of member.flags || []) {
+          const marker = document.createElement('span');
+          marker.className = 'lxx-flag';
+          marker.textContent = '\u25C6';
+          marker.title = flag.note;
+          marker.setAttribute('role', 'img');
+          marker.setAttribute('aria-label', flag.note);
+          row.append(marker);
+        }
+        td.append(row);
+      }
+      const note = document.createElement('small');
+      note.className = 'verse-source-note aligned-note';
+      note.setAttribute('role', 'note');
+      note.textContent = verseRows
+        ? '“And it was so” ends Greek 6; English/Hebrew place it in 7.'
+        : cell.collective
+        ? `Proposed collective passage (${cell.groupId}); boundaries differ \u2014 not a word-for-word or exact verse-boundary match.`
+        : `Proposed correspondence (${cell.groupId}); awaiting human review.`;
+      td.append(note);
+      return;
+    }
+    td.classList.add('verse-placeholder');
+    td.textContent = cell.state === 'alignment-unavailable' ? '(alignment not available)'
+      : cell.state === 'no-corresponding-verse' ? '(no corresponding verse)'
+      : cell.state === 'missing-source-text' ? '(source text not loaded)'
+      : cell.state === 'missing-edition' ? '(not available in this edition)'
+      : cell.state === 'ambiguous-metadata' ? '(alignment metadata is ambiguous)'
+      : '(loading\u2026)';
+    const note = document.createElement('small');
+    note.className = 'verse-source-note';
+    note.setAttribute('role', 'note');
+    note.textContent = cell.state === 'alignment-unavailable'
+      ? 'No proposal for this reference in the Genesis 1 pilot.'
+      : cell.state === 'missing-edition'
+        ? 'The Swete Septuagint source does not cover this book.'
+        : cell.state === 'missing-source-text'
+          ? 'The native source segment could not be read.'
+          : cell.state === 'ambiguous-metadata'
+            ? 'The alignment metadata for this reference conflicts; no correspondence is shown.'
+            : cell.state === 'no-corresponding-verse'
+              ? (cell.note || '')
+              : '';
+    td.append(note);
+  }
+
   function fillCell(td, cell, tId, scriptMode) {
+    if (tId === 'lxx-aligned') {
+      fillVirtualCell(td, cell);
+      return;
+    }
     if (cell.state === 'text' || cell.state === 'additional' || cell.state === 'note') {
       td.textContent = verseDisplayText(cell.text || '', tId, scriptMode);
       if (cell.state !== 'text' || cell.note) {
@@ -3070,6 +3194,101 @@ function init() {
   // ever created.
   let lxxCallbacks = [];
 
+  // ---------------------------------------------------------------------
+  // LXX alignment pilot (opt-in Canon column).
+  //
+  // A virtual, Canon-only column that resolves each canonical cell to its
+  // proposed source passage and reads the Greek from the existing native Swete
+  // dataset by native label. It is OFF by default: no mapping, scheme or native
+  // Greek script is requested until the checkbox is ticked. The mapping and
+  // scheme files are versioned query URLs so a stale cached map can never be
+  // reused. The virtual descriptor is deliberately NOT registered in
+  // TRANSLATIONS, so it can never enter the Parallel translation menu or text
+  // search. See docs/STAGE2A_ARCHITECTURE.md.
+  // ---------------------------------------------------------------------
+  function alignmentResolver() {
+    if (alignmentState.resolver) return alignmentState.resolver;
+    const mapping = window.MARANATHA_LXX_ALIGNMENT;
+    const api = window.MARANATHA_VERSE_MAPPING;
+    const native = lxxDataset();
+    if (!mapping || !api || !native) return null;
+    alignmentState.resolver = api.createResolver(mapping, { native });
+    return alignmentState.resolver;
+  }
+
+  function alignmentEnabled() {
+    return alignmentState.enabled && alignmentState.status === 'ready' && !!alignmentResolver();
+  }
+
+  function alignmentVirtualTranslation() {
+    return { id: 'lxx-aligned', label: 'LXX alignment (Genesis 1)', short: 'LXX alignment', virtual: true };
+  }
+
+  // Warns, before reading the pilot, when a currently selected edition has no
+  // Genesis 1 proposal coverage. Those editions are compared as unreviewed,
+  // edition-specific numbering; no Greek correspondence is asserted against
+  // them. The coverage set comes from the compiled scheme registry.
+  function updateAlignmentNotice() {
+    const note = refs.alignmentNotice;
+    if (!note) return;
+    if (!alignmentEnabled()) { note.textContent = ALIGNMENT_NOTICE_DEFAULT; return; }
+    const registry = window.MARANATHA_VERSIFICATION_SCHEMES;
+    const coverage = new Set(
+      (registry && registry.comparisonCoverage && registry.comparisonCoverage.editions) || ['web', 'kjv', 'he'],
+    );
+    const unreviewed = displayTranslations(selectedTranslations())
+      .map((t) => t.id)
+      .filter((id) => id !== 'lxx-swete' && !coverage.has(id));
+    note.textContent = unreviewed.length
+      ? `Warning: the Genesis 1 pilot is compared only with WEB/KJV/OSHB. Selected edition(s) ${unreviewed.join(', ')} use unreviewed, edition-specific numbering; no Greek correspondence is asserted against them.`
+      : ALIGNMENT_NOTICE_DEFAULT;
+  }
+
+  // Loads the scheme and mapping metadata exactly once, then the native Greek
+  // corpus through the shared queued loader. Every caller is notified; a script
+  // is never added twice while a load is in flight or already complete.
+  function loadAlignmentPilot(onReady) {
+    if (alignmentState.status === 'ready') { onReady(); return; }
+    alignmentState.callbacks.push(onReady);
+    if (alignmentState.status === 'loading') return;
+    alignmentState.status = 'loading';
+    alignmentState.resolver = null;
+    const scripts = [ALIGNMENT_SCHEMES_URL, ALIGNMENT_MAP_URL];
+    let pending = 0;
+    let failed = false;
+    const reportError = (src) => {
+      failed = true;
+      alignmentState.status = 'error';
+      const callbacks = alignmentState.callbacks;
+      alignmentState.callbacks = [];
+      setMessage(`Could not load the LXX alignment pilot (${src}).`);
+      for (const callback of callbacks) callback();
+    };
+    const settled = () => {
+      pending -= 1;
+      if (pending > 0 || failed) return;
+      loadLxx(() => {
+        const resolver = alignmentResolver();
+        alignmentState.status = resolver ? 'ready' : 'error';
+        const callbacks = alignmentState.callbacks;
+        alignmentState.callbacks = [];
+        if (!resolver) setMessage('Could not initialise the LXX alignment pilot.');
+        for (const callback of callbacks) callback();
+      });
+    };
+    for (const src of scripts) {
+      if (src === ALIGNMENT_SCHEMES_URL && window.MARANATHA_VERSIFICATION_SCHEMES) continue;
+      if (src === ALIGNMENT_MAP_URL && window.MARANATHA_LXX_ALIGNMENT) continue;
+      pending += 1;
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = settled;
+      script.onerror = () => reportError(src);
+      document.head.appendChild(script);
+    }
+    if (pending === 0) settled();
+  }
+
   function lxxDataset() {
     return (window.MARANATHA_TRANSLATIONS && window.MARANATHA_TRANSLATIONS['lxx-swete']) || null;
   }
@@ -3463,6 +3682,7 @@ function init() {
     // including programmatic transitions (reference actions, search returning
     // to Canon) and locale redraws — not only the View select's change event.
     updateReferenceHint();
+    updateAlignmentNotice();
     // Exactly one Book/Chapter mechanism is shown at a time: the canon bar in
     // canon view, the LXX bar in the LXX view, and the two independent pane
     // controls in the parallel view. The View selector stays visible in all.
@@ -3479,7 +3699,12 @@ function init() {
       return;
     }
     refs.lxxAttribution.hidden = true;
-    const translations = displayTranslations(selectedTranslations());
+    const baseTranslations = displayTranslations(selectedTranslations());
+    // The virtual aligned column is appended only as an extra Canon column,
+    // never added to the selection registry, so Parallel and search never see
+    // it. Extents and range parsing ignore it because it declares no dataset.
+    const pilotOn = alignmentEnabled();
+    const translations = pilotOn ? [...baseTranslations, alignmentVirtualTranslation()] : baseTranslations;
 
     refs.results.innerHTML = '';
 
@@ -3531,11 +3756,11 @@ function init() {
           return;
         }
       }
-      renderInterlinear(interlinear, translations);
+      renderInterlinear(interlinear, baseTranslations);
       return;
     }
 
-    if (!translations.length) {
+    if (!baseTranslations.length) {
       setMessage('Select at least one translation to display.');
       return;
     }
@@ -3548,7 +3773,7 @@ function init() {
     const layout = narrowScreen.matches
       ? 'mobile'
       : refs.layout.value === 'auto'
-        ? (translations.length > 5 ? 'multirow' : 'multicolumn')
+        ? (baseTranslations.length > 5 ? 'multirow' : 'multicolumn')
         : refs.layout.value;
 
     if (viewState.mode === 'reference') {
@@ -3557,6 +3782,17 @@ function init() {
       renderSearchResults();
     } else {
       renderBrowseChapter(translations, layout);
+    }
+
+    // The native Greek attribution is shown in the footer while the aligned
+    // column is visible, so the source/licence never loses its attribution in
+    // Canon. When the option is off the footer stays hidden (unchanged).
+    if (pilotOn) {
+      const dataset = lxxDataset();
+      if (dataset && dataset.license && dataset.license.attribution) {
+        refs.lxxAttribution.hidden = false;
+        refs.lxxAttribution.textContent = ` ${dataset.license.attribution}`;
+      }
     }
 
     // Update the context button label to reflect current state

@@ -2643,3 +2643,82 @@ The handoff and old proposed prompt are annotated as stale. No Scripture or
 heading was moved or copied between editions; no product policy changed.
 Evidence: build/reports/sirach-heading-handoff-REPORT.md. Remaining next UI
 proposal: native LXX Previous/Next navigation; font changes remain a user choice.
+
+### 2026-10-07 — Stage2a draft; user chooses one verse per row
+
+Stage2a began from d82d93b. Codex authored 31 content-based Genesis1 proposals
+in30 groups, including collective6-7 because the closing phrase crosses the
+Greek/WEB/KJV/OSHB boundary. DeepSeek independently reviewed the four-language
+ledger and implemented a research prototype, but stopped with HTTP402 Insufficient
+Balance before completion. No human textual approval or verified map is claimed.
+
+User approved the general interface and unresolved Genesis2 behavior, then
+rejected duplication and requested 1:1 rows plus a tiny notice. Codex made this
+UI-only change directly: Greek6 once at row6, Greek7 once at row7, with the short
+clause-placement note. Collective proposal/evidence remain unchanged. Direct
+Codex product work needs a second review; user preview review is pending.
+Presentation tests12/12, Stage2a UI checks37/37, resolver tests28/28. All source
+texts/labels/flags and existing corpora/importers remain unchanged. Six independent
+validator failures still block overall Stage2a acceptance. This branch is only
+an unfinished local draft; no merge, push or deletion authorized or performed.
+
+### 2026-10-07 — Stage2a validator/evidence repair and resolver hardening
+
+Continuing the unfinished Stage2a draft (f2b6b68) in the isolated checkout
+build/cache/lxx-stage2a-implementation on codex/lxx-stage2a. The accepted
+one-verse-per-row Genesis1:6/7 presentation is preserved unchanged (12/12
+desktop/mobile verse-row checks; check-stage2a 37/37). Six independently
+reproduced default-validator holes are closed: a verified document, group or
+entry without valid human approval, an invented provenance.rowId, wrong bound
+text hashes, and an unsupported status are all rejected; `--require-verified`
+still rejects the still-proposed pilot. The validator now loads and hash-binds
+the proposal ledger, resolves each rowId, and checks the source ref, complete
+target set and text hashes against the ledger and the bound source/comparison
+corpora (target locations proven by content hash, never by matching verse
+numbers); collective6-7 is jointly substantiated by both rows. The resolver
+fails closed on conflicting/duplicate claims, retains missing-source state when
+any group member is absent, refuses unattested "no counterpart" claims, and
+validates unnumbered kind/index. Bindings use a documented canonical
+`sha256-lf` (CRLF→LF) hash so fresh clones verify; the compiler now binds the
+ledger itself. Mapping and registry metadata declare source/target schemes and
+warn when the pilot is compared against an unreviewed edition. Mutation
+coverage: validator 47/47 (independent probe 0 failures), check-stage2a 37/37,
+verse-rows 12/12, and all Stage1/Stage1b/native/disclosures/native-reference
+checks pass with full npm test exit0 and no skips. No merge, push or deletion;
+human adjudication and phone testing remain open. Report:
+build/reports/stage2a-REPORT.md.
+See build/reports/stage2a-DRAFT-STATUS.md for the precise scope and blockers.
+
+### 2026-10-07 — Stage2a resolver runtime ambiguities fail closed
+
+Codex's independent review (build/reports/stage2a-independent-review.md)
+reproduced four runtime gaps: the Canon-column resolveTarget() path did not
+honour metadata ambiguities already rejected by the CLI validator. Commit5485d91
+closes all four: a duplicate source entry now taints its group's targets, not
+only resolveSource(); repeated group IDs can no longer overwrite a definition;
+a target that is both mapped and negatively asserted is ambiguous; and a second
+negative assertion for one target no longer yields a definitive
+no-corresponding-verse. Conflicts are tracked across both indexes and affected
+groups, so resolveSource() stays safe. Focused regressions cover both lookup
+directions and an unaffected sibling target, so valid proposals are not
+collaterally invalidated. Checks: independent runtime probe0 failures (was4),
+independent validator probe0, proposal PASS, --require-verified expected FAIL,
+import --check4/0, test-verse-mapping61/61, check-stage2a37/37, verse-rows12/12,
+full npm exit0 with no skips. Accepted display (source6 once at6, source7 once
+at7, short notice, single-verse7 only, Genesis2 unavailable), all existing
+evidence/scheme/human-gate repairs, proposed/human-null statuses, corpora,
+shellv52, DATAv3 and versioned URLs are unchanged. No merge, push or deletion;
+human textual adjudication and phone acceptance remain open.
+
+### 2026-10-07 — Stage2a technical acceptance after manual resolver repair
+
+Codex independently verified product5485d91/report66841cc in the independent
+clone. Original runtime probe: control+4 repaired conflicts,0failures. Original
+validator probe8/8, resolver61/61, accepted desktop/mobile presentation12/12,
+compiler4/0, proposal validationPASS, verified gate expectedFAIL, full npmexit0
+withoutSKIP/FAIL (Stage2aUI37/37). No product edits during this review. Source
+corpora/canon/importer/ledger/second textual review remain unchanged.
+Technical acceptance passes for the proposed Genesis1 pilot only. Human textual
+adjudication, actual phone acceptance and explicit merge/push remain pending.
+All real mappings stay proposal with humanApproval=null. Existing main/livev51
+is unchanged. See build/reports/stage2a-independent-ACCEPTANCE.md for evidence.
