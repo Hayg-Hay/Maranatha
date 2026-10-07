@@ -9,13 +9,19 @@ thin `app.js` + `index.html` + `style.css` front end with no framework.
 
 ## Status
 
-**Four real translations are live: World English Bible (WEB-C), King James
-Version (KJV), Byzantine Majority Text (Greek NT, 27 books), and Hebrew
+**Four canon-numbered translations are live: World English Bible (WEB-C), King
+James Version (KJV), Byzantine Majority Text (Greek NT, 27 books), and Hebrew
 (OSHB, 39 protocanonical OT books).** Open `index.html`, checkboxes are on by
 default, pick a book/chapter, and you'll see translations side by side. The 7
 Catholic deuterocanonical books (Tobit, Judith, Wisdom, Sirach, Baruch, 1–2
 Maccabees) show a "not available" placeholder in translations that don't cover
 them — this is expected, not a bug.
+
+**A separate "LXX (native numbering)" view (Stage 1) is also live**: the Swete
+Septuagint in its own source numbering, standalone and deliberately NOT aligned
+to the canon numbering used elsewhere. Choose "LXX (native numbering)" in the
+View selector to browse it by its own book/chapter labels. See
+`data/LICENSE-lxx-swete.md` and `PROJECT_HISTORY.md` (Phase 4).
 
 What works:
 
@@ -43,7 +49,15 @@ What works:
   Masoretic versification onto the Christian canon. `validate.mjs` result:
   0 errors, 3 warnings (EST 4, EST 10, DAN — all against provisional canon
   entries), 1 known-variant info note (PSA 13, Masoretic vs Christian verse
-  count).
+   count).
+- `data/lxx-swete.json` (+ `lxx-swete.js`) — the Swete Septuagint (Greek OT) in
+  native LXX numbering, built by `build/import-lxx-swete.mjs` from the pinned
+  OpenGreekAndLatin/First1KGreek `tlg0527` snapshot (CC BY-SA 4.0). 45 in-canon
+  books plus the Letter of Jeremiah, Susanna and Bel as components; Daniel is
+  the Theodotion witness. Rendered by the independent "LXX (native numbering)"
+  view; it is not checked against `canon.js` and is not a canon-numbered
+  translation. See `build/validate-lxx-native.mjs` and
+  `build/check-stage1.mjs`.
 - `index.html` — book/chapter navigation, translation checkboxes (multi-select,
   renders side by side), and real verse rendering. Translation data loads via
   a dynamically created `<script>` tag when its checkbox is selected — never
@@ -88,6 +102,12 @@ These provisional designations remain because the chapter/verse counts
 were computed from a single translation (WEB-C) rather than verified
 against multiple independent sources. `validate.mjs` treats mismatches
 against provisional books as warnings, not errors.
+
+Separately, the Swete Septuagint (the "LXX (native numbering)" view) has no
+Ecclesiastes: the source edition does not contain it. It is recorded in
+`data/lxx-swete.json` as "not available in this edition" and is never grafted
+in from another edition. That view is native-numbered and deliberately not
+validated against `canon.js`.
 
 ## Running it
 

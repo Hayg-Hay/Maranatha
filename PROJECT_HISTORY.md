@@ -2114,3 +2114,66 @@ dependencies were introduced; the grouped control uses the same classic
 - Evidence so far: BAR Letter n -> BAR 6:(n+1); DAN Theodotion 4:n -> 4:(n+3), 3:98-100 -> 4:1-3. 22 proposals, 572 containers unresolved.
 - Generic anchor tests (names/length/numerals/divine) flag 25-52% on identity-presumed control books: triage only, never validation.
 - Pending decisions: Daniel witness, tiered mapping approach, staged shipping. Per-translation versification is a blocking architecture requirement.
+
+### Phase 4 — LXX (Swete) Stage 1 implemented: native numbering, standalone view, Oct 2026
+
+The audit above ended with "user decides"; those decisions are now recorded and
+**Stage 1 is implemented**. Stage 1 ships the Swete Septuagint as a standalone
+Greek text in its **native source numbering**. It is deliberately **not mapped
+or aligned** to the canon numbering used by every other translation; the tiered
+mapping and per-translation versification work is deferred to Stage 2.
+
+**Decisions.** Daniel witness = Theodotion (`tlg057`), with Susanna (`tlg055`)
+and Bel (`tlg059`) as separate components; the Old Greek witnesses stay in the
+raw sources only. Source = `OpenGreekAndLatin/First1KGreek` `tlg0527` @
+`03776b39f4047c5cff06f5296fae4b2bae4b08fb` (CC BY-SA 4.0, per-file header).
+
+**Pipeline.** `build/import-lxx-swete.mjs` parses the pinned TEI with
+`fast-xml-parser` (never regex on tags), excludes apparatus and structural
+headings by structure, preserves detached titles/introductions as unnumbered
+segments, and applies **NFC as the only text transformation**. It writes
+`data/lxx-swete.json` / `data/lxx-swete.js` (7.5 MB each) and assigns
+`window.MARANATHA_TRANSLATIONS['lxx-swete']`. `build/validate-lxx-native.mjs`
+re-checks labels and character counts against the raw source. `build/check-stage1.mjs`
+asserts the Stage 1 invariants (below). Raw snapshots are not re-parsed by Git
+(they are re-fetchable and were already excluded on the audit branch).
+
+**Scope shipped:** exactly the 45 in-canon books present upstream, plus the
+components LJE/SUS/BEL; 1,055 chapters; 27,048 numbered verses; 100 unnumbered
+detached segments. Excluded (recorded in the data): 1 Esdras, 3-4 Maccabees,
+Odes/Prayer of Manasseh, Psalms of Solomon, Psalm 151. Ecclesiastes is recorded
+as `missing` ("not available in this edition") and is never grafted from another
+edition. Ezra/Nehemiah are split from the single Esdras B file (source chapters
+1-10 / 11-23), labels as printed.
+
+**Known defects (disclosed, never corrected):** Psalm 88 prints label `84` where
+48 is expected; Psalm 115 has no label 6 (verse 5 carries the text, and a
+`θάυατος` spelling); Psalm 129:3 nests labeled verses 4-8; Theodotion Bel is
+truncated mid-sentence at 1:36 (canonical Daniel 14:36; verses 37-42 absent);
+plus 686 flagged verses across shipped books for mixed-script/OCR-like tokens,
+transcription markers, empty containers and the nested container. Each is a
+per-verse flag or per-book notice, never a text repair.
+
+**UI.** A new View selector switches between "Canon view" (unchanged) and "LXX
+(native numbering)". The LXX view has its own Book/Chapter selectors driven by
+the data file, renders one column with the printed labels (unnumbered segments
+shown without a number), shows the banner "Swete Septuagint, native LXX
+numbering, not aligned to the canon numbering used elsewhere", per-book notices
+and per-verse disclosure markers, and a footer attribution/license. The data
+loads lazily through a dynamically created `<script>` tag (never `fetch()`), so
+`file://` still works. `canon.js`, `validate.mjs` and all existing translation
+registry entries are untouched; shell `CACHE_VERSION` bumped `v45 → v46`, data
+cache unchanged.
+
+**Verification.** `build/check-stage1.mjs` prints one PASS/FAIL line per
+invariant (source labels preserved; 45 books / excluded absent / ECC missing;
+Daniel=Theodotion; Bel truncation; detached text; independent source-vs-shipped
+character counts of 2,754,390 chars over 47 files; and a WEB+KJV canon-view
+regression over GEN 1, EXO 20, PSA 23, PSA 119, ISA 53, JER 25, DAN 3, SIR 1,
+MAT 5, JHN 1 captured from the base branch before any change). All 13 checks
+pass. `build/test-service-worker.mjs`, `build/test-sirach.mjs` and
+`build/test-delitzsch-group.mjs` still pass.
+
+**Stage 2 (still pending):** tiered Swete→canon mapping, per-translation
+versification architecture, and any alignment/parallel display. Stage 1 makes
+no claim of canonical correspondence.
