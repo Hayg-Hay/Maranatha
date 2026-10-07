@@ -49,3 +49,10 @@ publish the static files directly. Limitation: this has **not** deployed and
 cannot be confirmed from this branch. A new deployment and the phone's service
 worker update must still be observed on the live URL after merge. Whether
 Jekyll was the cause of the current delay remains unproven.
+
+## Verified deployment outcome — 2026-10-07
+
+User approved merge/push; merge 3e4c7b1 reached main. Pages run 37636339200
+succeeded with static artifact upload and no Jekyll step. Public HTTP checks
+returned shell v49 and Parallel reading. Phone activation is not independently
+verified. https://github.com/Hayg-Hay/Maranatha/actions/runs/37636339200

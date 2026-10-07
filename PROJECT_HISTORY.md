@@ -2442,3 +2442,13 @@ Expected effect: after an approved merge, Pages should skip the Jekyll build and
 publish the static files directly. Limitation: this fix has **not** deployed and
 cannot be confirmed from this branch — a new deployment and the phone's service
 worker update must still be observed on the live URL after merge.
+
+### 2026-10-07 — Static Pages publishing fix verified live
+
+User explicitly approved merging and pushing codex/pages-static-publish.
+Merge 3e4c7b1 was pushed to main. Pages run 37636339200 completed successfully;
+its build uploaded the static artifact without a Jekyll step. Public HTTP checks
+then returned shell v49 and the Parallel reading option, replacing live v45.
+https://github.com/Hayg-Hay/Maranatha/actions/runs/37636339200
+This verifies server deployment; phone activation remains the user's check.
+The three new LXX disclosures remain on their separate unmerged branch.
