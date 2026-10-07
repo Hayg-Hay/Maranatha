@@ -2177,3 +2177,63 @@ pass. `build/test-service-worker.mjs`, `build/test-sirach.mjs` and
 **Stage 2 (still pending):** tiered Swete→canon mapping, per-translation
 versification architecture, and any alignment/parallel display. Stage 1 makes
 no claim of canonical correspondence.
+
+### Phase 4 — LXX (Swete) Stage 1b implemented: independent parallel panes, Oct 2026
+
+Stage 1b adds a third View choice, **"Parallel reading (independent numbering)"**.
+It is a UI/control-layer change only: no mapping, no alignment, and no data
+rewrite. The two panes are deliberately independent and the banner
+"Independent numbering; passages are not aligned" says so.
+
+**Design.** The left pane is the Stage 1 Swete LXX; the right pane is **one**
+existing canon-numbered translation chosen from a dropdown that lists every
+registered translation (including Hebrew OSHB and **both** Delitzsch editions).
+Each pane owns its own controls:
+
+- The Stage 1 LXX renderer was split into
+  `renderLxxInto(bookSelect, chapterSelect, container, onReady)`; the standalone
+  LXX view calls it with `#lxx-book`/`#lxx-chapter`/`#results`, and the parallel
+  left pane calls it with `#parallel-lxx-book`/`#parallel-lxx-chapter`/
+  `#parallel-lxx-content`. Book notices, unnumbered segments, per-verse flags and
+  the footer attribution are therefore identical in both places.
+- The parallel right pane reuses `appendResultBlock`/`multiColumn` (or
+  `mobileReading` on narrow screens) through a synchronous `renderInto`
+  helper that temporarily points `refs.results` at the pane's content div. This
+  keeps the diff small and avoids a renderer-wide refactor. Hebrew stays RTL, and
+  the Delitzsch 1901 declared-versification notice still renders.
+- Each control listener re-renders **only its own pane** (`renderParallelLxxPane`
+  or `renderParallelTranslationPane`); moving one pane cannot move the other.
+  There is no row matching, synchronized scrolling or chapter mapping. The right
+  pane's dropdown and Book/Chapter are a separate control layer and never mutate
+  the canon translation checkboxes or the canon Book/Chapter state.
+- Invoking the (canon-only) Reference box or text Search from the LXX or parallel
+  view sets the View back to `canon` first, so neither pane can appear to have
+  answered an LXX reference or search.
+- The LXX data still lazy-loads through a dynamically created `<script>` tag
+  (never `fetch()`), so `file://` keeps working.
+
+**Mobile.** The two panes stack, LXX first, each keeping its own controls and
+content (CSS `@media (max-width:700px)`), plus a static
+`.parallel-view[hidden] { display:none }` rule so the flex layout cannot override
+the `hidden` attribute (the jsdom-CSS pitfall from the Stage 1 lessons).
+
+**Cache and assertions.** Shell `CACHE_VERSION` bumped `v47 → v48`; the data
+cache (`v3`) and every data file are unchanged. The three existing version
+assertions were updated to `v48` (`build/test-service-worker.mjs`,
+`build/test-delitzsch.mjs`, `build/test-delitzsch1901.mjs`). No importer,
+`canon.js`, `validate.mjs`, translation ID or `data/*` file was touched.
+
+**Verification.** New `build/check-stage1b.mjs` prints 36 PASS/FAIL lines:
+data SHA-256 (unchanged `d31c332f…`) and counts (48 books / 1,055 chapters /
+27,048 verses / 100 unnumbered / 686 flagged), preserved source labels
+(Ps 88 `…47,84,49`; Ps 115 no 6; Bel ends 36), unique HTML IDs, the hidden-view
+and mobile-stack CSS rules; then on the real `file://` app: startup lazy-loading
+(no LXX/Delitzsch script at boot), lazy LXX and Delitzsch loading, independent
+pane navigation in both directions, Hebrew RTL, the Delitzsch 1901 notice,
+reference/search return-to-Canon, view switching and mobile pane isolation; and a
+WEB+KJV canon regression (GEN 1, EXO 20, PSA 23, PSA 119, ISA 53, JER 25, DAN 3,
+SIR 1, MAT 5, JHN 1) byte-identical to the pre-change
+`build/cache/stage1b-before.json`. `build/check-stage1.mjs` (15/15),
+`build/validate-lxx-native.mjs` (8/8) and `npm test` all pass. Stage 2 (tiered
+Swete→canon mapping) remains unimplemented; Stage 1b makes no canonical
+correspondence claim.

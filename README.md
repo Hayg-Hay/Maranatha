@@ -23,10 +23,16 @@ to the canon numbering used elsewhere. Choose "LXX (native numbering)" in the
 View selector to browse it by its own book/chapter labels. See
 `data/LICENSE-lxx-swete.md` and `PROJECT_HISTORY.md` (Phase 4).
 
+**Stage 1b adds "Parallel reading (independent numbering)"** (see the section
+below): the LXX in the left pane and one canon-numbered translation in the right
+pane, each with its **own** Book/Chapter controls. The panes are independent —
+no row matching, no synchronized scrolling, no automatic chapter mapping — and a
+banner says so.
+
 Known limitation: the reference box and the text search are **canon-only** and
-ignore the LXX view (native LXX numbering is not mapped to canon references in
-Stage 1), so entering a reference or searching while in the LXX view still acts
-on the canon-numbered translations.
+do not address the LXX. Invoking either one from the LXX or parallel view
+returns to Canon view and acts on the canon-numbered translations, so neither
+pane ever appears to have answered an unsupported LXX reference or search.
 
 What works:
 
@@ -61,8 +67,8 @@ What works:
   books plus the Letter of Jeremiah, Susanna and Bel as components; Daniel is
   the Theodotion witness. Rendered by the independent "LXX (native numbering)"
   view; it is not checked against `canon.js` and is not a canon-numbered
-  translation. See `build/validate-lxx-native.mjs` and
-  `build/check-stage1.mjs`.
+  translation. See `build/validate-lxx-native.mjs`, `build/check-stage1.mjs`
+  and (for the parallel view) `build/check-stage1b.mjs`.
 - `index.html` — book/chapter navigation, translation checkboxes (multi-select,
   renders side by side), and real verse rendering. Translation data loads via
   a dynamically created `<script>` tag when its checkbox is selected — never
@@ -113,6 +119,35 @@ Ecclesiastes: the source edition does not contain it. It is recorded in
 `data/lxx-swete.json` as "not available in this edition" and is never grafted
 in from another edition. That view is native-numbered and deliberately not
 validated against `canon.js`.
+
+## Parallel reading (independent numbering)
+
+The View selector offers three choices: **Canon view**, **LXX (native
+numbering)**, and **Parallel reading (independent numbering)**.
+
+Parallel reading shows two panes side by side (stacked on a phone, LXX first):
+
+- **Left pane — Septuagint (Swete), native LXX numbering.** Its own LXX book and
+  chapter dropdowns, driven by `data/lxx-swete.js` (loaded lazily through a
+  classic `<script>` tag, never `fetch()`). It reuses the exact renderer used by
+  the standalone LXX view, so per-book notices, unnumbered segments, per-verse
+  flags and the footer attribution are all preserved.
+- **Right pane — one canon-numbered translation.** Its own translation dropdown
+  (every registered translation, including Hebrew OSHB and both Delitzsch
+  editions), plus its own Book/Chapter dropdowns. It renders through the normal
+  canon chapter renderer, so Hebrew stays RTL and the Delitzsch 1901 chapter
+  numbering notice is still shown.
+
+The two panes are **completely independent**: changing one pane's controls
+re-renders only that pane, never the other. There is no row matching, no
+synchronized scrolling and no automatic chapter mapping, and the banner
+"Independent numbering; passages are not aligned" states this. The right pane's
+selection and Book/Chapter do not touch the Canon-view translation checkboxes or
+the canon Book/Chapter state.
+
+The Reference box and the text Search remain **canon-only**: using either from
+the LXX or parallel view first returns to Canon view and then acts on the
+canon-numbered translations.
 
 ## Running it
 
