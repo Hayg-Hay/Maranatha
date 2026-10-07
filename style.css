@@ -575,6 +575,7 @@ code { font-family:Consolas, monospace; }
 .aligned-source-ref { display:inline-block; margin-inline-end:.4em; color:var(--muted); font-size:.78rem; font-variant-numeric:tabular-nums; white-space:nowrap; }
 .aligned-cell .lxx-text { font-size:1.05rem; }
 .aligned-note { display:block; margin-top:.4em; font-size:.8em; opacity:.85; }
+.aligned-shared-note { color:var(--muted); font-size:.82rem; }
 .mobile-verse-text.aligned-cell { display:block; }
 .alignment-notice[hidden] { display:none; }
 

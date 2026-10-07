@@ -156,7 +156,7 @@ check('6. Romans 14/16 placement and 3 John note-only metadata', true);
   vm.runInContext(fnSrc + '\nthis.f = isTranslationFile;', sandbox);
   assert(sandbox.f('/data/delitzsch.js') === true);
   assert(sandbox.f('/data/canon.js') === false);
-  assert(/CACHE_VERSION\s*=\s*'v52'/.test(swSrc));
+  assert(/CACHE_VERSION\s*=\s*'v53'/.test(swSrc));
   check('13. service-worker routes delitzsch and shell version bumped', true);
 }
 

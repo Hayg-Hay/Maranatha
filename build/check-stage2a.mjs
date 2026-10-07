@@ -116,7 +116,7 @@ function staticChecks() {
   out('css-aligned-cell-rules', /\.aligned-cell\s*\{/.test(css) && /\.aligned-source-ref\s*\{/.test(css));
 
   const sw = read('service-worker.js');
-  out('sw-shell-v52', /CACHE_VERSION\s*=\s*'v52'/.test(sw));
+  out('sw-shell-v53', /CACHE_VERSION\s*=\s*'v53'/.test(sw));
   out('sw-data-v3-kept', /DATA_CACHE_VERSION\s*=\s*'v3'/.test(sw));
   out('sw-keeps-data-cache-on-activate', /keep = new Set\(\[SHELL_CACHE, DATA_CACHE\]\)/.test(sw));
   out('sw-data-cache-ignores-query-false', /ignoreSearch: cacheName !== DATA_CACHE/.test(sw));
@@ -208,11 +208,16 @@ async function desktopChecks() {
   out('canonical-range-parsing-intact',
     d.querySelectorAll('#results table.comparison-table-columns tbody tr').length === 4);
 
-  // Unresolved and missing-edition states are distinct and never guessed.
+  // Genesis 2 is now proposal-covered; Genesis 6:2 stays unresolved. Unresolved
+  // and missing-edition states remain distinct and are never guessed.
   await goChapter(dom, 'GEN', 2);
-  out('genesis2-unresolved-no-greek',
-    correspondences(d).length === 0 && aligned(d).length > 0
-      && aligned(d).every((c) => c.classList.contains('verse-placeholder') && /alignment not available/.test(c.textContent)));
+  out('genesis2-now-covered', correspondences(d).length === 25, String(correspondences(d).length));
+
+  await goChapter(dom, 'GEN', 6);
+  out('genesis6-2-unresolved',
+    correspondences(d).length === 1 && aligned(d).length > 1
+      && aligned(d).filter((c) => !c.classList.contains('aligned-correspondence'))
+        .every((c) => /alignment not available/.test(c.textContent)));
 
   await goChapter(dom, 'PSA', 23);
   out('psalms-unresolved-no-greek',

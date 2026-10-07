@@ -39,7 +39,7 @@ async function test(narrow){
       assert.match(d.querySelector('#results .aligned-note').textContent,/Greek 6.*English\/Hebrew.*7/);
     });
     await check(label+'-unresolved-chapter-stays-unresolved',()=>{
-      change('#book','GEN');change('#chapter','2');
+      change('#book','GEN');change('#chapter','7');
       assert.match(d.querySelector('#results').textContent,/alignment not available/i);
       assert.equal(d.querySelectorAll('#results .aligned-cell .lxx-text').length,0);
     });

@@ -562,10 +562,14 @@ const refs = {
     generation: 0,
     callbacks: [],
   };
-  const ALIGNMENT_MAP_URL = 'data/lxx-swete-alignment.js?v=stage2a-20261007';
-  const ALIGNMENT_SCHEMES_URL = 'data/versification-schemes.js?v=stage2a-20261007';
+  const ALIGNMENT_MAP_URL = 'data/lxx-swete-alignment.js?v=stage2b-20261007';
+  const ALIGNMENT_SCHEMES_URL = 'data/versification-schemes.js?v=stage2b-20261007';
   const ALIGNMENT_NOTICE_DEFAULT =
-    'Canon view only. AI-proposed correspondences awaiting human review; the Greek is read from the native Swete text and is never guessed.';
+    'Canon view only. AI-proposed correspondences for Genesis 1-5 (plus boundary Genesis 6:1) awaiting human review; the Greek is read from the native Swete text and is never guessed.';
+  // Source units already rendered in the current comparison view, keyed by
+  // source ref. A single source spanning two targets is shown in full once per
+  // view; later visible targets get a short shared-source reference instead.
+  const alignmentRenderedSources = new Set();
 
   const viewState = {
     mode: 'browse',       // 'browse' | 'reference' | 'search'
@@ -1480,6 +1484,17 @@ function init() {
           && m.source.label === String(target.verse));
         if (member) { displayedMembers = [member]; verseRows = true; }
       }
+      // A single source unit spanning two canonical targets (GEN 3:1 / GEN 6:1)
+      // is rendered in full once per comparison view; a later visible target
+      // shows only a short reference to it. No Greek is split or duplicated.
+      let sharedReference = null;
+      if (cell.spanning && displayedMembers.length === 1) {
+        const member = displayedMembers[0];
+        const sk = [member.source.book, String(member.source.chapter), member.source.kind,
+          member.source.kind === 'unnumbered' ? String(member.source.segmentIndex) : String(member.source.label)].join('|');
+        if (alignmentRenderedSources.has(sk)) { sharedReference = member; displayedMembers = []; }
+        else alignmentRenderedSources.add(sk);
+      }
       for (const member of displayedMembers) {
         const row = document.createElement('span');
         row.className = 'aligned-source';
@@ -1502,11 +1517,28 @@ function init() {
         }
         td.append(row);
       }
+      if (sharedReference) {
+        const row = document.createElement('span');
+        row.className = 'aligned-source aligned-shared-reference';
+        const ref = document.createElement('span');
+        ref.className = 'aligned-source-ref';
+        ref.textContent = sharedReference.refLabel;
+        const shared = document.createElement('span');
+        shared.className = 'aligned-shared-note';
+        shared.textContent = 'Complete Greek source shown once in this view; this row shares it.';
+        row.append(ref, document.createTextNode(' '), shared);
+        td.append(row);
+      }
       const note = document.createElement('small');
       note.className = 'verse-source-note aligned-note';
       note.setAttribute('role', 'note');
+      const presentationNote = cell.presentation && cell.presentation.note ? cell.presentation.note : '';
       note.textContent = verseRows
         ? '“And it was so” ends Greek 6; English/Hebrew place it in 7.'
+        : sharedReference
+        ? `Greek ${sharedReference.refLabel} shown once above; this row shares it.`
+        : presentationNote
+        ? presentationNote
         : cell.collective
         ? `Proposed collective passage (${cell.groupId}); boundaries differ \u2014 not a word-for-word or exact verse-boundary match.`
         : `Proposed correspondence (${cell.groupId}); awaiting human review.`;
@@ -1524,7 +1556,7 @@ function init() {
     note.className = 'verse-source-note';
     note.setAttribute('role', 'note');
     note.textContent = cell.state === 'alignment-unavailable'
-      ? 'No proposal for this reference in the Genesis 1 pilot.'
+      ? 'No proposal for this reference in the Genesis 1-5 pilot.'
       : cell.state === 'missing-edition'
         ? 'The Swete Septuagint source does not cover this book.'
         : cell.state === 'missing-source-text'
@@ -3221,11 +3253,11 @@ function init() {
   }
 
   function alignmentVirtualTranslation() {
-    return { id: 'lxx-aligned', label: 'LXX alignment (Genesis 1)', short: 'LXX alignment', virtual: true };
+    return { id: 'lxx-aligned', label: 'LXX alignment (Genesis 1-5)', short: 'LXX alignment', virtual: true };
   }
 
   // Warns, before reading the pilot, when a currently selected edition has no
-  // Genesis 1 proposal coverage. Those editions are compared as unreviewed,
+  // Genesis 1-5 proposal coverage. Those editions are compared as unreviewed,
   // edition-specific numbering; no Greek correspondence is asserted against
   // them. The coverage set comes from the compiled scheme registry.
   function updateAlignmentNotice() {
@@ -3240,7 +3272,7 @@ function init() {
       .map((t) => t.id)
       .filter((id) => id !== 'lxx-swete' && !coverage.has(id));
     note.textContent = unreviewed.length
-      ? `Warning: the Genesis 1 pilot is compared only with WEB/KJV/OSHB. Selected edition(s) ${unreviewed.join(', ')} use unreviewed, edition-specific numbering; no Greek correspondence is asserted against them.`
+      ? `Warning: the Genesis 1-5 pilot is compared only with WEB/KJV/OSHB. Selected edition(s) ${unreviewed.join(', ')} use unreviewed, edition-specific numbering; no Greek correspondence is asserted against them.`
       : ALIGNMENT_NOTICE_DEFAULT;
   }
 
@@ -3683,6 +3715,7 @@ function init() {
     // to Canon) and locale redraws — not only the View select's change event.
     updateReferenceHint();
     updateAlignmentNotice();
+    alignmentRenderedSources.clear();
     // Exactly one Book/Chapter mechanism is shown at a time: the canon bar in
     // canon view, the LXX bar in the LXX view, and the two independent pane
     // controls in the parallel view. The View selector stays visible in all.
