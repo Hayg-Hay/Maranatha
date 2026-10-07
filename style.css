@@ -528,3 +528,24 @@ code { font-family:Consolas, monospace; }
 .update-banner button { padding: 6px 12px; }
 
 .verse-source-note { display: block; margin-top: .4em; font-size: .85em; opacity: .8; }
+
+/* ----------------------------------------------------------
+   LXX (Swete) native-numbering view
+---------------------------------------------------------- */
+.lxx-banner { background:var(--notice-bg); border:1px solid var(--notice-border); border-inline-start:4px solid var(--accent); padding:10px 14px; margin:14px 0; font-size:.92rem; }
+.lxx-heading { margin:20px 0 8px; }
+.lxx-notices { background:var(--paper); border:1px solid var(--line); padding:10px 14px; margin:0 0 14px; font-size:.9rem; }
+.lxx-notices summary { cursor:pointer; font-weight:bold; }
+.lxx-notices p { margin:8px 0 0; }
+.lxx-verses { background:var(--paper); border:1px solid var(--line); padding:12px 14px; margin-bottom:20px; }
+.lxx-segment { display:flex; gap:.5em; align-items:baseline; padding:5px 0; border-bottom:1px solid var(--line); }
+.lxx-segment:last-child { border-bottom:0; }
+.lxx-verse-num { flex:0 0 auto; min-width:2.5em; text-align:right; color:var(--muted); font-variant-numeric:tabular-nums; font-size:.85rem; }
+.lxx-text { flex:1 1 auto; font-family:'SBL Greek','Palatino Linotype','Times New Roman',serif; font-size:1.15rem; line-height:1.7; color:var(--verse-ink); }
+.lxx-segment.lxx-unnumbered .lxx-text { font-style:italic; color:var(--muted); }
+.lxx-flag { flex:0 0 auto; color:var(--accent); cursor:help; font-size:.8em; }
+#lxx-attribution { display:block; margin-top:6px; }
+@media (max-width:700px) {
+  .lxx-text { font-size:1.05rem; }
+  .lxx-verse-num { min-width:2em; }
+}

@@ -130,6 +130,47 @@ async function renderCanonViews() {
   return results;
 }
 
+async function renderLxxProbe() {
+  const dom = await JSDOM.fromFile(path.join(root, 'index.html'), {
+    runScripts: 'dangerously',
+    resources: 'usable',
+    pretendToBeVisual: true,
+    beforeParse(window) {
+      window.matchMedia = (query) => ({ get matches() { return query.includes('max-width') && !!window.narrowTest; }, addEventListener() {} });
+      window.scrollTo = () => {};
+      window.HTMLElement.prototype.scrollIntoView = () => {};
+    },
+  });
+  const { window } = dom;
+  const { document } = window;
+  await new Promise((resolve) => window.addEventListener('load', resolve, { once: true }));
+
+  const view = document.querySelector('#view-mode');
+  view.value = 'lxx';
+  view.dispatchEvent(new window.Event('change', { bubbles: true }));
+  await waitFor(() => document.querySelector('#results .lxx-banner'));
+  const banner = document.querySelector('#results .lxx-banner').textContent;
+
+  const bookSelect = document.querySelector('#lxx-book');
+  bookSelect.value = 'PSA';
+  bookSelect.dispatchEvent(new window.Event('change', { bubbles: true }));
+  const chapterSelect = document.querySelector('#lxx-chapter');
+  chapterSelect.value = '88';
+  chapterSelect.dispatchEvent(new window.Event('change', { bubbles: true }));
+
+  const numbers = [...document.querySelectorAll('#results .lxx-verse-num')].map((n) => n.textContent);
+  const attribution = document.querySelector('#lxx-attribution');
+  const result = {
+    banner,
+    has84: numbers.includes('84'),
+    attributionVisible: !attribution.hidden,
+    attributionText: attribution.textContent,
+    flagMarkers: document.querySelectorAll('#results .lxx-flag').length >= 0,
+  };
+  dom.window.close();
+  return result;
+}
+
 // ---------------------------------------------------------------------------
 // Invariant definitions.
 // ---------------------------------------------------------------------------
@@ -242,6 +283,15 @@ add('canon-view-regression', () => {
     return { ok: diffs.length === 0, detail: diffs.length ? `differs: ${diffs.join(', ')}` : `${REGRESSION_CHAPTERS.length} WEB+KJV chapters identical` };
   });
 });
+
+add('lxx-view-renders', () => renderLxxProbe().then((result) => {
+  const ok = /native LXX numbering/.test(result.banner) && result.has84 && result.attributionVisible && /Swete/.test(result.attributionText);
+  return {
+    ok,
+    detail: ok ? 'banner, Ps 88 label 84, footer attribution rendered in native view'
+      : `banner=${result.banner}; has84=${result.has84}; attribution=${result.attributionVisible}:${result.attributionText.slice(0, 40)}`,
+  };
+}));
 
 // ---------------------------------------------------------------------------
 // Run.
