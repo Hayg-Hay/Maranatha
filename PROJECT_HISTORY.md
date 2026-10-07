@@ -2484,3 +2484,16 @@ now normalizes actual CRLF to LF for the wrapper comparison and adds an
 independent `shipped-js-payload-parses-to-shipped-json` parsed-data equality check;
 the exact JSON-body comparison is retained. No data, importer, loader, cache-policy
 or runtime change was made. The checker now reports 39/39.
+
+### 2026-10-07 — Three LXX disclosures independently verified (Codex)
+
+Fresh-clone verification of 125f8f4: independent full-dataset/cache/DOM checks
+6/6; implementer checks 39/39; Stage1/native/Stage1b 15/8/45; Canon checks14/14;
+full npm suite exit0 on the same product code. Pinned-source verification finds
+47 files, 2,754,390 characters, zero differences and unchanged source labels.
+Only two targeted flags and one LJE notice were added; flagged count686->688.
+The initial fresh-clone verifier failed on Git/Windows CRLF wrapper EOLs; the
+implementer fixed the check without changing data or runtime. See the independent
+report and checker. User browser review and merge/push approval remain pending.
+The separately approved static publishing fix is already live on main at v49;
+retain its .nojekyll and history when a future disclosure merge is approved.
