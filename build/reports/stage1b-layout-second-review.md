@@ -1,5 +1,12 @@
 # Stage 1b layout refinement — second independent review
 
+Resolution recorded by Codex after this review: F1 is fixed in merge `7a2fe18`.
+Both stale assertions now require v49; the full fresh-clone npm suite passed
+(exit0; `build/cache/stage1b-final-npm-fixed.log`). Product code is unchanged
+from reviewed `7c58080`. F2 was reconciled in the merged documentation. F3's
+older-browser caveat remains; current visual appearance was accepted by the user.
+The original findings below are retained as the independent review record.
+
 Commit: `7c58080` on `codex/lxx-stage1b` (range `9ebe225..HEAD`).
 Reviewer 2 (independent). No product files edited; read-only `git`, source inspection and `node` checks only.
 Separation rule (`docs/ARCHITECT_HANDOFF.md` §0): implementer must not be the only verifier. Commit 7c58080 was authored by Codex (implementer / principal architect), so this second review is required. Method: read the actual diff and surrounding code, then run the repo's own checks. jsdom does not apply CSS, so all layout geometry below is **static** or **DOM** evidence only; the **visual** review was performed by the user, not by me.

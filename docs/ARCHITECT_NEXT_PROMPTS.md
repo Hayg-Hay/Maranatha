@@ -4,6 +4,14 @@ Proposals only: nothing below is authorization to implement, merge, push or dele
 Status update: Stage 1b was implemented, refined and browser-reviewed; the user
 approved its merge and push on 2026-10-07. Its prompt below is retained as the
 original specification. The remaining prompts describe subsequent work.
+
+Next bounded work item, after accepted Stage1b: disclosure metadata only for
+PSA16:4's preserved `(4)`, PSA88:84's anomalous source label, and LJE's synthetic
+navigation chapter 1. Codex checked the current data: both Psalm verses lack
+flags, and LJE lacks the chapter-container explanation. Use follow-up prompts
+1 and 2 below on a separate branch; retain every text and label byte. Data/cache
+changes need a tested refresh strategy and accurate new hash/flag anchors.
+Sirach headings, font replacement and Stage2 alignment remain separate decisions.
 Run tasks separately after the user approves their scope. Baseline: main includes
 Stage 1 through merge 8c69797; lxx-stage1 is 14fe85c. The independent acceptance
 record is build/reports/architect-handoff-REPORT.md. Each block is self-contained.

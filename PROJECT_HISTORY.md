@@ -2398,3 +2398,16 @@ updating the two Delitzsch shell assertions from v48 to v49; no runtime change.
 Codex independently used the actual pre-change ten-chapter baseline (the second
 reviewer's separate empty-baseline smoke run does not establish byte equality).
 Git integrity check exit0; no deleted paths; no Scripture/data changes.
+
+### 2026-10-07 — Stage1b merged and pushed
+
+Merge 7a2fe18 includes independently verified Stage1b, user-reviewed Codex
+layout refinement 7c58080, the second layout review, and reconciled handoff
+verification records. `git push origin main` succeeded: 8c69797 -> 7a2fe18.
+The second review's stale cache-version assertions were corrected; full npm
+suite exit0. No Scripture files changed. All five pre-existing untracked items
+were retained. Phone/PWA testing remains unreported; push success is not proof
+that the GitHub Pages deployment or a phone's cache has updated.
+Next scoped item is disclosure metadata for PSA16:4, PSA88:84 and the LJE
+navigation chapter, with byte-preservation and cache-refresh verification.
+See docs/ARCHITECT_NEXT_PROMPTS.md; no future merge/push approval is inferred.
