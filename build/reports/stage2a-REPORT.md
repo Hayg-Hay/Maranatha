@@ -131,6 +131,47 @@ negative resolver behaviour, attested-negative accept, and a synthetic fully
 human-approved verified document. No human approval was invented for the real
 pilot.
 
+## Follow-up — runtime resolver ambiguity review (commit 5485d91)
+
+Codex's independent runtime probe
+(`build/check-stage2a-runtime-independent.mjs`) found four gaps between the
+Canon-column `resolveTarget()` path and metadata ambiguities already rejected by
+the CLI validator. All four now fail closed with state `ambiguous-metadata` and
+no guessed or partially selected Greek:
+
+1. Duplicate source entry — conflict is now propagated from the entry index to
+   the affected group's targets, not only to `resolveSource()`.
+2. Conflicting definitions sharing one group ID — duplicate IDs are detected and
+   never silently overwrite a definition.
+3. A target both positively mapped and negatively asserted — the contradiction is
+   surfaced rather than preferring the map.
+4. Duplicate/conflicting negative assertions for one target — the second
+   assertion makes the target ambiguous instead of a definitive
+   `no-corresponding-verse`.
+
+Conflicts are tracked across both indexes and taint the affected groups, so
+`resolveSource()` stays safe too. Focused regression cases were added to
+`build/test-verse-mapping.mjs` covering both lookup directions and an unaffected
+sibling target in each fixture (no valid proposal is collaterally invalidated).
+
+| Check | Result |
+| --- | --- |
+| `check-stage2a-runtime-independent.mjs .` | 0 failures (was 4) |
+| `check-stage2a-validator-independent.mjs .` | 0 failures (8/8) unchanged |
+| `validate-verse-mapping.mjs` | PASS proposal |
+| `validate-verse-mapping.mjs --require-verified` | FAIL as expected |
+| `import-lxx-alignment.mjs --check` | 4 current / 0 stale |
+| `test-verse-mapping.mjs` | 61 pass / 0 fail |
+| `check-stage2a.mjs` | 37 pass / 0 fail |
+| `check-stage2a-verse-rows.mjs .` | 12 pass, 0 failures |
+| `npm test` | exit 0, no SKIP, no FAIL |
+
+Scope of commit 5485d91: `verse-mapping.js`,
+`build/test-verse-mapping.mjs`, plus Codex's copied
+`build/check-stage2a-runtime-independent.mjs` and
+`build/reports/stage2a-independent-review.md`. No map data, Scripture corpus,
+importer, ledger, presentation, service worker or cache version changed.
+
 ## Known deviations / open questions
 
 - The ledger's `declaredSha256` for `web`/`he` was recorded from a CRLF working

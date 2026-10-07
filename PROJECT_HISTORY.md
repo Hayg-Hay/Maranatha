@@ -2688,3 +2688,24 @@ checks pass with full npm test exit0 and no skips. No merge, push or deletion;
 human adjudication and phone testing remain open. Report:
 build/reports/stage2a-REPORT.md.
 See build/reports/stage2a-DRAFT-STATUS.md for the precise scope and blockers.
+
+### 2026-10-07 — Stage2a resolver runtime ambiguities fail closed
+
+Codex's independent review (build/reports/stage2a-independent-review.md)
+reproduced four runtime gaps: the Canon-column resolveTarget() path did not
+honour metadata ambiguities already rejected by the CLI validator. Commit5485d91
+closes all four: a duplicate source entry now taints its group's targets, not
+only resolveSource(); repeated group IDs can no longer overwrite a definition;
+a target that is both mapped and negatively asserted is ambiguous; and a second
+negative assertion for one target no longer yields a definitive
+no-corresponding-verse. Conflicts are tracked across both indexes and affected
+groups, so resolveSource() stays safe. Focused regressions cover both lookup
+directions and an unaffected sibling target, so valid proposals are not
+collaterally invalidated. Checks: independent runtime probe0 failures (was4),
+independent validator probe0, proposal PASS, --require-verified expected FAIL,
+import --check4/0, test-verse-mapping61/61, check-stage2a37/37, verse-rows12/12,
+full npm exit0 with no skips. Accepted display (source6 once at6, source7 once
+at7, short notice, single-verse7 only, Genesis2 unavailable), all existing
+evidence/scheme/human-gate repairs, proposed/human-null statuses, corpora,
+shellv52, DATAv3 and versioned URLs are unchanged. No merge, push or deletion;
+human textual adjudication and phone acceptance remain open.
