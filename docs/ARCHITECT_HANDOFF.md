@@ -21,6 +21,37 @@ now v49; data cache remains v3. The Stage 1b proposal below is historical.
 Stage 2 and remaining follow-ups remain separate work; this approval does not
 authorize their future merges, pushes, deletions, or a Scripture change.
 
+**LXX disclosure metadata update, 2026-10-07 (opencode/DeepSeek):** the user
+approved the three disclosure changes (§4.5 items 1-2 plus the LJE notice). They
+are implemented on `codex/lxx-disclosures` (base `5213a13`) as metadata only:
+targeted per-verse flags at PSA 16:4 and PSA 88:84, one LJE navigation-chapter
+notice, appended `changes`/license explanations. Text, labels, segment order/
+kind, books, chapters, sources, witnesses and licenses are unchanged; flagged
+verses move 686 → 688 by independent count. New data hash `fd52aa2f…`. The data
+cache deliberately stays **v3**: the loader now requests the query-versioned
+`data/lxx-swete.js?v=disclosures-20261007`, and because DATA_CACHE matches with
+`ignoreSearch:false` the stale unversioned key cannot satisfy it, so the shell
+cache was bumped `v49 → v50` (all three assertions updated). This is a recorded
+policy exception to the older universal data-cache-bump guidance, which is
+incomplete for versioned URLs. See `build/reports/lxx-disclosures-REPORT.md`;
+merge/push and the real-browser/phone test are still the user's.
+
+**Native LXX reference navigation, 2026-10-07 (opencode/DeepSeek):** the user
+reported that using the Reference box inside the LXX view (LXX → Gen 1 → Open
+reference) deactivated the LXX. The old canon-only reference restriction is now
+**superseded for the standalone LXX view only**: the reference box opens one
+native reference (`Book Chapter[:Verse]`), stays in LXX, resolves book names via
+the canonical parser's name map but validates chapters/verses only against the
+native dataset (so `Ps 88:84` is accepted; `Ps 115:6` refused), and refuses ranges
+and multiple references with a native-format message. Canon and Parallel
+reference behaviour is unchanged (Parallel returns to Canon) and search stays
+canon-only. `loadLxx()` now queues all callbacks; a reference submitted during the
+initial lazy load executes once data arrives, the latest submission wins, and
+leaving the view cancels a pending navigation. Shell `CACHE_VERSION` bumped
+`v50 → v51`; data cache stays `v3` and data/importers/layout are untouched. See
+`build/reports/lxx-native-reference-REPORT.md`; merge/push and the
+real-browser/phone test remain the user's.
+
 ---
 
 ## 0. What you are taking over

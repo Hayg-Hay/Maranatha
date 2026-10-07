@@ -596,6 +596,7 @@ function init() {
     populateBooks();
     populateTranslationCheckboxes();
     populateParallelControls();
+    updateReferenceHint();
 
     refs.language.addEventListener('change', () => {
         setLocale(refs.language.value);
@@ -619,14 +620,20 @@ function init() {
 
     refs.viewMode.addEventListener('change', () => {
         setMessage('');
+        // Leaving (or re-entering) the view supersedes any pending native
+        // reference navigation.
+        cancelLxxReference();
+        updateReferenceHint();
         render({ scrollToReference: false });
     });
 
     refs.lxxBook.addEventListener('change', () => {
+        cancelLxxReference();
         render({ scrollToReference: false });
     });
 
     refs.lxxChapter.addEventListener('change', () => {
+        cancelLxxReference();
         render({ scrollToReference: false });
     });
 
@@ -665,9 +672,15 @@ function init() {
 
     refs.referenceGo.addEventListener('click', () => {
 
-        // Reference lookup is explicitly canon-only: invoking it from the LXX
-        // or parallel view returns to the canon view so neither pane appears
-        // to have answered a reference it cannot address.
+        // The standalone LXX view navigates its own native numbering directly
+        // (one book/chapter, optionally one printed verse) and stays in the LXX
+        // view. Canon and Parallel keep the previous canon-only behaviour below,
+        // so invoking the reference box from Parallel still returns to Canon.
+        if (refs.viewMode.value === 'lxx') {
+            handleLxxReference();
+            return;
+        }
+
         refs.viewMode.value = 'canon';
 
         let groups;
@@ -3051,6 +3064,11 @@ function init() {
   // fetch()), so the file:// constraint holds.
   // ---------------------------------------------------------------------
   let lxxLoading = false;
+  // Callbacks queued while the single 7.5 MB script request is in flight. Every
+  // caller is called when it finishes (or dropped on error), so a request made
+  // during the initial load is never silently lost and no second script tag is
+  // ever created.
+  let lxxCallbacks = [];
 
   function lxxDataset() {
     return (window.MARANATHA_TRANSLATIONS && window.MARANATHA_TRANSLATIONS['lxx-swete']) || null;
@@ -3058,12 +3076,27 @@ function init() {
 
   function loadLxx(onReady) {
     if (lxxDataset()) { onReady(); return; }
+    lxxCallbacks.push(onReady);
     if (lxxLoading) return;
     lxxLoading = true;
     const script = document.createElement('script');
-    script.src = 'data/lxx-swete.js';
-    script.onload = () => { lxxLoading = false; onReady(); };
-    script.onerror = () => { lxxLoading = false; setMessage('Could not load the Septuagint (Swete) data (data/lxx-swete.js).'); };
+    // Query-versioned URL: the service worker's DATA_CACHE uses cache.match with
+    // ignoreSearch:false, so this exact URL is cached separately from the plain
+    // 'data/lxx-swete.js' key. A stale unversioned copy therefore cannot satisfy
+    // this request, while already-downloaded translations stay in the same data
+    // cache untouched (deliberate exception to the universal data-cache bump).
+    script.src = 'data/lxx-swete.js?v=disclosures-20261007';
+    script.onload = () => {
+      lxxLoading = false;
+      const callbacks = lxxCallbacks;
+      lxxCallbacks = [];
+      for (const callback of callbacks) callback();
+    };
+    script.onerror = () => {
+      lxxLoading = false;
+      lxxCallbacks = [];
+      setMessage('Could not load the Septuagint (Swete) data (data/lxx-swete.js).');
+    };
     document.head.appendChild(script);
   }
 
@@ -3089,6 +3122,165 @@ function init() {
       chapterSelect.appendChild(opt);
     }
     if (book.chapters.some((c) => c.n === previous)) chapterSelect.value = previous;
+  }
+
+  // ---------------------------------------------------------------------
+  // Standalone native reference lookup (LXX view only).
+  //
+  // One reference: a book, optionally a native chapter, optionally one exact
+  // native verse. It never maps to the canon. Book-name resolution reuses
+  // ReferenceParser.normalizeKey and the canonical parser's book map; chapter
+  // and verse labels are validated only against the native dataset, so printed
+  // source labels such as Psalm 88:84 are accepted and an absent Psalm 115:6 is
+  // rejected. Ranges and multiple references are refused rather than silently
+  // dropped.
+  // ---------------------------------------------------------------------
+  const lxxReferenceState = { generation: 0 };
+
+  function cancelLxxReference() {
+    lxxReferenceState.generation += 1;
+  }
+
+  function lxxChapterLabel(chapter) {
+    return chapter.n === 'prologue' ? 'Prologue' : chapter.n;
+  }
+
+  function lxxBookMap(dataset) {
+    const map = new Map();
+    const add = (key, book) => {
+      const normalized = ReferenceParser.normalizeKey(key);
+      if (normalized && !map.has(normalized)) map.set(normalized, book);
+    };
+    for (const book of dataset.books) {
+      add(book.id, book);
+      add(book.label, book);
+    }
+    // Existing canon book names/aliases resolve to the native book with the
+    // same id (the LXX shares canon ids for the books it ships).
+    for (const canonBook of canon.books) {
+      const info = locale.books[canonBook.id];
+      const native = dataset.books.find((b) => b.id === canonBook.id);
+      if (!info || !native) continue;
+      add(info.name, native);
+      for (const alias of info.aliases || []) add(alias, native);
+    }
+    // Source components have no canon id or alias list, so name them explicitly.
+    const componentAliases = {
+      LJE: ['LJE', 'Letter of Jeremiah', 'Epistle of Jeremiah'],
+      SUS: ['SUS', 'Susanna'],
+      BEL: ['BEL', 'Bel', 'Bel and the Dragon'],
+    };
+    for (const [id, aliases] of Object.entries(componentAliases)) {
+      const native = dataset.books.find((b) => b.id === id);
+      if (!native) continue;
+      for (const alias of aliases) add(alias, native);
+    }
+    return map;
+  }
+
+  function parseLxxReference(input, dataset) {
+    const raw = String(input || '').trim();
+    if (!raw) throw new Error('Enter a reference.');
+    if (/[;,]/.test(raw)) {
+      throw new Error('Native LXX references support one book and chapter, with at most a single verse; separate references and verse lists are not supported.');
+    }
+    // A numeric range ("1-2", "16:1-8", "5-") is refused explicitly.
+    if (/\d\s*-\s*(?:\d|$)/.test(raw)) {
+      throw new Error('Native LXX references support a single verse only; verse ranges are not supported.');
+    }
+
+    const structured = raw.match(/^(.+?)\s+(\d+|prologue)(?::\s*(.*))?$/i);
+    const bookText = (structured ? structured[1] : raw).trim();
+    const chapterText = structured ? structured[2] : undefined;
+    const verseText = structured && structured[3] !== undefined ? structured[3].trim() : undefined;
+
+    const book = lxxBookMap(dataset).get(ReferenceParser.normalizeKey(bookText));
+    if (!book) {
+      const canonBook = parser.bookMap.get(ReferenceParser.normalizeKey(bookText));
+      if (canonBook) {
+        const name = (locale.books[canonBook.id] && locale.books[canonBook.id].name) || bookText;
+        throw new Error(`${name} is not available in the Septuagint (Swete) edition.`);
+      }
+      throw new Error(`"${bookText}" is not a book in the Septuagint (Swete) native numbering.`);
+    }
+
+    let chapter;
+    if (chapterText === undefined) {
+      // A bare book opens its first chapter that carries numbered verses.
+      chapter = book.chapters.find((c) => c.segments.some((s) => s.kind === 'verse')) || book.chapters[0];
+    } else {
+      chapter = book.chapters.find((c) => c.n.toLowerCase() === chapterText.toLowerCase());
+      if (!chapter) {
+        throw new Error(`Chapter ${chapterText} is not available in ${book.label} (native LXX numbering).`);
+      }
+    }
+
+    let verse;
+    if (verseText !== undefined) {
+      if (!/^\d+$/.test(verseText)) {
+        throw new Error(`"${verseText || ':'}" is not a valid single verse number in ${book.label} ${lxxChapterLabel(chapter)}.`);
+      }
+      if (!chapter.segments.some((s) => s.kind === 'verse' && s.l === verseText)) {
+        throw new Error(`Verse ${verseText} is not available in ${book.label} ${lxxChapterLabel(chapter)} (native LXX numbering).`);
+      }
+      verse = verseText;
+    }
+
+    return { bookId: book.id, chapter: chapter.n, verse };
+  }
+
+  function navigateLxxReference(target) {
+    // Set the book first so the chapter options rebuild for it, then set the
+    // requested native chapter and render the complete chapter.
+    refs.lxxBook.value = target.bookId;
+    render({ scrollToReference: false });
+    refs.lxxChapter.value = String(target.chapter);
+    render({ scrollToReference: false });
+    if (!target.verse) return;
+    const row = [...refs.results.querySelectorAll('.lxx-segment')].find((segment) => {
+      const number = segment.querySelector('.lxx-verse-num');
+      return number && number.textContent === target.verse;
+    });
+    if (row && typeof row.scrollIntoView === 'function') {
+      row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  function applyLxxReference(input, dataset, generation) {
+    let target;
+    try {
+      target = parseLxxReference(input, dataset);
+    } catch (error) {
+      // Invalid input keeps the current native chapter, controls and view.
+      setMessage(error.message);
+      return;
+    }
+    if (lxxReferenceState.generation !== generation || refs.viewMode.value !== 'lxx') return;
+    setMessage('');
+    navigateLxxReference(target);
+  }
+
+  function handleLxxReference() {
+    const generation = (lxxReferenceState.generation += 1);
+    const input = refs.reference.value;
+    const dataset = lxxDataset();
+    if (dataset) { applyLxxReference(input, dataset, generation); return; }
+    // Data still loading: queue this reference; loadLxx preserves every queued
+    // callback and reuses the single in-flight script request.
+    loadLxx(() => {
+      if (lxxReferenceState.generation !== generation || refs.viewMode.value !== 'lxx') return;
+      const ready = lxxDataset();
+      if (!ready) { setMessage('Could not load the Septuagint (Swete) data (data/lxx-swete.js).'); return; }
+      applyLxxReference(input, ready, generation);
+    });
+  }
+
+  function updateReferenceHint() {
+    // The LXX examples are deliberately not comma-separated: the native parser
+    // accepts exactly ONE reference, so a list would imply unsupported input.
+    refs.reference.placeholder = refs.viewMode.value === 'lxx'
+      ? 'One native LXX reference only — e.g. Genesis 1 or Psalm 88:84'
+      : 'John 3:16, Genesis 1, Psalm 23';
   }
 
   // Renders the LXX reading for the given Book/Chapter controls into the given
@@ -3179,7 +3371,11 @@ function init() {
   function renderLxxView() {
     refs.contextBtn.hidden = true;
     setMessage('');
-    renderLxxInto(refs.lxxBook, refs.lxxChapter, refs.results);
+    // Guard the late lazy-load callback: if the user left the LXX view before
+    // the 7.5 MB file finished, do not re-render a different view from this
+    // callback (the parallel pane has the same guard).
+    renderLxxInto(refs.lxxBook, refs.lxxChapter, refs.results,
+      () => { if (refs.viewMode.value === 'lxx') render({ scrollToReference: false }); });
   }
 
   // ---------------------------------------------------------------------
@@ -3263,6 +3459,10 @@ function init() {
   function render({ scrollToReference = true } = {}) {
     const lxx = refs.viewMode.value === 'lxx';
     const parallel = refs.viewMode.value === 'parallel';
+    // Keep the reference hint in step with the actual view on every render,
+    // including programmatic transitions (reference actions, search returning
+    // to Canon) and locale redraws — not only the View select's change event.
+    updateReferenceHint();
     // Exactly one Book/Chapter mechanism is shown at a time: the canon bar in
     // canon view, the LXX bar in the LXX view, and the two independent pane
     // controls in the parallel view. The View selector stays visible in all.

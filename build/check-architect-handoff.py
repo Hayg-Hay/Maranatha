@@ -97,7 +97,7 @@ check('ordered-verse-text', not verse_errors, verse_errors or 'all verses match 
 chapters = [c for b in data['books'] for c in b['chapters']]
 segments = [s for c in chapters for s in c['segments']]
 counts = (len(data['books']), len(chapters), sum(s['kind']=='verse' for s in segments), sum(s['kind']=='unnumbered' for s in segments), sum(bool(s.get('flags')) for s in segments if s['kind']=='verse'))
-check('shipped-counts', counts == (48,1055,27048,100,686), counts)
+check('shipped-counts', counts == (48,1055,27048,100,688), counts)
 print(f'INFO raw verse containers={raw_verse_count}; omitted empty chapters={omitted_chapters}')
 by_id = {b['id']: b for b in data['books']}
 def labels(book, chapter):
@@ -108,5 +108,5 @@ check('ps129', labels('PSA','129') == [str(i) for i in range(1,9)], labels('PSA'
 check('bel', labels('BEL','1')[-1]=='36' and any('37-42' in n for n in by_id['BEL']['notices']), 'ends at 36; truncation disclosed')
 check('ecclesiastes', 'ECC' not in by_id and any(x['id']=='ECC' for x in data['missing']), 'absent and disclosed')
 digest = hashlib.sha256((clone/'data/lxx-swete.json').read_bytes()).hexdigest()
-check('shipped-hash', digest=='d31c332f69a7baec02901d6e2612795326bdcee69a74282e3065f2c5f79d75a4', digest)
+check('shipped-hash', digest=='fd52aa2f5f65f7e0a9c76d9cf203756c66f43ac1a91396d928be3b30d8ed1f2e', digest)
 sys.exit(bool(failures))

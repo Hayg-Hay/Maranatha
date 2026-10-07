@@ -39,6 +39,9 @@ const CHANGES = [
   'Daniel witness: Theodotion (tlg057) with Susanna (tlg055) and Bel (tlg059) as separate components; Old Greek witnesses not imported.',
   'Verse and chapter labels kept exactly as printed; no verse is renumbered, merged or split.',
   'Defects are disclosed as flags/notices and never corrected.',
+  'Psalm 16:4 keeps the source\'s stray inline numeral "(4)" and carries a targeted transcription-marker flag; only this documented location is flagged, not parentheses or verse-label digits in general.',
+  'Psalm 88 keeps its anomalous printed label 84 where 48 would be expected and now carries a targeted source-label-anomaly flag; the label is not renumbered, repaired or aligned.',
+  'The Letter of Jeremiah has no chapter division upstream; its displayed chapter 1 is disclosed in a book notice as a navigation container, and the detached Greek introduction with source verses 1-72 is preserved as printed.',
 ];
 
 const EXCLUDED = [
@@ -203,7 +206,25 @@ export function parseSourceFile(xmlText) {
 const LATIN_RE = /[^\s]*\p{Script=Latin}[^\s]*/gu;
 const NOISE_RE = /U\+[0-9A-F]{4,6}|\?{2,}|[⁰¹²³⁴⁵⁶⁷⁸⁹ᵃᵇᶜ]|\uFFFD/g;
 
-function flagsFor(segment) {
+// One-off, explicitly targeted disclosures, keyed to a documented
+// book/chapter/verse. They are deliberately NOT general rules: the corpus must
+// not start flagging every parenthesized numeral or every verse-label digit.
+const TARGETED_FLAGS = {
+  'PSA/16/4': [
+    {
+      code: 'transcription-marker',
+      note: 'Source prints a stray inline verse numeral "(4)" inside the running text of Psalm 16:4; it is preserved as in the source and is not part of the reading text.',
+    },
+  ],
+  'PSA/88/84': [
+    {
+      code: 'source-label-anomaly',
+      note: 'Source labels this verse 84 where 48 would be expected (the printed sequence is ...47, 84, 49 in Psalm 88); the source label is preserved and is not renumbered, repaired or aligned.',
+    },
+  ],
+};
+
+function flagsFor(segment, bookId, chapterLabel) {
   const flags = [];
   if (!segment.t) flags.push({ code: 'empty-verse', note: 'Empty verse container in the source.' });
   const latin = [...segment.t.matchAll(LATIN_RE)].map((m) => m[0]);
@@ -212,6 +233,7 @@ function flagsFor(segment) {
   if (noise.length) flags.push({ code: 'transcription-marker', note: `Typographic / transcription marker candidate(s) in source: ${[...new Set(noise)].slice(0, 8).join(', ')}` });
   if (/θάυατος/u.test(segment.t)) flags.push({ code: 'transcription-suspect', note: 'Source spells θάυατος (upsilon in a death-like word); disclosed, not corrected.' });
   if (segment._nested && segment._nested.length) flags.push({ code: 'nested-container', note: `Source nests separately labeled verse container(s) ${segment._nested.join(', ')} inside this verse; each is preserved once.` });
+  for (const targeted of TARGETED_FLAGS[`${bookId}/${chapterLabel}/${segment.l}`] || []) flags.push({ ...targeted });
   if (flags.length) segment.flags = flags;
   delete segment._nested;
   return segment;
@@ -229,6 +251,9 @@ const BOOK_NOTICES = {
   ],
   BEL: [
     'Theodotion Bel is truncated mid-sentence at source 1:36 (canonical Daniel 14:36); verses 37-42 are not available in this edition and are not reconstructed from the Old Greek witness.',
+  ],
+  LJE: [
+    'The upstream source has no chapter division for the Letter of Jeremiah; the displayed chapter 1 is a navigation container added for browsing, not an upstream chapter label. The detached Greek introduction and the source verses 1-72 are preserved as printed.',
   ],
 };
 
@@ -311,7 +336,7 @@ export function buildData() {
       // Flags are disclosures attached to numbered verses only, so every flag
       // points at an existing verse. Detached/unnumbered text is covered by the
       // book notices instead.
-      segments: c.segments.map((s) => (s.kind === 'verse' ? flagsFor(s) : s)),
+      segments: c.segments.map((s) => (s.kind === 'verse' ? flagsFor(s, id, c.n) : s)),
     }));
     const book = {
       id,

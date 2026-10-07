@@ -24,9 +24,12 @@ const read = (name) => fs.readFileSync(path.join(root, name), 'utf8');
 
 const data = JSON.parse(read('data/lxx-swete.json'));
 
-// Regression anchors (source SHA and shipped counts) must not move in Stage 1b.
-const LXX_SHA = 'd31c332f69a7baec02901d6e2612795326bdcee69a74282e3065f2c5f79d75a4';
-const COUNTS = { books: 48, chapters: 1055, verses: 27048, unnumbered: 100, flaggedVerses: 686 };
+// Regression anchors. Stage 1b did not change the LXX data; the later LXX
+// disclosure metadata update changed only flags/notices, so the shipped JSON
+// hash moved and the flagged-verse total is now 688 (was 686). Text, labels,
+// segment order/kind, books, chapters, sources and licenses are unchanged.
+const LXX_SHA = 'fd52aa2f5f65f7e0a9c76d9cf203756c66f43ac1a91396d928be3b30d8ed1f2e';
+const COUNTS = { books: 48, chapters: 1055, verses: 27048, unnumbered: 100, flaggedVerses: 688 };
 const REGRESSION_CHAPTERS = [
   ['GEN', '1'], ['EXO', '20'], ['PSA', '23'], ['PSA', '119'], ['ISA', '53'],
   ['JER', '25'], ['DAN', '3'], ['SIR', '1'], ['MAT', '5'], ['JHN', '1'],

@@ -38,10 +38,11 @@ The 27,050 historical mapping-audit records equal 27,048 shipped verses plus
 seven excluded Psalm 151 verses minus five nested Psalm 129 verses that the
 mapping audit skipped. The 100 unnumbered segments are counted separately.
 
-Known limitation: the reference box and the text search are **canon-only** and
-do not address the LXX. Invoking either one from the LXX or parallel view
-returns to Canon view and acts on the canon-numbered translations, so neither
-pane ever appears to have answered an unsupported LXX reference or search.
+The Reference box is **view-aware**. Inside the standalone LXX view it opens a
+**native** LXX reference (one book, one chapter, optionally one printed verse)
+and stays in the LXX view; Canon and Parallel keep the canon-only behaviour
+(Parallel returns to Canon). Text Search remains **canon-only** everywhere, so
+no view appears to have answered an unsupported LXX search.
 
 What works:
 
@@ -154,9 +155,54 @@ synchronized scrolling and no automatic chapter mapping, and the banner
 selection and Book/Chapter do not touch the Canon-view translation checkboxes or
 the canon Book/Chapter state.
 
-The Reference box and the text Search remain **canon-only**: using either from
-the LXX or parallel view first returns to Canon view and then acts on the
-canon-numbered translations.
+In Parallel, the Reference box stays canon-only: using it returns to Canon view
+and then acts on the canon-numbered translations. Text Search is canon-only in
+every view.
+
+## Native LXX reference (standalone LXX view)
+
+Inside the **LXX (native numbering)** view, the Reference box navigates the
+Septuagint's own numbering and stays in the LXX view:
+
+- **`Book Chapter`**, optionally **`:Verse`** — e.g. `Genesis 1`, `Ps 88:84`,
+  `Letter of Jeremiah 1`, `Bel 1`, `Susanna 1`, `Esther prologue`.
+- Book names are case-insensitive and accept **existing canon aliases** (`Ps`,
+  `Gen`, `Neh`, …), the source book IDs (`PSA`, `LJE`, `SUS`, `BEL`) and the
+  dataset labels (`Letter of Jeremiah`, `Bel and the Dragon`). A bare book opens
+  its first chapter that carries numbered verses, so `Nehemiah` opens native
+  **chapter 11** (native Nehemiah has no chapter 1) and `Genesis` opens 1.
+- Chapters and verse labels are validated against the native dataset only, so a
+  printed source label such as `Ps 88:84` is accepted while an absent `Ps 115:6`
+  is refused. A single verse scrolls to its segment; the complete native chapter
+  (including flags, notices and unnumbered text) is kept.
+- **One reference at a time**: verse ranges (`16-17`) and multiple references
+  (`Gen 1;Gen 2`) are refused with a clear native-format message, and invalid
+  input keeps the current native passage and view. Books not in this edition
+  (Ecclesiastes, the NT) report that clearly. Nothing is mapped to the canon.
+
+## LXX disclosure updates and versioned cache refresh
+
+The Swete LXX data is append-only with respect to its text: source defects are
+**disclosed**, never repaired. A small metadata update added two targeted
+per-verse flags — **Psalm 16:4** (the stray inline numeral `(4)`, a
+transcription-marker) and **Psalm 88:84** (label 84 where 48 would be expected,
+a source-label-anomaly) — plus one **Letter of Jeremiah** book notice stating
+that the displayed chapter 1 is a navigation container, not an upstream chapter
+label. Text, labels, segment order/kind, books, chapters, sources, witnesses,
+licenses and the excluded/missing metadata are unchanged.
+
+That update changes `data/lxx-swete.{json,js}` but deliberately leaves the data
+cache at `v3`. The LXX loader now requests
+`data/lxx-swete.js?v=disclosures-20261007`; the service worker's data cache
+matches with `ignoreSearch:false`, so the query makes this a **fresh cache key**
+that a stale unversioned `data/lxx-swete.js` copy cannot satisfy, while every
+already-downloaded translation stays cached untouched. This is a **deliberate
+exception** to the older universal "bump the data cache whenever a translation
+data file changes" guidance, which is incomplete for query-versioned URLs (the
+same pattern already used for corrected WEB data and the Berean Hebrew
+previews). The shell cache is bumped `v49 → v50` so phones fetch the new loader;
+`build/test-service-worker.mjs` and `build/check-lxx-disclosures.mjs` prove the
+versioned-key behaviour offline.
 
 ## Running it
 

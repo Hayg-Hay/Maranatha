@@ -2452,3 +2452,177 @@ then returned shell v49 and the Parallel reading option, replacing live v45.
 https://github.com/Hayg-Hay/Maranatha/actions/runs/37636339200
 This verifies server deployment; phone activation remains the user's check.
 The three new LXX disclosures remain on their separate unmerged branch.
+
+### 2026-10-07 — LXX disclosure metadata implemented (opencode/DeepSeek)
+
+The user approved the three disclosure changes on branch `codex/lxx-disclosures`
+(base `5213a13`). This stage adds metadata only; no Scripture text, label,
+segment order/kind, book/chapter structure, source, witness, license or
+excluded/missing entry changed.
+
+**Changes.** `build/import-lxx-swete.mjs` now carries a small, explicitly
+targeted `TARGETED_FLAGS` map (never a general rule):
+
+- **Psalm 16:4** gets a `transcription-marker` flag for the stray inline numeral
+  `(4)` already present in the printed source text; the text itself is preserved.
+- **Psalm 88:84** gets a `source-label-anomaly` flag explaining that 84 is
+  anomalous where 48 would be expected; the label is not renumbered, repaired or
+  aligned.
+- **Letter of Jeremiah** gains one book notice: the upstream source has no
+  chapter division, so the displayed chapter 1 is a navigation container, not an
+  upstream chapter label; the detached Greek introduction and source verses 1-72
+  are preserved.
+
+Three explanatory entries were appended to the data `changes` list and the
+adaptation list in `data/LICENSE-lxx-swete.md` was extended. Shipped counts are
+unchanged at **48 books / 1,055 chapters / 27,048 verses / 100 unnumbered**, with
+flagged verses computed independently from **686 to 688** (exactly the two new
+verse flags). Regenerating twice produced identical output; the new
+`data/lxx-swete.json` hash is
+`fd52aa2f5f65f7e0a9c76d9cf203756c66f43ac1a91396d928be3b30d8ed1f2e`
+(7,475,873 bytes; previous metadata hash was `d31c332f…`, retained as historical
+evidence in the earlier reports).
+
+**Cache decision (policy exception).** `DATA_CACHE_VERSION` stays `v3` and every
+already-downloaded translation is preserved. Instead, `loadLxx()` now requests
+`data/lxx-swete.js?v=disclosures-20261007`; the service worker's data cache
+matches with `ignoreSearch:false`, so the query is a fresh cache key and a stale
+unversioned copy cannot satisfy it. Shell `CACHE_VERSION` was bumped `v49 → v50`
+and all three shell version assertions updated (`build/test-service-worker.mjs`,
+`build/test-delitzsch.mjs`, `build/test-delitzsch1901.mjs`). This is recorded as
+a deliberate exception to the older universal "bump the data cache on any data
+change" guidance, which is incomplete for query-versioned URLs.
+
+**Verification.** New `build/check-lxx-disclosures.mjs` (38 PASS; 39 after the
+fresh-clone EOL review fix below) compares every
+segment text, label, kind, order and pre-existing flag against
+`build/cache/lxx-disclosures-before.json`; asserts exactly the two targeted new
+flags and only the one new LJE notice; keeps existing `changes` entries; re-parses
+the raw LJE XML to prove zero upstream chapter divisions and 72 verse divs;
+proves two-run determinism and JSON/JS agreement; renders the flags and notice in
+both the standalone LXX and parallel panes; and exercises a realistic
+CacheStorage mock (honouring `ignoreSearch`, query keys and origin) to prove a
+stale unversioned entry cannot satisfy the versioned URL, the new file is cached
+under the exact versioned URL, a later offline versioned load works, and
+cross-origin requests are untouched. Results: `check-stage1.mjs` 15/15, native
+validator 8/8, `check-stage1b.mjs` 45/45 (its SHA/flag anchors updated to the new
+metadata hash and 688), `check-stage1b-independent.mjs` 0 failures against the
+existing ten-chapter baseline, service-worker 26/26, and full `npm test` exit 0.
+`build/check-architect-handoff.py` expectations were updated to the new
+counts/hash; past evidence reports were left as historical.
+
+**Remaining acceptance.** The real-browser and physical-phone test is still the
+user's: hard refresh and confirm the PSA 16:4 and PSA 88:84 flag markers, the LJE
+notice, and an unchanged Canon view in both `file://` and the deployed PWA.
+No merge, push or deletion was performed; this stage has no merge/push approval.
+
+**Fresh-clone review fix (checker only, 2026-10-07).** Independent verification on
+a fresh Windows clone of `9f3d3c3` found `shipped-js-wraps-shipped-json` failing:
+Git rewrote the two JS-wrapper line endings to CRLF while the check built the
+expected wrapper with LF. The JSON body is a single line (interior newlines are
+escaped), so the difference is purely the wrapper EOLs. `build/check-lxx-disclosures.mjs`
+now normalizes actual CRLF to LF for the wrapper comparison and adds an
+independent `shipped-js-payload-parses-to-shipped-json` parsed-data equality check;
+the exact JSON-body comparison is retained. No data, importer, loader, cache-policy
+or runtime change was made. The checker now reports 39/39.
+
+### 2026-10-07 — Three LXX disclosures independently verified (Codex)
+
+Fresh-clone verification of 125f8f4: independent full-dataset/cache/DOM checks
+6/6; implementer checks 39/39; Stage1/native/Stage1b 15/8/45; Canon checks14/14;
+full npm suite exit0 on the same product code. Pinned-source verification finds
+47 files, 2,754,390 characters, zero differences and unchanged source labels.
+Only two targeted flags and one LJE notice were added; flagged count686->688.
+The initial fresh-clone verifier failed on Git/Windows CRLF wrapper EOLs; the
+implementer fixed the check without changing data or runtime. See the independent
+report and checker. User browser review and merge/push approval remain pending.
+The separately approved static publishing fix is already live on main at v49;
+retain its .nojekyll and history when a future disclosure merge is approved.
+
+### 2026-10-07 — Standalone native LXX reference navigation (opencode/DeepSeek)
+
+The user reported: picking LXX → Gen 1 → Open reference deactivated the LXX view.
+The reference box was deliberately canon-only; that is now superseded **for the
+standalone LXX view only**. Canon and Parallel reference behaviour is unchanged
+(Parallel still returns to Canon), and Text Search stays canon-only.
+
+**Native reference.** In the LXX view the Reference box now opens one native
+reference — `Book Chapter`, optionally `:Verse` — and stays in the LXX view. Book
+resolution reuses `ReferenceParser.normalizeKey` and the canonical parser's book
+map only; it accepts existing canon aliases, source book IDs and dataset labels,
+plus explicit component names (`Letter of Jeremiah`, `Susanna`, `Bel` /
+`Bel and the Dragon`) and `Esther prologue`. A bare book opens its first chapter
+with numbered verses (`Nehemiah` → native 11, `Genesis` → 1). Chapters and verse
+labels are validated **only** against `data/lxx-swete.json`, so the printed
+`Ps 88:84` is accepted while the absent `Ps 115:6` is refused. Single verses
+scroll to their native segment; the complete native chapter, flags, notices and
+unnumbered text are preserved. Ranges and multiple references are refused with a
+native-format message; invalid input keeps the current native passage and view;
+books absent from the edition (Ecclesiastes, the NT) report that clearly. No
+chapter mapping or aligned claim is made.
+
+**Async safety.** `loadLxx()` was changed from dropping a second callback to
+queueing every callback (still one script tag / one cache URL). A reference
+submitted during the initial lazy load executes once data arrives; a later
+submission supersedes an earlier one; leaving the view cancels a pending native
+navigation; all callbacks are guarded by current view and request generation, so
+no late callback can change Canon/Parallel, their pickers or the LXX footer. The
+standalone LXX render callback is now guarded like the parallel pane's.
+
+**Docs and cache.** README documents the accepted native syntax and the
+search/Parallel limits; the placeholder follows the selected view. Shell
+`CACHE_VERSION` bumped `v50 → v51` (three assertions updated, plus the same
+shell-version assertion in Codex's disclosure checker). Data cache stays `v3`; the
+LXX query URL stays `disclosures-20261007`; data/importers/canonical parser/layout
+are untouched and all three disclosures and the metadata hash
+(`fd52aa2f…ed1f2e`) are preserved.
+
+**Verification.** New `build/check-lxx-native-reference.mjs` (42 PASS): Gen 1 by
+click and Enter stays in LXX; aliases; bare `Nehemiah` → 11; components and
+`Esther prologue`; `Ps 88:84` accepted and scrolled, `Ps 115:6` rejected;
+unavailable chapter/book; malformed/multi/range inputs retain state; a reference
+during initial load executes; latest request wins with one script request;
+leaving the view cancels and leaves Canon/footer untouched; Canon and Parallel
+unchanged; ten-chapter Canon byte regression against `build/cache/stage1b-before.json`;
+data hash/counts/flags and disclosures unchanged. Also green: disclosure 39/39,
+Stage1 15/15, native 8/8, Stage1b 45/45, both independent checkers 0 failures,
+service-worker 26/26, full `npm test` exit 0 (ignored log
+`build/cache/lxx-native-reference-npm.log`). No merge, push or deletion; the
+real-browser/phone test remains the user's and Codex verifies in a fresh clone.
+
+**Follow-up review fix (placeholder sync, 2026-10-07).** Codex's independent
+checker found that after an LXX text search returned to Canon the reference
+placeholder still showed the LXX examples, because `updateReferenceHint()` ran
+only at setup and on the View select change, not on programmatic view
+transitions. The hint is now synced from the shared `render()` path, so reference
+actions, search returning to Canon and locale redraws all restore it. The LXX hint
+now reads "One native LXX reference only — e.g. Genesis 1 or Psalm 88:84" (no
+comma-separated examples, so it cannot imply unsupported multiple references) and
+the Canon hint is unchanged. `build/check-lxx-native-reference.mjs` gained an
+LXX → search → Canon placeholder-restoration case (43 PASS). Native checker,
+`check-stage1.mjs` canon regression and both independent checkers pass; no data,
+numbering, search, Canon/Parallel navigation or shell version changed.
+
+### 2026-10-07 — Native LXX references independently verified (Codex)
+
+Fresh-clone acceptance of 14959a2: native checks43/43, independent checks11/11,
+disclosures39/39 and independent6/6, Stage1/native/Stage1b15/8/45, Canon14/14,
+full npm exit0 with no skipped source checks after fixture setup. Gen1 click or
+Enter stays in LXX; exact native labels/components/prologue work; invalid native
+input preserves the view; pending requests respect latest input and view changes.
+The independent review caught a stale native hint after search returned to Canon;
+DeepSeek fixed it. No Scripture/data/importer/layout change; shell51, DATA3.
+User approved pushing the disclosures; main merge approval is still required.
+See build/reports/lxx-native-reference-independent-REPORT.md for evidence.
+
+### 2026-10-07 — Disclosures and native-reference merge approved
+
+After opening the updated local preview, the user explicitly said: "you can merge
+and push for mobile. then we continue". This authorizes the combined feature
+branch3169ab1. The merge preserves the separately shipped .nojekyll publishing
+marker and both histories; product/data match the independently verified branch.
+Checks: native references43/43, independent11/11, disclosures39/39, independent
+metadata6/6, Stage1/native/Stage1b15/8/45, Canon14/14, complete npm exit0 without
+skips. Source text and labels unchanged; only the approved metadata disclosures
+were added. Shell v51, DATA v3, versioned LXX URL; unrelated local files retained.
+Actual phone behavior remains the user's check after successful deployment.
