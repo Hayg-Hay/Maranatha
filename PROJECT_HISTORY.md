@@ -2237,3 +2237,41 @@ SIR 1, MAT 5, JHN 1) byte-identical to the pre-change
 `build/validate-lxx-native.mjs` (8/8) and `npm test` all pass. Stage 2 (tiered
 Swete→canon mapping) remains unimplemented; Stage 1b makes no canonical
 correspondence claim.
+
+### Phase 4 — Stage 1b independent review fixes, Oct 2026
+
+Codex's independent checker (`build/check-stage1b-independent.mjs`, run as
+`node build/check-stage1b-independent.mjs . build/cache/stage1b-before.json`)
+found four reproducible failures in the Stage 1b change. All four are fixed
+within the Stage 1b scope, and the independent checker now reports 0 failures:
+
+1. **Static heading contradicted the source-numbered notice.** The right-pane
+   heading said "Translation — canon numbering", which is false for the
+   source-numbered Delitzsch 1901. Replaced with the neutral "Translation —
+   numbering as printed"; the existing per-chapter source-numbering notice is
+   unchanged.
+2. **Phantom verse rows.** `renderParallelTranslationPane` used the global
+   `chapterExtent()`, which scans every loaded translation, so Delitzsch 1901's
+   52-verse John 1 inflated the eBible edition's 51-verse chapter to 52 rows.
+   The pane now uses `extentForTranslations([t], book.id, chapterNum)`, scoped to
+   the selected translation, so no unrelated edition can add rows.
+3. **Invalid/empty actions left stale panes.** `reference-go` switched the View
+   selector to `canon` but returned on a parse error before re-rendering;
+   `performSearch` returned before switching on empty input. Both paths now
+   render the canon view (visible panes match the selector) before showing the
+   message. Valid reference/search canon behaviour is unchanged.
+4. **Late LXX load leaked the footer into Canon.** The delayed `lxx-swete.js`
+   onload still ran the parallel pane renderer after the user left the view,
+   revealing `#lxx-attribution` in Canon; and
+   `#lxx-attribution { display:block }` outranked the `[hidden]` attribute. The
+   async callback is now guarded by the active view (`refs.viewMode.value ===
+   'parallel'`), and `#lxx-attribution[hidden] { display:none }` was added,
+   mirroring the chapter-bar fix. Attribution is preserved in the LXX and
+   parallel views.
+
+`build/check-stage1b.mjs` grew from 36 to 44 checks by adding independent
+behaviour cases for all four findings (neutral heading; 1901=52 vs eBible=51
+rows; invalid-reference and empty-search pane sync; delayed-LXX-callback guard;
+and the `#lxx-attribution[hidden]` rule); no existing check was weakened and no
+baseline was recaptured. The real-browser test remains unverified in the Codex
+environment (loopback timeout, `file://` forbidden) and is still the user's test.
