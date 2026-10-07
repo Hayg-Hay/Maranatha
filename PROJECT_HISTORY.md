@@ -2709,3 +2709,16 @@ at7, short notice, single-verse7 only, Genesis2 unavailable), all existing
 evidence/scheme/human-gate repairs, proposed/human-null statuses, corpora,
 shellv52, DATAv3 and versioned URLs are unchanged. No merge, push or deletion;
 human textual adjudication and phone acceptance remain open.
+
+### 2026-10-07 — Stage2a technical acceptance after manual resolver repair
+
+Codex independently verified product5485d91/report66841cc in the independent
+clone. Original runtime probe: control+4 repaired conflicts,0failures. Original
+validator probe8/8, resolver61/61, accepted desktop/mobile presentation12/12,
+compiler4/0, proposal validationPASS, verified gate expectedFAIL, full npmexit0
+withoutSKIP/FAIL (Stage2aUI37/37). No product edits during this review. Source
+corpora/canon/importer/ledger/second textual review remain unchanged.
+Technical acceptance passes for the proposed Genesis1 pilot only. Human textual
+adjudication, actual phone acceptance and explicit merge/push remain pending.
+All real mappings stay proposal with humanApproval=null. Existing main/livev51
+is unchanged. See build/reports/stage2a-independent-ACCEPTANCE.md for evidence.
