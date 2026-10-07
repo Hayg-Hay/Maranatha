@@ -20,8 +20,12 @@ import { fileURLToPath } from 'node:url';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '..');
-const LEDGER_REL = 'build/reviews/lxx-genesis1-evidence.json';
-const LEDGER = path.join(root, LEDGER_REL);
+// Immutable proposal ledgers, compiled together without rewriting either. Each
+// entry identifies its own ledger/row; every ledger is hash-bound below.
+const LEDGERS = [
+  { key: 'genesis1', path: 'build/reviews/lxx-genesis1-evidence.json' },
+  { key: 'genesis2_5', path: 'build/reviews/lxx-genesis2-5-evidence.json' },
+];
 const NATIVE = path.join(root, 'data', 'lxx-swete.json');
 const CANON = path.join(root, 'data', 'canon.js');
 
@@ -68,12 +72,13 @@ function buildSchemes() {
         'Scheme declarations: Maranatha Stage 2a. Greek: First1KGreek / Swete, CC BY-SA 4.0; Hebrew: OSHB, CC BY 4.0; WEB Catholic Edition and imported KJV: source declarations in the shipped datasets.',
       changes: 'Editorial scheme declarations only; no Scripture text changed.',
     },
-    // Only these three comparison editions have Genesis 1 proposal coverage.
-    // Any other selected edition is shown against the pilot as unreviewed
-    // numbering, not as an identity claim.
+    // Only these three comparison editions have Genesis 1-5 proposal coverage
+    // (plus the single disclosed boundary unit GEN 6:1). Any other selected
+    // edition is shown against the pilot as unreviewed numbering, not as an
+    // identity claim.
     comparisonCoverage: {
       editions: ['web', 'kjv', 'he'],
-      note: 'Only WEB/KJV/OSHB are compared in the Genesis 1 pilot. Target coordinates follow the Maranatha navigation canon anchored to WEB-C; selecting any other edition compares the Greek pilot against unreviewed, edition-specific numbering.',
+      note: 'Only WEB/KJV/OSHB are compared in the Genesis 1-5 pilot. Target coordinates follow the Maranatha navigation canon anchored to WEB-C; selecting any other edition compares the Greek pilot against unreviewed, edition-specific numbering.',
     },
     schemes: [
       {
@@ -88,21 +93,21 @@ function buildSchemes() {
         label: 'World English Bible Catholic Edition',
         kind: 'canon',
         dataset: 'web',
-        note: 'Comparison coverage in this pilot is limited to the Genesis 1 proposals; other books are unreviewed.',
+        note: 'Comparison coverage in this pilot is limited to the Genesis 1-5 proposals (plus boundary GEN 6:1); other books are unreviewed.',
       },
       {
         id: 'kjv',
         label: 'King James Version (standard 66-book edition)',
         kind: 'canon',
         dataset: 'kjv',
-        note: 'Comparison coverage in this pilot is limited to the Genesis 1 proposals; the edition omits the deuterocanonical books.',
+        note: 'Comparison coverage in this pilot is limited to the Genesis 1-5 proposals; the edition omits the deuterocanonical books.',
       },
       {
         id: 'oshb',
         label: 'Open Scriptures Hebrew Bible (Masoretic)',
         kind: 'canon',
         dataset: 'he',
-        note: 'Comparison coverage in this pilot is limited to the Genesis 1 proposals; the edition covers the 39 protocanonical books only.',
+        note: 'Comparison coverage in this pilot is limited to the Genesis 1-5 proposals; the edition covers the 39 protocanonical books only.',
       },
       {
         id: 'byz-greek',
@@ -154,7 +159,7 @@ function buildSchemes() {
       },
       {
         id: 'lxx-aligned',
-        label: 'LXX alignment pilot (Genesis 1)',
+        label: 'LXX alignment pilot (Genesis 1-5)',
         kind: 'virtual',
         nativeScheme: 'lxx-swete-native',
         mapping: 'data/lxx-swete-alignment.json',
@@ -178,57 +183,71 @@ function buildSchemes() {
 }
 
 export function build() {
-  const ledger = readJson(LEDGER);
+  const ledgers = LEDGERS.map((entry) => ({ ...entry, data: readJson(path.join(root, entry.path)) }));
   const native = readJson(NATIVE);
   const canon = parseCanon();
 
-  if (ledger.status !== 'proposal') throw new Error('ledger must remain a proposal');
-  if (ledger.review?.humanApproval !== null) throw new Error('ledger humanApproval must stay null');
-
-  // The pilot covers exactly the chapters present in the ledger. Derive the
-  // covered set from the source references; never infer it from equal counts.
-  const covered = new Map();
-  for (const row of ledger.rows) {
-    covered.set(`${row.from.book} ${row.from.chapter}`, { book: row.from.book, chapter: String(row.from.chapter) });
+  for (const { path: rel, data } of ledgers) {
+    if (data.status !== 'proposal') throw new Error(`ledger ${rel} must remain a proposal`);
+    if (data.review?.humanApproval !== null) throw new Error(`ledger ${rel} humanApproval must stay null`);
   }
 
+  // One row = one source proposal. Source chapters define the covered scope;
+  // target chapters are validated explicitly, never inferred from counts.
+  const covered = new Map();
   const groups = [];
   const groupIndex = new Map();
   const entries = [];
 
-  for (const row of ledger.rows) {
-    const groupId = row.groupId;
-    let group = groupIndex.get(groupId);
-    if (!group) {
-      group = { id: groupId, sources: [], targets: [], evidence: [], collective: false, notes: '', status: 'proposal' };
-      groupIndex.set(groupId, group);
-      groups.push(group);
-    }
-    const source = { book: row.from.book, chapter: String(row.from.chapter), kind: row.from.kind, label: String(row.from.label) };
-    if (!group.sources.some((s) => sourceKey(s) === sourceKey(source))) group.sources.push(source);
-    for (const target of row.to) {
-      if (!group.targets.some((t) => targetKey(t) === targetKey(target))) group.targets.push(target);
-    }
-    if (!group.evidence.includes(row.id)) group.evidence.push(row.id);
-    if (row.differences?.length) {
-      const note = row.differences.join(' ');
-      if (note && !group.notes.includes(note)) group.notes = group.notes ? `${group.notes} ${note}` : note;
-    }
+  for (const { path: ledgerRel, data } of ledgers) {
+    for (const row of data.rows) {
+      covered.set(`${row.from.book} ${row.from.chapter}`, { book: row.from.book, chapter: String(row.from.chapter) });
+      const groupId = row.groupId;
+      let group = groupIndex.get(groupId);
+      if (!group) {
+        group = { id: groupId, sources: [], targets: [], evidence: [], collective: false, notes: '', status: 'proposal' };
+        groupIndex.set(groupId, group);
+        groups.push(group);
+      }
+      const source = { book: row.from.book, chapter: String(row.from.chapter), kind: row.from.kind, label: String(row.from.label) };
+      if (!group.sources.some((s) => sourceKey(s) === sourceKey(source))) group.sources.push(source);
+      for (const target of row.to) {
+        if (!group.targets.some((t) => targetKey(t) === targetKey(target))) group.targets.push(target);
+      }
+      if (!group.evidence.includes(row.id)) group.evidence.push(row.id);
+      if (row.differences?.length) {
+        const note = row.differences.join(' ');
+        if (note && !group.notes.includes(note)) group.notes = group.notes ? `${group.notes} ${note}` : note;
+      }
+      if (row.presentation) group.presentation = row.presentation;
 
-    entries.push({
-      source,
-      groupId,
-      to: row.to.map((t) => ({ book: t.book, chapter: t.chapter, verse: t.verse })),
-      status: 'proposal',
-      provenance: {
-        ledger: 'build/reviews/lxx-genesis1-evidence.json',
+      const provenance = {
+        ledger: ledgerRel,
         rowId: row.id,
         reason: row.reason || '',
         differences: Array.isArray(row.differences) ? row.differences.slice() : [],
         sourceFlags: Array.isArray(row.sourceFlags) ? row.sourceFlags.slice() : [],
-        textHashes: { ...row.textHashes },
-      },
-    });
+      };
+      if (Array.isArray(row.targets) && row.targets.length) {
+        // Per-target comparison evidence: each target carries its own actual
+        // corpus string/hash. The source Greek keeps one ref/text/hash.
+        provenance.textHashes = { greek: row.textHashes.greek };
+        provenance.targetEvidence = row.targets.map((t) => ({
+          to: { book: t.to.book, chapter: t.to.chapter, verse: t.to.verse },
+          textHashes: { web: t.textHashes.web, he: t.textHashes.he, kjv: t.textHashes.kjv },
+        }));
+      } else {
+        provenance.textHashes = { ...row.textHashes };
+      }
+
+      entries.push({
+        source,
+        groupId,
+        to: row.to.map((t) => ({ book: t.book, chapter: t.chapter, verse: t.verse })),
+        status: 'proposal',
+        provenance,
+      });
+    }
   }
   for (const group of groups) group.collective = group.sources.length > 1 || group.targets.length > 1;
 
@@ -241,11 +260,11 @@ export function build() {
   // still flagged `rebound` so a stale or drifted binding can never ship
   // silently.
   const declared = {
-    lxx: ledger.bindings.lxx,
-    web: ledger.bindings.web,
-    he: ledger.bindings.he,
-    kjv: ledger.bindings.kjv,
-    canon: ledger.bindings.canon,
+    lxx: ledgers[0].data.bindings.lxx,
+    web: ledgers[0].data.bindings.web,
+    he: ledgers[0].data.bindings.he,
+    kjv: ledgers[0].data.bindings.kjv,
+    canon: ledgers[0].data.bindings.canon,
   };
   const bindings = {};
   for (const [name, binding] of Object.entries(declared)) {
@@ -256,30 +275,33 @@ export function build() {
     if (binding.sha256 && binding.sha256 !== actual) bindings[name].rebound = true;
   }
 
-  // Bind the proposal ledger itself, so the source proposals cannot silently
-  // drift from the artifact the validator checks them against. Every entry's
-  // provenance.ledger points at this same file; the validator requires it to
-  // resolve and its hash to match before trusting any row.
-  bindings.ledger = { path: LEDGER_REL, sha256: sha256(LEDGER), hash: CANONICAL_HASH };
+  // Bind each proposal ledger itself (ledger, ledger2, ...), so source
+  // proposals cannot silently drift from the file the validator checks them
+  // against. Every entry's provenance.ledger names its own file.
+  ledgers.forEach((entry, i) => {
+    const name = i === 0 ? 'ledger' : `ledger${i + 1}`;
+    bindings[name] = { path: entry.path, sha256: sha256(path.join(root, entry.path)), hash: CANONICAL_HASH, role: 'ledger' };
+  });
 
   const mapping = {
-    version: 1,
+    version: 2,
     id: 'lxx-swete-alignment',
-    label: 'LXX-canon alignment pilot (Genesis 1)',
+    label: 'LXX-canon alignment pilot (Genesis 1-5)',
     status: 'proposal',
     review: {
       humanApproval: null,
-      reviewers: ledger.review.reviewers.slice(),
-      requirement: ledger.review.requirement,
+      reviewers: ledgers.flatMap((entry) => (entry.data.review?.reviewers || []).map((r) => ({ ...r, ledger: entry.path }))),
+      requirement: ledgers[0].data.review.requirement,
     },
     license: {
-      id: ledger.license.id,
-      attribution: ledger.license.attribution,
-      changes: ledger.license.changes,
+      id: ledgers[0].data.license.id,
+      attribution: ledgers[0].data.license.attribution,
+      changes: 'Editorial correspondence proposals for Genesis 1-5 (plus the disclosed boundary unit GEN 6:1); no Scripture text changed.',
     },
     scope: {
       covered: [...covered.values()],
-      note: 'This pilot covers Genesis 1 only. A target reference with no entry and no explicit negative assertion is unresolved; it is never inferred from equal counts or ordinals.',
+      boundary: [{ book: 'GEN', chapter: '6', verses: [1], note: 'Boundary-only: only GEN 6:1 is proposed; GEN 6:2 and later remain unresolved.' }],
+      note: 'This pilot covers Genesis 1-5 plus the single disclosed boundary unit GEN 6:1. A target reference with no entry and no explicit negative assertion is unresolved; it is never inferred from equal counts or ordinals.',
       edges: 'Each source member names its group\'s complete target set. A group is a collective passage correspondence, not a claim of exact individual equivalence.',
     },
     schemes: 'data/versification-schemes.json',
@@ -287,7 +309,7 @@ export function build() {
     targetScheme: 'web-c',
     targetSchemeNote:
       'Target coordinates are the Maranatha navigation canon anchored to the WEB Catholic Edition. ' +
-      'They do not assert that every edition or manuscript shares that numbering; Genesis 1 is the only proposal-covered passage.',
+      'They do not assert that every edition or manuscript shares that numbering; Genesis 1-5 (plus boundary GEN 6:1) is the proposal-covered scope.',
     hashMethod: CANONICAL_HASH,
     bindings,
     groups,

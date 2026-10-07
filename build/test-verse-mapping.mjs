@@ -31,13 +31,22 @@ const hex = 'a'.repeat(64);
 function shapeChecks() {
   const sources = new Set(mapping.entries.map((e) => `${e.source.book}|${e.source.chapter}|${e.source.label}`));
   const targets = new Set(mapping.entries.flatMap((e) => e.to.map((t) => `${t.book}|${t.chapter}|${t.verse}`)));
-  out('31-unique-source-refs', sources.size === 31, String(sources.size));
-  out('31-unique-target-refs', targets.size === 31, String(targets.size));
-  out('30-groups', mapping.groups.length === 30, String(mapping.groups.length));
+  const genesis1Entries = mapping.entries.filter((e) => e.provenance.ledger === 'build/reviews/lxx-genesis1-evidence.json');
+  const genesis25Entries = mapping.entries.filter((e) => e.provenance.ledger === 'build/reviews/lxx-genesis2-5-evidence.json');
+  out('137-unique-source-refs', sources.size === 137, String(sources.size));
+  out('139-unique-target-refs', targets.size === 139, String(targets.size));
+  out('136-groups', mapping.groups.length === 136, String(mapping.groups.length));
+  out('genesis1-evidence-unchanged', genesis1Entries.length === 31 && genesis25Entries.length === 106,
+    `${genesis1Entries.length}/${genesis25Entries.length}`);
   const group = mapping.groups.find((g) => g.id === 'GEN1-6-7');
   out('collective-6-7-preserved',
     !!group && group.collective === true && group.sources.length === 2 && group.targets.length === 2
       && group.targets.some((t) => t.verse === 6) && group.targets.some((t) => t.verse === 7));
+  const span = mapping.groups.find((g) => g.id === 'GEN3-1');
+  out('spanning-3-1-preserved',
+    !!span && span.sources.length === 1 && span.targets.length === 2
+      && span.targets.some((t) => t.chapter === 2 && t.verse === 25)
+      && span.targets.some((t) => t.chapter === 3 && t.verse === 1));
 
   const first = build();
   const second = build();
@@ -336,10 +345,68 @@ function resolverChecks() {
   out('resolver-group-text-exact', resolverExact(six, native, 'GEN', '1', '6'), 'native text matches the shipped native segment');
   const realSource = resolver.resolveSource({ book: 'GEN', chapter: '1', kind: 'verse', label: '1' });
   out('resolver-real-map-source-unambiguous', realSource.ambiguous === false && !!realSource.entry && !!realSource.group);
-  out('resolver-unresolved-genesis2', resolver.resolveTarget('GEN', 2, 1).state === 'alignment-unavailable');
+  out('resolver-genesis2-covered', resolver.resolveTarget('GEN', 2, 1).state === 'correspondence');
+  out('resolver-genesis5-32-covered', resolver.resolveTarget('GEN', 5, 32).state === 'correspondence');
+  out('resolver-genesis6-1-covered', resolver.resolveTarget('GEN', 6, 1).groupId === 'GEN6-1');
+  out('resolver-genesis6-2-unresolved', resolver.resolveTarget('GEN', 6, 2).state === 'alignment-unavailable');
+  const cross = resolver.resolveTarget('GEN', 2, 25);
+  out('resolver-cross-chapter-group', cross.state === 'correspondence' && cross.groupId === 'GEN3-1'
+    && cross.members.length === 1 && cross.spanning === true);
+  out('resolver-spanning-presentation', !!cross.presentation && cross.presentation.primary.chapter === 3);
   out('resolver-unresolved-psalms', resolver.resolveTarget('PSA', 23, 1).state === 'alignment-unavailable');
   out('resolver-ecc-missing-edition', resolver.resolveTarget('ECC', 1, 1).state === 'missing-edition');
   out('resolver-nt-missing-edition', resolver.resolveTarget('MAT', 5, 1).state === 'missing-edition');
+}
+
+// ---------------------------------------------------------------------------
+// Stage 2b: per-target comparison evidence and cross-chapter binding.
+// ---------------------------------------------------------------------------
+function stage2bEvidenceChecks() {
+  const valid = validateMapping(mapping, { native, canon });
+  out('stage2b-proposal-pass', valid.ok, valid.errors.slice(0, 2).join(' | '));
+
+  const spanEntry = (m) => m.entries.find((e) => e.provenance.rowId === 'GEN3-1');
+  const cases = {
+    'reject-forged-target-evidence-hash': () => {
+      const m = clone(mapping);
+      spanEntry(m).provenance.targetEvidence[0].textHashes.web = hex;
+      return m;
+    },
+    'reject-missing-target-evidence': () => {
+      const m = clone(mapping);
+      spanEntry(m).provenance.targetEvidence.splice(0, 1);
+      return m;
+    },
+    'reject-duplicate-target-evidence': () => {
+      const m = clone(mapping);
+      const e = spanEntry(m);
+      e.provenance.targetEvidence.push(clone(e.provenance.targetEvidence[0]));
+      return m;
+    },
+    'reject-target-evidence-not-in-set': () => {
+      const m = clone(mapping);
+      spanEntry(m).provenance.targetEvidence[0].to = { book: 'GEN', chapter: 3, verse: 2 };
+      return m;
+    },
+    'reject-duplicate-source-genesis2': () => {
+      const m = clone(mapping);
+      const e = m.entries.find((x) => x.provenance.rowId === 'GEN2-1');
+      m.entries.push(clone(e));
+      return m;
+    },
+    'reject-forged-ledger2-binding': () => { const m = clone(mapping); m.bindings.ledger2.sha256 = hex; return m; },
+    'reject-absent-native-label': () => {
+      const m = clone(mapping);
+      const e = m.entries.find((x) => x.provenance.rowId === 'GEN2-1');
+      e.source.label = '404';
+      return m;
+    },
+  };
+  for (const [name, make] of Object.entries(cases)) {
+    let result;
+    try { result = validateMapping(make(), { native, canon }); } catch (error) { result = { ok: false, errors: [error.message] }; }
+    out(name, !result.ok, result.ok ? 'unexpectedly accepted' : (result.errors[0] || 'rejected'));
+  }
 }
 
 function resolverExact(cell, nativeData, bookId, chapter, label) {
@@ -355,6 +422,7 @@ mutationChecks();
 syntheticShapeChecks();
 resolverChecks();
 resolverSafetyChecks();
+stage2bEvidenceChecks();
 
 let failed = 0;
 for (const [name, ok, detail] of results) {

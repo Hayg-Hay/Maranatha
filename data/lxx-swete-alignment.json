@@ -1,7 +1,7 @@
 {
-  "version": 1,
+  "version": 2,
   "id": "lxx-swete-alignment",
-  "label": "LXX-canon alignment pilot (Genesis 1)",
+  "label": "LXX-canon alignment pilot (Genesis 1-5)",
   "status": "proposal",
   "review": {
     "humanApproval": null,
@@ -9,7 +9,14 @@
       {
         "id": "codex",
         "kind": "ai",
-        "role": "textual proposal author"
+        "role": "textual proposal author",
+        "ledger": "build/reviews/lxx-genesis1-evidence.json"
+      },
+      {
+        "id": "deepseek",
+        "kind": "ai",
+        "role": "implementer and textual proposal author",
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json"
       }
     ],
     "requirement": "Human adjudication before correspondences are described as verified."
@@ -17,22 +24,52 @@
   "license": {
     "id": "CC-BY-SA-4.0",
     "attribution": "Greek: First1KGreek / Swete, CC BY-SA 4.0; Hebrew: Open Scriptures Hebrew Bible, CC BY 4.0; WEB Catholic Edition and imported KJV: source declarations in shipped datasets.",
-    "changes": "Editorial correspondence proposals only; no Scripture text changed."
+    "changes": "Editorial correspondence proposals for Genesis 1-5 (plus the disclosed boundary unit GEN 6:1); no Scripture text changed."
   },
   "scope": {
     "covered": [
       {
         "book": "GEN",
         "chapter": "1"
+      },
+      {
+        "book": "GEN",
+        "chapter": "2"
+      },
+      {
+        "book": "GEN",
+        "chapter": "3"
+      },
+      {
+        "book": "GEN",
+        "chapter": "4"
+      },
+      {
+        "book": "GEN",
+        "chapter": "5"
+      },
+      {
+        "book": "GEN",
+        "chapter": "6"
       }
     ],
-    "note": "This pilot covers Genesis 1 only. A target reference with no entry and no explicit negative assertion is unresolved; it is never inferred from equal counts or ordinals.",
+    "boundary": [
+      {
+        "book": "GEN",
+        "chapter": "6",
+        "verses": [
+          1
+        ],
+        "note": "Boundary-only: only GEN 6:1 is proposed; GEN 6:2 and later remain unresolved."
+      }
+    ],
+    "note": "This pilot covers Genesis 1-5 plus the single disclosed boundary unit GEN 6:1. A target reference with no entry and no explicit negative assertion is unresolved; it is never inferred from equal counts or ordinals.",
     "edges": "Each source member names its group's complete target set. A group is a collective passage correspondence, not a claim of exact individual equivalence."
   },
   "schemes": "data/versification-schemes.json",
   "sourceScheme": "lxx-swete-native",
   "targetScheme": "web-c",
-  "targetSchemeNote": "Target coordinates are the Maranatha navigation canon anchored to the WEB Catholic Edition. They do not assert that every edition or manuscript shares that numbering; Genesis 1 is the only proposal-covered passage.",
+  "targetSchemeNote": "Target coordinates are the Maranatha navigation canon anchored to the WEB Catholic Edition. They do not assert that every edition or manuscript shares that numbering; Genesis 1-5 (plus boundary GEN 6:1) is the proposal-covered scope.",
   "hashMethod": "sha256-lf",
   "bindings": {
     "lxx": {
@@ -267,7 +304,14 @@
     "ledger": {
       "path": "build/reviews/lxx-genesis1-evidence.json",
       "sha256": "1ae0b0ada5dfa1824627cdfa3c506b7a3d4c23ee1eb9281e4276e343556c04f7",
-      "hash": "sha256-lf"
+      "hash": "sha256-lf",
+      "role": "ledger"
+    },
+    "ledger2": {
+      "path": "build/reviews/lxx-genesis2-5-evidence.json",
+      "sha256": "6fcb94d3c0969d14e775e9da2259b1208b4dfb6d2c0c2ba7df9242f16724da57",
+      "hash": "sha256-lf",
+      "role": "ledger"
     }
   },
   "groups": [
@@ -1002,6 +1046,2576 @@
       "collective": false,
       "notes": "Greek duplicated day-word and malformed bracket are retained exactly, not silently repaired.",
       "status": "proposal"
+    },
+    {
+      "id": "GEN2-1",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "2",
+          "kind": "verse",
+          "label": "1"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 1
+        }
+      ],
+      "evidence": [
+        "GEN2-1"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN2-2",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "2",
+          "kind": "verse",
+          "label": "2"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 2
+        }
+      ],
+      "evidence": [
+        "GEN2-2"
+      ],
+      "collective": false,
+      "notes": "Greek finishes the work on the sixth day and rests on the seventh; WEB/KJV/OSHB finish the work and rest on the seventh.",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN2-3",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "2",
+          "kind": "verse",
+          "label": "3"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 3
+        }
+      ],
+      "evidence": [
+        "GEN2-3"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN2-4",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "2",
+          "kind": "verse",
+          "label": "4"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 4
+        }
+      ],
+      "evidence": [
+        "GEN2-4"
+      ],
+      "collective": false,
+      "notes": "Same opening clause (\"book of the generations\" / \"history of the generations\").",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN2-5",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "2",
+          "kind": "verse",
+          "label": "5"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 5
+        }
+      ],
+      "evidence": [
+        "GEN2-5"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN2-6",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "2",
+          "kind": "verse",
+          "label": "6"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 6
+        }
+      ],
+      "evidence": [
+        "GEN2-6"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN2-7",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "2",
+          "kind": "verse",
+          "label": "7"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 7
+        }
+      ],
+      "evidence": [
+        "GEN2-7"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN2-8",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "2",
+          "kind": "verse",
+          "label": "8"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 8
+        }
+      ],
+      "evidence": [
+        "GEN2-8"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN2-9",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "2",
+          "kind": "verse",
+          "label": "9"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 9
+        }
+      ],
+      "evidence": [
+        "GEN2-9"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN2-10",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "2",
+          "kind": "verse",
+          "label": "10"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 10
+        }
+      ],
+      "evidence": [
+        "GEN2-10"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN2-11",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "2",
+          "kind": "verse",
+          "label": "11"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 11
+        }
+      ],
+      "evidence": [
+        "GEN2-11"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN2-12",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "2",
+          "kind": "verse",
+          "label": "12"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 12
+        }
+      ],
+      "evidence": [
+        "GEN2-12"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN2-13",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "2",
+          "kind": "verse",
+          "label": "13"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 13
+        }
+      ],
+      "evidence": [
+        "GEN2-13"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN2-14",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "2",
+          "kind": "verse",
+          "label": "14"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 14
+        }
+      ],
+      "evidence": [
+        "GEN2-14"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN2-15",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "2",
+          "kind": "verse",
+          "label": "15"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 15
+        }
+      ],
+      "evidence": [
+        "GEN2-15"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN2-16",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "2",
+          "kind": "verse",
+          "label": "16"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 16
+        }
+      ],
+      "evidence": [
+        "GEN2-16"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN2-17",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "2",
+          "kind": "verse",
+          "label": "17"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 17
+        }
+      ],
+      "evidence": [
+        "GEN2-17"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN2-18",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "2",
+          "kind": "verse",
+          "label": "18"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 18
+        }
+      ],
+      "evidence": [
+        "GEN2-18"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN2-19",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "2",
+          "kind": "verse",
+          "label": "19"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 19
+        }
+      ],
+      "evidence": [
+        "GEN2-19"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN2-20",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "2",
+          "kind": "verse",
+          "label": "20"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 20
+        }
+      ],
+      "evidence": [
+        "GEN2-20"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN2-21",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "2",
+          "kind": "verse",
+          "label": "21"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 21
+        }
+      ],
+      "evidence": [
+        "GEN2-21"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN2-22",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "2",
+          "kind": "verse",
+          "label": "22"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 22
+        }
+      ],
+      "evidence": [
+        "GEN2-22"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN2-23",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "2",
+          "kind": "verse",
+          "label": "23"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 23
+        }
+      ],
+      "evidence": [
+        "GEN2-23"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN2-24",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "2",
+          "kind": "verse",
+          "label": "24"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 24
+        }
+      ],
+      "evidence": [
+        "GEN2-24"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN3-1",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "3",
+          "kind": "verse",
+          "label": "1"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 25
+        },
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 1
+        }
+      ],
+      "evidence": [
+        "GEN3-1"
+      ],
+      "collective": true,
+      "notes": "Source GEN 3:1 opens with the nakedness/unashamed statement that the English and Hebrew place at 2:25, then the serpent dialogue at 3:1. One source container, two canonical targets; no Greek 2:25 is invented.",
+      "status": "proposal",
+      "presentation": {
+        "primary": {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 1
+        },
+        "note": "Greek 3:1 also carries the end of chapter 2 (the nakedness statement at 2:25); the complete source is shown once."
+      }
+    },
+    {
+      "id": "GEN3-2",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "3",
+          "kind": "verse",
+          "label": "2"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 2
+        }
+      ],
+      "evidence": [
+        "GEN3-2"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN3-3",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "3",
+          "kind": "verse",
+          "label": "3"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 3
+        }
+      ],
+      "evidence": [
+        "GEN3-3"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN3-4",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "3",
+          "kind": "verse",
+          "label": "4"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 4
+        }
+      ],
+      "evidence": [
+        "GEN3-4"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN3-5",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "3",
+          "kind": "verse",
+          "label": "5"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 5
+        }
+      ],
+      "evidence": [
+        "GEN3-5"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN3-6",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "3",
+          "kind": "verse",
+          "label": "6"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 6
+        }
+      ],
+      "evidence": [
+        "GEN3-6"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN3-7",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "3",
+          "kind": "verse",
+          "label": "7"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 7
+        }
+      ],
+      "evidence": [
+        "GEN3-7"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN3-8",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "3",
+          "kind": "verse",
+          "label": "8"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 8
+        }
+      ],
+      "evidence": [
+        "GEN3-8"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN3-9",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "3",
+          "kind": "verse",
+          "label": "9"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 9
+        }
+      ],
+      "evidence": [
+        "GEN3-9"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN3-10",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "3",
+          "kind": "verse",
+          "label": "10"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 10
+        }
+      ],
+      "evidence": [
+        "GEN3-10"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN3-11",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "3",
+          "kind": "verse",
+          "label": "11"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 11
+        }
+      ],
+      "evidence": [
+        "GEN3-11"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN3-12",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "3",
+          "kind": "verse",
+          "label": "12"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 12
+        }
+      ],
+      "evidence": [
+        "GEN3-12"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN3-13",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "3",
+          "kind": "verse",
+          "label": "13"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 13
+        }
+      ],
+      "evidence": [
+        "GEN3-13"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN3-14",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "3",
+          "kind": "verse",
+          "label": "14"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 14
+        }
+      ],
+      "evidence": [
+        "GEN3-14"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN3-15",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "3",
+          "kind": "verse",
+          "label": "15"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 15
+        }
+      ],
+      "evidence": [
+        "GEN3-15"
+      ],
+      "collective": false,
+      "notes": "Greek keeping/watching wording versus English \"bruise\"; pronoun renderings differ. Preserved, not harmonized.",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN3-16",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "3",
+          "kind": "verse",
+          "label": "16"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 16
+        }
+      ],
+      "evidence": [
+        "GEN3-16"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN3-17",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "3",
+          "kind": "verse",
+          "label": "17"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 17
+        }
+      ],
+      "evidence": [
+        "GEN3-17"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN3-18",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "3",
+          "kind": "verse",
+          "label": "18"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 18
+        }
+      ],
+      "evidence": [
+        "GEN3-18"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN3-19",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "3",
+          "kind": "verse",
+          "label": "19"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 19
+        }
+      ],
+      "evidence": [
+        "GEN3-19"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN3-20",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "3",
+          "kind": "verse",
+          "label": "20"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 20
+        }
+      ],
+      "evidence": [
+        "GEN3-20"
+      ],
+      "collective": false,
+      "notes": "Greek names the woman Ζωή (Life); English and Hebrew render Eve/Havvah.",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN3-21",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "3",
+          "kind": "verse",
+          "label": "21"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 21
+        }
+      ],
+      "evidence": [
+        "GEN3-21"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN3-22",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "3",
+          "kind": "verse",
+          "label": "22"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 22
+        }
+      ],
+      "evidence": [
+        "GEN3-22"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN3-23",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "3",
+          "kind": "verse",
+          "label": "23"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 23
+        }
+      ],
+      "evidence": [
+        "GEN3-23"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN3-24",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "3",
+          "kind": "verse",
+          "label": "24"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 24
+        }
+      ],
+      "evidence": [
+        "GEN3-24"
+      ],
+      "collective": false,
+      "notes": "Greek adds Adam being settled opposite (ἀπέναντι) the garden alongside the expulsion, cherubim and flaming sword.",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN4-1",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "4",
+          "kind": "verse",
+          "label": "1"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 1
+        }
+      ],
+      "evidence": [
+        "GEN4-1"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN4-2",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "4",
+          "kind": "verse",
+          "label": "2"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 2
+        }
+      ],
+      "evidence": [
+        "GEN4-2"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN4-3",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "4",
+          "kind": "verse",
+          "label": "3"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 3
+        }
+      ],
+      "evidence": [
+        "GEN4-3"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN4-4",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "4",
+          "kind": "verse",
+          "label": "4"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 4
+        }
+      ],
+      "evidence": [
+        "GEN4-4"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN4-5",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "4",
+          "kind": "verse",
+          "label": "5"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 5
+        }
+      ],
+      "evidence": [
+        "GEN4-5"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN4-6",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "4",
+          "kind": "verse",
+          "label": "6"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 6
+        }
+      ],
+      "evidence": [
+        "GEN4-6"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN4-7",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "4",
+          "kind": "verse",
+          "label": "7"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 7
+        }
+      ],
+      "evidence": [
+        "GEN4-7"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN4-8",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "4",
+          "kind": "verse",
+          "label": "8"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 8
+        }
+      ],
+      "evidence": [
+        "GEN4-8"
+      ],
+      "collective": false,
+      "notes": "Greek and WEB quote Cain’s invitation to go into the field; KJV and OSHB do not include that invitation clause.",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN4-9",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "4",
+          "kind": "verse",
+          "label": "9"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 9
+        }
+      ],
+      "evidence": [
+        "GEN4-9"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN4-10",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "4",
+          "kind": "verse",
+          "label": "10"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 10
+        }
+      ],
+      "evidence": [
+        "GEN4-10"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN4-11",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "4",
+          "kind": "verse",
+          "label": "11"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 11
+        }
+      ],
+      "evidence": [
+        "GEN4-11"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN4-12",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "4",
+          "kind": "verse",
+          "label": "12"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 12
+        }
+      ],
+      "evidence": [
+        "GEN4-12"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN4-13",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "4",
+          "kind": "verse",
+          "label": "13"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 13
+        }
+      ],
+      "evidence": [
+        "GEN4-13"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN4-14",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "4",
+          "kind": "verse",
+          "label": "14"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 14
+        }
+      ],
+      "evidence": [
+        "GEN4-14"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN4-15",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "4",
+          "kind": "verse",
+          "label": "15"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 15
+        }
+      ],
+      "evidence": [
+        "GEN4-15"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN4-16",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "4",
+          "kind": "verse",
+          "label": "16"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 16
+        }
+      ],
+      "evidence": [
+        "GEN4-16"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN4-17",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "4",
+          "kind": "verse",
+          "label": "17"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 17
+        }
+      ],
+      "evidence": [
+        "GEN4-17"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN4-18",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "4",
+          "kind": "verse",
+          "label": "18"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 18
+        }
+      ],
+      "evidence": [
+        "GEN4-18"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN4-19",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "4",
+          "kind": "verse",
+          "label": "19"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 19
+        }
+      ],
+      "evidence": [
+        "GEN4-19"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN4-20",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "4",
+          "kind": "verse",
+          "label": "20"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 20
+        }
+      ],
+      "evidence": [
+        "GEN4-20"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN4-21",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "4",
+          "kind": "verse",
+          "label": "21"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 21
+        }
+      ],
+      "evidence": [
+        "GEN4-21"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN4-22",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "4",
+          "kind": "verse",
+          "label": "22"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 22
+        }
+      ],
+      "evidence": [
+        "GEN4-22"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN4-23",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "4",
+          "kind": "verse",
+          "label": "23"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 23
+        }
+      ],
+      "evidence": [
+        "GEN4-23"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN4-24",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "4",
+          "kind": "verse",
+          "label": "24"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 24
+        }
+      ],
+      "evidence": [
+        "GEN4-24"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN4-25",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "4",
+          "kind": "verse",
+          "label": "25"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 25
+        }
+      ],
+      "evidence": [
+        "GEN4-25"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN4-26",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "4",
+          "kind": "verse",
+          "label": "26"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 26
+        }
+      ],
+      "evidence": [
+        "GEN4-26"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-1",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "1"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 1
+        }
+      ],
+      "evidence": [
+        "GEN5-1"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-2",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "2"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 2
+        }
+      ],
+      "evidence": [
+        "GEN5-2"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-3",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "3"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 3
+        }
+      ],
+      "evidence": [
+        "GEN5-3"
+      ],
+      "collective": false,
+      "notes": "Genealogy age differs: Greek 230 versus WEB/KJV/OSHB 130. Source reading preserved; ages are not harmonized.",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-4",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "4"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 4
+        }
+      ],
+      "evidence": [
+        "GEN5-4"
+      ],
+      "collective": false,
+      "notes": "Genealogy age differs: Greek 700 versus WEB/KJV/OSHB 800. Source reading preserved; ages are not harmonized.",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-5",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "5"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 5
+        }
+      ],
+      "evidence": [
+        "GEN5-5"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-6",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "6"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 6
+        }
+      ],
+      "evidence": [
+        "GEN5-6"
+      ],
+      "collective": false,
+      "notes": "Genealogy age differs: Greek 205 versus WEB/KJV/OSHB 105. Source reading preserved; ages are not harmonized.",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-7",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "7"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 7
+        }
+      ],
+      "evidence": [
+        "GEN5-7"
+      ],
+      "collective": false,
+      "notes": "Genealogy age differs: Greek 707 versus WEB/KJV/OSHB 807. Source reading preserved; ages are not harmonized.",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-8",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "8"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 8
+        }
+      ],
+      "evidence": [
+        "GEN5-8"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-9",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "9"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 9
+        }
+      ],
+      "evidence": [
+        "GEN5-9"
+      ],
+      "collective": false,
+      "notes": "Genealogy age differs: Greek 190 versus WEB/KJV/OSHB 90. Source reading preserved; ages are not harmonized.",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-10",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "10"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 10
+        }
+      ],
+      "evidence": [
+        "GEN5-10"
+      ],
+      "collective": false,
+      "notes": "Genealogy age differs: Greek 715 versus WEB/KJV/OSHB 815. Source reading preserved; ages are not harmonized.",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-11",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "11"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 11
+        }
+      ],
+      "evidence": [
+        "GEN5-11"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-12",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "12"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 12
+        }
+      ],
+      "evidence": [
+        "GEN5-12"
+      ],
+      "collective": false,
+      "notes": "Genealogy age differs: Greek 170 versus WEB/KJV/OSHB 70. Source reading preserved; ages are not harmonized.",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-13",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "13"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 13
+        }
+      ],
+      "evidence": [
+        "GEN5-13"
+      ],
+      "collective": false,
+      "notes": "Genealogy age differs: Greek 740 versus WEB/KJV/OSHB 840. Source reading preserved; ages are not harmonized.",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-14",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "14"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 14
+        }
+      ],
+      "evidence": [
+        "GEN5-14"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-15",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "15"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 15
+        }
+      ],
+      "evidence": [
+        "GEN5-15"
+      ],
+      "collective": false,
+      "notes": "Genealogy age differs: Greek 165 versus WEB/KJV/OSHB 65. Source reading preserved; ages are not harmonized.",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-16",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "16"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 16
+        }
+      ],
+      "evidence": [
+        "GEN5-16"
+      ],
+      "collective": false,
+      "notes": "Genealogy age differs: Greek 730 versus WEB/KJV/OSHB 830. Source reading preserved; ages are not harmonized.",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-17",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "17"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 17
+        }
+      ],
+      "evidence": [
+        "GEN5-17"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-18",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "18"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 18
+        }
+      ],
+      "evidence": [
+        "GEN5-18"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-19",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "19"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 19
+        }
+      ],
+      "evidence": [
+        "GEN5-19"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-20",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "20"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 20
+        }
+      ],
+      "evidence": [
+        "GEN5-20"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-21",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "21"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 21
+        }
+      ],
+      "evidence": [
+        "GEN5-21"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-22",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "22"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 22
+        }
+      ],
+      "evidence": [
+        "GEN5-22"
+      ],
+      "collective": false,
+      "notes": "Genealogy age differs: Greek 200 versus WEB/KJV/OSHB 300. Source reading preserved; ages are not harmonized.",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-23",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "23"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 23
+        }
+      ],
+      "evidence": [
+        "GEN5-23"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-24",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "24"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 24
+        }
+      ],
+      "evidence": [
+        "GEN5-24"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-25",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "25"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 25
+        }
+      ],
+      "evidence": [
+        "GEN5-25"
+      ],
+      "collective": false,
+      "notes": "Greek 5:25 reads 187 years, matching the inspected WEB/KJV/OSHB verse; the 167 reading of another LXX witness is not imported.",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-26",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "26"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 26
+        }
+      ],
+      "evidence": [
+        "GEN5-26"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-27",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "27"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 27
+        }
+      ],
+      "evidence": [
+        "GEN5-27"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-28",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "28"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 28
+        }
+      ],
+      "evidence": [
+        "GEN5-28"
+      ],
+      "collective": false,
+      "notes": "Genealogy age differs: Greek 188 versus WEB/KJV/OSHB 182. Source reading preserved; ages are not harmonized.",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-29",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "29"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 29
+        }
+      ],
+      "evidence": [
+        "GEN5-29"
+      ],
+      "collective": false,
+      "notes": "",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-30",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "30"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 30
+        }
+      ],
+      "evidence": [
+        "GEN5-30"
+      ],
+      "collective": false,
+      "notes": "Genealogy age differs: Greek 565 versus WEB/KJV/OSHB 595. Source reading preserved; ages are not harmonized.",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN5-31",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "5",
+          "kind": "verse",
+          "label": "31"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 31
+        }
+      ],
+      "evidence": [
+        "GEN5-31"
+      ],
+      "collective": false,
+      "notes": "Genealogy age differs: Greek 753 versus WEB/KJV/OSHB 777. Source reading preserved; ages are not harmonized.",
+      "status": "proposal"
+    },
+    {
+      "id": "GEN6-1",
+      "sources": [
+        {
+          "book": "GEN",
+          "chapter": "6",
+          "kind": "verse",
+          "label": "1"
+        }
+      ],
+      "targets": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 32
+        },
+        {
+          "book": "GEN",
+          "chapter": 6,
+          "verse": 1
+        }
+      ],
+      "evidence": [
+        "GEN6-1"
+      ],
+      "collective": true,
+      "notes": "Boundary-only extension: source GEN 6:1 opens with Noah at 500 and his three sons (target 5:32) before the multiplication-of-humanity clause (target 6:1). Only this single boundary reference is extended; the rest of chapter 6 stays unresolved.",
+      "status": "proposal",
+      "presentation": {
+        "primary": {
+          "book": "GEN",
+          "chapter": 6,
+          "verse": 1
+        },
+        "note": "Greek 6:1 opens with Noah’s age and three sons (5:32) before the multiplication clause (6:1); the complete source is shown once."
+      }
     }
   ],
   "entries": [
@@ -1987,6 +4601,4432 @@
           "he": "5bab56fca9cf12337d479e44e2319c5add84e63625e8f3f270172d93c73901a7",
           "kjv": "67c821b497f91cff9ddf49410abda3916c1e81ba28d186c66c5ef69fd8efa23d"
         }
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "2",
+        "kind": "verse",
+        "label": "1"
+      },
+      "groupId": "GEN2-1",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 1
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN2-1",
+        "reason": "Heavens, earth and all their array were completed.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "abd1b598aa05a086ab1b5397631d99d654615cf0979b13462f4ae36b771ccc14"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 2,
+              "verse": 1
+            },
+            "textHashes": {
+              "web": "330f180463cd57bd975c94e49422f39735f3d7d288582cbaca9e3007c9ebc720",
+              "he": "d4d0a02b7c92c96be1f5ebd05257949658fab66f7fb40f1c59dab7b81cd803e1",
+              "kjv": "6f4a7d45743a722858ec518fd3685870ed591f686ddc1560dd164510a9ba80cc"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "2",
+        "kind": "verse",
+        "label": "2"
+      },
+      "groupId": "GEN2-2",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 2
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN2-2",
+        "reason": "God completed his work and rested on the seventh day.",
+        "differences": [
+          "Greek finishes the work on the sixth day and rests on the seventh; WEB/KJV/OSHB finish the work and rest on the seventh."
+        ],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "eb3eadeb250864f96d59e3f9ee6a6dcb5a685d876e91f0ac7c738256efbca42b"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 2,
+              "verse": 2
+            },
+            "textHashes": {
+              "web": "afc084d0deefba85d60eeb586e0c2fbbb74ab2197f4f4bd1e93e6fba2cdb30eb",
+              "he": "6b50c784732340c186cb2bdb81830231fadba4fff41eff8edd28e9cfa247e61e",
+              "kjv": "d5f4b42a1e75564d0eb9c9d11b353c96e61b89c3a4e4fb138cc87437b318621d"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "2",
+        "kind": "verse",
+        "label": "3"
+      },
+      "groupId": "GEN2-3",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 3
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN2-3",
+        "reason": "God blessed and sanctified the seventh day.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "9c11082302e0cf1c741339024ba8d158fa9ecb8ce811e7b88830450ee9fab92a"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 2,
+              "verse": 3
+            },
+            "textHashes": {
+              "web": "31038d30699c1e598bbfae2df6a800e7736998f7f4f51f2fd69d43571ead23f4",
+              "he": "4adbebc19114ebf5a376605c8b446b08dd2847021242dfc91dc651ccc0a42c1e",
+              "kjv": "9ff7e45bd02ce1c41595d7072af892e6dcc819316b28c922de37b680ba7ddcf8"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "2",
+        "kind": "verse",
+        "label": "4"
+      },
+      "groupId": "GEN2-4",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 4
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN2-4",
+        "reason": "Book/history of the generations of the heavens and the earth.",
+        "differences": [
+          "Same opening clause (\"book of the generations\" / \"history of the generations\")."
+        ],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "dce741b90767e55749dcc42453deb0e6be16105927e19353394eb22686fa93b1"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 2,
+              "verse": 4
+            },
+            "textHashes": {
+              "web": "15f2656804d160f6019ff9a7b16a535e9f3ac4535fd4c923a5bf16c0f5f6fd27",
+              "he": "58516185e101dc76aa976a1a30f7584c0f459c00a9d849a7de18abe6da779645",
+              "kjv": "e7a1499dfe9a232f0ed33fe94659c4fa16f91066933da72a7840c2003f35f5fb"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "2",
+        "kind": "verse",
+        "label": "5"
+      },
+      "groupId": "GEN2-5",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 5
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN2-5",
+        "reason": "No field plant or herb yet; the LORD God had not sent rain.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "2c374c67052a6b37d2b25b7e8978b4d53b622a153f0b3b9b595633542ad97d0d"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 2,
+              "verse": 5
+            },
+            "textHashes": {
+              "web": "8e9a4099c34b13e74a328ca9ab84142b4465c188948b2c5bf7bf6b10715801b2",
+              "he": "8ffb13e652691705d96b32f9d79f2bab341f5d099f66bae568b57a95a9643136",
+              "kjv": "5cbf7cbe3b20c76f94bb786e31ac086bb0380395672e672071f604981cf97194"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "2",
+        "kind": "verse",
+        "label": "6"
+      },
+      "groupId": "GEN2-6",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 6
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN2-6",
+        "reason": "A spring/mist watered the whole face of the ground.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "8842688ddf416e7886368259f179fef9de4dc2f1da0b2f4befab859a1d32a4dc"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 2,
+              "verse": 6
+            },
+            "textHashes": {
+              "web": "359098581d7c8d82a3a4203dca575fa1c27f412472f7cc37817c3a4dc4be9f1b",
+              "he": "74a4f30c5d9ac80b3cb452fa85f775da9dcdc95c01e5aefd11df1c0ba540caf5",
+              "kjv": "9bf4e02bf9ff462ea8bb6e02975c7be26f2a2e2f769e8f8280e654b6b360712d"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "2",
+        "kind": "verse",
+        "label": "7"
+      },
+      "groupId": "GEN2-7",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 7
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN2-7",
+        "reason": "The LORD God formed man from dust and breathed the breath of life.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "646cf71e2bdeeb56ecea47f37a9cb2090515ae0d72ecc5a8681a2777ebb38780"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 2,
+              "verse": 7
+            },
+            "textHashes": {
+              "web": "0e36a52d337d92bf3b417b341fe91bac7721017098ed2baabf826bc24790f3f3",
+              "he": "dfa59f51fd0a71cc43a1229975259c6b597fa9d70dc931199cf3c3e96f10ece8",
+              "kjv": "54c6bed0198f9220a3da5f19d0015af0255f4d4d0e0a3b2ebb41a72c17520344"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "2",
+        "kind": "verse",
+        "label": "8"
+      },
+      "groupId": "GEN2-8",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 8
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN2-8",
+        "reason": "A garden was planted in Eden and the man placed there.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "f8d68953bfcc7b85cddc9acd7a8c1cf19296d7fb0ca0ff96ebe299ddb315a439"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 2,
+              "verse": 8
+            },
+            "textHashes": {
+              "web": "077aeed05bd125b9901ac332128db7ec6954369767bfdbfcad103eacc3573a5f",
+              "he": "f1554d25f2824a1e1cd7e533c866397a6f16e720de5e2b2a515725c1065ba0a1",
+              "kjv": "f38ac09ae94ec76c4dc82bf053a2501ca62b36617b2a949aa57fcf3c0b4d3d60"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "2",
+        "kind": "verse",
+        "label": "9"
+      },
+      "groupId": "GEN2-9",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 9
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN2-9",
+        "reason": "Every pleasant, good tree, including the tree of life, grew from the ground.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "49df2b4475e65cb58e2165b4533a15184cd75d6bcb3d78f27e9d1ebed13e02df"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 2,
+              "verse": 9
+            },
+            "textHashes": {
+              "web": "4553c2d086995f2e7acb18640aeaadab06b276a928bc2e5398cbf93240eb9d2f",
+              "he": "901a5f6e1924743d33cb6ed65bf351103135755446d47ecc3477077f4b1a2825",
+              "kjv": "efcab25194929d5e8c704805b8f0943c69efb30d76b2ec535b5aafa55caa56b1"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "2",
+        "kind": "verse",
+        "label": "10"
+      },
+      "groupId": "GEN2-10",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 10
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN2-10",
+        "reason": "A river went out of Eden and divided into four heads.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "8903b8ca6025e32b5e3f96371a2919c771cdbb57d7790788a05348b3dbaeaa1e"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 2,
+              "verse": 10
+            },
+            "textHashes": {
+              "web": "506d9075bf02332732eda1b328e5798549051a7af14d88b40ea156b2ff517ad5",
+              "he": "f5eb37844509272f89370d6b7d94395ff3b6da2fa209869a3b5646e2366efa85",
+              "kjv": "12d807cc9b2a96d16509ecaf575ee3d3042c3b7eaaa258d1ba891c2f70d31374"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "2",
+        "kind": "verse",
+        "label": "11"
+      },
+      "groupId": "GEN2-11",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 11
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN2-11",
+        "reason": "First river Pishon, encircling the land of Havilah with its gold.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "6f05d4cf422472001a1e5797d8d6c1cfee0f2ef3574e064ab2598948532130c4"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 2,
+              "verse": 11
+            },
+            "textHashes": {
+              "web": "bd4270f38cd9d2a8673afb85371e968aeb36f364b1a3ca8825120dea5499f44f",
+              "he": "f846c665955ada5fdc596724f4fbef91aa50b2ddd35504b9659bbed937ae51cd",
+              "kjv": "c90a0f4e5886c7d1bb684cba8d640e8b954bfc08ddf7794eb0d878e6aae6aad9"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "2",
+        "kind": "verse",
+        "label": "12"
+      },
+      "groupId": "GEN2-12",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 12
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN2-12",
+        "reason": "The gold is good; bdellium and onyx are there.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "29e0103093e1891a0e2b8ee9bf2fe342b536edaca9f816e62e58f19737fe8410"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 2,
+              "verse": 12
+            },
+            "textHashes": {
+              "web": "dfdc7cd40c8153a26643a9ba67b314b6e9230b9515927ea2212c7fb8e6a34e9d",
+              "he": "2f9697226203b2ec8450ef184c9cf099f4fe469f34d4cdf7a01c65c8caa93910",
+              "kjv": "ae2fc1fd4ad0a8c5a8c49ea14134bf8feb6db876f456a2558fe796d12723e033"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "2",
+        "kind": "verse",
+        "label": "13"
+      },
+      "groupId": "GEN2-13",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 13
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN2-13",
+        "reason": "Second river Gihon, encircling the land of Ethiopia/Cush.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "47c3be268c46ff467114309386f440379e3d3b36a29d23178457eb16a761891d"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 2,
+              "verse": 13
+            },
+            "textHashes": {
+              "web": "9ffada61434cc5908d734ba703f5fd0d99acd62b9953b9e980eed1c11883dea6",
+              "he": "6f238bd5ca280b262c7cb7cf50e301afb3f0d857a2bab8398e424f545d9c1212",
+              "kjv": "ee84d97d975e243220047835aa033ea235f57a57d23a31164334c84a7d49c31f"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "2",
+        "kind": "verse",
+        "label": "14"
+      },
+      "groupId": "GEN2-14",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 14
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN2-14",
+        "reason": "Third river Tigris/Hiddekel, and the fourth Euphrates.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "a1d2b73dca0a49c0a52a844fe47a606ada6f0af0e2ffc05c80014d121daeee2d"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 2,
+              "verse": 14
+            },
+            "textHashes": {
+              "web": "b0934233fbf53b09241f19b496f75341c47091775b502e388221851de9133e20",
+              "he": "fc401698099fb6964177ec81a01f9df09df431464e4030df7a0b6a26e6d44ba5",
+              "kjv": "6fe1c37953c2d12f2cddd663f04568b5477c820255528d3f9b6c0542d23ff996"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "2",
+        "kind": "verse",
+        "label": "15"
+      },
+      "groupId": "GEN2-15",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 15
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN2-15",
+        "reason": "The man was placed in the garden to work it and keep it.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "d3c26fdafb87051c9772cd5d3041402c9c6dccd242952645bef928016f85fc5e"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 2,
+              "verse": 15
+            },
+            "textHashes": {
+              "web": "f1c930b68a56ae01a7408b8538fe8ced6e0531ff74075805cd3669764872b108",
+              "he": "86ff084db3c6524120723e06befe37cd4afd24f5f778558aeca04d104f80936b",
+              "kjv": "068e2d0a38fb4cbd7114716a42847fc5a2f35b237e41a6465ab6c138738c61bc"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "2",
+        "kind": "verse",
+        "label": "16"
+      },
+      "groupId": "GEN2-16",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 16
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN2-16",
+        "reason": "Permission to eat freely of every tree of the garden.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "13d61f6819a04f794670be95b928df5e80a5c1498195b3481a21e8bf05fa4b97"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 2,
+              "verse": 16
+            },
+            "textHashes": {
+              "web": "ac8997844046784e8d9850cb8a6922ce3a5a8cf7a82af60cb0397460584a451d",
+              "he": "de31c9e2e7a3fdab60c69ea588c4446a19158798a8681510b76739cf7fa07f46",
+              "kjv": "658f576633f48b2d8d1b646d0d53ac9d9002b4e7d14e2abca1242f0c548ebdd1"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "2",
+        "kind": "verse",
+        "label": "17"
+      },
+      "groupId": "GEN2-17",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 17
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN2-17",
+        "reason": "Prohibition of the tree of knowledge, with death on the day of eating.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "555ed040c440d140ebdbc735374e59a074d91d297f9cc9e34b26bee65d094a8a"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 2,
+              "verse": 17
+            },
+            "textHashes": {
+              "web": "163fc261f8839cb244bcfd0d2ac3b52f8242fbd59e6e224b7acb27297d30d36f",
+              "he": "66e07b70419770fdea5ef9dfa2312992a223e707ca5918e7a7778a6c2e2276fb",
+              "kjv": "5946b0c1877e1dd0771a20c5d6c05e0b81045ff8dea5ee604c75f48baf6a1662"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "2",
+        "kind": "verse",
+        "label": "18"
+      },
+      "groupId": "GEN2-18",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 18
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN2-18",
+        "reason": "It is not good for the man to be alone; a helper will be made.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "1c9c7a2d04f5a79dd8092fd8f9cebaa411c9f397f048b78f506b978be7fdcd43"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 2,
+              "verse": 18
+            },
+            "textHashes": {
+              "web": "aff23374396def460389045d86ea4363994bebcf18e7cf09a5531b82a1e5cb5b",
+              "he": "70776c1cf323d5711263d73e8b6ba0e4c207af1ebe79acdb1c5f4037e69fefa5",
+              "kjv": "73b1c325c0f5d8f5f6e29107a8c9692e145c65669dd07c9ef00db018cb5c1d6b"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "2",
+        "kind": "verse",
+        "label": "19"
+      },
+      "groupId": "GEN2-19",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 19
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN2-19",
+        "reason": "The animals and birds were formed and brought to the man.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "15d98e74f7b6bfc367156f6c6d768467b0a929837476322e6fd8ae14d9353214"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 2,
+              "verse": 19
+            },
+            "textHashes": {
+              "web": "9099542003926bae02012e39b53d0f4d3d04511c17697e46a113fe6f316bb043",
+              "he": "57a2e6625e4b8324447bd8f15a7f29808917a3b0fc2c130af8a87b1c86c74477",
+              "kjv": "f1f3e602a351ccf0b1541fe774f521c1225a45f1fa8ef87f7e2c77e5bc1133e2"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "2",
+        "kind": "verse",
+        "label": "20"
+      },
+      "groupId": "GEN2-20",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 20
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN2-20",
+        "reason": "The man named the livestock, birds and beasts; no helper was found.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "72a0fdf5a04ca619b213aa57d7b00e391af95e4a6ec5de84b7a8137a09d56a94"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 2,
+              "verse": 20
+            },
+            "textHashes": {
+              "web": "8893b4a3492ce111192d93f07445d2a6f2cf88c5bfd30128970390cce48726b7",
+              "he": "af54c8f7fb9fe8c3750f8cf7eec3805752f0c1ac637fd92b2752ba10e80207a5",
+              "kjv": "776fb2701671353509ac8b0f7ef741a21967c20202eb0985bc2292cbbf733627"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "2",
+        "kind": "verse",
+        "label": "21"
+      },
+      "groupId": "GEN2-21",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 21
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN2-21",
+        "reason": "Deep sleep; God took one of the ribs and closed the flesh.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "3e2ebebbd11f501da2e6f3903cf02da5cee422581b9eea1b4b9f7ba2dcd60706"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 2,
+              "verse": 21
+            },
+            "textHashes": {
+              "web": "53a980ae45da715e19b5e7406c0774e41505a47dc00823407d2e76cff0819bba",
+              "he": "1eb8f821c2110dc87feb3590a3cc73ac97c0cd11d9f6d200a569164ba497267d",
+              "kjv": "226e216dfc604a366010a75892614d981aea9dc53fdfe1b9ceb2631fd5331bc9"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "2",
+        "kind": "verse",
+        "label": "22"
+      },
+      "groupId": "GEN2-22",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 22
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN2-22",
+        "reason": "God built the rib into a woman and brought her to the man.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "40b2f0dd448dd0ebebd4e486a07bd2af5fc01e4a65c4e42b4eed807bf79287a0"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 2,
+              "verse": 22
+            },
+            "textHashes": {
+              "web": "9c19872f33b7bbd8ee12e3e868084374b99521dfab3de98fb57aa37ecf514fe9",
+              "he": "28ea032031fc8aa5505b4f1988092b4b2033ca5bcd3480e3537cc1e9d6b285cf",
+              "kjv": "9668b0fef288067d399dc25664f956d32a28ad52c2670453a753c34a93aff702"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "2",
+        "kind": "verse",
+        "label": "23"
+      },
+      "groupId": "GEN2-23",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 23
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN2-23",
+        "reason": "Bone of my bones and flesh of my flesh; she shall be called Woman.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "58d0cb1ea70525305b389a3477fef582e6bf5023f4aef79461cf6115d7333ecc"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 2,
+              "verse": 23
+            },
+            "textHashes": {
+              "web": "80fb3284499fcee741c5bb7be670c4a4928167d599b2bf661dd5bc4f69cf1f04",
+              "he": "11979a47bb545499d5bf5159181778015b0dd4519b7c386cf27047cddd9f588d",
+              "kjv": "2d93ee515f1f39a954cda15afc717518e2bc1bfb9e4bcaebbeaa58a26a7adb10"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "2",
+        "kind": "verse",
+        "label": "24"
+      },
+      "groupId": "GEN2-24",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 24
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN2-24",
+        "reason": "A man shall leave his father and mother and cleave to his wife.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "986a897aa5b52dc3281949efdc549d8191327290d0bca39e176149d970fc29de"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 2,
+              "verse": 24
+            },
+            "textHashes": {
+              "web": "8a17863225d8a7d609aa42dbf853c33844126022bcca60346b755a530325eda2",
+              "he": "a05de71ebb85db71226cafda6e6bb96883dc5a86426ff4f216b123649e58d4c1",
+              "kjv": "54db1c876478f93ec2762a0c64c84ba5811849d39b14d78e10676674f1388ebe"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "3",
+        "kind": "verse",
+        "label": "1"
+      },
+      "groupId": "GEN3-1",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 2,
+          "verse": 25
+        },
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 1
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN3-1",
+        "reason": "The nakedness/unashamed statement and the serpent’s opening dialogue form one source container spanning 2:25 and 3:1.",
+        "differences": [
+          "Source GEN 3:1 opens with the nakedness/unashamed statement that the English and Hebrew place at 2:25, then the serpent dialogue at 3:1. One source container, two canonical targets; no Greek 2:25 is invented."
+        ],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "6854424cf8956fa141c045d4292a3033514b134bd690383b17fd45fc647e39d1"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 2,
+              "verse": 25
+            },
+            "textHashes": {
+              "web": "b7ad270e05f5cf4d5f9d927b413123725fb19ab29f3315906dd55b6029d6fea7",
+              "he": "2f7ffb364396529f4fc7e9e74a6809dedba9d996692ed799b1706295fdefcfed",
+              "kjv": "ffa9dc73900686c6b5c69320fc7a4cc9e15e1bc98ccef6820224226e3e4c2129"
+            }
+          },
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 3,
+              "verse": 1
+            },
+            "textHashes": {
+              "web": "17bd680ff8525bb9e3e0b40d935cf6c861e0bbc90c870d81ecbcfa2ae2b107b6",
+              "he": "fc7ed667061c78367ea0c2e057962beffd2f7540627b9d8c707f6d6c82ab8258",
+              "kjv": "aa43f38d07d0a7711f88faffb9ed8763fb1a8ef7f6ef9476976cae4a7b1b3f58"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "3",
+        "kind": "verse",
+        "label": "2"
+      },
+      "groupId": "GEN3-2",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 2
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN3-2",
+        "reason": "The woman answers the serpent about eating from the garden trees.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "4cb745ae69cc4b4177b792f9749995266fafd7eeaf161e3f0029520eb2edc122"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 3,
+              "verse": 2
+            },
+            "textHashes": {
+              "web": "bab4981878ffea5d89b6444689a5c1930d28e558216d5db62e33cc1079001cce",
+              "he": "d8fccca1b84879b55eb68f68f243d2e789bfac8a225f24cb911d4205b398da40",
+              "kjv": "717afb85efa1f0619977a88201e0de2ab4dbb14a589ba5b396d39a79d949f96d"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "3",
+        "kind": "verse",
+        "label": "3"
+      },
+      "groupId": "GEN3-3",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 3
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN3-3",
+        "reason": "She recounts the prohibition concerning the tree in the middle of the garden.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "574e785cc50dfc190aba1ed78b5a7d58fb5614ba590032f294bca5e14cb9aec4"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 3,
+              "verse": 3
+            },
+            "textHashes": {
+              "web": "eb63b38a4a41a128c5313a4eee91d377052c44abda79096eec66aa16cdba193e",
+              "he": "fce0259c0df82ef608b59013ed28573dc4717f35ccefb7f744f83eb48810492d",
+              "kjv": "9a143372a9de1b91cbbd010d42eb52db2a8375bfae6fa50b581d11474af67980"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "3",
+        "kind": "verse",
+        "label": "4"
+      },
+      "groupId": "GEN3-4",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 4
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN3-4",
+        "reason": "The serpent denies that they will die.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "477ad78b2a41817ce18e6f6b9351abb8b3077dd02f426bcf7b5e35842fd48a75"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 3,
+              "verse": 4
+            },
+            "textHashes": {
+              "web": "2bcba43ed96a5eac2bb852adcb1e5d07af90c7b21956c9b21663d33d15e9242d",
+              "he": "84a3d56d09917777c325751599317b47942ce982eafd0ac3c4401d0349be9d9c",
+              "kjv": "1e1c9294611bc1d1d7744591a9ffff4ce332f2f709c0609f941ed7e862bf225e"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "3",
+        "kind": "verse",
+        "label": "5"
+      },
+      "groupId": "GEN3-5",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 5
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN3-5",
+        "reason": "The serpent claims opened eyes and likeness to gods, knowing good and evil.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "b8c22a42af1b00dca8358df1dcc0c7bf8a72e54379c62209de5e2f2664c7a651"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 3,
+              "verse": 5
+            },
+            "textHashes": {
+              "web": "d1de210568893c3864c444cf6f14099a177ea42d0275b6f4a3556fa38e3fe206",
+              "he": "07db05c490912a9f98da33fcd4b49283b51d8e300bf2aae9d0aad28b6444e385",
+              "kjv": "1e1a6d933a22c30c95bfc56da14aedefb9dd1bbd9f6dd77da795d5db90d9aab0"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "3",
+        "kind": "verse",
+        "label": "6"
+      },
+      "groupId": "GEN3-6",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 6
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN3-6",
+        "reason": "The woman saw the tree was good, took its fruit and gave to her husband.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "66746cd2e55416217c6bc89b66603ebb017385eff4e6d655c78c740eeb15833c"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 3,
+              "verse": 6
+            },
+            "textHashes": {
+              "web": "8b79be02d905fb1b87ac52eec3c83b36d9309400f6ead8e98ab89e007505134c",
+              "he": "2b4594623fc442320ef0a3c1f1c71dc0fe98dd68f15fdf3ef270d59606b37372",
+              "kjv": "c03d60fd41e5378fd41d288132537c1986b69c96c4a51852e95052d022a8ed6c"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "3",
+        "kind": "verse",
+        "label": "7"
+      },
+      "groupId": "GEN3-7",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 7
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN3-7",
+        "reason": "Eyes opened, they knew they were naked, and sewed fig leaves.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "f280913f4a0ff892e1d1d4262b085988ce01128550f18725355ef6b6290e30e6"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 3,
+              "verse": 7
+            },
+            "textHashes": {
+              "web": "874cba5019430fb12e79394d5ad0099f8d79ef0ffebdb13234950c8c0742208a",
+              "he": "37b92b0153e0c1e5accfb7c4bd54e85208d5f0dbb1f81c44938669b9a8c570e1",
+              "kjv": "b5f1806f6afca55a9d4a8c7c9dcee4b40e109da9f0c64ca34dce60fcc162625e"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "3",
+        "kind": "verse",
+        "label": "8"
+      },
+      "groupId": "GEN3-8",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 8
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN3-8",
+        "reason": "They heard the LORD God walking in the garden and hid.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "cd5eddb9b441739c3eece04069b59a4c93dafd7e3df59ee30fe21d6d9d6d74d3"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 3,
+              "verse": 8
+            },
+            "textHashes": {
+              "web": "d3ada5f385718eac26704c652f96a3e48ef2ad929e8d10633d2ebd3c0907aec4",
+              "he": "2d22b87f56a3cd5e029989669b3989ad57b8f1791ca77a3db4f06870750ee76a",
+              "kjv": "803600025290e0fdb7538ab59a9e72c352495b75f289c993f0723dd8e912bf07"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "3",
+        "kind": "verse",
+        "label": "9"
+      },
+      "groupId": "GEN3-9",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 9
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN3-9",
+        "reason": "The LORD God called to the man: Where are you?",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "8b80aadf0926325d693995f116a65df658008296e2ee51ad4c8bc8e40fb1919f"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 3,
+              "verse": 9
+            },
+            "textHashes": {
+              "web": "6c1abdae7f769a431ff1944bc0da671af58674c249b894d35010747309f1a4cf",
+              "he": "44d6aeecbaaf83a3565f4fc94e1b9a20b3e3dc42792e0dc9ad4610dc4021e22c",
+              "kjv": "53b414f00495bd9901e4ac5964468b5215bfced3f49d8183db33364cf24eaada"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "3",
+        "kind": "verse",
+        "label": "10"
+      },
+      "groupId": "GEN3-10",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 10
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN3-10",
+        "reason": "The man: I heard your voice, was afraid, and hid.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "59ebbca75fa7b5efea6bab5816e2094e6effa6af37f3398afbbf6586aae7b57c"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 3,
+              "verse": 10
+            },
+            "textHashes": {
+              "web": "25d9e9a99b8dea6168c5ea9f31bec753c81bd6dbff87a9eb2badf411a81508f0",
+              "he": "11fb01b0fbc22adf74eed7145ebbbcf11a21a7f0b9f3c4fb9d937c0aa83b2502",
+              "kjv": "7a8a0e2c61b3283489c8d7687913a2a26b43e6c3fe7b3bc62f29e36d5c603794"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "3",
+        "kind": "verse",
+        "label": "11"
+      },
+      "groupId": "GEN3-11",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 11
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN3-11",
+        "reason": "God asks who told him and whether he ate of the tree.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "e0e46f65994faa5f09b14c985cc37a739b6d53ff9dc8a95f9980a9ede6012686"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 3,
+              "verse": 11
+            },
+            "textHashes": {
+              "web": "63bcfb1188922c6766695e891e814e9241032003dbe78702d74a36b337290f4b",
+              "he": "59889205614916c120834a6e42b5931eaca8c54805454211958e61130c5e277d",
+              "kjv": "b53e0d474a3c82d38e271f65bde296eabad31fec19a5258ac5f607f455f8adba"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "3",
+        "kind": "verse",
+        "label": "12"
+      },
+      "groupId": "GEN3-12",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 12
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN3-12",
+        "reason": "The man blames the woman given to him.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "7a355b7f0198bbdaa55e3b04ff48e20b317b4f0a2c32a1c40fd93a097fe94427"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 3,
+              "verse": 12
+            },
+            "textHashes": {
+              "web": "84036a626c6d3583f287bde3cbfff0c7a585c9331fde99aa576666770663fcc8",
+              "he": "7a4ada32e89d45bb158180b3252df49eb3fc12b37ee078f53f1f34ce9f286f97",
+              "kjv": "b052efb22d244f0473102e401997405709e294415ccaa99c6baf272a4be2d71d"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "3",
+        "kind": "verse",
+        "label": "13"
+      },
+      "groupId": "GEN3-13",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 13
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN3-13",
+        "reason": "God questions the woman; she says the serpent deceived her.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "39a60b1ad45a2ab5f5c977de5590dde46f956cd7f42171b299409bf7f604dc5e"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 3,
+              "verse": 13
+            },
+            "textHashes": {
+              "web": "e92bb6ba58cd7882193559d9e8e1a99754c2a25795c67b2a090b21bf19e39b52",
+              "he": "62e239cb3a76d017bd56373adf945358f8da77cbefbdeba94b2c23afbdb11b54",
+              "kjv": "ad1169515dbafdc5f4c17d9e53163f6d2ccdcf9215960c9a6229f1e71a810155"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "3",
+        "kind": "verse",
+        "label": "14"
+      },
+      "groupId": "GEN3-14",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 14
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN3-14",
+        "reason": "The serpent is cursed above all livestock and beasts.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "188fa83c638b415ec7724469c1cda4cd3366a25315cc12dde70455a817c5f99c"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 3,
+              "verse": 14
+            },
+            "textHashes": {
+              "web": "2f39f314c19d50b187b1f66234925c51a26c7beb604cbfc75de252d0b4e76600",
+              "he": "1fead61ccef382810201c78ac2bd391ebb54b8f4b4534e44a3a0bad9ae24c6c3",
+              "kjv": "fccc8ec16e0193fb00e5e54cb2093681edfb6d7e9e45d8596198e06f074bce8b"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "3",
+        "kind": "verse",
+        "label": "15"
+      },
+      "groupId": "GEN3-15",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 15
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN3-15",
+        "reason": "Enmity set between the serpent and the woman, and between their offspring.",
+        "differences": [
+          "Greek keeping/watching wording versus English \"bruise\"; pronoun renderings differ. Preserved, not harmonized."
+        ],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "10f1f43c75191c735091663cb3dbe86d537360e842ccdf3eebf60376488b7843"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 3,
+              "verse": 15
+            },
+            "textHashes": {
+              "web": "3dfda93676375b25d033fce6a431dfdd575c29bbf8283f89be072dc1d4bb59ba",
+              "he": "4c36fd7cfca3de7982177b018c3a27ad4d624595521dfeed15e391f0448f5136",
+              "kjv": "13cb300ce77db879d2f0e34b24e972f06fe71cb3af9f778a6758cd54441fb3a2"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "3",
+        "kind": "verse",
+        "label": "16"
+      },
+      "groupId": "GEN3-16",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 16
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN3-16",
+        "reason": "The woman’s pains and conception multiplied; desire and rule.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "e374bf8caafaf5b3d033e79f392fe310ac490193b1ddbc4486839b594b35c592"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 3,
+              "verse": 16
+            },
+            "textHashes": {
+              "web": "124e9f1b3ee6d762195d01f2e0a09c3a2261c5b40a295d932dddb6926e031ead",
+              "he": "ca1bd26c05d1f443a12890363faf43f36cf082af455451c85c8664c8ccee958e",
+              "kjv": "a0d1d8fb400e50af354727a6057da618dfb5f0226cf4dda6cf12757fad22ae8c"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "3",
+        "kind": "verse",
+        "label": "17"
+      },
+      "groupId": "GEN3-17",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 17
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN3-17",
+        "reason": "Adam’s sentence because he listened to his wife and ate.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "86d59c755618e3ba5e388b797cc38f2bc2a0a0437d654375117e6adbeece0b85"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 3,
+              "verse": 17
+            },
+            "textHashes": {
+              "web": "4d772325646743bb33dfe8ccf2116c93c71eda51229de34e9328d210ed69b3fe",
+              "he": "1f729c42857a285b7d103e5ecc0d4fd80d2aacc2ec7e3274867d6cea6686d2a6",
+              "kjv": "2d41fc34f23caa523afc6a93d5800dd8bf0252f6774517b423c0ab5fce9750a2"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "3",
+        "kind": "verse",
+        "label": "18"
+      },
+      "groupId": "GEN3-18",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 18
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN3-18",
+        "reason": "Thorns and thistles; he shall eat the herb of the field.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "dc2d31abf6736379242c782e7060c6baf0db06419bb925d4cfd6684a91a798b3"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 3,
+              "verse": 18
+            },
+            "textHashes": {
+              "web": "16a9b67795baf8133b7520040ef7cf6c58dbf3cc28ea1fc37db24fb32ea27c21",
+              "he": "218cb58b1d5540b5423c3816a40c195bb273219d29e25ce0db2e6c5c2709d1d8",
+              "kjv": "a873e08ed62cc63ce0565a476add51ffc4de97e5fc2893a7c96849ecf712eecb"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "3",
+        "kind": "verse",
+        "label": "19"
+      },
+      "groupId": "GEN3-19",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 19
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN3-19",
+        "reason": "Bread by the sweat of his face until he returns to the ground.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "902d94ad6c392af42ffe51b4c6d6a2e3b798a295db0a82154497b65c93fd5f52"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 3,
+              "verse": 19
+            },
+            "textHashes": {
+              "web": "b8426873124efadd821f15c7f0de7329fadef54dcb64852daa60ad646d146daf",
+              "he": "9c984f5c6b7cb27d137297997a7c31ae7478c7c6ca9f09588396ee05b660f750",
+              "kjv": "9ced714b59849207d42f6f207806d92b5f59be0565b27ab6442a2292ccaecc77"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "3",
+        "kind": "verse",
+        "label": "20"
+      },
+      "groupId": "GEN3-20",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 20
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN3-20",
+        "reason": "The man named his wife Zoe/Life, mother of all living.",
+        "differences": [
+          "Greek names the woman Ζωή (Life); English and Hebrew render Eve/Havvah."
+        ],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "7b0dc0bb2c0e57c3faf2200d9fac6714d9524e0e596e7d47c51d580fd85429c0"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 3,
+              "verse": 20
+            },
+            "textHashes": {
+              "web": "3ff8f39e745eff3dc74f7fc7fecc8e18d4e082affeafffd73f2798ac80a4a63e",
+              "he": "3f24357d9c2177b981830fbdebaafc4549880cab9e91a414bb60515dbc46941d",
+              "kjv": "3b0d0ebb17f26ea2ffd17c96046249567045bbc330ca62e46c0e613beab033f1"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "3",
+        "kind": "verse",
+        "label": "21"
+      },
+      "groupId": "GEN3-21",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 21
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN3-21",
+        "reason": "God made garments of skins and clothed them.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "bd432ca134ab654c2595d97665418f85f971aa734a1a2317c6cd6f1da0d5ae54"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 3,
+              "verse": 21
+            },
+            "textHashes": {
+              "web": "a2018a574b234ac30dbde63be1b1fecad27bdc63cd4ae082b3ddadb392f020c7",
+              "he": "5ce902f41c56092454f28e8044c927a685c935c20a22ea4d496674fc576580c6",
+              "kjv": "fb1ab88d24d0f50a37aae475dc7db3fac669131364d44d037b4e344f131b736c"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "3",
+        "kind": "verse",
+        "label": "22"
+      },
+      "groupId": "GEN3-22",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 22
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN3-22",
+        "reason": "The man became like one of us; he must not take of the tree of life.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "9cdab598cd22caf1163e4a29af2f4a845f460d9ccd2a8890132fbf4855e8c119"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 3,
+              "verse": 22
+            },
+            "textHashes": {
+              "web": "f598c266c45d7529fd2894101699c83629b6ba0081335e2b583bd88624588ff7",
+              "he": "51c5b22461d47cd5a74e8b26ec1a1bda3006f943857700f017aa186395587052",
+              "kjv": "fc774062210cb42fa4990422d7cf84ea1c69db9f3c92e8b77a04b4d8269bbec9"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "3",
+        "kind": "verse",
+        "label": "23"
+      },
+      "groupId": "GEN3-23",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 23
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN3-23",
+        "reason": "The LORD God sent him out of Eden to till the ground.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "0aed6bc9bce648c13aff57024512505592afe65e25267a9ac19a2eaf405a4cef"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 3,
+              "verse": 23
+            },
+            "textHashes": {
+              "web": "de2a829c9f637344d6f826df088c06c762bbe232307bf33c370733a2da22732d",
+              "he": "262b924179dcbdb8820f05a58ad01e458bccc3d4f59675990db7821ed486a431",
+              "kjv": "cc0fc76acd07f68ed6e7ffbf6c9e079cead8f1368ab866fa302cbce2235276eb"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "3",
+        "kind": "verse",
+        "label": "24"
+      },
+      "groupId": "GEN3-24",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 3,
+          "verse": 24
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN3-24",
+        "reason": "Adam driven out; cherubim and the flaming sword placed at Eden.",
+        "differences": [
+          "Greek adds Adam being settled opposite (ἀπέναντι) the garden alongside the expulsion, cherubim and flaming sword."
+        ],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "9c33921fd68743cb7ed49c835fd564f253e20cae3e7582f2e9ffcb908efbf12c"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 3,
+              "verse": 24
+            },
+            "textHashes": {
+              "web": "2a3b3764020af6d6e1171f74f350bf012e60a61df72763d368cd1019ac7c6493",
+              "he": "7f48cae1195ea0db8a5d45839931e937b4681b1f385ab64fa028e24faebad36a",
+              "kjv": "d712919c693bdb17000891a1c0eaf2b94feb188ceacedeb786cf0d4ade6308cf"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "4",
+        "kind": "verse",
+        "label": "1"
+      },
+      "groupId": "GEN4-1",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 1
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN4-1",
+        "reason": "Adam knew Eve; she conceived and bore Cain.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "b2f9f0f0efa6a47515a691ba00b256eb4fe7ae631c741289391d9861d8cd3afc"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 4,
+              "verse": 1
+            },
+            "textHashes": {
+              "web": "40571f8448ac997cc9926356f343bccb5d44d5e4aeceb3fd0ecdd2f64552f332",
+              "he": "141c71ce0c9bf2fbcf542b304a2860ea2e30d816fb52d2763a95ad8a97e02df3",
+              "kjv": "2363761cbc57020c6f65625b5ec82f63514201eb8964514ab567e3331fd3ae65"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "4",
+        "kind": "verse",
+        "label": "2"
+      },
+      "groupId": "GEN4-2",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 2
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN4-2",
+        "reason": "Abel was born; Abel a keeper of sheep, Cain a tiller of the ground.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "6f2a32691d24e1bb1e0c5d36767268de9529fa8d10309ddebe0bb91e0d729804"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 4,
+              "verse": 2
+            },
+            "textHashes": {
+              "web": "e8810f75390b5078300ea552d1d297ff5f3152037b48227b941e4aba1728c80d",
+              "he": "57a413f5f79a3ee5eb6784dc22483c16213e8f878a7a664de42e79fa100e6234",
+              "kjv": "5a41431a5bef1ad45e0a0b2201ea93d8f446fa6ab8d52a403d10409137ce7e43"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "4",
+        "kind": "verse",
+        "label": "3"
+      },
+      "groupId": "GEN4-3",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 3
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN4-3",
+        "reason": "In time Cain brought an offering from the fruit of the ground.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "d3652938109cfcfce56e585f046894008697dbfb57bd553a51d1c0901400de03"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 4,
+              "verse": 3
+            },
+            "textHashes": {
+              "web": "b21f49563aefa021830405d5d6439c04fc0beb0fb12b3f1d711bcf69aa702705",
+              "he": "ad38da13ba19f95b20f0a322d34f489f51dd61d18a7ecf244999f098d2aa6d21",
+              "kjv": "489fa880bb058809c906564c6144354a6e202768c1882c8a596f04148a1e5d5b"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "4",
+        "kind": "verse",
+        "label": "4"
+      },
+      "groupId": "GEN4-4",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 4
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN4-4",
+        "reason": "Abel brought the firstborn and fat; God respected Abel and his offering.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "7ec802c29f42df6c9b5fdc943ab4d122f86658d9a6102533066bcdd6c38966f6"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 4,
+              "verse": 4
+            },
+            "textHashes": {
+              "web": "9eb3eff055d3184fd91d8fffdb37681fb40bcb3000a441f2d7a136930b15e8af",
+              "he": "7a104c6727629c63d815f789f4dd0442d5d3a2cf8d9e0848b73a41c50de3028c",
+              "kjv": "0a53b4d234a6b6e2739448c70cca9434b9f93ad229b6971fcb0f51c630046412"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "4",
+        "kind": "verse",
+        "label": "5"
+      },
+      "groupId": "GEN4-5",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 5
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN4-5",
+        "reason": "Cain and his offering were not respected; Cain was angry and his face fell.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "ccdb77b52a609364bb2c7dbd3e524f88bac96841dc3bf5439d3b358fff04ab42"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 4,
+              "verse": 5
+            },
+            "textHashes": {
+              "web": "a8e13f923a15fa5ceddecc03c4fccd2fd68a900462bfe1540d48ced3f629135d",
+              "he": "52177021bda41cf43ec96b586db3e163f52ea93eec6a95c563a674e7b42e5f3d",
+              "kjv": "80d93ecf9d7bf822923b9976f0d2e2bef074bbc69012b6f0335937f83a044fda"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "4",
+        "kind": "verse",
+        "label": "6"
+      },
+      "groupId": "GEN4-6",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 6
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN4-6",
+        "reason": "The LORD asks Cain why he is angry and why his face has fallen.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "3b1881f7af5f1c636831209defe794a1b024d9d1b67307661517354d72b232ee"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 4,
+              "verse": 6
+            },
+            "textHashes": {
+              "web": "2758d189a9e955141881a0f0a8a0b4dcea3b836794ceab25899ea54569db41ed",
+              "he": "90ba60c49dfc1b5cc334e7d083f7dce7182dead677f29bf0b4edbc7fd6dd483f",
+              "kjv": "fed6cf0db7e3da1284a29e6e00f6ad304c05d531b0d092b48590d1d8ef20b7c0"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "4",
+        "kind": "verse",
+        "label": "7"
+      },
+      "groupId": "GEN4-7",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 7
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN4-7",
+        "reason": "If you do well, acceptance; if not, sin crouches at the door.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "551ba3010b4bb28fa83fd08a7c60384512296b2506a615ef73b133fcc0a3ce91"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 4,
+              "verse": 7
+            },
+            "textHashes": {
+              "web": "45bd71ff9038b1c203d4bd68ad04bd373a4ed14e5208f43d954b847569a7e674",
+              "he": "d5bab54cdb1e759c7070c520879bd7804691888fb1ef627ef3c57e9c3d75e152",
+              "kjv": "5179c052e0c99b2b7d25e508ca16b8a542bdb3754419f65919a3bc6642b827c4"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "4",
+        "kind": "verse",
+        "label": "8"
+      },
+      "groupId": "GEN4-8",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 8
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN4-8",
+        "reason": "Cain invites Abel into the field and rises against him.",
+        "differences": [
+          "Greek and WEB quote Cain’s invitation to go into the field; KJV and OSHB do not include that invitation clause."
+        ],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "ae6e3189df1f8b59f9dfb7c1ead2bb6c2c1d4f4897ff1c95699c502324a4852c"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 4,
+              "verse": 8
+            },
+            "textHashes": {
+              "web": "270386e76eaeb8757fb0cf77a55f9d2fe5e62cc8522fac61f3b15f188ccd04a5",
+              "he": "b1ccf44a695ee62e1f8efdadfbfd585542ff2fd35d2c7d483dfbf12a3bb404ea",
+              "kjv": "8ccc1eb201b6b3545ae3cc6a2ace4fb42f650871e95855ceb685b3a844017638"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "4",
+        "kind": "verse",
+        "label": "9"
+      },
+      "groupId": "GEN4-9",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 9
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN4-9",
+        "reason": "God asks where Abel is; Cain denies being his keeper.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "21752663c044f3dbdf76b9d2caef4c4059d467aa86acc4947af998bc5654b106"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 4,
+              "verse": 9
+            },
+            "textHashes": {
+              "web": "98e890ec67fd71dc6399a4fe37e0357258c6ea3da5f15bced4998e4a8d69b2bc",
+              "he": "2ba527920c1b2d52d1cd963be89e9de9e33b5445ab5f7b3dedd0a40e7d1fe03b",
+              "kjv": "75972999bf5275ba78064692421396cbd791004a490a75fc4ffb1046cf36fcdc"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "4",
+        "kind": "verse",
+        "label": "10"
+      },
+      "groupId": "GEN4-10",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 10
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN4-10",
+        "reason": "Abel’s blood cries to God from the ground.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "4d2816abdb13c1d60dd3209ae424932b50039f75c345b343eef888bc2f718fca"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 4,
+              "verse": 10
+            },
+            "textHashes": {
+              "web": "74130c648761d2a2ca92c2b6e4f560a2190cd8adc34cf7ec6ff876b74bf8d937",
+              "he": "76b0df92a90d78688eceac7f6cd531d6c5111db1c346b13cc44b9cdf26ef129a",
+              "kjv": "83b31ca6d4413d233207c5823c99b7381fcb976ae076ff3fd525a02d7424d62e"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "4",
+        "kind": "verse",
+        "label": "11"
+      },
+      "groupId": "GEN4-11",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 11
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN4-11",
+        "reason": "Cain is cursed from the ground that opened to receive the blood.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "156997217fcfcc2af38cebda4bbfb8833e393cd41c896ed863d93209b892a927"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 4,
+              "verse": 11
+            },
+            "textHashes": {
+              "web": "59f4e508b80c35c0c236cb7bd1698ab7ad218e263fade4b01a2d56e3367932bc",
+              "he": "20a594e36e89a658668dadaaaca63185471e4c2f47187fcdeb894d76fae33316",
+              "kjv": "20864578179a52b6253ed318919d5bad300620d4b9b8039bc754eaefd50a2bca"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "4",
+        "kind": "verse",
+        "label": "12"
+      },
+      "groupId": "GEN4-12",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 12
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN4-12",
+        "reason": "The ground will not yield its strength; he will be a fugitive and wanderer.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "f00fa8800c6312cebdc9152539eaccf47873615d0285af1c447c1162fa857fa3"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 4,
+              "verse": 12
+            },
+            "textHashes": {
+              "web": "2b715411e5e5d573acdba4b366eaf7acba85e9010300546ac82ef52ffa00aa0c",
+              "he": "929ef4046f6024c69930a2b40140eb34dd8c2f55cd6c197397e6ac24c4679f5c",
+              "kjv": "4b22000feb70092003e5578d90de74deb5ec0add5f141087244d0a0f5cd8aed1"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "4",
+        "kind": "verse",
+        "label": "13"
+      },
+      "groupId": "GEN4-13",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 13
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN4-13",
+        "reason": "Cain says his punishment is greater than he can bear.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "674ac3e1d997c96e09c522f8523cd5ac6146889eaebe0f3dccda7f0bea02b524"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 4,
+              "verse": 13
+            },
+            "textHashes": {
+              "web": "725e2b4e25bb6ee33b667a95ddeb7ce4c5b5b57bfaabe5de497095fab93c4c92",
+              "he": "347abd841406af2820e620f6574086662c0d6b791f70f4714f124c85f736e497",
+              "kjv": "1688b1904bef7d597804121fcc2cc8ef598b33eb48153bf9e7b91d130aee9bb5"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "4",
+        "kind": "verse",
+        "label": "14"
+      },
+      "groupId": "GEN4-14",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 14
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN4-14",
+        "reason": "Driven from the face of the ground; he will be hidden and a wanderer.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "c58164d5e5fbc14d2f0e8fae0b95dca2db32803237e5d7fcaee395b90271aaab"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 4,
+              "verse": 14
+            },
+            "textHashes": {
+              "web": "b88c9c6855e208fa7e690536c68a2a2a7d33f6ebe46cc3080a0b0e761a6ffaa3",
+              "he": "f0b09cd359b249557c871c8949d5177a60a8d3fa1a259fc102170782eadb8505",
+              "kjv": "192433450db94383d6c75cee1b8b7360658bf8b42839857c32ec8c34c6d5c57c"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "4",
+        "kind": "verse",
+        "label": "15"
+      },
+      "groupId": "GEN4-15",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 15
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN4-15",
+        "reason": "Sevenfold vengeance for killing Cain; the LORD set a mark on him.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "d5967f338f8e9db6775fe910f7902c15817191d4c582d9a3fcd768d18aa539a3"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 4,
+              "verse": 15
+            },
+            "textHashes": {
+              "web": "e48709d8fa18e40822b86d8a2d4cf40b140a17350a370eea66b5272254b052c6",
+              "he": "38d5823eceae1deb1e45db33ee5d4239bff5f98eabb72190a039087df81858e0",
+              "kjv": "39f9a32a97fd4044b83a5074462469e85d3924f0dad2ee89b22e006426d8ae00"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "4",
+        "kind": "verse",
+        "label": "16"
+      },
+      "groupId": "GEN4-16",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 16
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN4-16",
+        "reason": "Cain left the LORD’s presence and lived in Nod, east of Eden.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "5c7d4b612dd6a13e48774da829b4faf58fea3d73c47f16b9c1a761b323fb23aa"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 4,
+              "verse": 16
+            },
+            "textHashes": {
+              "web": "4d8d0e29c5970a2265c4553cf3b85fb0537da49470bc0353302a0faa9f488f65",
+              "he": "9d0a25b029b93bebc94010256209e5cbf3ed58eaa498386231d905e6d5215585",
+              "kjv": "87ce44d91bfddefa5a2f5b29b92a99079f81cff816bd433f7eba11f540056d22"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "4",
+        "kind": "verse",
+        "label": "17"
+      },
+      "groupId": "GEN4-17",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 17
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN4-17",
+        "reason": "Cain knew his wife; Enoch was born; Cain built and named a city.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "5f4c6183cf4c58ae4c0c0d06327f7e1d4479cc3578a2902336f9fd5cec43ceec"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 4,
+              "verse": 17
+            },
+            "textHashes": {
+              "web": "5fac9d03c5c227175823e829b38d0abf783b148f28a6812a0006575d1cd3ba28",
+              "he": "78488b13ad880809c2527b072c643d46e7d06d4d5be51010ca1706a7ad494c80",
+              "kjv": "f1c129ce37da1e40f366e6d17f237bf9624333b5618c2a78fa42a25fb91b57d5"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "4",
+        "kind": "verse",
+        "label": "18"
+      },
+      "groupId": "GEN4-18",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 18
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN4-18",
+        "reason": "Enoch’s line: Irad, Mehujael, Methushael, Lamech.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "4396f2d8a81a0b866edca4fc5988d971b17737fdbb8859ee1ab63160d3d7e6ea"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 4,
+              "verse": 18
+            },
+            "textHashes": {
+              "web": "0223dacab2f9bef2077f0e52ec6b80b73b7e0053ab77819666e73378a4784802",
+              "he": "2f29ff77037aaa17e2af1516284810b432160e128ed5aefff6231f5bf49e9ccc",
+              "kjv": "ec5d2c691ca667172cc8c0619f3533ac31b5d2f9dd431b66cf860eea860fa68d"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "4",
+        "kind": "verse",
+        "label": "19"
+      },
+      "groupId": "GEN4-19",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 19
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN4-19",
+        "reason": "Lamech took two wives, Adah and Zillah.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "ed0c1423a0639b025adcb42fd7ff44ff96d8a51edc12d5fb99c804777155294e"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 4,
+              "verse": 19
+            },
+            "textHashes": {
+              "web": "bbb5f8084dc819063fd3ac1367c7839f9e9993d343017dae2d342b8051f31958",
+              "he": "9c31f85fa8895ea145ebbfdaad8867f0c442b68e2cc7571c0461fecbc395e726",
+              "kjv": "0744772843f84b6e86897824a5f2dd3890dae69af40dc7d11ec2a976da7545ae"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "4",
+        "kind": "verse",
+        "label": "20"
+      },
+      "groupId": "GEN4-20",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 20
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN4-20",
+        "reason": "Adah bore Jabal, father of those who dwell in tents with livestock.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "aedc624ad6241223819570c43e918e39c29839b73af9b46a895c3f417915fb59"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 4,
+              "verse": 20
+            },
+            "textHashes": {
+              "web": "1302570572baae04523648fe63db82a8a9e59c916fabbe80c36414acec9523b7",
+              "he": "33324984082a9381babaeaad7b3b71ebd4bca26c214c94429c6a445743d6cd33",
+              "kjv": "c80a07cb261b4eb43c8fe8ac07ffecacdd38f23ff32145568e0bf6bfc016ed26"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "4",
+        "kind": "verse",
+        "label": "21"
+      },
+      "groupId": "GEN4-21",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 21
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN4-21",
+        "reason": "Jubal, father of all who handle the harp and pipe.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "3752d247c1d5344ec64d2f4e3c8e73a8a10a879ea54058a448b06ebf7c06bd0d"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 4,
+              "verse": 21
+            },
+            "textHashes": {
+              "web": "324083d610a39944d7994fcf11a2849ffe63ef353aaaf2aa067afdb1edddf54d",
+              "he": "21ae0b4b9fbee236b1946a89bbbd19946324d97878381e46ca011fab38842937",
+              "kjv": "c84fd9decec9f53d23d20805a01a20f7de267f526a756b09bb56572714200d81"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "4",
+        "kind": "verse",
+        "label": "22"
+      },
+      "groupId": "GEN4-22",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 22
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN4-22",
+        "reason": "Zillah bore Tubal Cain, forger of bronze and iron; sister Naamah.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "28654aaa7d6bb47b54e145f20acf895ba184bd69e8ef7c9197e980bf66ec92f3"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 4,
+              "verse": 22
+            },
+            "textHashes": {
+              "web": "82d2fbe03db39a63799a3e1946fc8dce22195bd47d69acfe598a2d4e6e9c5bcb",
+              "he": "d5f01364d7c5fd108defcb4a667c720f9febd017fa7416bc8d54108c16bce49a",
+              "kjv": "21aa5acfa126657f6f8ea89f5d02c05aeb19198e4a535255b10fd0837e51e402"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "4",
+        "kind": "verse",
+        "label": "23"
+      },
+      "groupId": "GEN4-23",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 23
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN4-23",
+        "reason": "Lamech’s speech to his wives Adah and Zillah.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "f33d951188adfdc19fdc4e7f0516189e7051386ef1b9cd0a759faf5c3aabf35a"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 4,
+              "verse": 23
+            },
+            "textHashes": {
+              "web": "972c6580682329002e09658047bf7df2f3f73a27bd88d2d934e14b25c8633696",
+              "he": "b9b282fe2976df60f413ece0c2592d69dc40b69ef26cd126e4e1c30b63780a21",
+              "kjv": "9e52a7780a112eb6d5f81c029e992017df70df7d89a71f4e2d99ddcdca2af238"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "4",
+        "kind": "verse",
+        "label": "24"
+      },
+      "groupId": "GEN4-24",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 24
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN4-24",
+        "reason": "Sevenfold for Cain, seventy-sevenfold for Lamech.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "eff5821f2036965e4d70f6d8174fb4546f6e876dd04c5fa3e2d35ed2742cee29"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 4,
+              "verse": 24
+            },
+            "textHashes": {
+              "web": "3dde7d4aba968462acf9f452f65fa8304bd5ffd92d028dbef1572d043f45a8e0",
+              "he": "47e404280947c1983b931b5835d948020e6d9a3e8bdc8d777cd519238567acaa",
+              "kjv": "075e8c6568b0d22684541132b04e8b4a46fa0847dd2c5fd8ba5546c707ba95de"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "4",
+        "kind": "verse",
+        "label": "25"
+      },
+      "groupId": "GEN4-25",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 25
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN4-25",
+        "reason": "Adam knew Eve again; she bore Seth.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "d5772ca5a69d429d9c234a430503db53b171f03b249e9207ff6bda1ae7f06c9d"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 4,
+              "verse": 25
+            },
+            "textHashes": {
+              "web": "443cdaa8ee20d45e3af6f5a093c0e864a94f7e5a21bf7aed3a0c5d1d6eecc9f5",
+              "he": "9c01836991d5742fac8f141364998e7dd802ede05d99113c92a2d4c6fdaf3ebe",
+              "kjv": "48840e8daf4682963b5f19e3ba2f529f2c1553821c893f51dcf494f11cfe61fc"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "4",
+        "kind": "verse",
+        "label": "26"
+      },
+      "groupId": "GEN4-26",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 4,
+          "verse": 26
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN4-26",
+        "reason": "Seth’s son Enosh; then men began to call on the LORD’s name.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "1cf1b8ce76b49f10c62cdeb5daa1f93214982fdf3bcac9abd3be9366d7c0cd16"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 4,
+              "verse": 26
+            },
+            "textHashes": {
+              "web": "bae54ef4f30f0c5e106ff3f40adb7065b844f2fa8901d9522a4dc6dfdde243f0",
+              "he": "5cb62eb6aaf89aea46c7ea99ea8feffe0d776d93724cd7f4463587a7aaec1fc3",
+              "kjv": "f0cbd27595e85b3c3e72679367e58a53dc80412afe61c5abc1e03d4b883c5370"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "1"
+      },
+      "groupId": "GEN5-1",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 1
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-1",
+        "reason": "Book of the generations of Adam; made in God’s likeness.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "182b8d350153f2e9d8b7a13df6309e69c797cad4e841b783af89c1fea01b405f"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 1
+            },
+            "textHashes": {
+              "web": "31380d39dc78c094edc40871dc3c18b7ce2930c1a4a3da8826aa035d72d42783",
+              "he": "a8be85ce08c8fba766bf498e54ae60ab6e0b94d82891d2d4e996c05ddb45a042",
+              "kjv": "99c1f2b606bcf9cadd5a69909c76ab525f69651a0cda58b3fe908d77821c9442"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "2"
+      },
+      "groupId": "GEN5-2",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 2
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-2",
+        "reason": "Male and female created and blessed; named Adam.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "dfd5620ec48450d3ada16b7968cc3de1ea24b73e818a0e540b0b78d8d5b9975b"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 2
+            },
+            "textHashes": {
+              "web": "fa9ad56783de65a6a9505e417b694574bc24ff0b64b6b7aa48d9a1b3fd7a73c5",
+              "he": "325d63490e6a17e84a2366f303e4814d6911e0b95b2f36f948704b5e4aff3e19",
+              "kjv": "9aaf05f6fd3ba84f3b5512b95bbf10b869471bdc1740e7dc6e14464678e848bf"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "3"
+      },
+      "groupId": "GEN5-3",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 3
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-3",
+        "reason": "Adam begat a son in his likeness and named him Seth.",
+        "differences": [
+          "Genealogy age differs: Greek 230 versus WEB/KJV/OSHB 130. Source reading preserved; ages are not harmonized."
+        ],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "873fad6f39eef9c634fc2acab463b5fe600a4e30c124e4f7bba69dbe0ccfcfb9"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 3
+            },
+            "textHashes": {
+              "web": "9fd7bedf1a34cd82561d5be480fa3603c2f883744417060a29b3812670dd8b8e",
+              "he": "84bf1eab2c7b3017995a9e75617a1b741baea9e1d1fb4c5fe271511a418eb854",
+              "kjv": "653b95948ad3389773f072587b7c8a508f905de2695149f140e668dfdb254d69"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "4"
+      },
+      "groupId": "GEN5-4",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 4
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-4",
+        "reason": "Adam lived after Seth and begat sons and daughters.",
+        "differences": [
+          "Genealogy age differs: Greek 700 versus WEB/KJV/OSHB 800. Source reading preserved; ages are not harmonized."
+        ],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "a153586233c986e7c0600640954be7498dec250f132a1db0f37302422a870a22"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 4
+            },
+            "textHashes": {
+              "web": "20278d26a331e1f6f20856c22ea8445557847681c8f0a6eb2ae53d8174fdde24",
+              "he": "4ba946c47d9f55cb350d30470bdd11a0613b65a10c7c39788c1b2f3c03e879e5",
+              "kjv": "39f0df5f1b500e2555444bc3a64ab879fa7d1749ff41034ac41ca7dbf3639b3d"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "5"
+      },
+      "groupId": "GEN5-5",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 5
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-5",
+        "reason": "All the days of Adam, and he died.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "dcafafe87a7a815849dd6be64629b5e6e61b238a4ca93f16fc4ee917411d74f6"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 5
+            },
+            "textHashes": {
+              "web": "50a464a83c321b00a320f51c7628522887df02b037c1436c6790dec171359d49",
+              "he": "a2f368656b0ac325b1462c9f3309a4e8781fb067f65af3112b9c386b16211d20",
+              "kjv": "cf46d3a75314b4eebe2bb0d07a39f5e2ad7dd41a47f8f073e593ce29756705dd"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "6"
+      },
+      "groupId": "GEN5-6",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 6
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-6",
+        "reason": "Seth begat Enosh.",
+        "differences": [
+          "Genealogy age differs: Greek 205 versus WEB/KJV/OSHB 105. Source reading preserved; ages are not harmonized."
+        ],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "47fa88f6966074bd1ef7fc22939e164002736a4554e4c4723ff5d74ae18c30f6"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 6
+            },
+            "textHashes": {
+              "web": "76cb13bd06da3d2ca46db2ca5dfd313b305465a5b160cb5304dfc179e9f7b463",
+              "he": "d5a0a8468078a105b272369c84beb7402a438311c3755cef8258d86634ad72b0",
+              "kjv": "7f6ac6375a720e0921fddf1738342a47f39d1b90d5c033bc3f76f8dc57a10f19"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "7"
+      },
+      "groupId": "GEN5-7",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 7
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-7",
+        "reason": "Seth lived after Enosh and begat sons and daughters.",
+        "differences": [
+          "Genealogy age differs: Greek 707 versus WEB/KJV/OSHB 807. Source reading preserved; ages are not harmonized."
+        ],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "56c53f067c9f5505bf358e26b75faaa7f6561bb1e6420cc2f9f799f34a074598"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 7
+            },
+            "textHashes": {
+              "web": "dccbe173f7efc28e44db73b1d34abaec02c6558304ae76ce8a8452a67de303a2",
+              "he": "cb2c795e35eca796de6bd4426a9250078fc9f809187e6e15b0d2a38f133bc1bb",
+              "kjv": "6a0fc8496ef189135f0b173084546a076cdf2d830d9378637425896cc27b4102"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "8"
+      },
+      "groupId": "GEN5-8",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 8
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-8",
+        "reason": "All the days of Seth, and he died.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "5634c25422d085e0eb45a39e17bdf522dbacf7be70e95e53473e5ef90211ed8b"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 8
+            },
+            "textHashes": {
+              "web": "63abc29c0a478568ccac27bcada1f58e289a5c5cd8c05f8e8070f95e76107e2d",
+              "he": "9a37012d6452e5ab969db95e14d1fa86cd445a9f2592f8a9f925da6ed2eb6b70",
+              "kjv": "5047eb229424ee4049575502e54f0b81e7452fb8d12aca9386a093b76d516980"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "9"
+      },
+      "groupId": "GEN5-9",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 9
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-9",
+        "reason": "Enosh begat Kenan.",
+        "differences": [
+          "Genealogy age differs: Greek 190 versus WEB/KJV/OSHB 90. Source reading preserved; ages are not harmonized."
+        ],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "31e80aef0ff3f1f325b22533352ddfa07e5344c16bb1d23d2b3a0b1c7898dce4"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 9
+            },
+            "textHashes": {
+              "web": "6bdc99ae81d10363552fa1edd57b99bfe0594d10095c00497740b508c5f5a3ef",
+              "he": "34bf2e225af9fd4e7b46304d967cc85d34b00904aae89ebf0d87c3c4d124f02a",
+              "kjv": "333f7631ed0a52e1342ca094ce617d31de7bc08c68238fbc50156b0768552862"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "10"
+      },
+      "groupId": "GEN5-10",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 10
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-10",
+        "reason": "Enosh lived after Kenan and begat sons and daughters.",
+        "differences": [
+          "Genealogy age differs: Greek 715 versus WEB/KJV/OSHB 815. Source reading preserved; ages are not harmonized."
+        ],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "1c335dca3c309d8b54c06239893fa08b1e017e6a0e6282c37dc796ce2168189c"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 10
+            },
+            "textHashes": {
+              "web": "c398429c89cac8380e1440e79e47bc7b5ad60bd0dca44a61671d77792c1f8c99",
+              "he": "8de5a5a0802dd531c5c0ebe1f48e8aa0c3189c57dd2ffc1d45428602ec21e3eb",
+              "kjv": "8a19f853054579eef0d13e7184a6560d2b4f2a5bab662c0a423e6ef615bbf42b"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "11"
+      },
+      "groupId": "GEN5-11",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 11
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-11",
+        "reason": "All the days of Enosh, and he died.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "10be164e29756ef6aff93fa64e66b2102dc1729705ee8dde628f45c85d540853"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 11
+            },
+            "textHashes": {
+              "web": "e152e6d309b04c3a8b6995338a97c4277a446185f2c2ef2710a4e901c023dcbe",
+              "he": "9b98091a2186d48bffdff3a663d6020c38feb5cd7257e70bddad480974e34e07",
+              "kjv": "e67329d2cb2b1c29877e0c1d471cf52d97c4d2682effbdbfc84588fbb7e22630"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "12"
+      },
+      "groupId": "GEN5-12",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 12
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-12",
+        "reason": "Kenan begat Mahalalel.",
+        "differences": [
+          "Genealogy age differs: Greek 170 versus WEB/KJV/OSHB 70. Source reading preserved; ages are not harmonized."
+        ],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "28a0441ecc86d5d7a92e9fd6586a558f9dbf978cf7a8ffa686e4ae3a9bb4d9eb"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 12
+            },
+            "textHashes": {
+              "web": "6c44bc0ff37d92f3014debfc701bb037a8dcc57d240f9a0e76d9d10d9db1bc9b",
+              "he": "d364234b537abf2e15aae053e3eb48b4e2bef15f17985ac64418a4eb4ee22ead",
+              "kjv": "b84c8bace26cc114dabf711beb13fe3c3ff7ddb8cb039c35d05b3d9cfe150005"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "13"
+      },
+      "groupId": "GEN5-13",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 13
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-13",
+        "reason": "Kenan lived after Mahalalel and begat sons and daughters.",
+        "differences": [
+          "Genealogy age differs: Greek 740 versus WEB/KJV/OSHB 840. Source reading preserved; ages are not harmonized."
+        ],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "c8fa630ae30240e71979cdba03b0cef77562fb29154845988c2f3d4d2175aba2"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 13
+            },
+            "textHashes": {
+              "web": "381cda33ed7407965d4ddf7173c0dc99665306bb7df2da6d894d4391bfbdff40",
+              "he": "d1eda0e7b6987889cbf9abc8d1c717199e9975efa405e5133a3f3caf8f8fcb9a",
+              "kjv": "78cce6d5c84222a6528ded9902e73c3ebd13528c2e41ada4dc96652fc28caefd"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "14"
+      },
+      "groupId": "GEN5-14",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 14
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-14",
+        "reason": "All the days of Kenan, and he died.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "82e76e52abd8f13c04e29163af012be3e5fa471461b3a126d5b4b6423ba23a9b"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 14
+            },
+            "textHashes": {
+              "web": "ab7b52ffd1773e85438f570327638e964a12d9f16de54d8d816b37cfa645c432",
+              "he": "9260cd3a4f55a5c1eadd6fd3cda4b5653957464af26567cb5b22e14efde14240",
+              "kjv": "6b56c22d249a2d7a81ffd2449caf4d2ecc78bbe3e03bcd584643ef777bc6a2bb"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "15"
+      },
+      "groupId": "GEN5-15",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 15
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-15",
+        "reason": "Mahalalel begat Jared.",
+        "differences": [
+          "Genealogy age differs: Greek 165 versus WEB/KJV/OSHB 65. Source reading preserved; ages are not harmonized."
+        ],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "37637a5de967b1af94cf2c56a4556bf066ca09cb9e1036d13e26d7258410b510"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 15
+            },
+            "textHashes": {
+              "web": "efc0580f1a7e23c38919990ac71b0825e12eca5bd2525a9921b6b7f8578fbf87",
+              "he": "d272ec95e0f00cbc11c22dae4d2e77aceeccf24424d75d5c2d8649a2ab45a61e",
+              "kjv": "9fdbee05e98df850ae1bbefa72387f0a3e94e6f0bb9b7f22948215592d22d8d5"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "16"
+      },
+      "groupId": "GEN5-16",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 16
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-16",
+        "reason": "Mahalalel lived after Jared and begat sons and daughters.",
+        "differences": [
+          "Genealogy age differs: Greek 730 versus WEB/KJV/OSHB 830. Source reading preserved; ages are not harmonized."
+        ],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "7b960f490b40f6d1f5856cacc7e355c1f17c95ace66e6bb805b875ec44c9dcbc"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 16
+            },
+            "textHashes": {
+              "web": "0b9f6f4743b2aa1190254e40f16d8709a7ba239dff429a2bd08cd8334b5fba60",
+              "he": "0733a226dd15b370b56fb38429ef46765b4aa504a1784c9e3ee4630ac5cc1f9c",
+              "kjv": "955b5508fe2366aa7fb6200f8a616fb9fa018f8eb589e42d2d013e285704a06f"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "17"
+      },
+      "groupId": "GEN5-17",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 17
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-17",
+        "reason": "All the days of Mahalalel, and he died.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "7dd07f85fd554284c1fe7b19136a9b7f7d827b0034f0d7046cbcea41394e2a7e"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 17
+            },
+            "textHashes": {
+              "web": "6616d79a58158a8766f839a24fbd11a61cc71b9603263c012ab548207fb5fe34",
+              "he": "8153b475ee1a37570e957a3be71d366152f62679e50c473b9604a807c6018b4b",
+              "kjv": "a297dcc76baf24f3aafb1ae28c70402f26d178735c6016764f51340ce08991c6"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "18"
+      },
+      "groupId": "GEN5-18",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 18
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-18",
+        "reason": "Jared begat Enoch.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "426fecb026a73ddbdf6dab4828440d2d68accbcfe204e8b0b2b0cc9e974e2c5c"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 18
+            },
+            "textHashes": {
+              "web": "c398d88ec28b9fd975528cb93aba0c7130f5ac411fd8060366d8e7f760982702",
+              "he": "2da51292b6e529558608472fde49e31652dc1e372fe32c62ce617c3bac91bdb6",
+              "kjv": "ddaffeba317cc0b28f61b9885d53b8715a143815bb54c186b6af7b4c1b383439"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "19"
+      },
+      "groupId": "GEN5-19",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 19
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-19",
+        "reason": "Jared lived after Enoch and begat sons and daughters.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "1a94ba5f737c7da6e9591cedcd31888ec62f3ec4d349eece0cee7f76124591d5"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 19
+            },
+            "textHashes": {
+              "web": "feda20a13fd4da750c254d7d1dd4c6fee3983ca99267eafff2b28248a4279637",
+              "he": "f1750292d59df3dffa1de89fefb04fe366e46e58672f7019ebac12742fe512a6",
+              "kjv": "86e13e64a8a9b3c9221bdd6914eb937b7458e0c3566656ef9099e975d9275c9d"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "20"
+      },
+      "groupId": "GEN5-20",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 20
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-20",
+        "reason": "All the days of Jared, and he died.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "87c1a509fa060414122d8c623163ec0091278c411d7688da7b5cde860e2fea26"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 20
+            },
+            "textHashes": {
+              "web": "0e6040831ac02c184da968f965ee02f7dbc08827cbf278d1e9d101484c96fbd0",
+              "he": "1afe8230d17b0a0ace1be47c0e8169570e9d3305d90af67c965582319a31def1",
+              "kjv": "ef28d10cbed4f4e5d10905ff510ab442c30787ae4157c5f3f83c2cef84c35760"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "21"
+      },
+      "groupId": "GEN5-21",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 21
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-21",
+        "reason": "Enoch begat Methuselah.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "b52d899d710e1c75cbcdf987327774047d406ea0417bbc77c7a26d1470749ed9"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 21
+            },
+            "textHashes": {
+              "web": "73cdc7e80ab7d5472b9ed782d9a426920afad6856baf6d9bebf63c313e17a071",
+              "he": "656ad2d9165df4abdfd53035094a40ae161b2505057ada3597fd4bd6650ca700",
+              "kjv": "4857cf0a7d2a7bc6982daafb5fa6defeea8d6a5ac5da07f7bf3d6e908b9881dd"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "22"
+      },
+      "groupId": "GEN5-22",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 22
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-22",
+        "reason": "Enoch walked with God after Methuselah and begat sons and daughters.",
+        "differences": [
+          "Genealogy age differs: Greek 200 versus WEB/KJV/OSHB 300. Source reading preserved; ages are not harmonized."
+        ],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "a34744ecd5c29166b54136ee5c538d4061f0b18ecd05fcee22737b495cbe1d16"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 22
+            },
+            "textHashes": {
+              "web": "472627e3b88464a8878310abd375bb29494d61e609d45341fc00d9c77332385c",
+              "he": "383944c9afe48a5c6274a354d3cc218bcd3477051326394b33f1f76439afaf83",
+              "kjv": "363b63f7227a66f57f3137ad9a9582f9dee054c1334000613f06a5c03c73caff"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "23"
+      },
+      "groupId": "GEN5-23",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 23
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-23",
+        "reason": "All the days of Enoch.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "8d7ab7bdf3f46035828f05774efbbc84b9dd7671a026a686769e592b070c4485"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 23
+            },
+            "textHashes": {
+              "web": "89671f2065f7e2089c0b028730aadf5e0faf0b7b8688bcbd6170a426e1ac4f90",
+              "he": "aa43ca566014ea6b08c34b1c4fb1e93aab422396007802e9edea077b4c0f16e8",
+              "kjv": "10ad6059c3a3df98a286450111cbfd65b5192d8f04cb96a86da5b878a40888f8"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "24"
+      },
+      "groupId": "GEN5-24",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 24
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-24",
+        "reason": "Enoch walked with God; he was not found, for God took him.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "1b5b95b5f631b0e2d3a1313b6160832c051bc4b38c856a6a92fb0dbd7eee4812"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 24
+            },
+            "textHashes": {
+              "web": "a8186b48d338e8224de53a577ff4b3b6aeee75f88e002f06001e8f564e1994eb",
+              "he": "14766195fc22a003c4ebf26350be73988de59aeb16b281f2ee102bd6497ec65f",
+              "kjv": "8f2aa7731932d714b823ca74122b63642e029c23948b7636ad7f95f2d5e92a12"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "25"
+      },
+      "groupId": "GEN5-25",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 25
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-25",
+        "reason": "Methuselah begat Lamech (Greek 187, matching the inspected English/Hebrew verse).",
+        "differences": [
+          "Greek 5:25 reads 187 years, matching the inspected WEB/KJV/OSHB verse; the 167 reading of another LXX witness is not imported."
+        ],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "0307742ee57b4ccb220490b67a36d49616c9d1fd0f1635c769c6bf215a43d76f"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 25
+            },
+            "textHashes": {
+              "web": "489eceb216d72b8186acdc96dad2e607d5d8a3b59be8075dd169a39d808ddbfc",
+              "he": "84d625a9561d64d781859befae0daecb5a15aee4a5687448653bc4f1e46dc75d",
+              "kjv": "6b0e327fce9042a98d4cb8a5c7019915d994773212d0f720a2ef353d640ec34e"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "26"
+      },
+      "groupId": "GEN5-26",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 26
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-26",
+        "reason": "Methuselah lived after Lamech and begat sons and daughters.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "a416c7e7a9db21a83026bfb6122137584fca1117d59f8f18e25d0df278e3ca47"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 26
+            },
+            "textHashes": {
+              "web": "16742b06af4b0b335e7af43bc87149ae54d5b63162c318e8ed8aec93eef18d6f",
+              "he": "ccd7bcd5e1e5449bf5073d578fa9a779d5eb1ec9b9b7b9f7e7adc0e2898e3222",
+              "kjv": "bd2090b262d530c414520746f8909d59a78c731f17182f8d295a01874be2d2a1"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "27"
+      },
+      "groupId": "GEN5-27",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 27
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-27",
+        "reason": "All the days of Methuselah, and he died.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "8082fb98518813e51a4ccaa04ce015bae113dcfa7368d1ca6482b0ddf03c182c"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 27
+            },
+            "textHashes": {
+              "web": "6aab2e3bdeb1b7d67f9c7f463d1ea06b6563b7a18ffa6f3e47a142c41e70bea2",
+              "he": "86674f9e3be9f0bb17fd216f844e46eacf4f145695f133012ecd5b3d65b07bc2",
+              "kjv": "b69cf6babd501a6706b980a29104a54392e2667182ec5559d6e4da34a82150ad"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "28"
+      },
+      "groupId": "GEN5-28",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 28
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-28",
+        "reason": "Lamech begat a son.",
+        "differences": [
+          "Genealogy age differs: Greek 188 versus WEB/KJV/OSHB 182. Source reading preserved; ages are not harmonized."
+        ],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "5f808f799a98fb516189c879a15f9c30c85c70ebbaff1d9507eb5d4c0f66b862"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 28
+            },
+            "textHashes": {
+              "web": "8cd3796144dba591618f6683eaf0a2549ecd97756af7345c18b4a73fc64f52fd",
+              "he": "197e55bbd82f69043ede5e4032a0e3170a4f3bd82c92f08c134769c440c6af68",
+              "kjv": "9ced257a4bb59d71b398e9c7d196d275f6a09f0d81e2fa71af53b7ac1002ad88"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "29"
+      },
+      "groupId": "GEN5-29",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 29
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-29",
+        "reason": "He named him Noah, saying he will comfort us.",
+        "differences": [],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "9485ecff024e28d0350656894f61b7f01d9e698e366c80879c68d02b5059aa3f"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 29
+            },
+            "textHashes": {
+              "web": "a887ef5482a73dc8b323056c790e6e0d0c3a8f9f60db986719db1528e9d62460",
+              "he": "0694ca44a7fcee996c00e21e6ae33d8495592110df4c301b9796dc07f2aed179",
+              "kjv": "68fe771238d257aab522271a7c435ea1fa635c4fa54d78934757b3121ca793c0"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "30"
+      },
+      "groupId": "GEN5-30",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 30
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-30",
+        "reason": "Lamech lived after Noah and begat sons and daughters.",
+        "differences": [
+          "Genealogy age differs: Greek 565 versus WEB/KJV/OSHB 595. Source reading preserved; ages are not harmonized."
+        ],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "cc88a80c1581ae39beb75b572d82748b008667c1e451cfecebf7fdff6b201c02"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 30
+            },
+            "textHashes": {
+              "web": "1b317d2741f1524e145b481bbe198ceb3b5a499e300a561b4184c4e0d92c608d",
+              "he": "3a1c98e87d73b44cfce25d0f39fcd9cb0e5e9e0a2827607c926d3511b5eebf4b",
+              "kjv": "c754d3f95e991152cb7c80854e005acda54226ad4d2394eb37b8075c6dd32365"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "5",
+        "kind": "verse",
+        "label": "31"
+      },
+      "groupId": "GEN5-31",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 31
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN5-31",
+        "reason": "All the days of Lamech, and he died.",
+        "differences": [
+          "Genealogy age differs: Greek 753 versus WEB/KJV/OSHB 777. Source reading preserved; ages are not harmonized."
+        ],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "db6a9ab39aab3429176a886763805ebf948e31f672dff1402e4a02cc1888b161"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 31
+            },
+            "textHashes": {
+              "web": "a95f52ee3d7757eb112cfca68d5f3b7f6d1425f5839746152a0e80b0590462bc",
+              "he": "19e309c73371f1107acaddefb12c13bd5d7b01cd62354b94bbf878c62471c5dd",
+              "kjv": "6b7a4fbdd767b011cbd2bdbb630cdbc0797f9ec8a37902bbe1cbd6b7e0008813"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "book": "GEN",
+        "chapter": "6",
+        "kind": "verse",
+        "label": "1"
+      },
+      "groupId": "GEN6-1",
+      "to": [
+        {
+          "book": "GEN",
+          "chapter": 5,
+          "verse": 32
+        },
+        {
+          "book": "GEN",
+          "chapter": 6,
+          "verse": 1
+        }
+      ],
+      "status": "proposal",
+      "provenance": {
+        "ledger": "build/reviews/lxx-genesis2-5-evidence.json",
+        "rowId": "GEN6-1",
+        "reason": "Noah at 500 with three sons (target 5:32) and the beginning of the multiplication narrative (target 6:1) form one source container.",
+        "differences": [
+          "Boundary-only extension: source GEN 6:1 opens with Noah at 500 and his three sons (target 5:32) before the multiplication-of-humanity clause (target 6:1). Only this single boundary reference is extended; the rest of chapter 6 stays unresolved."
+        ],
+        "sourceFlags": [],
+        "textHashes": {
+          "greek": "463afb38eb3ba43020c096970324f22b520bcdb48d93434459763835027c5264"
+        },
+        "targetEvidence": [
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 5,
+              "verse": 32
+            },
+            "textHashes": {
+              "web": "72b2ad097d513762c99ef93b2b87dddf40ff1a534bb7008c08023700f6752176",
+              "he": "cc284bedcf0aaea945372c080dbe09d68669e20772d08a548de5e0709f781e06",
+              "kjv": "ae2bad70e81631ec335c53dc91f0046e25b5de6e3e18f43d46641f56bec7f0dc"
+            }
+          },
+          {
+            "to": {
+              "book": "GEN",
+              "chapter": 6,
+              "verse": 1
+            },
+            "textHashes": {
+              "web": "3c4ef613844b320fea331080fc40c2cf0229ef66c442d8524739f136b3fddef3",
+              "he": "5697019ed1eaed815861c99fc588a9508fb71f6b4b27a5a55ab724c48c66cba2",
+              "kjv": "c05428823f0093bd9e6a3f243796f01e52bdb62c50a52e70de2a333efa7a5bf4"
+            }
+          }
+        ]
       }
     }
   ],

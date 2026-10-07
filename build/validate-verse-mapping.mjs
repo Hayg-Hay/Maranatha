@@ -330,32 +330,38 @@ export function validateMapping(mapping, options = {}) {
   }
 
   // ---- evidence binding -------------------------------------------------
-  // The referenced ledger must be present and bound. Each entry's rowId must
-  // resolve to an authoritative row; the row's source ref and complete target
-  // set must match the entry; and each declared text hash must match BOTH the
-  // row's recorded text and the bound source/comparison corpora. Target
-  // locations are proven by text hash, never inferred from matching verse
-  // numbers. A collective group is substantiated jointly by all its rows: for
-  // each language every group target must be covered by exactly one member row.
-  let ledgerData = presetLedger;
+  // Every referenced ledger must be present and hash-bound. An entry's rowId
+  // must resolve to an authoritative row in the ledger its provenance names;
+  // the row's source ref and complete target set must match the entry; and each
+  // declared text hash must match BOTH the row's recorded text and the bound
+  // source/comparison corpora. New rows carry explicit per-target comparison
+  // evidence (target ref + corpus string/hash per language); legacy rows carry
+  // one comparison hash per language matched to exactly one target by content.
+  // Target locations are proven by content, never inferred from verse numbers.
+  const ledgersByPath = new Map();
+  if (presetLedger) {
+    const rel = entries && isObject(entries[0]?.provenance) ? entries[0].provenance.ledger : 'preset';
+    ledgersByPath.set(rel, presetLedger);
+  }
   if (checkBindings && isObject(mapping.bindings)) {
-    const ledgerBinding = mapping.bindings.ledger;
-    const ledgerRel = ledgerBinding && typeof ledgerBinding.path === 'string'
-      ? ledgerBinding.path
-      : (entries && isObject(entries[0]?.provenance) ? entries[0].provenance.ledger : null);
-    if (!ledgerRel) {
-      err('bindings.ledger missing: the proposal ledger is not bound');
-    } else if (!fs.existsSync(path.join(base, ledgerRel))) {
-      err(`ledger ${ledgerRel} not found`);
-    } else if (!ledgerData) {
-      try { ledgerData = JSON.parse(fs.readFileSync(path.join(base, ledgerRel), 'utf8')); }
-      catch (error) { err(`ledger ${ledgerRel} is not valid JSON: ${error.message}`); }
+    const ledgerBindings = Object.entries(mapping.bindings)
+      .filter(([name, b]) => isObject(b) && (b.role === 'ledger' || /^ledger[0-9]*$/i.test(name)));
+    if (!ledgerBindings.length) err('bindings: no ledger binding found');
+    for (const [name, binding] of ledgerBindings) {
+      if (typeof binding.path !== 'string' || !binding.path) { err(`binding ${name}: ledger path missing`); continue; }
+      const file = path.join(base, binding.path);
+      if (!fs.existsSync(file)) { err(`ledger ${binding.path} not found`); continue; }
+      try { ledgersByPath.set(binding.path, JSON.parse(fs.readFileSync(file, 'utf8'))); }
+      catch (error) { err(`ledger ${binding.path} is not valid JSON: ${error.message}`); }
     }
   }
 
-  if (ledgerData && entries && groups) {
-    const rows = Array.isArray(ledgerData.rows) ? ledgerData.rows : [];
-    const rowById = new Map(rows.filter(isObject).map((r) => [r.id, r]));
+  if (ledgersByPath.size && entries && groups) {
+    const rowByLedger = new Map();
+    for (const [rel, data] of ledgersByPath) {
+      const rows = Array.isArray(data.rows) ? data.rows : [];
+      rowByLedger.set(rel, new Map(rows.filter(isObject).map((r) => [r.id, r])));
+    }
     const corpusPaths = {
       greek: mapping.bindings?.lxx?.path,
       web: mapping.bindings?.web?.path,
@@ -382,6 +388,11 @@ export function validateMapping(mapping, options = {}) {
     for (const entry of entries) {
       if (!isObject(entry) || !isObject(entry.provenance)) continue;
       const where = `entry ${entry.provenance.rowId}`;
+      const ledgerRel = entry.provenance.ledger;
+      const rowById = ledgerRel && rowByLedger.has(ledgerRel)
+        ? rowByLedger.get(ledgerRel)
+        : (rowByLedger.size === 1 ? rowByLedger.values().next().value : null);
+      if (!rowById) { err(`${where}: provenance.ledger "${ledgerRel}" is not a bound ledger`); continue; }
       const row = rowById.get(entry.provenance.rowId);
       if (!row) { err(`${where}: provenance.rowId "${entry.provenance.rowId}" is not an authoritative ledger row`); continue; }
 
@@ -419,26 +430,60 @@ export function validateMapping(mapping, options = {}) {
         }
       }
 
-      // WEB / KJV / OSHB: hash must match the row text and exactly one bound
-      // target text; the matching target is located by content, not by number.
-      for (const lang of ['web', 'kjv', 'he']) {
-        const declaredHash = hashes[lang];
-        if (typeof declaredHash !== 'string') { err(`${where}: ledger row lacks a ${lang} text hash`); continue; }
-        if (typeof texts[lang] !== 'string' || textHash(texts[lang]) !== declaredHash) {
-          err(`${where}: ledger row text does not match its own ${lang} hash`);
+      const targetEvidence = Array.isArray(entry.provenance.targetEvidence) ? entry.provenance.targetEvidence : null;
+      if (targetEvidence) {
+        // Per-target comparison evidence: each target names its own actual
+        // corpus string/hash. Every row target must be covered exactly once.
+        const rowTargets = Array.isArray(row.targets) ? row.targets : [];
+        const rowEvidenceByKey = new Map(rowTargets.filter(isObject).map((t) => [targetKey(t.to), t]));
+        const seen = new Set();
+        for (const ev of targetEvidence) {
+          if (!isObject(ev) || !isObject(ev.to)) { err(`${where}: malformed target evidence`); continue; }
+          const tk = targetKey(ev.to);
+          if (!rowTo.has(tk)) { err(`${where}: target evidence ${tk} is not in the row target set`); continue; }
+          if (seen.has(tk)) { err(`${where}: duplicate target evidence ${tk}`); continue; }
+          seen.add(tk);
+          const authoritative = rowEvidenceByKey.get(tk);
+          if (!authoritative) err(`${where}: ledger row lacks target evidence for ${tk}`);
+          for (const lang of ['web', 'kjv', 'he']) {
+            const h = ev.textHashes?.[lang];
+            if (typeof h !== 'string' || !/^[0-9a-f]{64}$/.test(h)) { err(`${where}: target evidence ${tk} lacks a ${lang} hash`); continue; }
+            if (authoritative && authoritative.textHashes?.[lang] !== h) err(`${where}: target evidence ${tk} ${lang} hash differs from the ledger row`);
+            if (authoritative && typeof authoritative.texts?.[lang] === 'string' && textHash(authoritative.texts[lang]) !== h) {
+              err(`${where}: ledger row ${tk} text does not match its ${lang} hash`);
+            }
+            const corpus = corpora[lang];
+            if (corpus) {
+              const text = canonicalCorpusText(corpus, refForKey(tk));
+              if (text === null) err(`${where}: target ${tk} not found in the bound ${lang} corpus`);
+              else if (textHash(text) !== h) err(`${where}: target ${tk} ${lang} hash does not match the bound corpus`);
+            }
+            noteCoverage(entry.groupId, lang, tk);
+          }
         }
-        if (entry.provenance.textHashes?.[lang] !== declaredHash) {
-          err(`${where}: provenance ${lang} hash differs from the authoritative row`);
+        for (const tk of rowTo) if (!seen.has(tk)) err(`${where}: missing target evidence for ${tk}`);
+      } else {
+        // Legacy WEB / KJV / OSHB: hash must match the row text and exactly one
+        // bound target text; the matching target is located by content.
+        for (const lang of ['web', 'kjv', 'he']) {
+          const declaredHash = hashes[lang];
+          if (typeof declaredHash !== 'string') { err(`${where}: ledger row lacks a ${lang} text hash`); continue; }
+          if (typeof texts[lang] !== 'string' || textHash(texts[lang]) !== declaredHash) {
+            err(`${where}: ledger row text does not match its own ${lang} hash`);
+          }
+          if (entry.provenance.textHashes?.[lang] !== declaredHash) {
+            err(`${where}: provenance ${lang} hash differs from the authoritative row`);
+          }
+          const corpus = corpora[lang];
+          if (!corpus) continue;
+          const matches = [...rowTo].filter((tk) => {
+            const text = canonicalCorpusText(corpus, refForKey(tk));
+            return typeof text === 'string' && textHash(text) === declaredHash;
+          });
+          if (matches.length === 0) err(`${where}: ${lang} hash does not match any authoritative target text`);
+          else if (matches.length > 1) err(`${where}: ${lang} hash matches multiple targets ambiguously`);
+          else noteCoverage(entry.groupId, lang, matches[0]);
         }
-        const corpus = corpora[lang];
-        if (!corpus) continue;
-        const matches = [...rowTo].filter((tk) => {
-          const text = canonicalCorpusText(corpus, refForKey(tk));
-          return typeof text === 'string' && textHash(text) === declaredHash;
-        });
-        if (matches.length === 0) err(`${where}: ${lang} hash does not match any authoritative target text`);
-        else if (matches.length > 1) err(`${where}: ${lang} hash matches multiple targets ambiguously`);
-        else noteCoverage(entry.groupId, lang, matches[0]);
       }
     }
 

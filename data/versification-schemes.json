@@ -15,7 +15,7 @@
       "kjv",
       "he"
     ],
-    "note": "Only WEB/KJV/OSHB are compared in the Genesis 1 pilot. Target coordinates follow the Maranatha navigation canon anchored to WEB-C; selecting any other edition compares the Greek pilot against unreviewed, edition-specific numbering."
+    "note": "Only WEB/KJV/OSHB are compared in the Genesis 1-5 pilot. Target coordinates follow the Maranatha navigation canon anchored to WEB-C; selecting any other edition compares the Greek pilot against unreviewed, edition-specific numbering."
   },
   "schemes": [
     {
@@ -30,21 +30,21 @@
       "label": "World English Bible Catholic Edition",
       "kind": "canon",
       "dataset": "web",
-      "note": "Comparison coverage in this pilot is limited to the Genesis 1 proposals; other books are unreviewed."
+      "note": "Comparison coverage in this pilot is limited to the Genesis 1-5 proposals (plus boundary GEN 6:1); other books are unreviewed."
     },
     {
       "id": "kjv",
       "label": "King James Version (standard 66-book edition)",
       "kind": "canon",
       "dataset": "kjv",
-      "note": "Comparison coverage in this pilot is limited to the Genesis 1 proposals; the edition omits the deuterocanonical books."
+      "note": "Comparison coverage in this pilot is limited to the Genesis 1-5 proposals; the edition omits the deuterocanonical books."
     },
     {
       "id": "oshb",
       "label": "Open Scriptures Hebrew Bible (Masoretic)",
       "kind": "canon",
       "dataset": "he",
-      "note": "Comparison coverage in this pilot is limited to the Genesis 1 proposals; the edition covers the 39 protocanonical books only."
+      "note": "Comparison coverage in this pilot is limited to the Genesis 1-5 proposals; the edition covers the 39 protocanonical books only."
     },
     {
       "id": "byz-greek",
@@ -96,7 +96,7 @@
     },
     {
       "id": "lxx-aligned",
-      "label": "LXX alignment pilot (Genesis 1)",
+      "label": "LXX alignment pilot (Genesis 1-5)",
       "kind": "virtual",
       "nativeScheme": "lxx-swete-native",
       "mapping": "data/lxx-swete-alignment.json",

@@ -179,6 +179,8 @@
 
     function correspondenceFor(group) {
       var members = (group.sources || []).map(memberFor);
+      var sources = group.sources || [];
+      var targets = group.targets || [];
       // If ANY member's native text is absent the group cannot be presented as
       // a complete correspondence; the missing-source state is retained rather
       // than silently showing the members that did resolve.
@@ -187,9 +189,14 @@
         state: noText ? STATES.MISSING_SOURCE_TEXT : STATES.CORRESPONDENCE,
         status: group.status || 'proposal',
         groupId: group.id,
-        collective: group.collective === true || (group.sources || []).length > 1 || (group.targets || []).length > 1,
-        sources: group.sources || [],
-        targets: group.targets || [],
+        collective: group.collective === true || sources.length > 1 || targets.length > 1,
+        // A single source container spanning multiple canonical targets (e.g.
+        // GEN 3:1 -> 2:25 and 3:1). The complete source is rendered once per
+        // comparison view; no source text is split or duplicated.
+        spanning: sources.length === 1 && targets.length > 1,
+        presentation: group.presentation || null,
+        sources: sources,
+        targets: targets,
         members: members,
         note: group.notes || '',
       };
