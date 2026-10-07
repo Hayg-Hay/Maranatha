@@ -119,6 +119,7 @@ function staticChecks() {
   out('css-chapter-bar-hidden-rule', /\.chapter-bar\[hidden\]\s*\{[^}]*display:\s*none/.test(css));
   const parallelSection = css.slice(css.indexOf('Parallel reading (independent numbering)'));
   out('css-mobile-parallel-stacks', /\.parallel-panes\s*\{[^}]*flex-direction:\s*column/.test(parallelSection));
+  out('css-lxx-attribution-hidden-rule', /#lxx-attribution\[hidden\]\s*\{[^}]*display:\s*none/.test(css));
 
   const html = read('index.html');
   const banner = /<p class="parallel-banner"[^>]*>Independent numbering; passages are not aligned\.<\/p>/.test(html);
@@ -135,6 +136,12 @@ function staticChecks() {
   out('html-parallel-controls-labelled', unlabelled.length === 0, unlabelled.join(','));
   const needContainers = ['parallel-lxx-content', 'parallel-translation-content'];
   out('html-parallel-content-containers', needContainers.every((id) => doc.getElementById(id)));
+
+  // The right-pane heading must not claim canon numbering: the selected
+  // translation may itself print a source numbering (Delitzsch 1901).
+  out('html-parallel-heading-neutral',
+    !/canon numbering/i.test(doc.getElementById('parallel-translation-heading').textContent),
+    doc.getElementById('parallel-translation-heading').textContent);
 }
 
 // ---------------------------------------------------------------------------
@@ -161,6 +168,9 @@ async function desktopChecks() {
   out('parallel-controls-isolated-from-canon',
     !d.querySelector('#parallel-view').hidden && d.querySelector('#results').hidden
       && d.querySelector('#lxx-bar').hidden && canonControls(d).every((el) => el.hidden));
+  out('parallel-heading-neutral',
+    !/canon numbering/i.test(d.querySelector('#parallel-translation-heading').textContent),
+    d.querySelector('#parallel-translation-heading').textContent);
 
   // Independent navigation: LXX pane moves alone...
   const transBook = d.querySelector('#parallel-book');
@@ -209,10 +219,19 @@ async function desktopChecks() {
   out('parallel-delitzsch-1901-notice', !!d.querySelector('#parallel-translation-content .versification-notice'));
   out('parallel-lazy-loads-delitzsch1901', srcList(d).some((s) => s.includes('data/delitzsch1901.js')), srcList(d).join(','));
 
+  // The right pane's verse extent must follow the SELECTED edition, not every
+  // loaded translation: Delitzsch 1901's John 1 has 52 verses, the eBible
+  // edition 51, so the 1901 row count must not inflate the eBible pane.
+  const rightRows = () => d.querySelectorAll('#parallel-translation-content tbody tr').length;
+  const jhn1901 = w.MARANATHA_TRANSLATIONS.delitzsch1901.books.JHN[0].length;
+  out('parallel-right-extent-scoped-1901', rightRows() === jhn1901 && rightRows() === 52, `${rightRows()}/${jhn1901}`);
+
   transSel.value = 'delitzsch';
   fire(w, transSel);
-  await waitFor(() => srcList(d).some((s) => s.includes('data/delitzsch.js')) && d.querySelector('#parallel-translation-content .hebrew-verse'));
+  await waitFor(() => w.MARANATHA_TRANSLATIONS.delitzsch && srcList(d).some((s) => s.includes('data/delitzsch.js')) && d.querySelector('#parallel-translation-content .hebrew-verse'));
   out('parallel-lazy-loads-delitzsch-ebible', srcList(d).some((s) => s.includes('data/delitzsch.js')));
+  const jhnE = w.MARANATHA_TRANSLATIONS.delitzsch.books.JHN[0].length;
+  out('parallel-right-extent-scoped-ebible', rightRows() === jhnE && rightRows() !== jhn1901, `${rightRows()}/${jhnE} (1901 ${jhn1901})`);
 
   transSel.value = 'he';
   fire(w, transSel);
@@ -241,6 +260,26 @@ async function desktopChecks() {
   d.querySelector('#search-go').click();
   out('search-returns-to-canon', view.value === 'canon' && d.querySelector('#parallel-view').hidden
     && !d.querySelector('#results').hidden && !d.querySelector('#results').hidden);
+
+  // Invalid and empty inputs must still switch the visible panes to match the
+  // selector (no lingering parallel panes after an error).
+  view.value = 'parallel';
+  fire(w, view);
+  await waitFor(() => !d.querySelector('#parallel-view').hidden);
+  d.querySelector('#reference').value = 'not a reference';
+  d.querySelector('#reference-go').click();
+  out('invalid-reference-syncs-panes',
+    d.querySelector('#parallel-view').hidden === (view.value !== 'parallel') && !d.querySelector('#results').hidden,
+    `${view.value}/${d.querySelector('#parallel-view').hidden}`);
+
+  view.value = 'parallel';
+  fire(w, view);
+  await waitFor(() => !d.querySelector('#parallel-view').hidden);
+  d.querySelector('#search').value = '';
+  d.querySelector('#search-go').click();
+  out('empty-search-syncs-panes',
+    d.querySelector('#parallel-view').hidden === (view.value !== 'parallel'),
+    `${view.value}/${d.querySelector('#parallel-view').hidden}`);
 
   // View switching: LXX standalone is preserved, then canon restores cleanly.
   view.value = 'lxx';
@@ -291,6 +330,47 @@ async function mobileChecks() {
 }
 
 // ---------------------------------------------------------------------------
+// 4b. A delayed LXX script must not leak the footer attribution into Canon.
+// ---------------------------------------------------------------------------
+async function lateLxxGuardCheck() {
+  const dom = await JSDOM.fromFile(path.join(root, 'index.html'), {
+    runScripts: 'dangerously',
+    resources: 'usable',
+    pretendToBeVisual: true,
+    beforeParse(window) {
+      window.matchMedia = () => ({ matches: false, addEventListener() {}, removeEventListener() {} });
+      window.scrollTo = () => {};
+      window.HTMLElement.prototype.scrollIntoView = () => {};
+      // Hold the 7.5 MB LXX script back so the user can leave the view first.
+      const original = window.Node.prototype.appendChild;
+      window.Node.prototype.appendChild = function (node) {
+        if (node.tagName === 'SCRIPT' && node.src.includes('/data/lxx-swete.js')) {
+          setTimeout(() => original.call(this, node), 200);
+          return node;
+        }
+        return original.call(this, node);
+      };
+    },
+  });
+  try {
+    const w = dom.window;
+    const d = w.document;
+    await waitFor(() => w.MARANATHA_TRANSLATIONS && w.MARANATHA_TRANSLATIONS.web && d.querySelector('#results h2'));
+    const selector = d.querySelector('#view-mode');
+    selector.value = 'parallel';
+    fire(w, selector);
+    selector.value = 'canon';
+    fire(w, selector);
+    await waitFor(() => w.MARANATHA_TRANSLATIONS && w.MARANATHA_TRANSLATIONS['lxx-swete']);
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    out('late-lxx-callback-guarded',
+      d.querySelector('#lxx-attribution').hidden && d.querySelector('#parallel-view').hidden);
+  } finally {
+    dom.window.close();
+  }
+}
+
+// ---------------------------------------------------------------------------
 // 5. Canon-view regression against the pre-change baseline (WEB + KJV).
 // ---------------------------------------------------------------------------
 async function renderCanonViews() {
@@ -337,6 +417,7 @@ dataChecks();
 staticChecks();
 await desktopChecks();
 await mobileChecks();
+await lateLxxGuardCheck();
 await canonRegressionCheck();
 
 let failed = 0;
