@@ -2275,3 +2275,34 @@ rows; invalid-reference and empty-search pane sync; delayed-LXX-callback guard;
 and the `#lxx-attribution[hidden]` rule); no existing check was weakened and no
 baseline was recaptured. The real-browser test remains unverified in the Codex
 environment (loopback timeout, `file://` forbidden) and is still the user's test.
+
+### Phase 4 — Stage 1b locale regression and neutral heading, Oct 2026
+
+A further independent check found one reproducible failure and one wording
+overclaim; both are fixed within Stage 1b scope.
+
+- **Armenian locale left the parallel Book menu in English.** `setLocale()` only
+  rebuilt the canon Book control, so switching Language to Armenian while
+  Parallel was open localized the right-pane heading but not its Book menu. It
+  now also rebuilds the parallel control through the same `populateBookSelect`
+  helper, preserving the pane's chosen book and chapter; the chosen translation
+  and the independent LXX navigation are untouched and Canon locale semantics are
+  unchanged.
+- **Neutral right-pane heading.** The heading is now simply **"Translation"**.
+  "Canon numbering" was false for source-numbered Delitzsch 1901, and "numbering
+  as printed" was false for OSHB, whose Masoretic numbering is mapped to
+  Christian references by the importer. The explicit 1901 source-numbering notice
+  is retained; no font or numbering scheme was reworked.
+
+`build/check-stage1b.mjs` grew from 44 to 45 checks (a behavioural locale case
+that switches to Armenian, asserts the Book options localize, and asserts the
+book/chapter, chosen translation and LXX pane are preserved; plus a stricter
+neutral-heading assertion). The independent checker (14 checks) reports 0
+failures. The copied verifier documents `build/check-architect-handoff.py` and
+`docs/ARCHITECT_NEXT_PROMPTS.md` are kept unchanged and committed separately
+because the architect report links to them. `build/check-stage1.mjs` (15/15)
+and `build/validate-lxx-native.mjs` (8/8) remain green. The full `npm test` suite
+was rerun on the prior substantive fix and is left to the independent verifier on
+the final commit. The principal verifier has not signed off; the real-browser
+test remains unverified (loopback timeout, `file://` forbidden) and is the
+user's test.
