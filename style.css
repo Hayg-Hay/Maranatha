@@ -125,6 +125,11 @@ code { font-family:Consolas, monospace; }
 .offline-badge { flex:none; padding:4px 9px; border:1px solid var(--line); color:var(--muted); background:var(--paper); font-size:.75rem; }
 .lookup-grid { display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1fr); gap:24px; }
 .chapter-bar { display:flex; flex-wrap:wrap; align-items:end; gap:14px; padding:14px 0; }
+/* The flex display above would otherwise override the hidden attribute, leaving
+   an empty bar (or hidden-in-canon controls) visible. Same pattern as
+   .compare-panel[hidden]. */
+.chapter-bar[hidden] { display:none; }
+.chapter-bar [data-canon-only][hidden] { display:none; }
 .chapter-bar label,
 .settings-row label { display:grid; gap:4px; font-size:.85rem; }
 .hebrew-script-setting { min-width:0; flex:1 1 8rem; }
@@ -150,6 +155,7 @@ code { font-family:Consolas, monospace; }
 .tool-section > .study-row,
 .tool-section > .settings-row { padding:10px 11px; }
 .translations-section { grid-row:span 2; }
+.translations-hint { padding:0 11px; }
 #translations { display:flex; flex-wrap:wrap; align-items:flex-start; gap:8px 14px; }
 .translation-option { display:flex; flex-wrap:wrap; align-items:flex-start; gap:5px; min-width:0; max-width:100%; }
 .translation-warning { min-width:0; font-size:.78rem; }

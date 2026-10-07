@@ -145,11 +145,16 @@ async function renderLxxProbe() {
   const { document } = window;
   await new Promise((resolve) => window.addEventListener('load', resolve, { once: true }));
 
+  const canonOnly = () => [...document.querySelectorAll('[data-canon-only]')];
+  const lxxBar = document.querySelector('#lxx-bar');
+  const canonViewClean = canonOnly().every((el) => !el.hidden) && lxxBar.hidden;
+
   const view = document.querySelector('#view-mode');
   view.value = 'lxx';
   view.dispatchEvent(new window.Event('change', { bubbles: true }));
   await waitFor(() => document.querySelector('#results .lxx-banner'));
   const banner = document.querySelector('#results .lxx-banner').textContent;
+  const lxxViewClean = canonOnly().every((el) => el.hidden) && !lxxBar.hidden
 
   const bookSelect = document.querySelector('#lxx-book');
   bookSelect.value = 'PSA';
@@ -165,7 +170,8 @@ async function renderLxxProbe() {
     has84: numbers.includes('84'),
     attributionVisible: !attribution.hidden,
     attributionText: attribution.textContent,
-    flagMarkers: document.querySelectorAll('#results .lxx-flag').length >= 0,
+    canonViewClean,
+    lxxViewClean,
   };
   dom.window.close();
   return result;
@@ -248,6 +254,18 @@ add('detached-text-present', () => {
   return { ok, detail: ok ? 'Letter intro, Esther prologue, Psalm titles present' : `LJE=${ljeIntro}, EST prologue=${est}, PSA titles=${psaTitles}` };
 });
 
+add('static-css-hidden-rule', () => {
+  const css = fs.readFileSync(path.join(root, 'style.css'), 'utf8');
+  const ok = /\.chapter-bar\[hidden\]\s*\{[^}]*display:\s*none/.test(css);
+  return { ok, detail: ok ? 'style.css declares .chapter-bar[hidden] { display:none }' : 'missing .chapter-bar[hidden] rule' };
+});
+
+add('static-translations-hint', () => {
+  const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+  const ok = /Septuagint \(Swete\): choose View .* LXX \(native numbering\)/.test(html);
+  return { ok, detail: ok ? 'index.html has the Translations view hint' : 'missing Translations hint text' };
+});
+
 add('source-hashes', () => {
   for (const file of data.source.files) {
     const bytes = fs.readFileSync(path.join(B_DIR, file.path));
@@ -285,11 +303,12 @@ add('canon-view-regression', () => {
 });
 
 add('lxx-view-renders', () => renderLxxProbe().then((result) => {
-  const ok = /native LXX numbering/.test(result.banner) && result.has84 && result.attributionVisible && /Swete/.test(result.attributionText);
+  const ok = /native LXX numbering/.test(result.banner) && result.has84 && result.attributionVisible
+    && /Swete/.test(result.attributionText) && result.canonViewClean && result.lxxViewClean;
   return {
     ok,
-    detail: ok ? 'banner, Ps 88 label 84, footer attribution rendered in native view'
-      : `banner=${result.banner}; has84=${result.has84}; attribution=${result.attributionVisible}:${result.attributionText.slice(0, 40)}`,
+    detail: ok ? 'banner, Ps 88 label 84, footer attribution, one Book/Chapter pair per view'
+      : `banner=${result.banner}; has84=${result.has84}; attribution=${result.attributionVisible}:${result.attributionText.slice(0, 40)}; canonViewClean=${result.canonViewClean}; lxxViewClean=${result.lxxViewClean}`,
   };
 }));
 

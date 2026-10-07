@@ -349,6 +349,9 @@ const refs = {
     lxxChapter: q('#lxx-chapter'),
     lxxAttribution: q('#lxx-attribution'),
 };
+  // Canon-only controls (Book/Chapter selects, Previous/Next/Open chapter).
+  // Toggled as a group so the LXX view never shows two Book/Chapter pairs.
+  refs.canonControls = [...document.querySelectorAll('[data-canon-only]')];
   const loaded = new Set();   // translation ids whose <script> has finished loading
   const loading = new Set();  // translation ids whose <script> is in flight
   // Active edition per grouped control (group id -> selected translation id).
@@ -606,9 +609,6 @@ function init() {
     });
 
     refs.viewMode.addEventListener('change', () => {
-        const lxx = refs.viewMode.value === 'lxx';
-        refs.lxxBar.hidden = !lxx;
-        refs.lxxAttribution.hidden = !lxx;
         setMessage('');
         render({ scrollToReference: false });
     });
@@ -3077,7 +3077,12 @@ function init() {
   }
 
   function render({ scrollToReference = true } = {}) {
-    if (refs.viewMode.value === 'lxx') {
+    const lxx = refs.viewMode.value === 'lxx';
+    // Only one Book/Chapter pair is ever shown: the canon bar in canon view,
+    // the LXX bar in the LXX view. The View selector stays visible in both.
+    refs.lxxBar.hidden = !lxx;
+    for (const control of refs.canonControls) control.hidden = lxx;
+    if (lxx) {
       renderLxxView();
       return;
     }

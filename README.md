@@ -23,6 +23,11 @@ to the canon numbering used elsewhere. Choose "LXX (native numbering)" in the
 View selector to browse it by its own book/chapter labels. See
 `data/LICENSE-lxx-swete.md` and `PROJECT_HISTORY.md` (Phase 4).
 
+Known limitation: the reference box and the text search are **canon-only** and
+ignore the LXX view (native LXX numbering is not mapped to canon references in
+Stage 1), so entering a reference or searching while in the LXX view still acts
+on the canon-numbered translations.
+
 What works:
 
 - `data/canon.js` — the full 73-book Catholic canon skeleton: stable book IDs,

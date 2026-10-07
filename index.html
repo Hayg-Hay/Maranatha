@@ -68,10 +68,10 @@
       </div>
 
       <div class="chapter-bar" aria-label="Browse by chapter">
-        <label for="book">Book
+        <label for="book" data-canon-only>Book
           <select id="book"></select>
         </label>
-        <label for="chapter">Chapter
+        <label for="chapter" data-canon-only>Chapter
           <select id="chapter"></select>
         </label>
         <label for="view-mode">View
@@ -80,7 +80,7 @@
             <option value="lxx">LXX (native numbering)</option>
           </select>
         </label>
-        <div class="chapter-actions">
+        <div class="chapter-actions" data-canon-only>
           <button id="prev-chapter-button" type="button" aria-label="Previous chapter">&larr; Previous</button>
           <button id="next-chapter-button" type="button" aria-label="Next chapter">Next &rarr;</button>
           <button id="go-button" class="primary-action" type="button">Open chapter</button>
@@ -99,6 +99,7 @@
       <div class="tool-sections">
         <details class="tool-section translations-section" open>
           <summary>Translations</summary>
+          <p class="hint translations-hint">Septuagint (Swete): choose View &rarr; LXX (native numbering)</p>
           <fieldset id="translations" aria-label="Translations"></fieldset>
         </details>
 
