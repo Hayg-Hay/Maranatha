@@ -343,7 +343,15 @@ const refs = {
     fontsize: q('#fontsize'),
     hebrewScript: q('#hebrew-scripts'),
     hebrewScriptNote: q('#hebrew-script-note'),
+    viewMode: q('#view-mode'),
+    lxxBar: q('#lxx-bar'),
+    lxxBook: q('#lxx-book'),
+    lxxChapter: q('#lxx-chapter'),
+    lxxAttribution: q('#lxx-attribution'),
 };
+  // Canon-only controls (Book/Chapter selects, Previous/Next/Open chapter).
+  // Toggled as a group so the LXX view never shows two Book/Chapter pairs.
+  refs.canonControls = [...document.querySelectorAll('[data-canon-only]')];
   const loaded = new Set();   // translation ids whose <script> has finished loading
   const loading = new Set();  // translation ids whose <script> is in flight
   // Active edition per grouped control (group id -> selected translation id).
@@ -598,6 +606,19 @@ function init() {
     refs.go.addEventListener('click', () => {
         setBrowseMode();
         render();
+    });
+
+    refs.viewMode.addEventListener('change', () => {
+        setMessage('');
+        render({ scrollToReference: false });
+    });
+
+    refs.lxxBook.addEventListener('change', () => {
+        render({ scrollToReference: false });
+    });
+
+    refs.lxxChapter.addEventListener('change', () => {
+        render({ scrollToReference: false });
     });
 
     refs.prevChapter.addEventListener('click', () => {
@@ -2927,7 +2948,145 @@ function init() {
     return null;
   }
 
+  // ---------------------------------------------------------------------
+  // LXX view (Swete, native source numbering).
+  //
+  // Completely independent of canon.js and of the canon-numbered translations:
+  // it renders data/lxx-swete.js in the numbering printed in the source. The
+  // data file is lazy-loaded through a dynamically created <script> tag (never
+  // fetch()), so the file:// constraint holds.
+  // ---------------------------------------------------------------------
+  let lxxLoading = false;
+
+  function lxxDataset() {
+    return (window.MARANATHA_TRANSLATIONS && window.MARANATHA_TRANSLATIONS['lxx-swete']) || null;
+  }
+
+  function loadLxx(onReady) {
+    if (lxxDataset()) { onReady(); return; }
+    if (lxxLoading) return;
+    lxxLoading = true;
+    const script = document.createElement('script');
+    script.src = 'data/lxx-swete.js';
+    script.onload = () => { lxxLoading = false; onReady(); };
+    script.onerror = () => { lxxLoading = false; setMessage('Could not load the Septuagint (Swete) data (data/lxx-swete.js).'); };
+    document.head.appendChild(script);
+  }
+
+  function populateLxxBooks(dataset) {
+    const previous = refs.lxxBook.value;
+    refs.lxxBook.innerHTML = '';
+    for (const book of dataset.books) {
+      const opt = document.createElement('option');
+      opt.value = book.id;
+      opt.textContent = `${book.label}${book.kind === 'component' ? ' (component)' : ''}`;
+      refs.lxxBook.appendChild(opt);
+    }
+    if (dataset.books.some((b) => b.id === previous)) refs.lxxBook.value = previous;
+  }
+
+  function populateLxxChapters(book) {
+    const previous = refs.lxxChapter.value;
+    refs.lxxChapter.innerHTML = '';
+    for (const chapter of book.chapters) {
+      const opt = document.createElement('option');
+      opt.value = chapter.n;
+      opt.textContent = chapter.n === 'prologue' ? 'Prologue' : `Chapter ${chapter.n}`;
+      refs.lxxChapter.appendChild(opt);
+    }
+    if (book.chapters.some((c) => c.n === previous)) refs.lxxChapter.value = previous;
+  }
+
+  function renderLxxView() {
+    refs.results.innerHTML = '';
+    refs.contextBtn.hidden = true;
+    setMessage('');
+    const dataset = lxxDataset();
+    if (!dataset) {
+      const loading = document.createElement('p');
+      loading.className = 'empty';
+      loading.textContent = 'Loading the Septuagint (Swete) data…';
+      refs.results.appendChild(loading);
+      loadLxx(() => render({ scrollToReference: false }));
+      return;
+    }
+
+    populateLxxBooks(dataset);
+    const book = dataset.books.find((b) => b.id === refs.lxxBook.value) || dataset.books[0];
+    if (!book) return;
+    populateLxxChapters(book);
+    const chapter = book.chapters.find((c) => c.n === refs.lxxChapter.value) || book.chapters[0];
+
+    const banner = document.createElement('p');
+    banner.className = 'lxx-banner';
+    banner.textContent = 'Swete Septuagint, native LXX numbering, not aligned to the canon numbering used elsewhere.';
+    refs.results.appendChild(banner);
+
+    if (book.notices && book.notices.length) {
+      const notices = document.createElement('details');
+      notices.className = 'lxx-notices';
+      const summary = document.createElement('summary');
+      summary.textContent = `Notices (${book.notices.length})`;
+      notices.appendChild(summary);
+      for (const text of book.notices) {
+        const p = document.createElement('p');
+        p.textContent = text;
+        notices.appendChild(p);
+      }
+      refs.results.appendChild(notices);
+    }
+
+    const heading = document.createElement('h2');
+    heading.className = 'lxx-heading';
+    heading.textContent = `${book.label} ${chapter.n === 'prologue' ? 'Prologue' : chapter.n}`;
+    refs.results.appendChild(heading);
+
+    const list = document.createElement('div');
+    list.className = 'lxx-verses';
+    for (const segment of chapter.segments) {
+      const row = document.createElement('div');
+      row.className = 'lxx-segment' + (segment.kind === 'unnumbered' ? ' lxx-unnumbered' : '');
+      if (segment.kind === 'verse') {
+        const num = document.createElement('span');
+        num.className = 'lxx-verse-num';
+        num.textContent = segment.l;
+        row.appendChild(num);
+      }
+      const text = document.createElement('span');
+      text.className = 'lxx-text';
+      text.lang = 'el';
+      text.textContent = segment.t;
+      row.appendChild(text);
+      for (const flag of segment.flags || []) {
+        const marker = document.createElement('span');
+        marker.className = 'lxx-flag';
+        marker.textContent = '\u25C6';
+        marker.title = flag.note;
+        marker.setAttribute('role', 'img');
+        marker.setAttribute('aria-label', flag.note);
+        row.appendChild(marker);
+      }
+      list.appendChild(row);
+    }
+    refs.results.appendChild(list);
+
+    if (dataset.license && dataset.license.attribution) {
+      refs.lxxAttribution.hidden = false;
+      refs.lxxAttribution.textContent = ` ${dataset.license.attribution}`;
+    }
+  }
+
   function render({ scrollToReference = true } = {}) {
+    const lxx = refs.viewMode.value === 'lxx';
+    // Only one Book/Chapter pair is ever shown: the canon bar in canon view,
+    // the LXX bar in the LXX view. The View selector stays visible in both.
+    refs.lxxBar.hidden = !lxx;
+    for (const control of refs.canonControls) control.hidden = lxx;
+    if (lxx) {
+      renderLxxView();
+      return;
+    }
+    refs.lxxAttribution.hidden = true;
     const translations = displayTranslations(selectedTranslations());
 
     refs.results.innerHTML = '';

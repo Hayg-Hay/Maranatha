@@ -1,0 +1,188 @@
+LXX SWETE AUDIT ONLY — read-only; complete tables: build/sources/lxx-swete/AUDIT.md
+A ALL EDITION HEADER LICENSES: 55 files; Y 0; N 55; excluded non-Swete files 0
+B ALL EDITION HEADER LICENSES: 62 files; Y 62; N 0; excluded non-Swete files 7
+
+A nathans/lxx-swete
+commit 26bad3eb42bba98471d154c954e36a6f30a0279d
+fetched 2026-10-06T20:29:09.406Z
+files 61; bytes 11808373; SHA256 failures 0
+book files 55; header license Y 0; N 55
+present (45): GEN EXO LEV NUM DEU JOS JDG RUT 1SA 2SA 1KI 2KI 1CH 2CH EZR NEH TOB JDT EST 1MA 2MA JOB PSA PRO SNG WIS SIR ISA JER LAM BAR EZK DAN HOS JOL AMO OBA JON MIC NAM HAB ZEP HAG ZEC MAL
+missing (28): ECC MAT MRK LUK JHN ACT ROM 1CO 2CO GAL EPH PHP COL 1TH 2TH 1TI 2TI TIT PHM HEB JAS 1PE 2PE 1JN 2JN 3JN JUD REV
+outside: 1 Esdras; 3 Maccabees; 4 Maccabees; Odes (including Prayer of Manasseh); Psalms of Solomon; embedded Psalm 151
+ARTIFACT COUNTS (10 examples/type in AUDIT.md):
+Latin-script tokens (suspected OCR / sigla): 513
+mixed-script Greek/Latin tokens: 341
+isolated digit tokens: 23
+editorial markers: 10
+uncertain glyph strings: 11
+apparatus notes: 0
+variant sigla / marginal notes: 0
+other XML notes: 0
+brackets: 0
+superscript / note marker candidates: 425
+literal Unicode escape labels: 12
+replacement characters: 0
+control characters: 0
+XML leftovers in main text: 22
+hyphenated fragments: 0
+empty verses: 0
+placeholder verse candidates: 0
+unparsed token rows: 0
+invalid XML: 0
+nonstandard / zero references: 358
+ENCODING: UTF8 invalid 0; raw NFC 55/55; raw NFD 0/55; main-text NFC exceptions 0
+STRUCTURE: ID file chapters source/canon; mismatching chapters (full counts in AUDIT.md)
+GEN 01.Genesis.txt 50/50: 2,5,15,16,31,36,37,45
+EXO 02.Exodus.txt 40/40: 4,17,24,25,28,29,36,37,38,39,40
+LEV 03.Leviticus.txt 27/27: 6,7
+NUM 04.Numeri.txt 36/36: 12,13,21,27,29
+DEU 05.Deuteronomium.txt 34/34: 14,16,18,21,23,25,31
+JOS 06.Josue.txt 24/24: 8,9,10,13,15,19,20,21,24
+JDG 08.Judices.txt 21/21: none
+RUT 10.Ruth.txt 4/4: none
+1SA 11.Regnorum_I.txt 31/31: 4,8,13,14,17,18,20,23,24,25
+2SA 12.Regnorum_II.txt 24/24: 19,23
+1KI 13.Regnorum_III.txt 22/22: 2,3,4,5,6,7,8,9,10,12,13,14,15,16,20,21,22
+2KI 14.Regnorum_IV.txt 25/25: 1,14,25
+1CH 15.Paralipomenon_I.txt 29/29: 1,6,12,16,20,24,27,28
+2CH 16.Paralipomenon_II.txt 36/36: 3,4,11,17,24,27,31,33,35,36
+EZR 18.Esdras_B.txt 10/10: 2,5,6,8,10
+NEH 18.Esdras_B.txt 13/13: 13,14,17,18,20,21,22
+EST 19.Esther.txt 10/10: 3,4,5,6,8,9,10
+JDT 20.Judith.txt 16/16: 3,9,15
+TOB 21.Tobias.txt 14/14: 1,6,7
+1MA 23.Machabaeorum_i.txt 16/16: 1,4,9
+2MA 24.Machabaeorum_ii.txt 15/15: 7,11
+PSA 27.Psalmi.txt 151/150: 3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,91,92,93,94,95,97,99,100,101,102,103,104,105,106,107,108,109,110,113,114,115,116,117,118,119,120,121,122,123,124,125,127,128,130,131,132,134,135,136,138,139,140,141,142,143,144,145,146,147,149,150,151
+PRO 29.Proverbia.txt 29/31: 1,3,4,6,7,8,9,10,11,12,13,15,17,18,19,20,21,22,23,24,25,26,27,28,29
+SNG 31.Canticum.txt 8/8: 4,5,6
+JOB 32.Job.txt 42/42: 2,7,10,14,16,19,33,35,36,39,40,41,42
+WIS 33.Sapientia_Salomonis.txt 19/19: 1,3,4,9,16,17,18,19,20
+SIR 34.Ecclesiasticus.txt 51/51: 1,3,7,10,11,13,16,17,18,19,20,22,24,25,26,29,30,33,34,35,36,40,41
+HOS 36.Osee.txt 14/14: 13,14
+AMO 37.Amos.txt 9/9: none
+MIC 38.Michaeas.txt 7/7: none
+JOL 39.Joel.txt 3/3: none
+OBA 40.Abdias.txt 1/1: 1
+JON 41.Jonas.txt 4/4: 1,2
+NAM 42.Nahum.txt 3/3: 2
+HAB 43.Habacuc.txt 3/3: none
+ZEP 44.Sophonias.txt 3/3: 2,3
+HAG 45.Aggaeus.txt 2/2: 1
+ZEC 46.Zacharias.txt 14/14: 11,12
+MAL 47.Malachias.txt 4/4: none
+ISA 48.Isaias.txt 66/66: 1,2,3,12,22,25,35,38,40,44,56
+JER 49.Jeremias.txt 52/52: 2,7,8,10,11,17,23,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52
+BAR 50.Baruch.txt 5/6: 3
+LAM 51.Threni_seu_Lamentationes.txt 5/5: 1,3
+EZK 53.Ezechiel.txt 48/48: 1,7,8,10,11,23,27,32,33,40
+DAN 56.Daniel_translatio_Graeca.txt 12/14: 3,4,5,6
+DAN 57.Daniel_Theodotionis_versio.txt 12/14: 3,4,10,12
+PSALM MERGE/SPLIT COUNT EVIDENCE:
+LXX 9 (39) / canon 9+10 (38)
+LXX 113 (26) / canon 114+115 (26)
+LXX 114+115 (19) / canon 116 (19)
+LXX 146+147 (21) / canon 147 (20)
+
+B OpenGreekAndLatin/First1KGreek
+commit 03776b39f4047c5cff06f5296fae4b2bae4b08fb
+fetched 2026-10-06T20:29:15.404Z
+files 121; bytes 15187697; SHA256 failures 0
+book files 55; header license Y 55; N 0
+present (45): GEN EXO LEV NUM DEU JOS JDG RUT 1SA 2SA 1KI 2KI 1CH 2CH EZR NEH TOB JDT EST 1MA 2MA JOB PSA PRO SNG WIS SIR ISA JER LAM BAR EZK DAN HOS JOL AMO OBA JON MIC NAM HAB ZEP HAG ZEC MAL
+missing (28): ECC MAT MRK LUK JHN ACT ROM 1CO 2CO GAL EPH PHP COL 1TH 2TH 1TI 2TI TIT PHM HEB JAS 1PE 2PE 1JN 2JN 3JN JUD REV
+outside: 1 Esdras; 3 Maccabees; 4 Maccabees; Odes (including Prayer of Manasseh); Psalms of Solomon; embedded Psalm 151
+ARTIFACT COUNTS (10 examples/type in AUDIT.md):
+XML pb elements: 2419
+XML headings: 244
+XML lb elements: 9966
+variant sigla / marginal notes: 3930
+apparatus notes: 2427
+XML milestone elements: 86
+editorial markers: 338
+brackets: 148
+Latin-script tokens (suspected OCR / sigla): 521
+mixed-script Greek/Latin tokens: 348
+hyphenated fragments: 340
+uncertain glyph strings: 12
+other XML notes: 3
+superscript / note marker candidates: 438
+literal Unicode escape labels: 12
+replacement characters: 0
+control characters: 0
+XML leftovers in main text: 0
+isolated digit tokens: 22
+empty verses: 4
+placeholder verse candidates: 0
+unparsed token rows: 0
+invalid XML: 0
+nonstandard / zero references: 352
+main text outside verse containers: 181
+ENCODING: UTF8 invalid 0; raw NFC 5/55; raw NFD 0/55; main-text NFC exceptions 11952
+STRUCTURE: ID file chapters source/canon; mismatching chapters (full counts in AUDIT.md)
+GEN tlg0527.tlg001.1st1K-grc1.xml 50/50: 2,5,15,16,31,36,37,45
+EXO tlg0527.tlg002.1st1K-grc1.xml 40/40: 4,17,24,25,28,29,36,37,38,39,40
+LEV tlg0527.tlg003.1st1K-grc1.xml 27/27: 6,7
+NUM tlg0527.tlg004.1st1K-grc1.xml 36/36: 12,13,21,27,29
+DEU tlg0527.tlg005.1st1K-grc1.xml 34/34: 14,16,18,21,23,25,31
+JOS tlg0527.tlg006.1st1K-grc1.xml 24/24: 8,9,10,13,15,19,20,21,24
+JDG tlg0527.tlg008.1st1K-grc1.xml 21/21: none
+RUT tlg0527.tlg010.1st1K-grc1.xml 4/4: none
+1SA tlg0527.tlg011.1st1K-grc1.xml 31/31: 4,8,13,14,17,18,20,23,24,25
+2SA tlg0527.tlg012.1st1K-grc1.xml 24/24: 19,23
+1KI tlg0527.tlg013.1st1K-grc1.xml 22/22: 2,4,5,6,7,8,9,10,12,13,14,15,16,20,21,22
+2KI tlg0527.tlg014.1st1K-grc1.xml 25/25: 1,14,25
+1CH tlg0527.tlg015.1st1K-grc1.xml 29/29: 1,6,12,16,20,24,27,28
+2CH tlg0527.tlg016.1st1K-grc1.xml 36/36: 3,4,11,17,24,27,31,33,35,36
+EZR tlg0527.tlg018.1st1K-grc1.xml 10/10: 2,5,6,8,10
+NEH tlg0527.tlg018.1st1K-grc1.xml 13/13: 13,14,17,18,20,21,22
+EST tlg0527.tlg019.1st1K-grc1.xml 10/10: 3,4,5,6,8,9,10
+JDT tlg0527.tlg020.1st1K-grc1.xml 16/16: 3,9,15
+TOB tlg0527.tlg021.1st1K-grc1.xml 14/14: 1,6,7
+1MA tlg0527.tlg023.1st1K-grc1.xml 16/16: 1,4,9
+2MA tlg0527.tlg024.1st1K-grc1.xml 15/15: 7,11
+PSA tlg0527.tlg027.1st1K-grc1.xml 151/150: 3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,99,100,101,102,103,104,105,106,107,108,109,110,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,130,131,132,134,135,136,137,138,139,140,141,142,143,144,145,146,147,151
+PRO tlg0527.tlg029.1st1K-grc1.xml 29/31: 1,3,4,6,7,8,9,10,11,12,13,15,17,18,19,20,21,22,23,24,25,26,27,28,29
+SNG tlg0527.tlg031.1st1K-grc1.xml 8/8: 4,5,6
+JOB tlg0527.tlg032.1st1K-grc1.xml 42/42: 2,7,10,14,16,19,33,35,36,39,40,41,42
+WIS tlg0527.tlg033.1st1K-grc1.xml 19/19: 1,3,4,9,16,17,18,19,20
+SIR tlg0527.tlg034.1st1K-grc2.xml 51/51: 1,3,7,10,11,13,16,17,18,19,20,22,24,25,26,29,30,33,34,35,36,40,41
+HOS tlg0527.tlg036.1st1K-grc1.xml 14/14: 13,14
+AMO tlg0527.tlg037.1st1K-grc1.xml 9/9: none
+MIC tlg0527.tlg038.1st1K-grc1.xml 7/7: none
+JOL tlg0527.tlg039.1st1K-grc1.xml 3/3: none
+OBA tlg0527.tlg040.1st1K-grc1.xml 1/1: none
+JON tlg0527.tlg041.1st1K-grc1.xml 4/4: 1,2
+NAM tlg0527.tlg042.1st1K-grc1.xml 3/3: 2
+HAB tlg0527.tlg043.1st1K-grc1.xml 3/3: none
+ZEP tlg0527.tlg044.1st1K-grc1.xml 3/3: 2,3
+HAG tlg0527.tlg045.1st1K-grc1.xml 2/2: 1
+ZEC tlg0527.tlg046.1st1K-grc1.xml 14/14: 11,12
+MAL tlg0527.tlg047.1st1K-grc1.xml 4/4: none
+ISA tlg0527.tlg048.1st1K-grc1.xml 66/66: 2,9,13,22,32,35,37,38,43,47,49,52,56,65
+JER tlg0527.tlg049.1st1K-grc1.xml 52/52: 2,7,8,10,11,17,23,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52
+BAR tlg0527.tlg050.1st1K-grc1.xml 5/6: 3
+LAM tlg0527.tlg051.1st1K-grc1.xml 5/5: 3
+EZK tlg0527.tlg053.1st1K-grc1.xml 48/48: 1,7,8,10,11,23,27,32,33,40
+DAN tlg0527.tlg056.1st1K-grc1.xml 12/14: 3,4,5,6
+DAN tlg0527.tlg057.1st1K-grc1.xml 12/14: 3,4,10,12
+PSALM MERGE/SPLIT COUNT EVIDENCE:
+LXX 9 (39) / canon 9+10 (38)
+LXX 113 (26) / canon 114+115 (26)
+LXX 114+115 (18) / canon 116 (19)
+LXX 146+147 (20) / canon 147 (20)
+
+FIVE-BOOK VERSE DIFF (first 10 differences/book in AUDIT.md):
+{"num":1,"label":"GEN","A":"data/01.Genesis.txt","B":"data/tlg0527/tlg001/tlg0527.tlg001.1st1K-grc1.xml","union":1523,"Aonly":0,"Bonly":0,"equalWhitespaceNFC":1361,"equalDiagnosticProjection":1521,"different":162}
+{"num":27,"label":"PSA","A":"data/27.Psalmi.txt","B":"data/tlg0527/tlg027/tlg0527.tlg027.1st1K-grc1.xml","union":2551,"Aonly":37,"Bonly":0,"equalWhitespaceNFC":2441,"equalDiagnosticProjection":2470,"different":73}
+{"num":48,"label":"ISA","A":"data/48.Isaias.txt","B":"data/tlg0527/tlg048/tlg0527.tlg048.1st1K-grc1.xml","union":1291,"Aonly":14,"Bonly":12,"equalWhitespaceNFC":77,"equalDiagnosticProjection":77,"different":1188}
+{"num":34,"label":"SIR","A":"data/34.Ecclesiasticus.txt","B":"data/tlg0527/tlg034/tlg0527.tlg034.1st1K-grc2.xml","union":1370,"Aonly":1,"Bonly":0,"equalWhitespaceNFC":1347,"equalDiagnosticProjection":1369,"different":22}
+{"num":57,"label":"DAN","A":"data/57.Daniel_Theodotionis_versio.txt","B":"data/tlg0527/tlg057/tlg0527.tlg057.1st1K-grc1.xml","union":412,"Aonly":0,"Bonly":0,"equalWhitespaceNFC":394,"equalDiagnosticProjection":411,"different":18}
+A ISA vs excluded Ottley Greek witness: {"A":"data/48.Isaias.txt","B":"data/tlg0527/tlg048/tlg0527.tlg048.1st1K-grc2.xml","union":1279,"Aonly":1,"Bonly":0,"equalWhitespaceNFC":1234,"equalDiagnosticProjection":1252,"different":44}
+REJECTION: A Isaiah is closer to Ottley grc2 than Swete grc1; A build permits edition overwrites.
+COMPONENTS: Baruch file 50; Letter file 52 (B 72 unchaptered verses); Susanna 54/55; Bel 58/59; Daniel 56/57 chapter 3 additions; Esther 19 prologue and sublabels; Prayer of Manasseh Odes 8.
+
+RECOMMENDATION: B as raw preservation source; A secondary only. Neither approved for shipping.
+BLOCKERS: exact semantic versification; Daniel witness; additions and excluded books; missing Ecclesiastes; apparatus and corruption disclosure; CC BY-SA attribution; user approval before importer.
+STOP: no importer written.

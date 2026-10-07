@@ -68,22 +68,38 @@
       </div>
 
       <div class="chapter-bar" aria-label="Browse by chapter">
-        <label for="book">Book
+        <label for="book" data-canon-only>Book
           <select id="book"></select>
         </label>
-        <label for="chapter">Chapter
+        <label for="chapter" data-canon-only>Chapter
           <select id="chapter"></select>
         </label>
-        <div class="chapter-actions">
+        <label for="view-mode">View
+          <select id="view-mode">
+            <option value="canon">Canon view</option>
+            <option value="lxx">LXX (native numbering)</option>
+          </select>
+        </label>
+        <div class="chapter-actions" data-canon-only>
           <button id="prev-chapter-button" type="button" aria-label="Previous chapter">&larr; Previous</button>
           <button id="next-chapter-button" type="button" aria-label="Next chapter">Next &rarr;</button>
           <button id="go-button" class="primary-action" type="button">Open chapter</button>
         </div>
       </div>
 
+      <div id="lxx-bar" class="chapter-bar" hidden aria-label="Browse the Septuagint (Swete)">
+        <label for="lxx-book">Book
+          <select id="lxx-book"></select>
+        </label>
+        <label for="lxx-chapter">Chapter
+          <select id="lxx-chapter"></select>
+        </label>
+      </div>
+
       <div class="tool-sections">
         <details class="tool-section translations-section" open>
           <summary>Translations</summary>
+          <p class="hint translations-hint">Septuagint (Swete): choose View &rarr; LXX (native numbering)</p>
           <fieldset id="translations" aria-label="Translations"></fieldset>
         </details>
 
@@ -161,7 +177,7 @@
     <section id="message" class="message" aria-live="polite"></section>
     <section id="results" aria-live="polite"></section>
   </main>
-  <footer>Built for offline personal use. <a href="PROJECT_HISTORY.md">Read the project history</a>.</footer>
+  <footer>Built for offline personal use. <a href="PROJECT_HISTORY.md">Read the project history</a>.<span id="lxx-attribution" hidden></span></footer>
   <script src="data/canon.js"></script>
   <script src="data/locales/en.js"></script>
   <script src="data/locales/hy.js"></script>
