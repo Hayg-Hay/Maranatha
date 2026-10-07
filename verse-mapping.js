@@ -52,33 +52,94 @@
     var negativeByTarget = {};
     var covered = {};
 
-    // A target or source claimed by more than one group/entry is an unresolved
-    // conflict. It is recorded so the resolver fails closed instead of letting
-    // a later declaration silently overwrite an earlier one.
+    // Any metadata ambiguity is recorded so BOTH lookup directions fail closed
+    // instead of a later declaration silently overwriting an earlier one:
+    //   conflictedTargets  target claimed by two groups, or both mapped and
+    //                      negatively asserted, or two negative assertions
+    //   conflictedSources  one source ref used by two entries
+    //   conflictedGroups   duplicate group ids, or a group participating in a
+    //                      source/target conflict (so resolveSource fails too)
     var conflictedTargets = {};
     var conflictedSources = {};
+    var conflictedGroups = {};
 
     if (mapping) {
-      (mapping.groups || []).forEach(function (group) {
-        groupsById[group.id] = group;
-        (group.targets || []).forEach(function (target) {
-          var tk = targetKey(target);
-          if (groupByTarget[tk] && groupByTarget[tk].id !== group.id) conflictedTargets[tk] = true;
-          else groupByTarget[tk] = group;
-        });
+      var groupsList = (mapping.groups || []).filter(function (g) { return g && g.id !== undefined; });
+
+      // Repeated group IDs must never silently overwrite one definition.
+      var seenGroupId = {};
+      groupsList.forEach(function (group) {
+        if (seenGroupId[group.id]) conflictedGroups[group.id] = true;
+        seenGroupId[group.id] = true;
+      });
+
+      // Coverage scopes are collected from every declared source.
+      groupsList.forEach(function (group) {
         (group.sources || []).forEach(function (source) {
-          if (source.kind === 'verse') {
+          if (source && source.kind === 'verse') {
             covered[source.book + '|' + String(source.chapter)] = true;
           }
         });
       });
-      (mapping.entries || []).forEach(function (entry) {
-        var sk = sourceKey(entry.source);
-        if (Object.prototype.hasOwnProperty.call(entryBySource, sk)) conflictedSources[sk] = true;
-        else entryBySource[sk] = entry;
+
+      // Target ownership; a target claimed twice is ambiguous and taints both
+      // owning groups.
+      groupsList.forEach(function (group) {
+        var gid = group.id;
+        if (conflictedGroups[gid]) {
+          (group.targets || []).forEach(function (t) { conflictedTargets[targetKey(t)] = true; });
+          return;
+        }
+        (group.targets || []).forEach(function (target) {
+          var tk = targetKey(target);
+          if (groupByTarget[tk]) {
+            conflictedTargets[tk] = true;
+            conflictedGroups[groupByTarget[tk].id] = true;
+            conflictedGroups[gid] = true;
+          } else {
+            groupByTarget[tk] = group;
+          }
+        });
       });
+
+      // One source ref used by two entries taints both entries' groups.
+      (mapping.entries || []).forEach(function (entry) {
+        if (!entry) return;
+        var sk = sourceKey(entry.source);
+        if (Object.prototype.hasOwnProperty.call(entryBySource, sk)) {
+          conflictedSources[sk] = true;
+          if (entry.groupId !== undefined) conflictedGroups[entry.groupId] = true;
+          var existing = entryBySource[sk];
+          if (existing && existing.groupId !== undefined) conflictedGroups[existing.groupId] = true;
+        } else {
+          entryBySource[sk] = entry;
+        }
+      });
+
+      // Negative assertions: a mapped target cannot also be negatively
+      // asserted, and two assertions for one target are a contradiction.
+      var negCount = {};
       (mapping.negativeAssertions || []).forEach(function (neg) {
-        if (neg && neg.target) negativeByTarget[targetKey(neg.target)] = neg;
+        if (!neg || !neg.target) return;
+        var tk = targetKey(neg.target);
+        if (groupByTarget[tk]) {
+          conflictedTargets[tk] = true;
+          conflictedGroups[groupByTarget[tk].id] = true;
+        }
+        negCount[tk] = (negCount[tk] || 0) + 1;
+        if (negCount[tk] === 1) negativeByTarget[tk] = neg;
+        else conflictedTargets[tk] = true;
+      });
+
+      // Propagate group conflicts to their targets and keep only unambiguous
+      // groups in the id index (duplicate ids included).
+      groupsList.forEach(function (group) {
+        if (!conflictedGroups[group.id]) return;
+        delete groupsById[group.id];
+        (group.targets || []).forEach(function (t) { conflictedTargets[targetKey(t)] = true; });
+      });
+      groupsList.forEach(function (group) {
+        if (!conflictedGroups[group.id] && !groupsById[group.id]) groupsById[group.id] = group;
       });
     }
 
@@ -176,8 +237,14 @@
       var sk = sourceKey(ref);
       if (conflictedSources[sk]) return { entry: null, group: null, ambiguous: true };
       var entry = entryBySource[sk];
-      var group = entry ? groupsById[entry.groupId] : null;
-      return { entry: entry || null, group: group || null, ambiguous: false };
+      if (!entry) return { entry: null, group: null, ambiguous: false };
+      // A group whose id or membership/targets are ambiguous must not resolve
+      // either, even though its source key itself is not a duplicate.
+      if (entry.groupId !== undefined && conflictedGroups[entry.groupId]) {
+        return { entry: null, group: null, ambiguous: true };
+      }
+      var group = entry.groupId !== undefined ? (groupsById[entry.groupId] || null) : null;
+      return { entry: entry, group: group, ambiguous: false };
     }
 
     return {

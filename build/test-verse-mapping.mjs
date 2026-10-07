@@ -258,6 +258,64 @@ function resolverSafetyChecks() {
   };
   const r4 = api.createResolver(duplicateSource, { native });
   out('resolver-duplicate-source-fails-closed', r4.resolveSource({ book: 'GEN', chapter: '1', kind: 'verse', label: '1' }).ambiguous === true);
+
+  // The four runtime ambiguity gaps, each with an unaffected sibling target so
+  // no valid proposal is collaterally invalidated.
+  const verse = (label) => ({ book: 'GEN', chapter: '1', kind: 'verse', label });
+  const target = (v) => ({ book: 'GEN', chapter: 1, verse: v });
+  const group = (id, label, v) => ({ id, sources: [verse(label)], targets: [target(v)], evidence: ['x'], status: 'proposal' });
+  const entry = (label, id, v) => ({ source: verse(label), groupId: id, to: [target(v)], status: 'proposal', provenance: {} });
+  const fixture = (groups, entries, negativeAssertions = []) => ({ status: 'proposal', review: { humanApproval: null }, groups, entries, negativeAssertions });
+
+  // 1. Duplicate source entry, both lookup directions.
+  const dup = api.createResolver(fixture(
+    [group('DS1', '1', 1), group('DS3', '3', 3)],
+    [entry('1', 'DS1', 1), entry('1', 'DS1', 1), entry('3', 'DS3', 3)],
+  ), { native });
+  out('resolver-duplicate-source-target-view-ambiguous', dup.resolveTarget('GEN', 1, 1).state === 'ambiguous-metadata');
+  out('resolver-duplicate-source-unaffected-target-ok', dup.resolveTarget('GEN', 1, 3).state === 'correspondence');
+  out('resolver-duplicate-source-both-directions',
+    dup.resolveSource(verse('1')).ambiguous === true && dup.resolveSource(verse('3')).ambiguous === false);
+
+  // 2. Conflicting definitions sharing one group ID.
+  const dupId = api.createResolver(fixture(
+    [group('DG', '1', 1), group('DG', '2', 1), group('DG3', '3', 3)],
+    [entry('1', 'DG', 1), entry('3', 'DG3', 3)],
+  ), { native });
+  out('resolver-duplicate-group-id-ambiguous', dupId.resolveTarget('GEN', 1, 1).state === 'ambiguous-metadata');
+  out('resolver-duplicate-group-id-unaffected-target-ok', dupId.resolveTarget('GEN', 1, 3).state === 'correspondence');
+  out('resolver-duplicate-group-id-source-ambiguous', dupId.resolveSource(verse('1')).ambiguous === true);
+
+  // 3. Target both positively mapped and negatively asserted.
+  const mappedNeg = api.createResolver(fixture(
+    [group('MN', '1', 1), group('MN3', '3', 3)],
+    [entry('1', 'MN', 1), entry('3', 'MN3', 3)],
+    [{ target: target(1), attestation: 'synthetic', provenance: { source: 'synthetic' } }],
+  ), { native });
+  out('resolver-mapped-vs-negative-ambiguous', mappedNeg.resolveTarget('GEN', 1, 1).state === 'ambiguous-metadata');
+  out('resolver-mapped-vs-negative-unaffected-target-ok', mappedNeg.resolveTarget('GEN', 1, 3).state === 'correspondence');
+  out('resolver-mapped-vs-negative-source-ambiguous', mappedNeg.resolveSource(verse('1')).ambiguous === true);
+
+  // 4. Two conflicting negative assertions for one target.
+  const negNeg = api.createResolver(fixture(
+    [group('NN3', '3', 3)],
+    [entry('3', 'NN3', 3)],
+    [
+      { target: target(1), attestation: 'synthetic A', provenance: { source: 'synthetic A' } },
+      { target: target(1), attestation: 'synthetic B', provenance: { source: 'synthetic B' } },
+    ],
+  ), { native });
+  out('resolver-conflicting-negatives-ambiguous', negNeg.resolveTarget('GEN', 1, 1).state === 'ambiguous-metadata');
+  out('resolver-conflicting-negatives-unaffected-target-ok', negNeg.resolveTarget('GEN', 1, 3).state === 'correspondence');
+
+  // A single well-formed attested negative is still a definitive state.
+  const singleNeg = api.createResolver(fixture(
+    [group('SN3', '3', 3)],
+    [entry('3', 'SN3', 3)],
+    [{ target: target(2), attestation: 'No counterpart in the covered pilot edition.', provenance: { source: 'fixture' } }],
+  ), { native });
+  out('resolver-single-attested-negative-definitive', singleNeg.resolveTarget('GEN', 1, 2).state === 'no-corresponding-verse');
+  out('resolver-single-attested-negative-unaffected-target-ok', singleNeg.resolveTarget('GEN', 1, 3).state === 'correspondence');
 }
 
 // ---------------------------------------------------------------------------
@@ -276,6 +334,8 @@ function resolverChecks() {
       && six.groupId === 'GEN1-6-7' && seven.groupId === 'GEN1-6-7'
       && six.members.length === 2 && seven.members.length === 2);
   out('resolver-group-text-exact', resolverExact(six, native, 'GEN', '1', '6'), 'native text matches the shipped native segment');
+  const realSource = resolver.resolveSource({ book: 'GEN', chapter: '1', kind: 'verse', label: '1' });
+  out('resolver-real-map-source-unambiguous', realSource.ambiguous === false && !!realSource.entry && !!realSource.group);
   out('resolver-unresolved-genesis2', resolver.resolveTarget('GEN', 2, 1).state === 'alignment-unavailable');
   out('resolver-unresolved-psalms', resolver.resolveTarget('PSA', 23, 1).state === 'alignment-unavailable');
   out('resolver-ecc-missing-edition', resolver.resolveTarget('ECC', 1, 1).state === 'missing-edition');
