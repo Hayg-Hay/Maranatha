@@ -2752,3 +2752,18 @@ check-stage2a 38/38, check-stage2b 18/18, verse-rows 12/12, Stage1 15/15,
 native 8/8, Stage1b 45/45 + independent, disclosures 39/39 + independent,
 native-reference 43/43 + independent, full npm exit0 with no SKIP/FAIL. No
 merge, push or deletion. Report: build/reports/stage2b-REPORT.md.
+
+### 2026-10-07 — Independent Stage 2b technical acceptance
+
+Codex verified product `50bfc62` in a fresh local clone. Full npm test exits 0
+without SKIP/FAIL/ERROR; existing independent ambiguity/evidence probes pass,
+compiler reports 4 current / 0 stale, and the human verified gate fails as
+expected. New independent checker passes 37/37: all 106 new source and 108
+target units have exact corpus text/hashes; shared chapter-boundary sources
+appear once for both reference orders and single targets on desktop/mobile,
+including pilot toggles; four independent evidence mutations are rejected.
+Corpora, canon and Genesis 1 evidence remain unchanged. Corrected review-header
+wording: age/wording caveats remain in the review table, boundary notices are
+inline. Technical acceptance applies only to the proposed pilot; human textual
+adjudication, actual phone/browser review and merge/push approval remain open.
+See `build/reports/stage2b-independent-ACCEPTANCE.md`. No merge/push/deletion.

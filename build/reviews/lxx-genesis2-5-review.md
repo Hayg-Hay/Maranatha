@@ -4,7 +4,7 @@ Author: DeepSeek (AI), 2026-10-07. Content assessment against the shipped Greek,
 WEB-C, KJV and OSHB strings. This is **AI proposal adjudication, not human or
 scholarly verification**; the ledger was not human-edited. Every correspondence
 stays `proposal` with `humanApproval = null`. Verdicts: **A** = agree; **A*** =
-agree with a material boundary/age/wording caveat that stays visible. Doubtful
+agree with a material boundary/age/wording caveat retained in this review table. Doubtful
 cases were left unresolved rather than forced.
 
 Container facts: source GEN 3:1 spans targets 2:25 and 3:1; source GEN 6:1 is a

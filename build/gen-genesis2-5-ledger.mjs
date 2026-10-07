@@ -245,7 +245,7 @@ const md = `# Genesis 2-5 correspondence proposals - author review\n\n` +
   `WEB-C, KJV and OSHB strings. This is **AI proposal adjudication, not human or\n` +
   `scholarly verification**; the ledger was not human-edited. Every correspondence\n` +
   `stays \`proposal\` with \`humanApproval = null\`. Verdicts: **A** = agree; **A*** =\n` +
-  `agree with a material boundary/age/wording caveat that stays visible. Doubtful\n` +
+  `agree with a material boundary/age/wording caveat retained in this review table. Doubtful\n` +
   `cases were left unresolved rather than forced.\n\n` +
   `Container facts: source GEN 3:1 spans targets 2:25 and 3:1; source GEN 6:1 is a\n` +
   `boundary-only unit spanning 5:32 and 6:1 (chapter 6 otherwise unresolved). No\n` +
