@@ -1037,6 +1037,17 @@ function init() {
     refs.language.value = entry.id;
     try { localStorage.setItem('maranatha-locale', entry.id); } catch (error) {}
     populateBooks();
+    // The parallel view's Book control is a separate select, so it must be
+    // rebuilt in the new locale as well — otherwise its menu stays in the old
+    // language. Preserve the pane's chosen book/chapter; the chosen translation
+    // and the independent LXX navigation are not touched.
+    const parallelBook = refs.parallelBook.value;
+    populateBookSelect(refs.parallelBook);
+    if (canon.books.some((b) => b.id === parallelBook)) refs.parallelBook.value = parallelBook;
+    const parallelChapter = refs.parallelChapter.value;
+    if ([...refs.parallelChapter.options].some((o) => o.value === parallelChapter)) {
+      refs.parallelChapter.value = parallelChapter;
+    }
     render();
   }
 
