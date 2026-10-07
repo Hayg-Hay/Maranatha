@@ -1,5 +1,14 @@
 # Stage 1 report — Swete LXX (native numbering)
 
+**Verified update, 2026-10-07:** this is the original implementation report.
+Current `lxx-stage1` is `14fe85c`, already merged into `main` via `8c69797`.
+It now passes **15 checks**, including `static-css-hidden-rule` and
+`static-translations-hint`; shell cache is **v47**, data cache **v3**.
+The original 13-check/v46 details below describe the earlier implementation.
+Independent text/hash/count evidence: `architect-handoff-REPORT.md`.
+Deviation 8's approval assertion is disputed by the handoff; no original
+approval evidence was verified. Do not treat that assertion as authorization.
+
 Branch `lxx-stage1` (no merge, no push). Base for the diff: `lxx-audit`.
 Source pinned: `OpenGreekAndLatin/First1KGreek` `tlg0527` @ `03776b39f4047c5cff06f5296fae4b2bae4b08fb` (CC BY-SA 4.0).
 

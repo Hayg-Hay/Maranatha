@@ -9,10 +9,11 @@ thin `app.js` + `index.html` + `style.css` front end with no framework.
 
 ## Status
 
-**Four canon-numbered translations are live: World English Bible (WEB-C), King
-James Version (KJV), Byzantine Majority Text (Greek NT, 27 books), and Hebrew
-(OSHB, 39 protocanonical OT books).** Open `index.html`, checkboxes are on by
-default, pick a book/chapter, and you'll see translations side by side. The 7
+**Available translations:** World English Bible Catholic Edition (73 books),
+KJV, Byzantine Majority Text (Greek NT), OSHB Hebrew OT, Luther 1912, Segond 1910,
+both Delitzsch Hebrew NT editions, and Western Armenian NT (under audit).
+Open `index.html`; WEB is selected by default. Select translations and pick a
+book/chapter to read them side by side. The 7
 Catholic deuterocanonical books (Tobit, Judith, Wisdom, Sirach, Baruch, 1–2
 Maccabees) show a "not available" placeholder in translations that don't cover
 them — this is expected, not a bug.
@@ -22,6 +23,13 @@ Septuagint in its own source numbering, standalone and deliberately NOT aligned
 to the canon numbering used elsewhere. Choose "LXX (native numbering)" in the
 View selector to browse it by its own book/chapter labels. See
 `data/LICENSE-lxx-swete.md` and `PROJECT_HISTORY.md` (Phase 4).
+
+Stage 1 is included in `main` through merge `8c69797`. Independent verification
+reproduced 47 source files, 2,754,390 characters and all native labels with zero
+text differences; see `build/reports/architect-handoff-REPORT.md`.
+The 27,050 historical mapping-audit records equal 27,048 shipped verses plus
+seven excluded Psalm 151 verses minus five nested Psalm 129 verses that the
+mapping audit skipped. The 100 unnumbered segments are counted separately.
 
 Known limitation: the reference box and the text search are **canon-only** and
 ignore the LXX view (native LXX numbering is not mapped to canon references in
@@ -37,7 +45,7 @@ What works:
   from `canon.js` so a future locale (e.g. Armenian) can be added without
   touching the canon file.
 - `data/web.json` (+ `web.js`), `data/kjv.json` (+ `kjv.js`), `data/byz.json`
-  (+ `byz.js`) — real text for the 66 standard books (WEB/KJV) and 27 NT
+  (+ `byz.js`) — real text for 73 Catholic books (WEB), 66 standard books (KJV) and 27 NT
   books (Byzantine Greek NT), built by `build/import-web.mjs` /
   `build/import-kjv.mjs` / `build/import-byz.mjs` from verified structured
   sources. WEB and KJV validate with 0 errors against `canon.js`. The
@@ -81,7 +89,7 @@ importer script and its book-name mapping are kept (real, reusable work) with
 a clear warning not to re-run it against that source. See
 `PROJECT_HISTORY.md`, Phase 2, for the full writeup, and `build/fetch-source.mjs`
 for what was tried and ruled out before that. Still needed: a clean Douay-Rheims
-source, and any translation at all for the 7 deuterocanonical books. NKJV was
+source. WEB-C now supplies all 7 deuterocanonical books. NKJV was
 considered and rejected as a second English translation — it's copyrighted
 (Thomas Nelson), unlike WEB/KJV/DRB, all public domain.
 

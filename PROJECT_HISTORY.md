@@ -2177,3 +2177,46 @@ pass. `build/test-service-worker.mjs`, `build/test-sirach.mjs` and
 **Stage 2 (still pending):** tiered Swete→canon mapping, per-translation
 versification architecture, and any alignment/parallel display. Stage 1 makes
 no claim of canonical correspondence.
+
+## 2026-10-07 — Architect handoff independently verified (Codex)
+
+The supplied handoff was committed alone as `8d27c45`. Read-only GitHub checks
+showed that `main` already includes Stage 1 through merge `8c69797`; the handoff's
+"awaiting merge" status was stale. `lxx-stage1` remains `14fe85c`.
+
+A fresh clone of that branch was compared with a fresh sparse First1KGreek
+clone at `03776b39f4047c5cff06f5296fae4b2bae4b08fb`. Independent Python stdlib
+XML extraction (no importer helpers) verified all 47 source hashes, 2,754,390
+non-whitespace NFC characters with zero per-file Counter differences, every
+ordered chapter/verse label and every individual verse's text. Both importer
+runs reproduced JSON SHA-256
+`d31c332f69a7baec02901d6e2612795326bdcee69a74282e3065f2c5f79d75a4`.
+Counts remain 48 books, 1,055 chapters, 27,048 verses, 100 unnumbered segments,
+686 flagged verses; Ps88 ...47,84,49, Ps115 missing label6, and Bel ending36 hold.
+
+The mapping audit's 27,050 records include seven excluded Psalm151 verses and
+omit five nested Psalm129 containers (its walk stops at the parent verse):
+27,048 + 7 - 5 = 27,050. Unnumbered segments are a separate count.
+Stage1 checks: 15/15; native validator: 8/8; canon regression: ten WEB+KJV
+chapters identical to a baseline rendered from `lxx-audit`. Shell cache v47,
+data cache v3; the earlier history/report's 13 checks/v46 are historical values.
+Full `npm test` passed (exit0) after restoring the manifest-checked, ignored Berean
+source-page cache and rerunning outside the sandbox. The initial sandbox run had
+six temporary-file rename failures; that was an environment failure, not sign-off.
+
+Evidence, commands and full-suite outcome are in
+`build/reports/architect-handoff-REPORT.md`; independent verifier is
+`build/check-architect-handoff.py`. jsdom verification does not establish CSS
+or phone acceptance. No new real-browser test was performed in this review.
+Stage1b and seven follow-up prompts are proposals in
+`docs/ARCHITECT_NEXT_PROMPTS.md`; no proposed feature was implemented.
+Codex wrote the verification script and documentation only. No merge, push or
+deletion was performed. Existing untracked source/patch/image files were retained.
+
+### 2026-10-07 — Stage1b local browser acceptance
+
+User viewed `build/cache/stage1b-implementation/index.html` and said "ok looks good".
+Local browser acceptance is recorded; phone/PWA testing was not reported.
+Stage1b implementation and independent verification are recorded on local branch
+`codex/lxx-stage1b` (acceptance record `9ebe225`, product code `3647438`).
+No merge or push approval is inferred from the browser acceptance.

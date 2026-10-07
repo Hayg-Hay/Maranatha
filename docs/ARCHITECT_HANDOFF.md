@@ -4,6 +4,16 @@ Written 2026-10-07. Commit this file to the repo (suggested path: `docs/ARCHITEC
 The repository and `PROJECT_HISTORY.md` are the project's memory; this file is the briefing that sits on top of them.
 When this file and the repo disagree, **the repo wins** — verify, then fix whichever is stale.
 
+**Verified correction, 2026-10-07 (Codex):** GitHub `main` already includes
+`lxx-stage1` through merge `8c69797`; the branch remains at `14fe85c`. References
+below to an awaiting merge are stale; they are not instructions to merge again.
+Independent fresh-clone verification reproduced all shipped counts, the expected
+JSON hash twice, and zero text differences across 47 pinned source files.
+The mapping audit's 27,050 records are 27,048 shipped + 7 Psalm 151 - 5 nested
+Psalm 129 containers; the 100 unnumbered segments are a separate record type.
+See `build/reports/architect-handoff-REPORT.md` for evidence and limitations,
+and `docs/ARCHITECT_NEXT_PROMPTS.md` for proposals only.
+
 ---
 
 ## 0. What you are taking over
