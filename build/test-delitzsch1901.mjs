@@ -130,7 +130,7 @@ check('2. full source reference sets and correction fidelity', true);
   vm.runInContext(fnSrc + '\nthis.f = isTranslationFile;', sandbox);
   assert(sandbox.f('/data/delitzsch1901.js') === true);
   assert(sandbox.f('/data/canon.js') === false);
-  assert(/CACHE_VERSION\s*=\s*'v45'/.test(swSrc));
+  assert(/CACHE_VERSION\s*=\s*'v46'/.test(swSrc));
   check('13. service-worker routes delitzsch1901; shell version bumped', true);
 }
 
