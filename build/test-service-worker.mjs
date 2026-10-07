@@ -7,7 +7,7 @@
 //   node build/test-service-worker.mjs
 //
 // It asserts:
-//   - install precaches the NEW shell (maranatha-shell-v45);
+//   - install precaches the NEW shell (maranatha-shell-v46);
 //   - activate keeps the existing data cache (maranatha-data-v3) and every file
 //     already stored in it (previously downloaded translations / Greek books);
 //   - activate deletes the OLD shell cache (maranatha-shell-v29);
@@ -102,9 +102,9 @@ async function main() {
   await fire(env.listeners, 'install');
   await fire(env.listeners, 'activate');
 
-  check('install creates the new shell cache (maranatha-shell-v45)', caches.store.has('maranatha-shell-v45'));
-  check('new shell cache is populated', (caches.store.get('maranatha-shell-v45') || new Map()).size > 0);
-  check('Paleo converter and font are precached for offline reading', ['./hebrew-script.js', './fonts/NotoSansPhoenician-Regular.ttf', './fonts/ProtoCanaanite.ttf'].every(url => caches.store.get('maranatha-shell-v45')?.has(url)));
+  check('install creates the new shell cache (maranatha-shell-v46)', caches.store.has('maranatha-shell-v46'));
+  check('new shell cache is populated', (caches.store.get('maranatha-shell-v46') || new Map()).size > 0);
+  check('Paleo converter and font are precached for offline reading', ['./hebrew-script.js', './fonts/NotoSansPhoenician-Regular.ttf', './fonts/ProtoCanaanite.ttf'].every(url => caches.store.get('maranatha-shell-v46')?.has(url)));
   check('activation preserves the existing data cache (maranatha-data-v3)', caches.store.has('maranatha-data-v3'));
   check('activation deletes the old shell cache (maranatha-shell-v29)', !caches.store.has('maranatha-shell-v29'));
 
@@ -148,7 +148,7 @@ async function main() {
   check('Hebrew preview files are not precached into the shell', !/berean-hebrew/.test(shellList));
   check('the large Delitzsch translations are not precached into the shell', !/delitzsch/.test(shellList));
   check('data cache version is v3 (unchanged by the Hebrew preview)', /DATA_CACHE_VERSION\s*=\s*'v3'/.test(swSource));
-  check('shell cache version was bumped for the app change', /CACHE_VERSION\s*=\s*'v45'/.test(swSource));
+  check('shell cache version was bumped for the app change', /CACHE_VERSION\s*=\s*'v46'/.test(swSource));
 
   check('data cache honors version query strings for corrected WEB data', /ignoreSearch: cacheName !== DATA_CACHE/.test(swSource));
 
