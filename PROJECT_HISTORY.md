@@ -2411,3 +2411,65 @@ that the GitHub Pages deployment or a phone's cache has updated.
 Next scoped item is disclosure metadata for PSA16:4, PSA88:84 and the LJE
 navigation chapter, with byte-preservation and cache-refresh verification.
 See docs/ARCHITECT_NEXT_PROMPTS.md; no future merge/push approval is inferred.
+
+### 2026-10-07 — LXX disclosure metadata implemented (opencode/DeepSeek)
+
+The user approved the three disclosure changes on branch `codex/lxx-disclosures`
+(base `5213a13`). This stage adds metadata only; no Scripture text, label,
+segment order/kind, book/chapter structure, source, witness, license or
+excluded/missing entry changed.
+
+**Changes.** `build/import-lxx-swete.mjs` now carries a small, explicitly
+targeted `TARGETED_FLAGS` map (never a general rule):
+
+- **Psalm 16:4** gets a `transcription-marker` flag for the stray inline numeral
+  `(4)` already present in the printed source text; the text itself is preserved.
+- **Psalm 88:84** gets a `source-label-anomaly` flag explaining that 84 is
+  anomalous where 48 would be expected; the label is not renumbered, repaired or
+  aligned.
+- **Letter of Jeremiah** gains one book notice: the upstream source has no
+  chapter division, so the displayed chapter 1 is a navigation container, not an
+  upstream chapter label; the detached Greek introduction and source verses 1-72
+  are preserved.
+
+Three explanatory entries were appended to the data `changes` list and the
+adaptation list in `data/LICENSE-lxx-swete.md` was extended. Shipped counts are
+unchanged at **48 books / 1,055 chapters / 27,048 verses / 100 unnumbered**, with
+flagged verses computed independently from **686 to 688** (exactly the two new
+verse flags). Regenerating twice produced identical output; the new
+`data/lxx-swete.json` hash is
+`fd52aa2f5f65f7e0a9c76d9cf203756c66f43ac1a91396d928be3b30d8ed1f2e`
+(7,475,873 bytes; previous metadata hash was `d31c332f…`, retained as historical
+evidence in the earlier reports).
+
+**Cache decision (policy exception).** `DATA_CACHE_VERSION` stays `v3` and every
+already-downloaded translation is preserved. Instead, `loadLxx()` now requests
+`data/lxx-swete.js?v=disclosures-20261007`; the service worker's data cache
+matches with `ignoreSearch:false`, so the query is a fresh cache key and a stale
+unversioned copy cannot satisfy it. Shell `CACHE_VERSION` was bumped `v49 → v50`
+and all three shell version assertions updated (`build/test-service-worker.mjs`,
+`build/test-delitzsch.mjs`, `build/test-delitzsch1901.mjs`). This is recorded as
+a deliberate exception to the older universal "bump the data cache on any data
+change" guidance, which is incomplete for query-versioned URLs.
+
+**Verification.** New `build/check-lxx-disclosures.mjs` (38 PASS) compares every
+segment text, label, kind, order and pre-existing flag against
+`build/cache/lxx-disclosures-before.json`; asserts exactly the two targeted new
+flags and only the one new LJE notice; keeps existing `changes` entries; re-parses
+the raw LJE XML to prove zero upstream chapter divisions and 72 verse divs;
+proves two-run determinism and JSON/JS agreement; renders the flags and notice in
+both the standalone LXX and parallel panes; and exercises a realistic
+CacheStorage mock (honouring `ignoreSearch`, query keys and origin) to prove a
+stale unversioned entry cannot satisfy the versioned URL, the new file is cached
+under the exact versioned URL, a later offline versioned load works, and
+cross-origin requests are untouched. Results: `check-stage1.mjs` 15/15, native
+validator 8/8, `check-stage1b.mjs` 45/45 (its SHA/flag anchors updated to the new
+metadata hash and 688), `check-stage1b-independent.mjs` 0 failures against the
+existing ten-chapter baseline, service-worker 26/26, and full `npm test` exit 0.
+`build/check-architect-handoff.py` expectations were updated to the new
+counts/hash; past evidence reports were left as historical.
+
+**Remaining acceptance.** The real-browser and physical-phone test is still the
+user's: hard refresh and confirm the PSA 16:4 and PSA 88:84 flag markers, the LJE
+notice, and an unchanged Canon view in both `file://` and the deployed PWA.
+No merge, push or deletion was performed; this stage has no merge/push approval.

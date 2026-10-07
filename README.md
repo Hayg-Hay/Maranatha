@@ -158,6 +158,30 @@ The Reference box and the text Search remain **canon-only**: using either from
 the LXX or parallel view first returns to Canon view and then acts on the
 canon-numbered translations.
 
+## LXX disclosure updates and versioned cache refresh
+
+The Swete LXX data is append-only with respect to its text: source defects are
+**disclosed**, never repaired. A small metadata update added two targeted
+per-verse flags — **Psalm 16:4** (the stray inline numeral `(4)`, a
+transcription-marker) and **Psalm 88:84** (label 84 where 48 would be expected,
+a source-label-anomaly) — plus one **Letter of Jeremiah** book notice stating
+that the displayed chapter 1 is a navigation container, not an upstream chapter
+label. Text, labels, segment order/kind, books, chapters, sources, witnesses,
+licenses and the excluded/missing metadata are unchanged.
+
+That update changes `data/lxx-swete.{json,js}` but deliberately leaves the data
+cache at `v3`. The LXX loader now requests
+`data/lxx-swete.js?v=disclosures-20261007`; the service worker's data cache
+matches with `ignoreSearch:false`, so the query makes this a **fresh cache key**
+that a stale unversioned `data/lxx-swete.js` copy cannot satisfy, while every
+already-downloaded translation stays cached untouched. This is a **deliberate
+exception** to the older universal "bump the data cache whenever a translation
+data file changes" guidance, which is incomplete for query-versioned URLs (the
+same pattern already used for corrected WEB data and the Berean Hebrew
+previews). The shell cache is bumped `v49 → v50` so phones fetch the new loader;
+`build/test-service-worker.mjs` and `build/check-lxx-disclosures.mjs` prove the
+versioned-key behaviour offline.
+
 ## Running it
 
 Open `index.html` directly (or run `Open-Maranatha-Local.cmd`). No server,
