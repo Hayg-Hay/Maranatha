@@ -180,9 +180,9 @@ Septuagint's own numbering and stays in the LXX view:
   input keeps the current native passage and view. Books not in this edition
   (Ecclesiastes, the NT) report that clearly. Nothing is mapped to the canon.
 
-## Stage 2a — LXX alignment pilot (Genesis 1)
+## Stage 2a/2b — LXX alignment pilot (Genesis 1–5)
 
-An **opt-in** Canon comparison column, *LXX alignment pilot (Genesis 1)*,
+An **opt-in** Canon comparison column, *LXX alignment pilot (Genesis 1–5)*,
 shows the native Swete Greek beside the canon-numbered translations. It is
 **off by default**, Canon-only, and never enters Parallel or text search.
 
@@ -191,42 +191,55 @@ shows the native Swete Greek beside the canon-numbered translations. It is
   `status: "proposal"` with `review.humanApproval: null`.
   `node build/validate-verse-mapping.mjs --require-verified` deliberately
   **fails** on this still-proposed pilot.
-- **Scope.** Only Genesis 1 is covered. Outside it the column reads
-  *(alignment not available)* while the native reading stays reachable; a book
-  the Swete edition does not contain reads *(not available in this edition)*.
+- **Scope.** Genesis **1–5** are proposal-covered, plus the single disclosed
+  boundary unit **Genesis 6:1**. Everything else (including Genesis 6:2 and
+  later, and other books) reads *(alignment not available)* while the native
+  reading stays reachable; a book the Swete edition does not contain reads
+  *(not available in this edition)*.
 - **Genesis 1:6-7.** The closing phrase *"and it was so"* ends Greek 6 while
   WEB/KJV/OSHB place it at 7. The authored evidence is a collective group, but
   the accepted presentation (user decision, 2026-10-07) shows source 6 once at
   target 6 and source 7 once at target 7, each with a short boundary notice; a
   single `Genesis 1:7` query shows source 7 only. This is a display choice, not
   a claim of exact verse boundaries and not a general ordinal-matching rule.
+- **Boundary containers.** Source **GEN 3:1** carries both the nakedness
+  statement (canon 2:25) and the serpent dialogue (canon 3:1); source **GEN 6:1**
+  carries Noah's age and three sons (canon 5:32) and the multiplication clause
+  (canon 6:1). Each is rendered in full **once per comparison view**, with the
+  native label and a short continuation note; no Greek 2:25/5:32 is invented and
+  no source text is split, relabelled or concatenated. A query of just `2:25` or
+  `5:32` shows the complete known source unit once and explains its boundary.
 - **Schemes and coverage.** The mapping declares its **source scheme**
   (`lxx-swete-native`) and **target scheme** (`web-c`; the Maranatha navigation
   canon anchored to WEB-C, not a universal numbering claim).
   `data/versification-schemes.{json,js}` declares each registered edition's own
   scheme. Only **WEB/KJV/OSHB** have proposal coverage; selecting any other
   edition surfaces a warning that its numbering is unreviewed against the pilot.
-- **Evidence binding.** `build/validate-verse-mapping.mjs` loads the bound
-  proposal ledger `build/reviews/lxx-genesis1-evidence.json`, requires each
-  `provenance.rowId` to exist, and checks the source ref, complete target set
-  and text hashes against both the ledger and the bound source/comparison
-  corpora. Artifacts are bound with a documented canonical `sha256-lf` hash
-  (CRLF normalized to LF) so a Windows checkout and a fresh Linux clone verify
+- **Evidence binding.** `build/validate-verse-mapping.mjs` loads **both** bound
+  proposal ledgers (`build/reviews/lxx-genesis1-evidence.json`,
+  `build/reviews/lxx-genesis2-5-evidence.json`), requires each
+  `provenance.rowId` to exist in the ledger its entry names, and checks the
+  source ref, complete target set and text hashes against both the ledger and
+  the bound source/comparison corpora. New rows carry **explicit per-target
+  comparison evidence** (target ref + actual corpus string/hash per language);
+  artifacts are bound with a documented canonical `sha256-lf` hash (CRLF
+  normalized to LF) so a Windows checkout and a fresh Linux clone verify
   identically. No equal-count or ordinal inference is used.
 - **Files.** `verse-mapping.js` (classic resolver),
   `data/lxx-swete-alignment.{json,js}`, `data/versification-schemes.{json,js}`,
   `build/import-lxx-alignment.mjs` (metadata compiler),
+  `build/gen-genesis2-5-ledger.mjs` (Genesis 2–5 ledger generator),
   `build/validate-verse-mapping.mjs` (validator),
-  `build/test-verse-mapping.mjs`, `build/check-stage2a.mjs` and
-  `build/check-stage2a-verse-rows.mjs`. All load through versioned classic
-  `<script>` tags; no `fetch()`, CDN or module load.
+  `build/test-verse-mapping.mjs`, `build/check-stage2a.mjs`,
+  `build/check-stage2a-verse-rows.mjs` and `build/check-stage2b.mjs`. All load
+  through versioned classic `<script>` tags; no `fetch()`, CDN or module load.
 - **Licensing.** The new map/registry metadata carries its license, attribution
   and changes: Greek **First1KGreek / Swete, CC BY-SA 4.0**; Hebrew **OSHB,
   CC BY 4.0**; WEB-C and imported KJV source declarations as in the shipped
   datasets. No Scripture text changed.
-- **Status.** Local unshipped draft on `codex/lxx-stage2a`. Human textual
+- **Status.** Local unshipped draft on `codex/lxx-stage2b`. Human textual
   adjudication of the full map, browser/phone acceptance, merge and push remain
-  separate gates. Shell `v52`, DATA `v3`; the raw LXX URL stays
+  separate gates. Shell `v53`, DATA `v3`; the raw LXX URL stays
   `?v=disclosures-20261007`.
 
 ## LXX disclosure updates and versioned cache refresh

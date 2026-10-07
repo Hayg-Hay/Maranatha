@@ -2722,3 +2722,33 @@ Technical acceptance passes for the proposed Genesis1 pilot only. Human textual
 adjudication, actual phone acceptance and explicit merge/push remain pending.
 All real mappings stay proposal with humanApproval=null. Existing main/livev51
 is unchanged. See build/reports/stage2a-independent-ACCEPTANCE.md for evidence.
+
+
+### 2026-10-07 — Genesis 2-5 proposals and per-target evidence (Stage 2b)
+
+Expanded the technically accepted Genesis 1 research pilot with content-based
+proposals for Genesis 2-5 plus the single disclosed boundary unit Genesis 6:1.
+The new immutable ledger build/reviews/lxx-genesis2-5-evidence.json (106 rows)
+and its review table were authored by DeepSeek with exact per-language strings
+and hashes extracted from the unchanged shipped corpora; every row stays
+proposal with humanApproval=null. Source GEN 3:1 spans targets 2:25/3:1 and
+source GEN 6:1 spans 5:32/6:1; the schema was extended backward-compatibly with
+explicit per-target comparison evidence (target ref + corpus string/hash per
+language) while source Greek keeps one ref/text/hash. The compiler now reads
+both immutable ledgers, binds each ledger file, and compiles a combined map;
+the validator resolves each entry against the ledger it names and verifies
+every target hash against the bound corpus at its exact location. The resolver
+reports a spanning flag/presentation and the aligned column renders such a
+source unit once per comparison view with a short continuation note; a single
+2:25 or 5:32 query still shows the complete source once. Genesis1 6:7 display,
+all prior evidence/binding/confidence/human-gate repairs and proposed/human-null
+statuses are unchanged; Genesis 6:2 and unrelated books stay unresolved and
+other editions stay flagged unreviewed. Shell bumped v52->v53 (all three shell
+assertions and version-only expectations updated); DATA stays v3; raw LXX URL
+unchanged; map/registry query keys bumped to stage2b-20261007. Checks:
+independent validator probe 0 failures, runtime probe 0, proposal PASS,
+--require-verified expected FAIL, compiler 4/0, test-verse-mapping 76/76,
+check-stage2a 38/38, check-stage2b 18/18, verse-rows 12/12, Stage1 15/15,
+native 8/8, Stage1b 45/45 + independent, disclosures 39/39 + independent,
+native-reference 43/43 + independent, full npm exit0 with no SKIP/FAIL. No
+merge, push or deletion. Report: build/reports/stage2b-REPORT.md.
