@@ -43,6 +43,15 @@ The adaptation is mechanical and deliberately does not correct Scripture:
   label 6, the nested Psalm 129 verses, and the mid-sentence truncation of
   Theodotion Bel at 1:36) are **disclosed** as flags and per-book notices, never
   corrected.
+- Psalm 16:4 keeps its stray inline numeral `(4)` and carries a **targeted
+  transcription-marker flag**; Psalm 88:84 keeps its anomalous printed label and
+  carries a **targeted source-label-anomaly flag**. Both flags are anchored to
+  the documented book/chapter/verse; no general rule flags parenthesized
+  numerals or verse-label digits elsewhere in the corpus.
+- The Letter of Jeremiah has no chapter division upstream; a book notice states
+  that the displayed chapter 1 is a navigation container, not an upstream
+  chapter label, and the detached Greek introduction with source verses 1-72 is
+  preserved as printed.
 
 Because the adaptation is a derivative of CC BY-SA 4.0 material, the adapted
 data is distributed under the same license.
