@@ -2411,3 +2411,34 @@ that the GitHub Pages deployment or a phone's cache has updated.
 Next scoped item is disclosure metadata for PSA16:4, PSA88:84 and the LJE
 navigation chapter, with byte-preservation and cache-refresh verification.
 See docs/ARCHITECT_NEXT_PROMPTS.md; no future merge/push approval is inferred.
+
+### 2026-10-07 — Static-publishing marker for GitHub Pages (`.nojekyll`)
+
+A minimal, review-only fix on branch `codex/pages-static-publish` (based on
+`5213a13`). At that base the repository has neither `.nojekyll` nor
+`_config.yml`. The public Pages run
+`https://github.com/Hayg-Hay/Maranatha/actions/runs/37632428142` was observed
+**in progress** on job **build / Build with Jekyll**, while `main` carries the
+user-accepted Stage 1b (shell cache `v49`, data cache `v3`). The deployment is
+in progress, **not proven failed**; no claim is made that repo size
+conclusively causes any Jekyll delay.
+
+Maranatha is already a static generated site: `index.html` is complete and loads
+`style.css`, `app.js`, `data/*.js` and `data/locales/*.js` through classic
+`<script>` tags with no server or build step, and there are no Jekyll layouts,
+includes or config. GitHub's primary guidance ("Creating a GitHub Pages site")
+states that an empty `.nojekyll` at the publishing-source root disables the
+default Jekyll build and serves the files as-is, so an empty marker is the
+minimal documented way to request direct static publishing.
+
+Only three paths changed: the new empty `.nojekyll` at the repository root, a
+`PROJECT_HISTORY.md` entry, and `build/reports/pages-static-REPORT.md`.
+`app.js`, `style.css`, `index.html`, `service-worker.js` and every `data/*`
+file are untouched; `CACHE_VERSION` stays `v49` and `DATA_CACHE_VERSION` stays
+`v3`. No workflow was rewritten, no test mirrors the empty file, and no
+merge, push or deletion was performed.
+
+Expected effect: after an approved merge, Pages should skip the Jekyll build and
+publish the static files directly. Limitation: this fix has **not** deployed and
+cannot be confirmed from this branch — a new deployment and the phone's service
+worker update must still be observed on the live URL after merge.
