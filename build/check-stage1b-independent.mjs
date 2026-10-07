@@ -96,7 +96,7 @@ try {
     change('#parallel-translation','delitzsch');await wait(()=>w.MARANATHA_TRANSLATIONS.delitzsch);
     change('#parallel-book','JHN');change('#parallel-chapter','1');
     assert.match(right().textContent,/[א-ת]/u);
-    assert.equal(right().querySelectorAll('tbody tr').length,w.MARANATHA_TRANSLATIONS.delitzsch.books.JHN[0].length,'another loaded edition inflated the selected edition verse count');
+    assert.equal(right().querySelectorAll('.mobile-verse').length,w.MARANATHA_TRANSLATIONS.delitzsch.books.JHN[0].length,'another loaded edition inflated the selected edition verse count');
   });
   await check('lxx-notices-detached-text-and-native-labels',()=>{
     change('#parallel-lxx-book','PSA');change('#parallel-lxx-chapter','115');

@@ -122,7 +122,7 @@ function staticChecks() {
   out('css-lxx-attribution-hidden-rule', /#lxx-attribution\[hidden\]\s*\{[^}]*display:\s*none/.test(css));
 
   const html = read('index.html');
-  const banner = /<p class="parallel-banner"[^>]*>Independent numbering; passages are not aligned\.<\/p>/.test(html);
+  const banner = /<p class="parallel-banner"[^>]*>Independent numbering; passages are not aligned\. Swete Septuagint uses native LXX numbering\.<\/p>/.test(html);
   out('html-parallel-banner', banner);
   out('html-parallel-view-option', /<option value="parallel">Parallel reading \(independent numbering\)<\/option>/.test(html));
 
@@ -160,7 +160,7 @@ async function desktopChecks() {
 
   view.value = 'parallel';
   fire(w, view);
-  await waitFor(() => d.querySelector('#parallel-lxx-content .lxx-banner'));
+  await waitFor(() => d.querySelector('#parallel-lxx-content .lxx-verses'));
 
   out('parallel-lazy-loads-lxx', srcList(d).some((s) => /lxx-swete/.test(s)), srcList(d).join(','));
   out('parallel-banner-rendered', /Independent numbering; passages are not aligned/.test(
@@ -222,7 +222,7 @@ async function desktopChecks() {
   // The right pane's verse extent must follow the SELECTED edition, not every
   // loaded translation: Delitzsch 1901's John 1 has 52 verses, the eBible
   // edition 51, so the 1901 row count must not inflate the eBible pane.
-  const rightRows = () => d.querySelectorAll('#parallel-translation-content tbody tr').length;
+  const rightRows = () => d.querySelectorAll('#parallel-translation-content .mobile-verse').length;
   const jhn1901 = w.MARANATHA_TRANSLATIONS.delitzsch1901.books.JHN[0].length;
   out('parallel-right-extent-scoped-1901', rightRows() === jhn1901 && rightRows() === 52, `${rightRows()}/${jhn1901}`);
 
@@ -333,7 +333,7 @@ async function mobileChecks() {
   const view = d.querySelector('#view-mode');
   view.value = 'parallel';
   fire(w, view);
-  await waitFor(() => d.querySelector('#parallel-lxx-content .lxx-banner'));
+  await waitFor(() => d.querySelector('#parallel-lxx-content .lxx-verses'));
 
   const panes = [...d.querySelectorAll('.parallel-panes > .parallel-pane')];
   out('mobile-panes-lxx-then-translation',

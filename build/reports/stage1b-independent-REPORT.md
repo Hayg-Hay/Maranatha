@@ -26,7 +26,8 @@ Fresh independent clone: `build/cache/stage1b-verification`.
 | Protected paths unchanged | PASS | Git diff empty for data/, importer and canonical validator |
 | Fresh clone integrity | PASS | git fsck --full exit0; tracked diff exit0 |
 | Desktop/mobile CSS structure | PASS (static only) | flex panes, <=700px stacked order; explicit hidden rules |
-| Real-browser / physical phone acceptance | UNVERIFIED | browser connection timeout; file URL rejected by browser policy |
+| Local browser acceptance (user) | PASS | user reviewed implementation file preview and said "ok looks good" |
+| Physical phone / installed PWA acceptance | UNVERIFIED | no phone test reported |
 
 ## Findings resolved before acceptance
 
@@ -90,8 +91,25 @@ Shell cache v47 -> v48; three existing version assertions updated. Data cache v3
 
 ## OPEN QUESTIONS / user acceptance
 
+User accepted the local implementation preview on 2026-10-07: "ok looks good".
+This records local browser acceptance, not phone testing or merge/push approval.
+
 Open the implementation checkout's index.html directly. Check all three views,
 desktop side-by-side/mobile stacked layout, independent pickers, Hebrew RTL,
 1901 notices, native anomalous labels, flags/attribution and returning to Canon.
 Repeat on phone; hard refresh for the PWA shell update. Then explicitly approve
 any merge/push. Feature implementation is complete; visual release acceptance remains.
+
+### 2026-10-07 — Codex refines the parallel reading layout
+
+At the user's request, Codex made this presentation change directly. Both panes
+now use a quiet reading layout, compact verse references and equal text rhythm.
+One shared native-numbering notice replaces the duplicate left notice; desktop
+controls share grid rows so chapter headings start together. Mobile panes remain
+stacked. Edition-specific disclosures, Hebrew RTL, LXX notices and independent
+navigation are preserved. The translation chapter title omits layout metadata.
+Shell cache v49; data cache v3 unchanged. Checks: Stage1b 45/45, independent
+functional checks 14/14 including ten byte-identical Canon chapters, service
+worker 26/26, and git diff --check. User acceptance of the previous layout does
+not cover this refinement; revised visual appearance awaits preview refresh.
+No merge or push was performed.

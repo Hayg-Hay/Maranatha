@@ -3114,10 +3114,16 @@ function init() {
     populateLxxChapters(chapterSelect, book);
     const chapter = book.chapters.find((c) => c.n === chapterSelect.value) || book.chapters[0];
 
+    const parallelPane = container === refs.parallelLxxContent;
+    const heading = document.createElement('h2');
+    heading.className = 'lxx-heading';
+    heading.textContent = `${book.label} ${chapter.n === 'prologue' ? 'Prologue' : chapter.n}`;
+    if (parallelPane) container.appendChild(heading);
+
     const banner = document.createElement('p');
     banner.className = 'lxx-banner';
     banner.textContent = 'Swete Septuagint, native LXX numbering, not aligned to the canon numbering used elsewhere.';
-    container.appendChild(banner);
+    if (!parallelPane) container.appendChild(banner);
 
     if (book.notices && book.notices.length) {
       const notices = document.createElement('details');
@@ -3133,10 +3139,7 @@ function init() {
       container.appendChild(notices);
     }
 
-    const heading = document.createElement('h2');
-    heading.className = 'lxx-heading';
-    heading.textContent = `${book.label} ${chapter.n === 'prologue' ? 'Prologue' : chapter.n}`;
-    container.appendChild(heading);
+    if (!parallelPane) container.appendChild(heading);
 
     const list = document.createElement('div');
     list.className = 'lxx-verses';
@@ -3229,7 +3232,6 @@ function init() {
     // that ends earlier (Delitzsch eBible has 51).
     const verseCount = extentForTranslations([t], book.id, chapterNum);
     const name = (locale.books[book.id] && locale.books[book.id].name) || book.id;
-    const layout = narrowScreen.matches ? 'mobile' : 'multicolumn';
     renderInto(container, () => {
       appendResultBlock({
         bookId: book.id,
@@ -3238,13 +3240,17 @@ function init() {
         verseCount,
         verses: Array.from({ length: verseCount }, (_, i) => i + 1),
         translations: [t],
-        layout,
+        layout: 'mobile',
         highlight: false,
         anchorFirst: false,
         exactVerses: null,
         versificationDisclosure: true,
       });
     });
+    // The pane already identifies its translation; keep the chapter title
+    // quiet and use the existing reading renderer at every screen width.
+    const heading = container.querySelector('.result-head h2');
+    if (heading) heading.textContent = `${name} ${chapterNum}`;
   }
 
   function renderParallelView() {

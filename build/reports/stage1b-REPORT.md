@@ -109,3 +109,17 @@ LXX controls, and the lazy 7.5 MB LXX first load.
   LXX previous/next would be separate Stage 2 work.
 - The independent verifier has not signed off yet; rerun both checkers in a fresh
   clone before sign-off.
+
+### 2026-10-07 — Codex refines the parallel reading layout
+
+At the user's request, Codex made this presentation change directly. Both panes
+now use a quiet reading layout, compact verse references and equal text rhythm.
+One shared native-numbering notice replaces the duplicate left notice; desktop
+controls share grid rows so chapter headings start together. Mobile panes remain
+stacked. Edition-specific disclosures, Hebrew RTL, LXX notices and independent
+navigation are preserved. The translation chapter title omits layout metadata.
+Shell cache v49; data cache v3 unchanged. Checks: Stage1b 45/45, independent
+functional checks 14/14 including ten byte-identical Canon chapters, service
+worker 26/26, and git diff --check. User acceptance of the previous layout does
+not cover this refinement; revised visual appearance awaits preview refresh.
+No merge or push was performed.

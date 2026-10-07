@@ -2324,3 +2324,23 @@ Codex authored the independent checker and acceptance documentation only.
 See `build/reports/stage1b-independent-REPORT.md` for commands, logs and limits.
 Automated implementation acceptance is complete; browser/physical-phone release
 acceptance remains the user's test. No merge, push or repository-file deletion.
+
+### 2026-10-07 — User accepts Stage1b local browser preview
+
+User viewed this implementation checkout's index.html and said "ok looks good".
+Local browser acceptance is recorded. Phone/PWA testing was not reported.
+This does not authorize merging or pushing; explicit approval remains required.
+
+### 2026-10-07 — Codex refines the parallel reading layout
+
+At the user's request, Codex made this presentation change directly. Both panes
+now use a quiet reading layout, compact verse references and equal text rhythm.
+One shared native-numbering notice replaces the duplicate left notice; desktop
+controls share grid rows so chapter headings start together. Mobile panes remain
+stacked. Edition-specific disclosures, Hebrew RTL, LXX notices and independent
+navigation are preserved. The translation chapter title omits layout metadata.
+Shell cache v49; data cache v3 unchanged. Checks: Stage1b 45/45, independent
+functional checks 14/14 including ten byte-identical Canon chapters, service
+worker 26/26, and git diff --check. User acceptance of the previous layout does
+not cover this refinement; revised visual appearance awaits preview refresh.
+No merge or push was performed.
