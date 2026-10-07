@@ -3061,7 +3061,12 @@ function init() {
     if (lxxLoading) return;
     lxxLoading = true;
     const script = document.createElement('script');
-    script.src = 'data/lxx-swete.js';
+    // Query-versioned URL: the service worker's DATA_CACHE uses cache.match with
+    // ignoreSearch:false, so this exact URL is cached separately from the plain
+    // 'data/lxx-swete.js' key. A stale unversioned copy therefore cannot satisfy
+    // this request, while already-downloaded translations stay in the same data
+    // cache untouched (deliberate exception to the universal data-cache bump).
+    script.src = 'data/lxx-swete.js?v=disclosures-20261007';
     script.onload = () => { lxxLoading = false; onReady(); };
     script.onerror = () => { lxxLoading = false; setMessage('Could not load the Septuagint (Swete) data (data/lxx-swete.js).'); };
     document.head.appendChild(script);
