@@ -48,7 +48,7 @@ identical output.
 
 | Check | Result |
 |---|---|
-| `build/check-lxx-disclosures.mjs` (new) | 38 pass / 0 fail |
+| `build/check-lxx-disclosures.mjs` (new) | 39 pass / 0 fail |
 | `build/check-stage1.mjs` | 15 pass / 0 fail |
 | `build/validate-lxx-native.mjs` | 8 pass / 0 fail |
 | `build/check-stage1b.mjs` (anchors updated) | 45 pass / 0 fail |
@@ -61,8 +61,9 @@ pre-existing flag matches `build/cache/lxx-disclosures-before.json`; exactly the
 two targeted new flags exist at PSA 16:4 and PSA 88:84; only LJE gains exactly
 one notice; all old `changes` entries are retained (8 → 11); source/license/
 excluded/missing metadata unchanged; the raw LJE XML has zero chapter `div`s and
-72 verse `div`s; two-run determinism and JSON/JS agreement; the flags render in
-**both** the standalone LXX view and the parallel left pane; the LJE notice and
+72 verse `div`s; two-run determinism; exact JSON-body equality; the shipped JS
+wrapper (LF-normalized) plus its parsed payload equal the shipped JSON; the flags
+render in **both** the standalone LXX view and the parallel left pane; the LJE notice and
 intro/72-verse shape render in both; the Canon view is byte-identical to the
 existing pre-change baseline. A realistic CacheStorage mock (honouring
 `ignoreSearch`, query keys and origin) proves the versioned-key behaviour and an
@@ -86,7 +87,7 @@ offline reload.
  docs/ARCHITECT_HANDOFF.md        | 15 ++++++++++
  service-worker.js                | 13 ++++++---
  14 files changed, 169 insertions(+), 21 deletions(-)
- build/check-lxx-disclosures.mjs  | new file, 38 checks
+ build/check-lxx-disclosures.mjs  | new file, 39 checks
 ```
 
 ## Deviations
@@ -94,6 +95,16 @@ offline reload.
 - None from the approved task. The data hash necessarily changed (flags + notice
   + appended `changes`); text/labels/order/kind and all non-LJE notices are
   byte-identical to the baseline.
+- **Fresh-clone review fix (checker only, no data correction).** On a fresh
+  Windows clone (Codex review, `9f3d3c3`) `shipped-js-wraps-shipped-json` failed
+  because Git converted the two JS-wrapper line endings to CRLF while the check
+  built the expected wrapper with LF. The JSON body is a single line (its interior
+  newlines are escaped), so the two are byte-identical apart from those wrapper
+  EOLs. `build/check-lxx-disclosures.mjs` now compares the wrapper after
+  normalizing actual CRLF to LF and adds an independent
+  `shipped-js-payload-parses-to-shipped-json` check. The exact JSON-body
+  comparison (`shipped-json-matches-regeneration`) is retained. No importer,
+  loader, cache policy, runtime code or data output was changed.
 - `build/check-architect-handoff.py` expectations were updated to the new
   counts/hash (688, `fd52aa2f…`) only because it is a live anchor. Its upstream
   clone argument was not available here, so it was not executed in this run; the

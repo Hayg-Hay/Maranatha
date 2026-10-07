@@ -2452,7 +2452,8 @@ and all three shell version assertions updated (`build/test-service-worker.mjs`,
 a deliberate exception to the older universal "bump the data cache on any data
 change" guidance, which is incomplete for query-versioned URLs.
 
-**Verification.** New `build/check-lxx-disclosures.mjs` (38 PASS) compares every
+**Verification.** New `build/check-lxx-disclosures.mjs` (38 PASS; 39 after the
+fresh-clone EOL review fix below) compares every
 segment text, label, kind, order and pre-existing flag against
 `build/cache/lxx-disclosures-before.json`; asserts exactly the two targeted new
 flags and only the one new LJE notice; keeps existing `changes` entries; re-parses
@@ -2473,3 +2474,13 @@ counts/hash; past evidence reports were left as historical.
 user's: hard refresh and confirm the PSA 16:4 and PSA 88:84 flag markers, the LJE
 notice, and an unchanged Canon view in both `file://` and the deployed PWA.
 No merge, push or deletion was performed; this stage has no merge/push approval.
+
+**Fresh-clone review fix (checker only, 2026-10-07).** Independent verification on
+a fresh Windows clone of `9f3d3c3` found `shipped-js-wraps-shipped-json` failing:
+Git rewrote the two JS-wrapper line endings to CRLF while the check built the
+expected wrapper with LF. The JSON body is a single line (interior newlines are
+escaped), so the difference is purely the wrapper EOLs. `build/check-lxx-disclosures.mjs`
+now normalizes actual CRLF to LF for the wrapper comparison and adds an
+independent `shipped-js-payload-parses-to-shipped-json` parsed-data equality check;
+the exact JSON-body comparison is retained. No data, importer, loader, cache-policy
+or runtime change was made. The checker now reports 39/39.

@@ -246,8 +246,23 @@ const verseLabels = (d, id, ch) => (byId(d, id).chapters.find((c) => c.n === ch)
   const run2 = JSON.stringify(buildData());
   out('regeneration-deterministic', run1 === run2 && sha256(run1) === sha256(run2), sha256(run1));
   out('shipped-json-matches-regeneration', afterJson === run1, `file=${sha256(afterJson)} rebuilt=${sha256(run1)}`);
+  // The exact JSON body is compared above (shipped-json-matches-regeneration).
+  // For the JS wrapper, a Git checkout on Windows may rewrite the two wrapper
+  // line endings to CRLF; the JSON body contains no literal newlines (they are
+  // escaped), so normalizing the wrapper's CRLF to LF is safe and still proves
+  // the wrapper text. Parsed-data equality is checked independently of EOLs.
   const expectedJs = `window.MARANATHA_TRANSLATIONS=window.MARANATHA_TRANSLATIONS||{};\nwindow.MARANATHA_TRANSLATIONS['lxx-swete']=${afterJson};\n`;
-  out('shipped-js-wraps-shipped-json', read('data/lxx-swete.js') === expectedJs);
+  const actualJsLf = read('data/lxx-swete.js').replace(/\r\n/g, '\n');
+  out('shipped-js-wraps-shipped-json', actualJsLf === expectedJs,
+    actualJsLf === expectedJs ? 'LF-normalized wrapper matches' : 'wrapper mismatch');
+  let parsedEq = false;
+  try {
+    const marker = "window.MARANATHA_TRANSLATIONS['lxx-swete']=";
+    const start = actualJsLf.indexOf(marker) + marker.length;
+    const payload = start > marker.length ? actualJsLf.slice(start).replace(/;\s*$/, '') : '';
+    parsedEq = JSON.stringify(JSON.parse(payload)) === JSON.stringify(after);
+  } catch { parsedEq = false; }
+  out('shipped-js-payload-parses-to-shipped-json', parsedEq);
 }
 
 // ---------------------------------------------------------------------------
