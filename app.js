@@ -348,6 +348,14 @@ const refs = {
     lxxBook: q('#lxx-book'),
     lxxChapter: q('#lxx-chapter'),
     lxxAttribution: q('#lxx-attribution'),
+    parallelView: q('#parallel-view'),
+    parallelLxxBook: q('#parallel-lxx-book'),
+    parallelLxxChapter: q('#parallel-lxx-chapter'),
+    parallelLxxContent: q('#parallel-lxx-content'),
+    parallelTranslation: q('#parallel-translation'),
+    parallelBook: q('#parallel-book'),
+    parallelChapter: q('#parallel-chapter'),
+    parallelTranslationContent: q('#parallel-translation-content'),
 };
   // Canon-only controls (Book/Chapter selects, Previous/Next/Open chapter).
   // Toggled as a group so the LXX view never shows two Book/Chapter pairs.
@@ -587,6 +595,7 @@ function init() {
 
     populateBooks();
     populateTranslationCheckboxes();
+    populateParallelControls();
 
     refs.language.addEventListener('change', () => {
         setLocale(refs.language.value);
@@ -621,6 +630,31 @@ function init() {
         render({ scrollToReference: false });
     });
 
+    // Independent parallel-pane navigation: each control re-renders only its
+    // own pane, so moving one pane can never move the other.
+    refs.parallelLxxBook.addEventListener('change', () => {
+        renderParallelLxxPane();
+    });
+
+    refs.parallelLxxChapter.addEventListener('change', () => {
+        renderParallelLxxPane();
+    });
+
+    refs.parallelTranslation.addEventListener('change', () => {
+        const t = TRANSLATIONS.find((x) => x.id === refs.parallelTranslation.value);
+        if (t && !loaded.has(t.id)) loadTranslation(t, () => renderParallelTranslationPane());
+        else renderParallelTranslationPane();
+    });
+
+    refs.parallelBook.addEventListener('change', () => {
+        populateParallelChapters();
+        renderParallelTranslationPane();
+    });
+
+    refs.parallelChapter.addEventListener('change', () => {
+        renderParallelTranslationPane();
+    });
+
     refs.prevChapter.addEventListener('click', () => {
         goToAdjacentChapter(-1);
     });
@@ -630,6 +664,11 @@ function init() {
     });
 
     refs.referenceGo.addEventListener('click', () => {
+
+        // Reference lookup is explicitly canon-only: invoking it from the LXX
+        // or parallel view returns to the canon view so neither pane appears
+        // to have answered a reference it cannot address.
+        refs.viewMode.value = 'canon';
 
         let groups;
 
@@ -998,8 +1037,11 @@ function init() {
     render();
   }
 
-  function populateBooks() {
-    refs.book.innerHTML = '';
+  // Fills any <select> with the canon books, grouped by testament. Shared by
+  // the canon Book control and the independent Book control in the parallel
+  // translation pane so both stay in sync with the canon and locale.
+  function populateBookSelect(select) {
+    select.innerHTML = '';
     let currentTestament = null;
     for (const book of canon.books) {
       if (book.testament !== currentTestament) {
@@ -1008,13 +1050,39 @@ function init() {
         const testamentName = locale.testaments && locale.testaments[currentTestament];
         group.label = testamentName || (currentTestament === 'OT' ? 'Old Testament' : 'New Testament');
         group.dataset.testament = currentTestament;
-        refs.book.appendChild(group);
+        select.appendChild(group);
       }
       const opt = document.createElement('option');
       opt.value = book.id;
       opt.textContent = (locale.books[book.id] && locale.books[book.id].name) || book.id;
-      refs.book.lastElementChild.appendChild(opt);
+      select.lastElementChild.appendChild(opt);
     }
+  }
+
+  function populateBooks() {
+    populateBookSelect(refs.book);
+  }
+
+  // The parallel view's translation pane is entirely independent of the canon
+  // translation checkboxes: it offers every registered translation (including
+  // Hebrew and both Delitzsch editions) through its own dropdown, and its own
+  // Book/Chapter pair. Nothing here mutates the canon selection/state.
+  function populateParallelControls() {
+    refs.parallelTranslation.innerHTML = '';
+    for (const t of TRANSLATIONS) {
+      const opt = document.createElement('option');
+      opt.value = t.id;
+      opt.textContent = t.label;
+      refs.parallelTranslation.appendChild(opt);
+    }
+    refs.parallelTranslation.value = 'web';
+    populateBookSelect(refs.parallelBook);
+    populateParallelChapters();
+  }
+
+  function populateParallelChapters() {
+    const book = canon.books.find((b) => b.id === refs.parallelBook.value) || canon.books[0];
+    populateChapterSelect(refs.parallelChapter, book);
   }
 
   function translationGroup(groupId) {
@@ -1214,15 +1282,19 @@ function init() {
     return canon.books.find(b => b.id === refs.book.value);
   }
 
-  function populateChapters() {
-    const book = currentBook();
-    refs.chapter.innerHTML = '';
+  function populateChapterSelect(select, book) {
+    if (!book) return;
+    select.innerHTML = '';
     book.chapters.forEach((verseCount, i) => {
       const opt = document.createElement('option');
       opt.value = String(i + 1);
       opt.textContent = `Chapter ${i + 1}`;
-      refs.chapter.appendChild(opt);
+      select.appendChild(opt);
     });
+  }
+
+  function populateChapters() {
+    populateChapterSelect(refs.chapter, currentBook());
   }
 
   // Moves to the next/previous chapter, crossing into the next/previous
@@ -1799,6 +1871,10 @@ function init() {
       setMessage('Enter a word or phrase to search for.');
       return;
     }
+    // Text search is canon-only (it indexes canon-numbered translations):
+    // invoking it from the LXX or parallel view returns to the canon view.
+    refs.viewMode.value = 'canon';
+    populateSearchTranslations();
     const t = TRANSLATIONS.find(x => x.id === refs.searchTranslation.value);
     const data = t && window.MARANATHA_TRANSLATIONS[t.id];
     if (!t || !data) {
@@ -2973,54 +3049,57 @@ function init() {
     document.head.appendChild(script);
   }
 
-  function populateLxxBooks(dataset) {
-    const previous = refs.lxxBook.value;
-    refs.lxxBook.innerHTML = '';
+  function populateLxxBooks(bookSelect, dataset) {
+    const previous = bookSelect.value;
+    bookSelect.innerHTML = '';
     for (const book of dataset.books) {
       const opt = document.createElement('option');
       opt.value = book.id;
       opt.textContent = `${book.label}${book.kind === 'component' ? ' (component)' : ''}`;
-      refs.lxxBook.appendChild(opt);
+      bookSelect.appendChild(opt);
     }
-    if (dataset.books.some((b) => b.id === previous)) refs.lxxBook.value = previous;
+    if (dataset.books.some((b) => b.id === previous)) bookSelect.value = previous;
   }
 
-  function populateLxxChapters(book) {
-    const previous = refs.lxxChapter.value;
-    refs.lxxChapter.innerHTML = '';
+  function populateLxxChapters(chapterSelect, book) {
+    const previous = chapterSelect.value;
+    chapterSelect.innerHTML = '';
     for (const chapter of book.chapters) {
       const opt = document.createElement('option');
       opt.value = chapter.n;
       opt.textContent = chapter.n === 'prologue' ? 'Prologue' : `Chapter ${chapter.n}`;
-      refs.lxxChapter.appendChild(opt);
+      chapterSelect.appendChild(opt);
     }
-    if (book.chapters.some((c) => c.n === previous)) refs.lxxChapter.value = previous;
+    if (book.chapters.some((c) => c.n === previous)) chapterSelect.value = previous;
   }
 
-  function renderLxxView() {
-    refs.results.innerHTML = '';
-    refs.contextBtn.hidden = true;
-    setMessage('');
+  // Renders the LXX reading for the given Book/Chapter controls into the given
+  // container. Shared by the standalone LXX view and the left pane of the
+  // parallel view, so the two never diverge. `onReady` reruns the caller's
+  // render after the 7.5 MB data file finishes lazy-loading (default: a full
+  // view render, which is what the standalone view needs).
+  function renderLxxInto(bookSelect, chapterSelect, container, onReady) {
+    container.innerHTML = '';
     const dataset = lxxDataset();
     if (!dataset) {
       const loading = document.createElement('p');
       loading.className = 'empty';
       loading.textContent = 'Loading the Septuagint (Swete) data…';
-      refs.results.appendChild(loading);
-      loadLxx(() => render({ scrollToReference: false }));
+      container.appendChild(loading);
+      loadLxx(() => (onReady ? onReady() : render({ scrollToReference: false })));
       return;
     }
 
-    populateLxxBooks(dataset);
-    const book = dataset.books.find((b) => b.id === refs.lxxBook.value) || dataset.books[0];
+    populateLxxBooks(bookSelect, dataset);
+    const book = dataset.books.find((b) => b.id === bookSelect.value) || dataset.books[0];
     if (!book) return;
-    populateLxxChapters(book);
-    const chapter = book.chapters.find((c) => c.n === refs.lxxChapter.value) || book.chapters[0];
+    populateLxxChapters(chapterSelect, book);
+    const chapter = book.chapters.find((c) => c.n === chapterSelect.value) || book.chapters[0];
 
     const banner = document.createElement('p');
     banner.className = 'lxx-banner';
     banner.textContent = 'Swete Septuagint, native LXX numbering, not aligned to the canon numbering used elsewhere.';
-    refs.results.appendChild(banner);
+    container.appendChild(banner);
 
     if (book.notices && book.notices.length) {
       const notices = document.createElement('details');
@@ -3033,13 +3112,13 @@ function init() {
         p.textContent = text;
         notices.appendChild(p);
       }
-      refs.results.appendChild(notices);
+      container.appendChild(notices);
     }
 
     const heading = document.createElement('h2');
     heading.className = 'lxx-heading';
     heading.textContent = `${book.label} ${chapter.n === 'prologue' ? 'Prologue' : chapter.n}`;
-    refs.results.appendChild(heading);
+    container.appendChild(heading);
 
     const list = document.createElement('div');
     list.className = 'lxx-verses';
@@ -3068,7 +3147,7 @@ function init() {
       }
       list.appendChild(row);
     }
-    refs.results.appendChild(list);
+    container.appendChild(list);
 
     if (dataset.license && dataset.license.attribution) {
       refs.lxxAttribution.hidden = false;
@@ -3076,12 +3155,94 @@ function init() {
     }
   }
 
+  function renderLxxView() {
+    refs.contextBtn.hidden = true;
+    setMessage('');
+    renderLxxInto(refs.lxxBook, refs.lxxChapter, refs.results);
+  }
+
+  // ---------------------------------------------------------------------
+  // Parallel view: two independent panes, one LXX (native numbering) and one
+  // existing canon-numbered translation. No row alignment, no synchronized
+  // scrolling, no chapter mapping — the banner says so. Reuses the LXX
+  // renderer and the canon chapter renderer unchanged.
+  // ---------------------------------------------------------------------
+
+  // Runs a canon renderer against an explicit container instead of #results.
+  // Rendering is synchronous, so the temporary redirect is safe.
+  function renderInto(container, fn) {
+    const previous = refs.results;
+    refs.results = container;
+    try { fn(); } finally { refs.results = previous; }
+  }
+
+  function renderParallelLxxPane() {
+    renderLxxInto(
+      refs.parallelLxxBook,
+      refs.parallelLxxChapter,
+      refs.parallelLxxContent,
+      () => renderParallelLxxPane(),
+    );
+  }
+
+  function renderParallelTranslationPane() {
+    const container = refs.parallelTranslationContent;
+    container.innerHTML = '';
+    const t = TRANSLATIONS.find((x) => x.id === refs.parallelTranslation.value) || TRANSLATIONS[0];
+    const book = canon.books.find((b) => b.id === refs.parallelBook.value) || canon.books[0];
+    if (!t || !book) return;
+
+    if (!loaded.has(t.id)) {
+      const loading = document.createElement('p');
+      loading.className = 'empty';
+      loading.textContent = `Loading ${t.label}…`;
+      container.appendChild(loading);
+      loadTranslation(t, () => renderParallelTranslationPane());
+      return;
+    }
+
+    const chapterNum = Number(refs.parallelChapter.value) || 1;
+    const verseCount = chapterExtent(book.id, chapterNum);
+    const name = (locale.books[book.id] && locale.books[book.id].name) || book.id;
+    const layout = narrowScreen.matches ? 'mobile' : 'multicolumn';
+    renderInto(container, () => {
+      appendResultBlock({
+        bookId: book.id,
+        chapterNum,
+        name,
+        verseCount,
+        verses: Array.from({ length: verseCount }, (_, i) => i + 1),
+        translations: [t],
+        layout,
+        highlight: false,
+        anchorFirst: false,
+        exactVerses: null,
+        versificationDisclosure: true,
+      });
+    });
+  }
+
+  function renderParallelView() {
+    refs.contextBtn.hidden = true;
+    setMessage('');
+    renderParallelLxxPane();
+    renderParallelTranslationPane();
+  }
+
   function render({ scrollToReference = true } = {}) {
     const lxx = refs.viewMode.value === 'lxx';
-    // Only one Book/Chapter pair is ever shown: the canon bar in canon view,
-    // the LXX bar in the LXX view. The View selector stays visible in both.
+    const parallel = refs.viewMode.value === 'parallel';
+    // Exactly one Book/Chapter mechanism is shown at a time: the canon bar in
+    // canon view, the LXX bar in the LXX view, and the two independent pane
+    // controls in the parallel view. The View selector stays visible in all.
     refs.lxxBar.hidden = !lxx;
-    for (const control of refs.canonControls) control.hidden = lxx;
+    for (const control of refs.canonControls) control.hidden = lxx || parallel;
+    refs.parallelView.hidden = !parallel;
+    refs.results.hidden = parallel;
+    if (parallel) {
+      renderParallelView();
+      return;
+    }
     if (lxx) {
       renderLxxView();
       return;
