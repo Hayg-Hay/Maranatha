@@ -78,6 +78,7 @@
           <select id="view-mode">
             <option value="canon">Canon view</option>
             <option value="lxx">LXX (native numbering)</option>
+            <option value="parallel">Parallel reading (independent numbering)</option>
           </select>
         </label>
         <div class="chapter-actions" data-canon-only>
@@ -99,7 +100,7 @@
       <div class="tool-sections">
         <details class="tool-section translations-section" open>
           <summary>Translations</summary>
-          <p class="hint translations-hint">Septuagint (Swete): choose View &rarr; LXX (native numbering)</p>
+          <p class="hint translations-hint">Septuagint (Swete): choose View &rarr; LXX (native numbering) or Parallel reading (independent numbering)</p>
           <fieldset id="translations" aria-label="Translations"></fieldset>
         </details>
 
@@ -175,6 +176,40 @@
     </section>
 
     <section id="message" class="message" aria-live="polite"></section>
+
+    <section id="parallel-view" class="parallel-view" hidden aria-label="Parallel reading with independent numbering">
+      <p class="parallel-banner" role="note">Independent numbering; passages are not aligned. Swete Septuagint uses native LXX numbering.</p>
+      <div class="parallel-panes">
+        <section class="parallel-pane" aria-labelledby="parallel-lxx-heading">
+          <h2 id="parallel-lxx-heading">Septuagint (Swete) — native LXX numbering</h2>
+          <div class="chapter-bar">
+            <label for="parallel-lxx-book">LXX book
+              <select id="parallel-lxx-book"></select>
+            </label>
+            <label for="parallel-lxx-chapter">LXX chapter
+              <select id="parallel-lxx-chapter"></select>
+            </label>
+          </div>
+          <div id="parallel-lxx-content" class="parallel-content" aria-live="polite"></div>
+        </section>
+        <section class="parallel-pane" aria-labelledby="parallel-translation-heading">
+          <h2 id="parallel-translation-heading">Translation</h2>
+          <div class="chapter-bar">
+            <label for="parallel-translation">Translation
+              <select id="parallel-translation"></select>
+            </label>
+            <label for="parallel-book">Book
+              <select id="parallel-book"></select>
+            </label>
+            <label for="parallel-chapter">Chapter
+              <select id="parallel-chapter"></select>
+            </label>
+          </div>
+          <div id="parallel-translation-content" class="parallel-content" aria-live="polite"></div>
+        </section>
+      </div>
+    </section>
+
     <section id="results" aria-live="polite"></section>
   </main>
   <footer>Built for offline personal use. <a href="PROJECT_HISTORY.md">Read the project history</a>.<span id="lxx-attribution" hidden></span></footer>

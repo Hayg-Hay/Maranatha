@@ -2178,6 +2178,174 @@ pass. `build/test-service-worker.mjs`, `build/test-sirach.mjs` and
 versification architecture, and any alignment/parallel display. Stage 1 makes
 no claim of canonical correspondence.
 
+### Phase 4 — LXX (Swete) Stage 1b implemented: independent parallel panes, Oct 2026
+
+Stage 1b adds a third View choice, **"Parallel reading (independent numbering)"**.
+It is a UI/control-layer change only: no mapping, no alignment, and no data
+rewrite. The two panes are deliberately independent and the banner
+"Independent numbering; passages are not aligned" says so.
+
+**Design.** The left pane is the Stage 1 Swete LXX; the right pane is **one**
+existing canon-numbered translation chosen from a dropdown that lists every
+registered translation (including Hebrew OSHB and **both** Delitzsch editions).
+Each pane owns its own controls:
+
+- The Stage 1 LXX renderer was split into
+  `renderLxxInto(bookSelect, chapterSelect, container, onReady)`; the standalone
+  LXX view calls it with `#lxx-book`/`#lxx-chapter`/`#results`, and the parallel
+  left pane calls it with `#parallel-lxx-book`/`#parallel-lxx-chapter`/
+  `#parallel-lxx-content`. Book notices, unnumbered segments, per-verse flags and
+  the footer attribution are therefore identical in both places.
+- The parallel right pane reuses `appendResultBlock`/`multiColumn` (or
+  `mobileReading` on narrow screens) through a synchronous `renderInto`
+  helper that temporarily points `refs.results` at the pane's content div. This
+  keeps the diff small and avoids a renderer-wide refactor. Hebrew stays RTL, and
+  the Delitzsch 1901 declared-versification notice still renders.
+- Each control listener re-renders **only its own pane** (`renderParallelLxxPane`
+  or `renderParallelTranslationPane`); moving one pane cannot move the other.
+  There is no row matching, synchronized scrolling or chapter mapping. The right
+  pane's dropdown and Book/Chapter are a separate control layer and never mutate
+  the canon translation checkboxes or the canon Book/Chapter state.
+- Invoking the (canon-only) Reference box or text Search from the LXX or parallel
+  view sets the View back to `canon` first, so neither pane can appear to have
+  answered an LXX reference or search.
+- The LXX data still lazy-loads through a dynamically created `<script>` tag
+  (never `fetch()`), so `file://` keeps working.
+
+**Mobile.** The two panes stack, LXX first, each keeping its own controls and
+content (CSS `@media (max-width:700px)`), plus a static
+`.parallel-view[hidden] { display:none }` rule so the flex layout cannot override
+the `hidden` attribute (the jsdom-CSS pitfall from the Stage 1 lessons).
+
+**Cache and assertions.** Shell `CACHE_VERSION` bumped `v47 → v48`; the data
+cache (`v3`) and every data file are unchanged. The three existing version
+assertions were updated to `v48` (`build/test-service-worker.mjs`,
+`build/test-delitzsch.mjs`, `build/test-delitzsch1901.mjs`). No importer,
+`canon.js`, `validate.mjs`, translation ID or `data/*` file was touched.
+
+**Verification.** New `build/check-stage1b.mjs` prints 36 PASS/FAIL lines:
+data SHA-256 (unchanged `d31c332f…`) and counts (48 books / 1,055 chapters /
+27,048 verses / 100 unnumbered / 686 flagged), preserved source labels
+(Ps 88 `…47,84,49`; Ps 115 no 6; Bel ends 36), unique HTML IDs, the hidden-view
+and mobile-stack CSS rules; then on the real `file://` app: startup lazy-loading
+(no LXX/Delitzsch script at boot), lazy LXX and Delitzsch loading, independent
+pane navigation in both directions, Hebrew RTL, the Delitzsch 1901 notice,
+reference/search return-to-Canon, view switching and mobile pane isolation; and a
+WEB+KJV canon regression (GEN 1, EXO 20, PSA 23, PSA 119, ISA 53, JER 25, DAN 3,
+SIR 1, MAT 5, JHN 1) byte-identical to the pre-change
+`build/cache/stage1b-before.json`. `build/check-stage1.mjs` (15/15),
+`build/validate-lxx-native.mjs` (8/8) and `npm test` all pass. Stage 2 (tiered
+Swete→canon mapping) remains unimplemented; Stage 1b makes no canonical
+correspondence claim.
+
+### Phase 4 — Stage 1b independent review fixes, Oct 2026
+
+Codex's independent checker (`build/check-stage1b-independent.mjs`, run as
+`node build/check-stage1b-independent.mjs . build/cache/stage1b-before.json`)
+found four reproducible failures in the Stage 1b change. All four are fixed
+within the Stage 1b scope, and the independent checker now reports 0 failures:
+
+1. **Static heading contradicted the source-numbered notice.** The right-pane
+   heading said "Translation — canon numbering", which is false for the
+   source-numbered Delitzsch 1901. Replaced with the neutral "Translation —
+   numbering as printed"; the existing per-chapter source-numbering notice is
+   unchanged.
+2. **Phantom verse rows.** `renderParallelTranslationPane` used the global
+   `chapterExtent()`, which scans every loaded translation, so Delitzsch 1901's
+   52-verse John 1 inflated the eBible edition's 51-verse chapter to 52 rows.
+   The pane now uses `extentForTranslations([t], book.id, chapterNum)`, scoped to
+   the selected translation, so no unrelated edition can add rows.
+3. **Invalid/empty actions left stale panes.** `reference-go` switched the View
+   selector to `canon` but returned on a parse error before re-rendering;
+   `performSearch` returned before switching on empty input. Both paths now
+   render the canon view (visible panes match the selector) before showing the
+   message. Valid reference/search canon behaviour is unchanged.
+4. **Late LXX load leaked the footer into Canon.** The delayed `lxx-swete.js`
+   onload still ran the parallel pane renderer after the user left the view,
+   revealing `#lxx-attribution` in Canon; and
+   `#lxx-attribution { display:block }` outranked the `[hidden]` attribute. The
+   async callback is now guarded by the active view (`refs.viewMode.value ===
+   'parallel'`), and `#lxx-attribution[hidden] { display:none }` was added,
+   mirroring the chapter-bar fix. Attribution is preserved in the LXX and
+   parallel views.
+
+`build/check-stage1b.mjs` grew from 36 to 44 checks by adding independent
+behaviour cases for all four findings (neutral heading; 1901=52 vs eBible=51
+rows; invalid-reference and empty-search pane sync; delayed-LXX-callback guard;
+and the `#lxx-attribution[hidden]` rule); no existing check was weakened and no
+baseline was recaptured. The real-browser test remains unverified in the Codex
+environment (loopback timeout, `file://` forbidden) and is still the user's test.
+
+### Phase 4 — Stage 1b locale regression and neutral heading, Oct 2026
+
+A further independent check found one reproducible failure and one wording
+overclaim; both are fixed within Stage 1b scope.
+
+- **Armenian locale left the parallel Book menu in English.** `setLocale()` only
+  rebuilt the canon Book control, so switching Language to Armenian while
+  Parallel was open localized the right-pane heading but not its Book menu. It
+  now also rebuilds the parallel control through the same `populateBookSelect`
+  helper, preserving the pane's chosen book and chapter; the chosen translation
+  and the independent LXX navigation are untouched and Canon locale semantics are
+  unchanged.
+- **Neutral right-pane heading.** The heading is now simply **"Translation"**.
+  "Canon numbering" was false for source-numbered Delitzsch 1901, and "numbering
+  as printed" was false for OSHB, whose Masoretic numbering is mapped to
+  Christian references by the importer. The explicit 1901 source-numbering notice
+  is retained; no font or numbering scheme was reworked.
+
+`build/check-stage1b.mjs` grew from 44 to 45 checks (a behavioural locale case
+that switches to Armenian, asserts the Book options localize, and asserts the
+book/chapter, chosen translation and LXX pane are preserved; plus a stricter
+neutral-heading assertion). The independent checker (14 checks) reports 0
+failures. The copied verifier documents `build/check-architect-handoff.py` and
+`docs/ARCHITECT_NEXT_PROMPTS.md` are kept unchanged and committed separately
+because the architect report links to them. `build/check-stage1.mjs` (15/15)
+and `build/validate-lxx-native.mjs` (8/8) remain green. The full `npm test` suite
+was rerun on the prior substantive fix and is left to the independent verifier on
+the final commit. The principal verifier has not signed off; the real-browser
+test remains unverified (loopback timeout, `file://` forbidden) and is the
+user's test.
+
+### 2026-10-07 — Stage1b independent acceptance (Codex)
+
+A fresh local clone of final product commit `3647438` passed 14 independently
+authored behaviour cases, 45 Stage1b checks, 15 Stage1 checks, 8 native checks and
+the complete npm suite (exit0). The ten-chapter WEB+KJV regression is byte-identical
+to the pre-change main baseline. Independent Python verification against the
+fresh pinned upstream XML reconfirmed 47 source hashes, 2,754,390 characters,
+ordered labels and per-verse text with zero differences; data paths are unchanged.
+
+Review found and returned five defects to DeepSeek: numbering heading overclaims,
+unrelated-edition verse-count inflation, invalid-input view mismatch, late LXX
+footer leakage (including its hidden CSS rule), and the Armenian Book-menu locale
+regression. All were fixed by the implementer and independently retested.
+Codex authored the independent checker and acceptance documentation only.
+See `build/reports/stage1b-independent-REPORT.md` for commands, logs and limits.
+Automated implementation acceptance is complete; browser/physical-phone release
+acceptance remains the user's test. No merge, push or repository-file deletion.
+
+### 2026-10-07 — User accepts Stage1b local browser preview
+
+User viewed this implementation checkout's index.html and said "ok looks good".
+Local browser acceptance is recorded. Phone/PWA testing was not reported.
+This does not authorize merging or pushing; explicit approval remains required.
+
+### 2026-10-07 — Codex refines the parallel reading layout
+
+At the user's request, Codex made this presentation change directly. Both panes
+now use a quiet reading layout, compact verse references and equal text rhythm.
+One shared native-numbering notice replaces the duplicate left notice; desktop
+controls share grid rows so chapter headings start together. Mobile panes remain
+stacked. Edition-specific disclosures, Hebrew RTL, LXX notices and independent
+navigation are preserved. The translation chapter title omits layout metadata.
+Shell cache v49; data cache v3 unchanged. Checks: Stage1b 45/45, independent
+functional checks 14/14 including ten byte-identical Canon chapters, service
+worker 26/26, and git diff --check. User acceptance of the previous layout does
+not cover this refinement; revised visual appearance awaits preview refresh.
+No merge or push was performed.
+
+
 ## 2026-10-07 — Architect handoff independently verified (Codex)
 
 The supplied handoff was committed alone as `8d27c45`. Read-only GitHub checks
@@ -2213,10 +2381,20 @@ Stage1b and seven follow-up prompts are proposals in
 Codex wrote the verification script and documentation only. No merge, push or
 deletion was performed. Existing untracked source/patch/image files were retained.
 
-### 2026-10-07 — Stage1b local browser acceptance
 
-User viewed `build/cache/stage1b-implementation/index.html` and said "ok looks good".
-Local browser acceptance is recorded; phone/PWA testing was not reported.
-Stage1b implementation and independent verification are recorded on local branch
-`codex/lxx-stage1b` (acceptance record `9ebe225`, product code `3647438`).
-No merge or push approval is inferred from the browser acceptance.
+### 2026-10-07 — Stage1b merge and push approved
+
+User reviewed Codex's refinement at 7c58080 and said: "yes i reviewed your
+polishment. its clean. we can merge and push it all. then we continue."
+This explicitly authorizes the Stage1b merge and push. The implementation and
+review documents are included; pre-existing untracked sources, patch and image
+remain outside this change. Product files match 7c58080; documentation reconciles
+the original handoff verification with the feature history. Phone/PWA testing
+has not been reported. Subsequent stages require their own merge/push approval.
+
+Final pre-merge verification: full `npm test` exit0 in the fresh final clone
+(log: build/cache/stage1b-final-npm-fixed.log). Second-review F1 resolved by
+updating the two Delitzsch shell assertions from v48 to v49; no runtime change.
+Codex independently used the actual pre-change ten-chapter baseline (the second
+reviewer's separate empty-baseline smoke run does not establish byte equality).
+Git integrity check exit0; no deleted paths; no Scripture/data changes.

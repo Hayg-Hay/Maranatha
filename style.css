@@ -551,7 +551,42 @@ code { font-family:Consolas, monospace; }
 .lxx-segment.lxx-unnumbered .lxx-text { font-style:italic; color:var(--muted); }
 .lxx-flag { flex:0 0 auto; color:var(--accent); cursor:help; font-size:.8em; }
 #lxx-attribution { display:block; margin-top:6px; }
+/* An ID selector's display:block outranks the user-agent [hidden]{display:none},
+   so the footer attribution needs the same explicit hidden rule the chapter bar
+   got — otherwise a late LXX load can show it in Canon view. */
+#lxx-attribution[hidden] { display:none; }
 @media (max-width:700px) {
   .lxx-text { font-size:1.05rem; }
   .lxx-verse-num { min-width:2em; }
+}
+
+/* ----------------------------------------------------------
+   Parallel reading (independent numbering)
+
+   Two independent panes on desktop; stacked LXX then translation on
+   mobile. No row alignment and no synchronized scrolling — the banner
+   states this. Each pane owns its own controls.
+---------------------------------------------------------- */
+.parallel-view { margin-top:14px; }
+.parallel-view[hidden] { display:none; }
+.parallel-banner { background:var(--notice-bg); border:1px solid var(--notice-border); border-inline-start:4px solid var(--accent); padding:10px 14px; margin:0 0 14px; font-size:.92rem; }
+.parallel-panes { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); column-gap:28px; }
+.parallel-pane { display:grid; grid-template-rows:subgrid; grid-row:span 3; min-width:0; }
+.parallel-pane > h2 { margin:0; font-size:1.05rem; }
+.parallel-pane .chapter-bar { padding:8px 0; }
+.parallel-content { min-width:0; }
+.parallel-content .lxx-heading,
+.parallel-content .result-head { margin:18px 0 12px; }
+.parallel-content .mobile-verses { background:var(--paper); border:1px solid var(--line); padding:12px 14px; }
+.parallel-content .mobile-verse { grid-template-columns:2.5em minmax(0, 1fr); align-items:baseline; gap:.5em; padding:5px 0; border:0; border-bottom:1px solid var(--line); }
+.parallel-content .mobile-verse:last-child { border-bottom:0; }
+.parallel-content .mobile-reference { color:var(--muted); font-weight:normal; font-size:.85rem; text-align:right; }
+.parallel-content .mobile-verse-text { font-size:1.15rem; line-height:1.7; }
+.parallel-pane .lxx-verses,
+.parallel-pane .comparison-table { margin-bottom:0; }
+@media (max-width:700px) {
+  .parallel-panes { display:flex; flex-direction:column; gap:28px; }
+  .parallel-pane { display:block; width:100%; }
+  .parallel-content .mobile-verse-text { font-size:1.05rem; }
+  .parallel-content .mobile-verse { grid-template-columns:2em minmax(0, 1fr); }
 }

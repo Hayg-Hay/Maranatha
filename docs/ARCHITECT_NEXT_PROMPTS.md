@@ -1,6 +1,9 @@
 # Proposed opencode tasks — 2026-10-07
 
 Proposals only: nothing below is authorization to implement, merge, push or delete.
+Status update: Stage 1b was implemented, refined and browser-reviewed; the user
+approved its merge and push on 2026-10-07. Its prompt below is retained as the
+original specification. The remaining prompts describe subsequent work.
 Run tasks separately after the user approves their scope. Baseline: main includes
 Stage 1 through merge 8c69797; lxx-stage1 is 14fe85c. The independent acceptance
 record is build/reports/architect-handoff-REPORT.md. Each block is self-contained.

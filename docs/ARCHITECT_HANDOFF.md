@@ -14,6 +14,13 @@ Psalm 129 containers; the 100 unnumbered segments are a separate record type.
 See `build/reports/architect-handoff-REPORT.md` for evidence and limitations,
 and `docs/ARCHITECT_NEXT_PROMPTS.md` for proposals only.
 
+**Stage 1b update, 2026-10-07:** the independent panes and subsequent Codex
+layout refinement are implemented at `7c58080`. The user reviewed the refined
+browser preview and explicitly approved merging and pushing it. Shell cache is
+now v49; data cache remains v3. The Stage 1b proposal below is historical.
+Stage 2 and remaining follow-ups remain separate work; this approval does not
+authorize their future merges, pushes, deletions, or a Scripture change.
+
 ---
 
 ## 0. What you are taking over

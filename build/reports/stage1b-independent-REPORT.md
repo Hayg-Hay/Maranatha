@@ -1,5 +1,14 @@
 # Stage 1b independent architecture review — 2026-10-07
 
+Current status: user accepted Codex's refinement at `7c58080` and explicitly
+approved merge/push. A fresh final clone passes Stage1b 45/45, independent
+behaviour checks 14/14 with the actual pre-change baseline, Stage1 15/15 and
+native checks 8/8. DeepSeek's separate layout review is recorded in
+`stage1b-layout-second-review.md`. Its F1 identifies two stale version assertions;
+both were corrected to v49. Product code/data still match the reviewed preview.
+The original implementation review below is historical; its role and approval
+statements describe the earlier `3647438` review, before Codex's refinement.
+
 Implementer: opencode / DeepSeek. Independent verifier: Codex.
 User approved Stage1b implementation with "yes go ahead". Merge/push/deletion
 approval was not given. Codex authored verification scripts and documentation,
@@ -99,3 +108,34 @@ desktop side-by-side/mobile stacked layout, independent pickers, Hebrew RTL,
 1901 notices, native anomalous labels, flags/attribution and returning to Canon.
 Repeat on phone; hard refresh for the PWA shell update. Then explicitly approve
 any merge/push. Feature implementation is complete; visual release acceptance remains.
+
+### 2026-10-07 — Codex refines the parallel reading layout
+
+At the user's request, Codex made this presentation change directly. Both panes
+now use a quiet reading layout, compact verse references and equal text rhythm.
+One shared native-numbering notice replaces the duplicate left notice; desktop
+controls share grid rows so chapter headings start together. Mobile panes remain
+stacked. Edition-specific disclosures, Hebrew RTL, LXX notices and independent
+navigation are preserved. The translation chapter title omits layout metadata.
+Shell cache v49; data cache v3 unchanged. Checks: Stage1b 45/45, independent
+functional checks 14/14 including ten byte-identical Canon chapters, service
+worker 26/26, and git diff --check. User acceptance of the previous layout does
+not cover this refinement; revised visual appearance awaits preview refresh.
+No merge or push was performed.
+
+### 2026-10-07 — Stage1b merge and push approved
+
+User reviewed Codex's refinement at 7c58080 and said: "yes i reviewed your
+polishment. its clean. we can merge and push it all. then we continue."
+This explicitly authorizes the Stage1b merge and push. The implementation and
+review documents are included; pre-existing untracked sources, patch and image
+remain outside this change. Product files match 7c58080; documentation reconciles
+the original handoff verification with the feature history. Phone/PWA testing
+has not been reported. Subsequent stages require their own merge/push approval.
+
+Final pre-merge verification: full `npm test` exit0 in the fresh final clone
+(log: build/cache/stage1b-final-npm-fixed.log). Second-review F1 resolved by
+updating the two Delitzsch shell assertions from v48 to v49; no runtime change.
+Codex independently used the actual pre-change ten-chapter baseline (the second
+reviewer's separate empty-baseline smoke run does not establish byte equality).
+Git integrity check exit0; no deleted paths; no Scripture/data changes.
