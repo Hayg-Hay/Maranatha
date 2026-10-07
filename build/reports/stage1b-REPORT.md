@@ -1,5 +1,11 @@
 # Stage 1b report — independent LXX and translation panes
 
+**Independent acceptance, Codex (2026-10-07):** fresh clone of code commit
+`3647438` passes 14 independent cases, 45 Stage1b checks, 15 Stage1 checks,
+8 native-validator checks and the full npm suite (exit0). Scripture fidelity
+and ten-chapter Canon regression pass. See `stage1b-independent-REPORT.md`.
+Real-browser/phone acceptance remains unverified; no merge or push approved.
+
 Implementer: opencode (DeepSeek). Branch `codex/lxx-stage1b`.
 Base: `8d27c45890e561dc324d2ab67b73e05d97eb66ee` (current `main`, includes
 `lxx-stage1` via `8c69797`). No merge, push or deletion performed. Work stopped

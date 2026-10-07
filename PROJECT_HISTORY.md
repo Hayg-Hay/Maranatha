@@ -2306,3 +2306,21 @@ was rerun on the prior substantive fix and is left to the independent verifier o
 the final commit. The principal verifier has not signed off; the real-browser
 test remains unverified (loopback timeout, `file://` forbidden) and is the
 user's test.
+
+### 2026-10-07 — Stage1b independent acceptance (Codex)
+
+A fresh local clone of final product commit `3647438` passed 14 independently
+authored behaviour cases, 45 Stage1b checks, 15 Stage1 checks, 8 native checks and
+the complete npm suite (exit0). The ten-chapter WEB+KJV regression is byte-identical
+to the pre-change main baseline. Independent Python verification against the
+fresh pinned upstream XML reconfirmed 47 source hashes, 2,754,390 characters,
+ordered labels and per-verse text with zero differences; data paths are unchanged.
+
+Review found and returned five defects to DeepSeek: numbering heading overclaims,
+unrelated-edition verse-count inflation, invalid-input view mismatch, late LXX
+footer leakage (including its hidden CSS rule), and the Armenian Book-menu locale
+regression. All were fixed by the implementer and independently retested.
+Codex authored the independent checker and acceptance documentation only.
+See `build/reports/stage1b-independent-REPORT.md` for commands, logs and limits.
+Automated implementation acceptance is complete; browser/physical-phone release
+acceptance remains the user's test. No merge, push or repository-file deletion.
