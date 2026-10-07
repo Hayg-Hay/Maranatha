@@ -4,6 +4,18 @@ Written 2026-10-07. Commit this file to the repo (suggested path: `docs/ARCHITEC
 The repository and `PROJECT_HISTORY.md` are the project's memory; this file is the briefing that sits on top of them.
 When this file and the repo disagree, **the repo wins** — verify, then fix whichever is stale.
 
+**Current verified release, 2026-10-07:** merge `aa816df` shipped the three
+disclosures and native LXX reference lookup. Pages run `37646763640` succeeded;
+public HTTP checks verified shell v51, the native-reference code and the versioned
+LXX payload hash `fd52aa2f…ed1f2e`. Native references stay in standalone LXX;
+Canon/Parallel references and text search retain their documented Canon behavior.
+
+**Correction to §4.5 item 3:** the two named Sirach `<head>` elements belong to
+unused grc1 (Hart), not selected grc2 (Swete). In grc2, `Πατέρων ὕμνος.` is a
+line inside source verse43:33 and is already shipped there; `Περὶ ὑπομονῆς` is
+absent. There are no two dropped grc2 editorial heads to restore. Do not graft
+Hart headings into Swete. See `build/reports/sirach-heading-handoff-REPORT.md`.
+
 **Verified correction, 2026-10-07 (Codex):** GitHub `main` already includes
 `lxx-stage1` through merge `8c69797`; the branch remains at `14fe85c`. References
 below to an awaiting merge are stale; they are not instructions to merge again.

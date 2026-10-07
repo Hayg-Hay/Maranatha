@@ -2626,3 +2626,20 @@ metadata6/6, Stage1/native/Stage1b15/8/45, Canon14/14, complete npm exit0 withou
 skips. Source text and labels unchanged; only the approved metadata disclosures
 were added. Shell v51, DATA v3, versioned LXX URL; unrelated local files retained.
 Actual phone behavior remains the user's check after successful deployment.
+
+### 2026-10-07 — Native LXX mobile deployment and next handoff audit
+
+Merge aa816df was pushed; Pages run37646763640 completed successfully.
+Public HTTP checks confirm shellv51, native-reference app code and query-versioned
+LXX payload SHA256 fd52aa2f5f65f7e0a9c76d9cf203756c66f43ac1a91396d928be3b30d8ed1f2e.
+The user can update the phone, select LXX and open Gen1 without returning to Canon.
+This proves server publication; actual phone activation remains user-verified.
+https://github.com/Hayg-Hay/Maranatha/actions/runs/37646763640
+
+Continuing the handoff, independent pinned-XML inspection disproved §4.5 item3.
+The two named Sirach heads are in grc1 (Hart), not selected grc2 (Swete). Swete's
+Fathers title is already included inside43:33; the Patience heading is absent.
+The handoff and old proposed prompt are annotated as stale. No Scripture or
+heading was moved or copied between editions; no product policy changed.
+Evidence: build/reports/sirach-heading-handoff-REPORT.md. Remaining next UI
+proposal: native LXX Previous/Next navigation; font changes remain a user choice.

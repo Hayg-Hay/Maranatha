@@ -127,6 +127,12 @@ switch correctly and Canon is unchanged. STOP after report; independent review.
 
 ## Follow-up 3 — Sirach editorial headings policy
 
+**Superseded by source verification:** the two named `<head>` elements are in
+unused grc1 (Hart), not selected grc2 (Swete). Swete's Fathers title is already
+shipped within verse43:33; the Patience heading is absent. The original prompt
+below must not be executed against grc2. See the Sirach heading handoff report;
+no cross-edition heading restoration is authorized or needed.
+
 ```text
 === TASK: document excluded Sirach headings; you are the implementer ===
 STATUS: all head elements are currently excluded. Proposal: accept and explicitly
