@@ -2561,3 +2561,15 @@ the Canon hint is unchanged. `build/check-lxx-native-reference.mjs` gained an
 LXX → search → Canon placeholder-restoration case (43 PASS). Native checker,
 `check-stage1.mjs` canon regression and both independent checkers pass; no data,
 numbering, search, Canon/Parallel navigation or shell version changed.
+
+### 2026-10-07 — Native LXX references independently verified (Codex)
+
+Fresh-clone acceptance of 14959a2: native checks43/43, independent checks11/11,
+disclosures39/39 and independent6/6, Stage1/native/Stage1b15/8/45, Canon14/14,
+full npm exit0 with no skipped source checks after fixture setup. Gen1 click or
+Enter stays in LXX; exact native labels/components/prologue work; invalid native
+input preserves the view; pending requests respect latest input and view changes.
+The independent review caught a stale native hint after search returned to Canon;
+DeepSeek fixed it. No Scripture/data/importer/layout change; shell51, DATA3.
+User approved pushing the disclosures; main merge approval is still required.
+See build/reports/lxx-native-reference-independent-REPORT.md for evidence.
