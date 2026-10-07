@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "status": "proposal",
+  "review": {
+    "humanApproval": null
+  },
+  "license": {
+    "id": "CC-BY-SA-4.0",
+    "attribution": "Scheme declarations: Maranatha Stage 2a. Greek: First1KGreek / Swete, CC BY-SA 4.0; Hebrew: OSHB, CC BY 4.0; WEB Catholic Edition and imported KJV: source declarations in the shipped datasets.",
+    "changes": "Editorial scheme declarations only; no Scripture text changed."
+  },
+  "schemes": [
+    {
+      "id": "lxx-swete-native",
+      "label": "Swete Septuagint (native LXX numbering)",
+      "kind": "native",
+      "dataset": "lxx-swete",
+      "note": "Source edition verse numbering as printed; never renumbered."
+    },
+    {
+      "id": "web-c",
+      "label": "World English Bible Catholic Edition",
+      "kind": "canon",
+      "dataset": "web",
+      "note": "Comparison coverage in this pilot is limited to the Genesis 1 proposals; other books are unreviewed."
+    },
+    {
+      "id": "kjv",
+      "label": "King James Version (standard 66-book edition)",
+      "kind": "canon",
+      "dataset": "kjv",
+      "note": "Comparison coverage in this pilot is limited to the Genesis 1 proposals; the edition omits the deuterocanonical books."
+    },
+    {
+      "id": "oshb",
+      "label": "Open Scriptures Hebrew Bible (Masoretic)",
+      "kind": "canon",
+      "dataset": "he",
+      "note": "Comparison coverage in this pilot is limited to the Genesis 1 proposals; the edition covers the 39 protocanonical books only."
+    },
+    {
+      "id": "lxx-aligned",
+      "label": "LXX alignment pilot (Genesis 1)",
+      "kind": "virtual",
+      "nativeScheme": "lxx-swete-native",
+      "mapping": "data/lxx-swete-alignment.json",
+      "note": "Virtual, opt-in Canon comparison column. Resolves from the native Swete text; it is not a separate corpus and is excluded from Parallel translation choices and text search."
+    }
+  ],
+  "translations": {
+    "lxx-swete": "lxx-swete-native",
+    "lxx-aligned": "lxx-aligned",
+    "web": "web-c",
+    "kjv": "kjv",
+    "he": "oshb"
+  }
+}

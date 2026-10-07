@@ -2643,3 +2643,22 @@ The handoff and old proposed prompt are annotated as stale. No Scripture or
 heading was moved or copied between editions; no product policy changed.
 Evidence: build/reports/sirach-heading-handoff-REPORT.md. Remaining next UI
 proposal: native LXX Previous/Next navigation; font changes remain a user choice.
+
+### 2026-10-07 — Stage2a draft; user chooses one verse per row
+
+Stage2a began from d82d93b. Codex authored 31 content-based Genesis1 proposals
+in30 groups, including collective6-7 because the closing phrase crosses the
+Greek/WEB/KJV/OSHB boundary. DeepSeek independently reviewed the four-language
+ledger and implemented a research prototype, but stopped with HTTP402 Insufficient
+Balance before completion. No human textual approval or verified map is claimed.
+
+User approved the general interface and unresolved Genesis2 behavior, then
+rejected duplication and requested 1:1 rows plus a tiny notice. Codex made this
+UI-only change directly: Greek6 once at row6, Greek7 once at row7, with the short
+clause-placement note. Collective proposal/evidence remain unchanged. Direct
+Codex product work needs a second review; user preview review is pending.
+Presentation tests12/12, Stage2a UI checks37/37, resolver tests28/28. All source
+texts/labels/flags and existing corpora/importers remain unchanged. Six independent
+validator failures still block overall Stage2a acceptance. This branch is only
+an unfinished local draft; no merge, push or deletion authorized or performed.
+See build/reports/stage2a-DRAFT-STATUS.md for the precise scope and blockers.
