@@ -137,11 +137,11 @@ function staticChecks() {
   const needContainers = ['parallel-lxx-content', 'parallel-translation-content'];
   out('html-parallel-content-containers', needContainers.every((id) => doc.getElementById(id)));
 
-  // The right-pane heading must not claim canon numbering: the selected
-  // translation may itself print a source numbering (Delitzsch 1901).
-  out('html-parallel-heading-neutral',
-    !/canon numbering/i.test(doc.getElementById('parallel-translation-heading').textContent),
-    doc.getElementById('parallel-translation-heading').textContent);
+  // The right-pane heading must be neutral: neither "canon numbering" (false
+  // for source-numbered Delitzsch 1901) nor "numbering as printed" (false for
+  // OSHB, whose Masoretic numbering is mapped to Christian references).
+  const headingText = doc.getElementById('parallel-translation-heading').textContent;
+  out('html-parallel-heading-neutral', /^\s*Translation\s*$/.test(headingText), headingText);
 }
 
 // ---------------------------------------------------------------------------
@@ -169,7 +169,7 @@ async function desktopChecks() {
     !d.querySelector('#parallel-view').hidden && d.querySelector('#results').hidden
       && d.querySelector('#lxx-bar').hidden && canonControls(d).every((el) => el.hidden));
   out('parallel-heading-neutral',
-    !/canon numbering/i.test(d.querySelector('#parallel-translation-heading').textContent),
+    /^\s*Translation\s*$/.test(d.querySelector('#parallel-translation-heading').textContent),
     d.querySelector('#parallel-translation-heading').textContent);
 
   // Independent navigation: LXX pane moves alone...
@@ -244,6 +244,30 @@ async function desktopChecks() {
     const el = d.querySelector('#parallel-translation-content .hebrew-verse');
     return !!el && el.dir === 'rtl' && el.lang === 'he';
   })());
+
+  // Switching UI language must localize the parallel Book menu without
+  // disturbing the pane's book/chapter, chosen translation, or LXX navigation.
+  const pBookBefore = pBook.value;
+  const pChapterBefore = d.querySelector('#parallel-chapter').value;
+  const pTranslationBefore = transSel.value;
+  const lxxBookBefore = lxxBook.value;
+  const lxxContentBefore = d.querySelector('#parallel-lxx-content').innerHTML;
+  const language = d.querySelector('#language');
+  language.value = 'hy';
+  fire(w, language);
+  await waitFor(() => d.querySelector('#parallel-book').selectedOptions[0].textContent
+    === w.MARANATHA_LOCALE_HY.books[pBookBefore].name);
+  out('parallel-book-localized-on-language-switch',
+    d.querySelector('#parallel-book').value === pBookBefore
+      && d.querySelector('#parallel-chapter').value === pChapterBefore
+      && d.querySelector('#parallel-translation').value === pTranslationBefore
+      && d.querySelector('#parallel-lxx-book').value === lxxBookBefore
+      && d.querySelector('#parallel-lxx-content').innerHTML === lxxContentBefore,
+    `${d.querySelector('#parallel-book').value}/${pBookBefore} "${d.querySelector('#parallel-book').selectedOptions[0].textContent}"`);
+  language.value = 'en';
+  fire(w, language);
+  await waitFor(() => d.querySelector('#parallel-book').selectedOptions[0].textContent
+    === w.MARANATHA_LOCALE_EN.books[pBookBefore].name);
 
   // Canon-only reference/search invoked from the parallel view return to canon.
   d.querySelector('#reference').value = 'John 3:16';
