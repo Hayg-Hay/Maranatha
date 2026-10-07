@@ -2497,3 +2497,54 @@ implementer fixed the check without changing data or runtime. See the independen
 report and checker. User browser review and merge/push approval remain pending.
 The separately approved static publishing fix is already live on main at v49;
 retain its .nojekyll and history when a future disclosure merge is approved.
+
+### 2026-10-07 — Standalone native LXX reference navigation (opencode/DeepSeek)
+
+The user reported: picking LXX → Gen 1 → Open reference deactivated the LXX view.
+The reference box was deliberately canon-only; that is now superseded **for the
+standalone LXX view only**. Canon and Parallel reference behaviour is unchanged
+(Parallel still returns to Canon), and Text Search stays canon-only.
+
+**Native reference.** In the LXX view the Reference box now opens one native
+reference — `Book Chapter`, optionally `:Verse` — and stays in the LXX view. Book
+resolution reuses `ReferenceParser.normalizeKey` and the canonical parser's book
+map only; it accepts existing canon aliases, source book IDs and dataset labels,
+plus explicit component names (`Letter of Jeremiah`, `Susanna`, `Bel` /
+`Bel and the Dragon`) and `Esther prologue`. A bare book opens its first chapter
+with numbered verses (`Nehemiah` → native 11, `Genesis` → 1). Chapters and verse
+labels are validated **only** against `data/lxx-swete.json`, so the printed
+`Ps 88:84` is accepted while the absent `Ps 115:6` is refused. Single verses
+scroll to their native segment; the complete native chapter, flags, notices and
+unnumbered text are preserved. Ranges and multiple references are refused with a
+native-format message; invalid input keeps the current native passage and view;
+books absent from the edition (Ecclesiastes, the NT) report that clearly. No
+chapter mapping or aligned claim is made.
+
+**Async safety.** `loadLxx()` was changed from dropping a second callback to
+queueing every callback (still one script tag / one cache URL). A reference
+submitted during the initial lazy load executes once data arrives; a later
+submission supersedes an earlier one; leaving the view cancels a pending native
+navigation; all callbacks are guarded by current view and request generation, so
+no late callback can change Canon/Parallel, their pickers or the LXX footer. The
+standalone LXX render callback is now guarded like the parallel pane's.
+
+**Docs and cache.** README documents the accepted native syntax and the
+search/Parallel limits; the placeholder follows the selected view. Shell
+`CACHE_VERSION` bumped `v50 → v51` (three assertions updated, plus the same
+shell-version assertion in Codex's disclosure checker). Data cache stays `v3`; the
+LXX query URL stays `disclosures-20261007`; data/importers/canonical parser/layout
+are untouched and all three disclosures and the metadata hash
+(`fd52aa2f…ed1f2e`) are preserved.
+
+**Verification.** New `build/check-lxx-native-reference.mjs` (42 PASS): Gen 1 by
+click and Enter stays in LXX; aliases; bare `Nehemiah` → 11; components and
+`Esther prologue`; `Ps 88:84` accepted and scrolled, `Ps 115:6` rejected;
+unavailable chapter/book; malformed/multi/range inputs retain state; a reference
+during initial load executes; latest request wins with one script request;
+leaving the view cancels and leaves Canon/footer untouched; Canon and Parallel
+unchanged; ten-chapter Canon byte regression against `build/cache/stage1b-before.json`;
+data hash/counts/flags and disclosures unchanged. Also green: disclosure 39/39,
+Stage1 15/15, native 8/8, Stage1b 45/45, both independent checkers 0 failures,
+service-worker 26/26, full `npm test` exit 0 (ignored log
+`build/cache/lxx-native-reference-npm.log`). No merge, push or deletion; the
+real-browser/phone test remains the user's and Codex verifies in a fresh clone.

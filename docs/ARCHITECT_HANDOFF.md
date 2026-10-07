@@ -36,6 +36,22 @@ policy exception to the older universal data-cache-bump guidance, which is
 incomplete for versioned URLs. See `build/reports/lxx-disclosures-REPORT.md`;
 merge/push and the real-browser/phone test are still the user's.
 
+**Native LXX reference navigation, 2026-10-07 (opencode/DeepSeek):** the user
+reported that using the Reference box inside the LXX view (LXX → Gen 1 → Open
+reference) deactivated the LXX. The old canon-only reference restriction is now
+**superseded for the standalone LXX view only**: the reference box opens one
+native reference (`Book Chapter[:Verse]`), stays in LXX, resolves book names via
+the canonical parser's name map but validates chapters/verses only against the
+native dataset (so `Ps 88:84` is accepted; `Ps 115:6` refused), and refuses ranges
+and multiple references with a native-format message. Canon and Parallel
+reference behaviour is unchanged (Parallel returns to Canon) and search stays
+canon-only. `loadLxx()` now queues all callbacks; a reference submitted during the
+initial lazy load executes once data arrives, the latest submission wins, and
+leaving the view cancels a pending navigation. Shell `CACHE_VERSION` bumped
+`v50 → v51`; data cache stays `v3` and data/importers/layout are untouched. See
+`build/reports/lxx-native-reference-REPORT.md`; merge/push and the
+real-browser/phone test remain the user's.
+
 ---
 
 ## 0. What you are taking over
