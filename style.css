@@ -109,6 +109,8 @@ tbody td {
   font-display: swap;
 }
 .greek-verse { font-family:'Cardo','Gentium Plus',serif; font-size:1.2rem; line-height:1.7; }
+/* Latin (Clementine Vulgate): left-to-right, on the existing serif face. */
+.latin-verse { font-family:'Cardo','Gentium Plus',serif; line-height:1.7; }
 
 tbody td:not(.reference):not(.translation-label):not(.verse-placeholder) { color:var(--verse-ink); }
 .empty { padding:18px; background:var(--paper); border:1px solid var(--line); }
@@ -444,6 +446,7 @@ code { font-family:Consolas, monospace; }
   th, td { padding:7px; }
   .hebrew-verse { font-size:1.15rem; }
   .greek-verse { font-size:1.1rem; }
+  .latin-verse { font-size:1.1rem; }
 }
 
 /* ----------------------------------------------------------

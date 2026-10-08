@@ -58,6 +58,21 @@ class ReferenceParser {
 
         this.canon = canon;
         this.translations = translations;
+
+        // A translation may cover chapters beyond the canon extent (for
+        // example the Clementine Vulgate's Esther 11-16). Such a chapter is a
+        // valid reference target when, and only when, a translation passed to
+        // this parser actually carries it — so a native reference is never
+        // accepted on the strength of an unrelated loaded edition.
+        this.hasNativeChapter = (bookId, chapter) => {
+            if (!Number.isInteger(chapter) || chapter < 1) return false;
+            for (const data of Object.values(this.translations() || {})) {
+                const arr = data && data.books && data.books[bookId];
+                if (Array.isArray(arr) && chapter <= arr.length && Array.isArray(arr[chapter - 1])) return true;
+            }
+            return false;
+        };
+
         this.bookMap = new Map();
 
         for (const book of canon.books) {
@@ -184,7 +199,8 @@ class ReferenceParser {
                 const book = this.canon.books.find(b => b.id === bookId);
                 const chapter = Number(chapterText);
 
-                if (!Number.isInteger(chapter) || chapter < 1 || chapter > book.chapters.length)
+                if (!Number.isInteger(chapter) || chapter < 1
+                    || (chapter > book.chapters.length && !this.hasNativeChapter(bookId, chapter)))
                     throw new Error(`"${part}" — chapter ${chapterText} does not exist in this book.`);
 
                 const available = VerseAvailability.references(this.canon, this.translations(), bookId, chapter);
@@ -260,7 +276,7 @@ class ReferenceParser {
   ];
 
   let locale = window.MARANATHA_LOCALE_EN;
-  let parser = new ReferenceParser(MARANATHA_CANON, locale);
+  let parser = new ReferenceParser(MARANATHA_CANON, locale, selectedTranslationData);
 
 
   // MARANATHA_CANON is provided by data/canon.js (structure only: ids, testament,
@@ -286,6 +302,11 @@ class ReferenceParser {
     { id: 'he', label: 'Hebrew (OSHB)', short: 'Hebrew (OSHB)', src: 'data/he.js' },
     { id: 'luther1912', label: 'Luther Bible 1912', short: 'Luther 1912', src: 'data/luther1912.js' },
     { id: 'segond1910', label: 'Louis Segond (1910)', short: 'Segond 1910', src: 'data/segond1910.js' },
+    // The Latin Clementine Vulgate (1598) published by eBible.org as latVUC.
+    // It declares nativeVersification in its data, so every chapter is treated
+    // as edition-specific numbering and is never row-aligned with canon
+    // translations on the strength of matching verse numbers alone.
+    { id: 'vulc', label: 'Vulgata Clementina (1598)', short: 'VULC', src: 'data/vulc.js', description: 'Latin Clementine Vulgate (1598), including the deuterocanonical books, published by eBible.org as latVUC. Public domain. Read in its own native verse numbering; it is not aligned row-for-row with canon-numbered translations. Distinct from the Nova Vulgata (1979).' },
     // `description` is the visible source explanation. It is deliberately a
     // separate field from `note` (which renders the "Under audit" disclosure);
     // the Delitzsch text is not under audit, it is a documented public-domain
@@ -610,7 +631,7 @@ function init() {
     populateLanguages();
     const startLocale = restoreLocale();
     locale = localeById(startLocale);
-    parser = new ReferenceParser(canon, locale);
+    parser = new ReferenceParser(canon, locale, selectedTranslationData);
     refs.language.value = startLocale;
 
     populateBooks();
@@ -669,6 +690,9 @@ function init() {
 
     refs.parallelTranslation.addEventListener('change', () => {
         const t = TRANSLATIONS.find((x) => x.id === refs.parallelTranslation.value);
+        // The pane's chapter extent depends on its own translation, so rebuild
+        // the Chapter list before rendering (e.g. VULC gains Esther 11-16).
+        populateParallelChapters();
         if (t && !loaded.has(t.id)) loadTranslation(t, () => renderParallelTranslationPane());
         else renderParallelTranslationPane();
     });
@@ -984,6 +1008,15 @@ function init() {
     element.classList.add('hebrew-verse');
   }
 
+  // Latin-language styling for translations that are Latin text (the
+  // Clementine Vulgate). Left-to-right, tagged lang="la" so the browser picks a
+  // suitable Latin/Scripture face, using the existing appearance only.
+  function styleLatinLanguageVerse(element) {
+    element.dir = 'ltr';
+    element.lang = 'la';
+    element.classList.add('latin-verse');
+  }
+
   function isSquareHebrew(id) { return id === 'delitzsch' || id === 'delitzsch1901'; }
 
   function getStoredAppearance() {
@@ -1086,7 +1119,7 @@ function init() {
     const entry = LOCALES.find((l) => l.id === id);
     if (!entry || !window[entry.global]) return;
     locale = window[entry.global];
-    parser = new ReferenceParser(canon, locale);
+    parser = new ReferenceParser(canon, locale, selectedTranslationData);
     refs.language.value = entry.id;
     try { localStorage.setItem('maranatha-locale', entry.id); } catch (error) {}
     populateBooks();
@@ -1149,7 +1182,10 @@ function init() {
 
   function populateParallelChapters() {
     const book = canon.books.find((b) => b.id === refs.parallelBook.value) || canon.books[0];
-    populateChapterSelect(refs.parallelChapter, book);
+    // The Parallel translation pane is independent of the main selection, so
+    // its chapter extent follows its own chosen translation (e.g. Clementine
+    // Esther 11-16 while VULC is the pane's translation).
+    populateChapterSelect(refs.parallelChapter, book, [refs.parallelTranslation.value]);
   }
 
   function translationGroup(groupId) {
@@ -1329,6 +1365,32 @@ function init() {
       .filter(Boolean);
   }
 
+  // The datasets the reference parser may validate against.
+  //
+  // A native-numbered edition (the Clementine Vulgate) contributes its
+  // references ONLY while it is selected, and while any native edition is in
+  // play the parser validates strictly against the current selection — so a
+  // stale, deselected native edition can never extend a reference range, and
+  // when only the Vulgate is selected a previously loaded canon edition cannot
+  // silently keep a reference valid. When no native edition is loaded at all,
+  // the historical behaviour (every loaded translation, selected or not) is
+  // preserved.
+  function selectedTranslationData() {
+    const all = window.MARANATHA_TRANSLATIONS || {};
+    const selected = selectedTranslations();
+    const selectedIds = new Set(selected.map(t => t.id));
+    const anyNativeLoaded = Object.values(all).some(d => d && d.nativeVersification);
+    const nativeInPlay = anyNativeLoaded || selected.some(t => isNativeVersification(t));
+    const out = {};
+    for (const [id, data] of Object.entries(all)) {
+      const isNative = !!(data && data.nativeVersification);
+      if (isNative && !selectedIds.has(id)) continue;
+      if (nativeInPlay && !selectedIds.has(id)) continue;
+      out[id] = data;
+    }
+    return out;
+  }
+
   // Loads data/<id>.js via a dynamically created <script> tag — not fetch().
   // Script tags work fine under file://; fetch() of local files does not.
   function loadTranslation(t, onReady) {
@@ -1349,19 +1411,36 @@ function init() {
     return canon.books.find(b => b.id === refs.book.value);
   }
 
-  function populateChapterSelect(select, book) {
+  function populateChapterSelect(select, book, translationIds = selectedTranslationIds()) {
     if (!book) return;
+    const previous = select.dataset.bookId === book.id ? select.value : '';
+    select.dataset.bookId = book.id;
     select.innerHTML = '';
-    book.chapters.forEach((verseCount, i) => {
+    // Canon extent extended by any loaded native translation in scope (e.g.
+    // Clementine Esther 11-16). The current selection is preserved when still
+    // valid, so a lazy load cannot move the reader off their chapter.
+    const count = effectiveChapterCount(book.id, translationIds);
+    for (let i = 1; i <= count; i += 1) {
       const opt = document.createElement('option');
-      opt.value = String(i + 1);
-      opt.textContent = `Chapter ${i + 1}`;
+      opt.value = String(i);
+      opt.textContent = `Chapter ${i}`;
       select.appendChild(opt);
-    });
+    }
+    if ([...select.options].some(o => o.value === previous)) select.value = previous;
   }
 
   function populateChapters() {
     populateChapterSelect(refs.chapter, currentBook());
+  }
+
+  // Rebuilds the canon Chapter selector when the effective chapter count for
+  // the current book changes (for example after the Clementine Vulgate's data
+  // finishes loading and Esther gains chapters 11-16). Cheap no-op otherwise.
+  function refreshChapterOptions() {
+    const book = currentBook();
+    if (!book) return;
+    const count = effectiveChapterCount(book.id);
+    if (refs.chapter.options.length !== count) populateChapterSelect(refs.chapter, book);
   }
 
   // Moves to the next/previous chapter, crossing into the next/previous
@@ -1374,8 +1453,9 @@ function init() {
     if (!book) return;
     const currentChapter = Number(refs.chapter.value);
     const targetChapter = currentChapter + direction;
+    const chapterCount = effectiveChapterCount(book.id);
 
-    if (targetChapter >= 1 && targetChapter <= book.chapters.length) {
+    if (targetChapter >= 1 && targetChapter <= chapterCount) {
       setBrowseMode();
       refs.chapter.value = String(targetChapter);
       render();
@@ -1390,7 +1470,7 @@ function init() {
     setBrowseMode();
     refs.book.value = targetBook.id;
     populateChapters();
-    refs.chapter.value = direction > 0 ? '1' : String(targetBook.chapters.length);
+    refs.chapter.value = direction > 0 ? '1' : String(effectiveChapterCount(targetBook.id));
     render();
     scrollToTop();
   }
@@ -1415,14 +1495,57 @@ function init() {
     return numbers.size ? Math.max(...numbers) : 0;
   }
 
+  // A translation may declare nativeVersification in its data (e.g. the Latin
+  // Clementine Vulgate). Such a translation keeps its own numbering in EVERY
+  // chapter and is never row-aligned with another translation: equal verse
+  // numbers are not evidence of equivalent text, and equal verse counts are not
+  // evidence of correspondence either.
+  function isNativeVersification(t) {
+    return !!(t && (window.MARANATHA_TRANSLATIONS || {})[t.id]?.nativeVersification);
+  }
+
   // Edge cases for translations that declare an edition-specific versification
-  // for a chapter (e.g. the vocalized Delitzsch 1901). These are deliberately
-  // NOT row-aligned with canon-numbered translations; they are rendered in their
-  // own block under their own (source) verse numbers with a visible notice, so
-  // equal row positions are never mistaken for equivalent verses.
+  // for a chapter (e.g. the vocalized Delitzsch 1901) or a whole-translation
+  // native numbering (e.g. the Clementine Vulgate). These are deliberately NOT
+  // row-aligned with canon-numbered translations; they are rendered in their own
+  // block under their own (source) verse numbers with a visible notice, so equal
+  // row positions are never mistaken for equivalent verses.
   function versificationEntry(t, bookId, chapterNum) {
     const datasets = window.MARANATHA_TRANSLATIONS || {};
-    return datasets[t.id]?.versification?.[bookId]?.[chapterNum] || null;
+    const declared = datasets[t.id]?.versification?.[bookId]?.[chapterNum];
+    if (declared) return declared;
+    if (datasets[t.id]?.nativeVersification) {
+      const arr = datasets[t.id].books?.[bookId]?.[chapterNum - 1];
+      if (!Array.isArray(arr)) return null;
+      const canonBook = canon.books.find(b => b.id === bookId);
+      return {
+        source: arr.filter(Boolean).length,
+        canon: (canonBook && canonBook.chapters[chapterNum - 1]) || 0,
+        native: true,
+        note: 'This translation keeps its own native verse numbering; equal verse numbers are not a verified correspondence with other translations.',
+      };
+    }
+    return null;
+  }
+
+  function selectedTranslationIds() {
+    return selectedTranslations().map(t => t.id);
+  }
+
+  // Number of chapters actually shown for a book: the canon extent, extended by
+  // any loaded translation in `translationIds` that carries native extra
+  // chapters (e.g. Clementine Esther 11-16). Never rewrites canon.js. The
+  // caller supplies the ids so the independent Parallel pane can reflect its
+  // own chosen translation rather than the main selection.
+  function effectiveChapterCount(bookId, translationIds = selectedTranslationIds()) {
+    const all = window.MARANATHA_TRANSLATIONS || {};
+    const canonBook = canon.books.find(b => b.id === bookId);
+    let count = canonBook ? canonBook.chapters.length : 0;
+    for (const id of translationIds) {
+      const arr = all[id]?.books?.[bookId];
+      if (Array.isArray(arr) && arr.length > count) count = arr.length;
+    }
+    return count;
   }
 
   function extentForTranslations(translations, bookId, chapterNum) {
@@ -1442,6 +1565,16 @@ function init() {
       (versificationEntry(t, bookId, chapterNum) ? mismatched : aligned).push(t);
     }
     return { aligned, mismatched };
+  }
+
+  // One block for the aligned (row-comparable) translations, then one block per
+  // mismatched translation. Keeping mismatched editions apart prevents a second
+  // independently-numbered edition from being silently aligned with the first.
+  function buildVersificationBlocks(aligned, mismatched) {
+    const blocks = [];
+    if (aligned.length) blocks.push(aligned);
+    for (const t of mismatched) blocks.push([t]);
+    return blocks.length ? blocks : [[]];
   }
 
   function cellFor(t, bookId, chapterNum, verseNum) {
@@ -1591,6 +1724,8 @@ function init() {
       } else if (tId === 'byz') {
         td.lang = 'el';
         td.classList.add('greek-verse');
+      } else if (tId === 'vulc') {
+        styleLatinLanguageVerse(td);
       }
     } else {
       td.className = 'verse-placeholder';
@@ -1837,7 +1972,9 @@ function init() {
         const notice = document.createElement('p');
         notice.className = 'notice versification-notice';
         notice.setAttribute('role', 'note');
-        notice.textContent = `${t.label} uses a different verse numbering in this chapter (${v.source} verses; canon.js expects ${v.canon}). ${v.note} Its verses below are numbered as in the source edition and are not aligned row-for-row with canon-numbered translations.`;
+        notice.textContent = v.native
+          ? `${t.label} is shown in its own native verse numbering (${v.source} verses in this chapter of the source edition); it is not aligned row-for-row with any other translation, and equal verse numbers are not a verified correspondence.`
+          : `${t.label} uses a different verse numbering in this chapter (${v.source} verses; canon.js expects ${v.canon}). ${v.note} Its verses below are numbered as in the source edition and are not aligned row-for-row with canon-numbered translations.`;
         refs.results.appendChild(notice);
       }
     }
@@ -1869,8 +2006,12 @@ function init() {
       ? new Set([hv.verse])
       : null;
 
+    // Aligned translations share one row-for-row block. Each mismatched
+    // translation gets its OWN block: two mismatched editions must never be
+    // placed in the same table, where equal row positions would falsely imply
+    // correspondence (e.g. Vulgata Clementina beside Delitzsch 1901).
     const { aligned, mismatched } = partitionByVersification(translations, book.id, chapterNum);
-    const blocks = aligned.length && mismatched.length ? [aligned, mismatched] : [translations];
+    const blocks = buildVersificationBlocks(aligned, mismatched);
     for (const group of blocks) {
       const groupVerseCount = extentForTranslations(group, book.id, chapterNum);
       appendResultBlock({
@@ -1916,7 +2057,7 @@ function init() {
       const book = canon.books.find(b => b.id === group.bookId);
       const name = (locale.books[book.id] && locale.books[book.id].name) || book.id;
       const { aligned, mismatched } = partitionByVersification(translations, book.id, group.chapter);
-      const blocks = aligned.length && mismatched.length ? [aligned, mismatched] : [translations];
+      const blocks = buildVersificationBlocks(aligned, mismatched);
 
       const blockKey = `${book.id}-${group.chapter}`;
       const effectiveContext = blockContext(blockKey);
@@ -2122,6 +2263,7 @@ function init() {
         body.className = 'search-text';
         if (s.translationId === 'he') styleHebrewVerse(body, scriptMode);
         else if (isSquareHebrew(s.translationId)) styleHebrewLanguageVerse(body);
+        else if (s.translationId === 'vulc') styleLatinLanguageVerse(body);
         if (scriptModes.length > 1) {
           const label = document.createElement('small');
           label.className = 'mobile-translation-label';
@@ -2190,7 +2332,25 @@ function init() {
     const others = displayTranslations(selectedTranslations()).filter((t) =>
       t.id !== excludeId && loaded.has(t.id) && window.MARANATHA_TRANSLATIONS[t.id]);
 
+    // The Clementine Vulgate keeps its own native verse numbering. Presenting a
+    // same-numbered verse from a different edition as an aligned comparison
+    // would assert a correspondence that has not been established — in either
+    // direction — so all cross-edition alignment involving vulc is suppressed
+    // and replaced with a visible native-numbering notice.
+    const vulcInvolved = excludeId === 'vulc' || others.some((t) => t.id === 'vulc');
+    if (vulcInvolved && isNativeVersification({ id: 'vulc' })) {
+      const notice = document.createElement('p');
+      notice.className = 'notice versification-notice compare-native-notice';
+      notice.setAttribute('role', 'note');
+      notice.textContent = 'Vulgata Clementina (1598) is shown in its own native verse numbering. Same-numbered verses in another translation are not a verified correspondence, so no aligned comparison is shown.';
+      panel.appendChild(notice);
+      if (excludeId === 'vulc') return panel;
+    }
+
     for (const t of others) {
+      // A native-numbered edition is never shown as a same-numbered verse
+      // beside another edition; the notice above explains why.
+      if (isNativeVersification(t)) continue;
       const row = document.createElement('div');
       row.className = 'compare-row';
 
@@ -2987,6 +3147,7 @@ function init() {
     caption.className = 'interlinear-caption';
     caption.dir = 'auto';
     if (isSquareHebrew(translation.id)) styleHebrewLanguageVerse(caption);
+    else if (translation.id === 'vulc') styleLatinLanguageVerse(caption);
     caption.textContent = cell.text;
     block.appendChild(caption);
     if (cell.state === 'note') {
@@ -3672,6 +3833,8 @@ function init() {
       return;
     }
 
+    // A first lazy load may add native chapters after the picker was filled.
+    if (refs.parallelChapter.options.length !== effectiveChapterCount(book.id, [t.id])) populateParallelChapters();
     const chapterNum = Number(refs.parallelChapter.value) || 1;
     // Scope the verse extent to the pane's chosen translation. Using the global
     // chapterExtent() would let another loaded edition with a longer chapter
@@ -3742,9 +3905,18 @@ function init() {
     refs.results.innerHTML = '';
 
     // An interlinear overrides the normal reading view (works even with no
-    // translation selected — a selected one is used only as a caption).
+    // translation selected — a selected one is used only as a caption). A
+    // native-numbered caption edition (the Clementine Vulgate) is never aligned
+    // to the original-language interlinear: the same reference numbers are not
+    // a verified correspondence, so the interlinear is disabled with a visible
+    // explanation and the independent Latin reading is kept instead.
     const interlinear = activeInterlinear();
-    if (interlinear) {
+    const nativeCaption = interlinear && baseTranslations[0] && isNativeVersification(baseTranslations[0])
+      ? baseTranslations[0] : null;
+    if (interlinear && nativeCaption) {
+      setMessage(`${nativeCaption.label} keeps its own native verse numbering, so the ${interlinear.label} interlinear is not aligned to it; showing the independent reading.`);
+    }
+    if (interlinear && !nativeCaption) {
       setMessage('');
       refs.contextBtn.hidden = true;
       if (interlinear.perBook) {
@@ -3797,8 +3969,11 @@ function init() {
       setMessage('Select at least one translation to display.');
       return;
     }
-    setMessage('');
+    if (!nativeCaption) setMessage('');
     populateSearchTranslations();
+    // Reflect any native extra chapters a newly loaded translation brings
+    // (e.g. Clementine Esther 11-16) without moving the current chapter.
+    refreshChapterOptions();
 
     // At phone widths every selector choice uses the dedicated stacked
     // reading view. Multi-column and multi-row remain meaningful desktop

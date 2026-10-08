@@ -1,0 +1,2 @@
+# Published sources are byte-pinned; never rewrite their line endings.
+build/sources/vulgata-clementina/** -text

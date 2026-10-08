@@ -9,15 +9,20 @@ thin `app.js` + `index.html` + `style.css` front end with no framework.
 
 ## Status
 
-**Nine translations are registered: World English Bible (WEB-C,
+**Ten translations are registered: World English Bible (WEB-C,
 73 books), King James Version (KJV, 66 books), Byzantine Majority Text (Greek
 NT, 27 books), Hebrew (OSHB, 39 protocanonical OT books), Luther 1912, Louis
 Segond 1910, the two Delitzsch Hebrew NT editions, and the Western Armenian NT
-(1853, under audit).** Only WEB is selected by default; open `index.html`, tick
+(1853, under audit), and Vulgata Clementina (1598, Latin, VULC).** Only WEB is selected by default; open `index.html`, tick
 another translation, pick a book/chapter, and you'll see them side by side.
 WEB-C supplies the 7 Catholic deuterocanonical books (Tobit, Judith, Wisdom,
 Sirach, Baruch, 1–2 Maccabees); translations that do not cover them (e.g. KJV)
 show a "not available" placeholder for those books — expected, not a bug.
+
+VULC supplies all 73 books in the published eBible `latVUC` source: 1,334
+chapters and 35,809 verses. Its native numbering is preserved in separate
+reading blocks, with no asserted cross-edition alignment. See
+[source, import and validation documentation](docs/VULGATA_CLEMENTINA.md).
 
 **A separate "LXX (native numbering)" view (Stage 1) is also live**: the Swete
 Septuagint in its own source numbering, standalone and deliberately NOT aligned
