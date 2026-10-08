@@ -120,10 +120,17 @@ tbody td {
   word-break:normal;
   line-break:strict;
 }
+.otb-ja-verse { white-space:pre-wrap; }
 .source-heading { margin:.2em 0 .6em; padding:.35em .55em; border-left:3px solid var(--line); background:var(--paper); }
 .source-heading-text { font-style:italic; }
 .source-heading-note { margin-left:.4em; font-size:.8em; opacity:.75; }
+/* Unnumbered New-Testament variant notes: shown outside Scripture, never
+   inserted into a verse or reading block. */
+.source-note { margin:.2em 0 .6em; padding:.35em .55em; border-left:3px solid var(--accent); background:var(--paper); }
+.source-note-text { font-style:italic; }
+.source-note-label { margin-left:.4em; font-size:.8em; opacity:.75; }
 .verse-source-gap { color:var(--muted); }
+.verse-source-placeholder { color:var(--placeholder); }
 
 tbody td:not(.reference):not(.translation-label):not(.verse-placeholder) { color:var(--verse-ink); }
 .empty { padding:18px; background:var(--paper); border:1px solid var(--line); }

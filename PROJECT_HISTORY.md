@@ -1,5 +1,67 @@
 # Maranatha Project History
 
+## Open Translation Bible (Japanese) — October 8, 2026
+
+The publisher's recent **Open Translation Bible (OTB) Japanese edition**
+(`lang/ja-JP`, launched December 2025, licensed **CC BY-SA 4.0**) is now a
+registered translation (`otb-ja`, short `OTB-JA`, language `ja`). It is imported
+offline by `build/import-otb-ja.mjs` from the pinned JSON of
+`OpenTranslationBible/open-bible` at commit
+`31d411ac1c2d277242a3bd85697f354eaa11526b`. The manifest (`source-files.json`),
+the licence (`LICENCE.md`) and the upstream readme are each SHA256-pinned in the
+importer, and every listed source file is re-verified against both its SHA256
+and its git blob; the set of JSON files on disk must match the manifest exactly,
+so editing the manifest alone cannot mask altered Scripture.
+
+The source is 1192 JSON files (1189 chapters plus three metadata files). Each
+chapter is `{ book, chapter, verses }`; numbered records are
+`{ verse, text: string[] }` and unnumbered records omit `verse`. Canonical book
+identity comes from the explicit `01..66` directory index mapped onto the stable
+ids, never from the free-text (and, in 20 directories, varying) book labels.
+The import validates contiguous numbering with no gaps or duplicates, non-empty
+UTF-8 segments, and the expected totals: **66 books, 1189 chapters, 31103
+numbered records, 3777 unnumbered records** (3636 literal `---` separators, 138
+Psalm textual records, 3 New-Testament variant notes at Mark 16, John 7 and
+John 8). Psalm filenames use three digits (詩篇-001.json); all others two.
+
+Two source records are numeric-only placeholders — **Matthew 23:14 (`[14]`) and
+John 5:4 (`[4]`)** — with no Scripture text. The exact strings are retained in
+`books[]`, tagged with `status: "source-placeholder"` and an authored notice
+that no text was supplied or inferred; the notice is rendered at the verse slot
+and is never labelled a source footnote. The three New-Testament notes are
+rendered as source notes outside Scripture (never inserted into a verse or a
+reading block), the Psalm records populate the existing `psalmHeadings` support,
+and the 3636 separators are preserved in `sourceRecords` with their source index
+and `beforeVerse`/`afterVerse` position. Each verse's original text-array is kept
+verbatim in `verseSegments` and joined with newlines in `books[]`, so publisher
+line breaks are preserved.
+
+The translation declares **`nativeVersification`** (its own reading block;
+cross-edition comparison suppressed in both search directions) and
+**`nativeReferenceScope`** (as the sole selected edition its extent is
+authoritative, so Daniel has 12 chapters and 3 John 1 has 15 verses; Daniel 13
+is invalid). The original-language interlinear is disabled with an explanation
+rather than captioned by OTB-JA. Japanese references reuse the existing
+grapheme-aware NFC search and parser; the 16 publisher book-name spellings not
+already present were added as aliases to `build/sources/bungo/book-names.json`
+and `data/locales/ja.{json,js}` was regenerated. **Provenance is undocumented by
+the publisher**, so no translator, source-language, method or review claim is
+made and the edition is not accuracy-certified; the source/licence details live
+in `data/LICENSE-otb-ja.md` and `docs/OTB_JA.md`.
+
+The shell cache version was bumped `v56 → v57` (app.js/style.css and the new
+`data/locales/ja.js`), with the exact version assertions in the existing tests
+updated; the data cache stays `v3`. `build/check-otb-ja-independent.mjs` re-reads
+the raw source independently (no importer import), re-verifies every manifest
+SHA256 and git blob, and compares every numbered verse, preserved segment and
+unnumbered record against `data/otb-ja.json`, plus the `--check` idempotence.
+`build/test-otb-ja.mjs` covers the importer contract, the JSON/JS twin, real
+JSDOM desktop/mobile `file://` loading with network blocked, lazy load, the
+placeholder notices, the separated source notes, the 12- and 15-verse native
+bounds, comparison/interlinear guards and kana-safe search. `npm test` now also
+runs `build/check-otb-ja-independent.mjs`, `build/import-otb-ja.mjs --check` and
+`build/test-otb-ja.mjs`.
+
 ## Bungo-yaku (Classical Japanese) — October 8, 2026
 
 The **Bungo-yaku / Taisho-kaiyaku** — the Meiji Old Testament (1887) and Taisho

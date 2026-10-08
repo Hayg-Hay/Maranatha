@@ -9,12 +9,13 @@ thin `app.js` + `index.html` + `style.css` front end with no framework.
 
 ## Status
 
-**Eleven translations are registered: World English Bible (WEB-C,
+**Twelve translations are registered: World English Bible (WEB-C,
 73 books), King James Version (KJV, 66 books), Byzantine Majority Text (Greek
 NT, 27 books), Hebrew (OSHB, 39 protocanonical OT books), Luther 1912, Louis
 Segond 1910, the two Delitzsch Hebrew NT editions, the Western Armenian NT
-(1853, under audit), Vulgata Clementina (1598, Latin, VULC), and Bungo-yaku
-(Classical Japanese, BUNGO).** Only WEB is selected by default; open `index.html`, tick
+(1853, under audit), Vulgata Clementina (1598, Latin, VULC), Bungo-yaku
+(Classical Japanese, BUNGO), and the Open Translation Bible Japanese edition
+(OTB-JA).** Only WEB is selected by default; open `index.html`, tick
 another translation, pick a book/chapter, and you'll see them side by side.
 WEB-C supplies the 7 Catholic deuterocanonical books (Tobit, Judith, Wisdom,
 Sirach, Baruch, 1–2 Maccabees); translations that do not cover them (e.g. KJV)
@@ -328,6 +329,14 @@ Patriarchs, etc. are explicitly out of scope).
   slots. It is read in its own source-indexed numbering, with 12 Daniel
   chapters and three disclosed source gaps; see `docs/BUNGO.md` and
   `docs/BUNGO_SOURCE_DEFECTS.md`.
+- OTB-JA (Open Translation Bible, Japanese, CC BY-SA 4.0) — the publisher's
+  recent Japanese edition (launched December 2025), imported offline via
+  `build/import-otb-ja.mjs` from the pinned `lang/ja-JP` JSON of
+  `OpenTranslationBible/open-bible`. 66 books, 1189 chapters, 31103 numbered
+  source records and 3777 preserved unnumbered records. It is read in its own
+  native numbering (12 Daniel chapters; 15 verses in 3 John 1). The publisher
+  does not document the translation/editorial method, so no accuracy
+  certification is made; see `docs/OTB_JA.md`.
 
 RSV-CE is explicitly excluded: copyrighted by the National Council of
 Churches, not freely redistributable.
@@ -511,6 +520,47 @@ Reproduce with:
 node build/build-bungo-locale.mjs --check
 node build/import-bungo.mjs --check
 node build/test-bungo.mjs
+```
+
+## Open Translation Bible (Japanese)
+
+`OTB-JA` is the publisher's **Open Translation Bible (OTB) Japanese edition**
+(`lang/ja-JP`), launched December 2025 and licensed **CC BY-SA 4.0**. It is
+imported offline by `build/import-otb-ja.mjs` from the pinned JSON of
+`https://github.com/OpenTranslationBible/open-bible` (commit
+`31d411ac1c2d277242a3bd85697f354eaa11526b`). The manifest, licence and readme are
+SHA256-pinned, and every source file is re-verified against both its SHA256 and
+its git blob, so altering the manifest alone cannot mask altered Scripture. Full
+provenance is in `docs/OTB_JA.md` and `data/LICENSE-otb-ja.md`.
+
+Key properties:
+
+- **66 books / 1189 chapters / 31103 numbered source records**, plus **3777
+  unnumbered records**: 3636 literal `---` separators, 138 Psalm textual
+  records and 3 New-Testament variant notes (Mark 16, John 7, John 8).
+- **`nativeVersification` / `nativeReferenceScope`**: OTB-JA is read in its own
+  reading block and suppresses same-numbered cross-edition comparisons in both
+  search directions. As the sole selected edition its extent is authoritative —
+  Daniel has 12 chapters and 3 John 1 has 15 verses.
+- **Placeholders**: the source supplies no Scripture for **Matthew 23:14**
+  (`[14]`) and **John 5:4** (`[4]`); the exact markers are shown with an authored
+  notice that no text was supplied, never filled from another source and never
+  labelled a source footnote.
+- **Source notes** (the three New-Testament variant notes) and the 138 Psalm
+  textual records are rendered separately from Scripture; the 3636 `---`
+  separators are preserved in dataset metadata with their positions.
+- **Conversion**: each verse's original text segments are joined with newlines
+  (line breaks preserved); no word is added, removed or corrected.
+- **Provenance is undocumented by the publisher**: the translation/editorial
+  method is not asserted, and the edition is **not accuracy-certified**. This is
+  the publisher's recent OTB Japanese edition — not the Kogoyaku or Bungo-yaku.
+
+Reproduce with:
+
+```bash
+node build/import-otb-ja.mjs --check
+node build/check-otb-ja-independent.mjs
+node build/test-otb-ja.mjs
 ```
 
 ## Project structure

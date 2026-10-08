@@ -1,3 +1,4 @@
 # Published sources are byte-pinned; never rewrite their line endings.
 build/sources/vulgata-clementina/** -text
 build/sources/bungo/** -text
+build/sources/otb-ja/** -text

@@ -35,6 +35,10 @@ class VerseAvailability {
         // separately indexed text. It is never filled from an adjacent verse or
         // guessed; the notice is shown instead.
         if (meta?.status === 'source-gap') return { state: 'source-gap', note: meta.note, context: meta.context };
+        // A source placeholder: the source supplies only a bracketed marker, no
+        // Scripture. The exact marker is still shown, with an authored notice
+        // (never presented as a source footnote) that no text was supplied.
+        if (meta?.status === 'source-placeholder') return { state: 'text', text: text || meta.text || '', note: meta.note, placeholder: true };
         if (meta?.status === 'note') return { state: 'note', text: meta.text, note: meta.note };
         if (text) return { state: meta?.status === 'additional' ? 'additional' : 'text', text, note: meta?.note };
         return { state: 'missing-verse' };
@@ -404,6 +408,14 @@ class ReferenceParser {
     // selected edition its source extent, including 12 Daniel chapters, is
     // authoritative). Its three source gaps are disclosed inline.
     { id: 'bungo', label: 'Bungo-yaku (Meiji OT / Taisho NT)', short: 'BUNGO', src: 'data/bungo.js', description: 'Classical literary Japanese (bungo) Protestant Bible, from the CrossWire Bible Society JapBungo module 2.0 (2022-08-17). The Old Testament follows the Meiji translation (1887) and the New Testament the Taisho translation (1917); the module identifies the printed witnesses as the 1953 OT and 1950 NT printings. DistributionLicense=Public Domain. Read in the source-indexed numbering (66 books, 1189 chapters, 31102 indexed verse slots). Daniel has 12 chapters and the deuterocanonical books are absent. Three source slots (Exodus 7:25, 2 Samuel 19:25, 2 Chronicles 2:13) carry no separately indexed text and are shown as declared source gaps.' },
+    // The publisher's recent Open Translation Bible (OTB) Japanese edition,
+    // launched December 2025 and licensed CC BY-SA 4.0. It is NOT the Kogoyaku
+    // or Bungo-yaku. It declares nativeVersification (its own reading blocks are
+    // never row-aligned) and nativeReferenceScope (as the sole selected edition
+    // its source extent, including 12 Daniel chapters and 15 verses in 3 John 1,
+    // is authoritative). Translation/editorial provenance is not documented by
+    // the publisher and is not asserted here; the edition is not accuracy-certified.
+    { id: 'otb-ja', label: 'Open Translation Bible (Japanese)', short: 'OTB-JA', src: 'data/otb-ja.js', description: 'The publisher\u2019s Open Translation Bible (OTB) Japanese edition, launched December 2025 and released under CC BY-SA 4.0 (openbible.uk). Read in its own native reference numbering (66 books, 1189 chapters, 31103 numbered source records). Daniel has 12 chapters. The publisher does not document the translation or editorial method, so this edition is not accuracy-certified. Two source records (Matthew 23:14 and John 5:4) contain only a bracketed placeholder with no Scripture text and are shown exactly as supplied. Converted offline from the publisher JSON; each verse\u2019s original text segments are preserved.' },
   ];
 
   // Grouped translations share ONE checkbox with an edition dropdown. Each
@@ -1128,7 +1140,10 @@ function init() {
     if (isSquareHebrew(translationId)) { styleHebrewLanguageVerse(element); return; }
     const language = translationLanguage(translationId);
     if (language === 'la') styleLatinLanguageVerse(element);
-    else if (language === 'ja') styleJapaneseLanguageVerse(element);
+    else if (language === 'ja') {
+      styleJapaneseLanguageVerse(element);
+      if (translationId === 'otb-ja') element.classList.add('otb-ja-verse');
+    }
   }
 
   function isSquareHebrew(id) { return id === 'delitzsch' || id === 'delitzsch1901'; }
@@ -1833,6 +1848,7 @@ function init() {
     }
     if (cell.state === 'text' || cell.state === 'additional' || cell.state === 'note') {
       td.textContent = verseDisplayText(cell.text || '', tId, scriptMode);
+      if (cell.placeholder) td.classList.add('verse-source-placeholder');
       if (cell.state !== 'text' || cell.note) {
         const note = document.createElement('small');
         note.className = 'verse-source-note';
@@ -2138,6 +2154,29 @@ function init() {
         const note = document.createElement('small');
         note.className = 'source-heading-note';
         note.textContent = `Source superscription (${t.short || t.label}); shown separately from the verse text.`;
+        el.append(text, document.createTextNode(' '), note);
+        refs.results.appendChild(el);
+      }
+    }
+
+    // Unnumbered source notes (the New-Testament variant notes) are rendered as
+    // source notes OUTSIDE Scripture: they are never inserted into a verse, a
+    // reading block or copied Bible text, and they are never numbered.
+    for (const t of translations) {
+      const data = (window.MARANATHA_TRANSLATIONS || {})[t.id];
+      const notes = data && data.sourceNotes && data.sourceNotes[bookId] && data.sourceNotes[bookId][chapterNum];
+      if (!notes) continue;
+      for (const entry of notes) {
+        const el = document.createElement('p');
+        el.className = 'source-note';
+        el.setAttribute('role', 'note');
+        const text = document.createElement('span');
+        text.className = 'source-note-text';
+        if (data.language) text.lang = data.language;
+        text.textContent = entry.text;
+        const note = document.createElement('small');
+        note.className = 'source-note-label';
+        note.textContent = `Source note (${t.short || t.label}) \u2014 not Scripture; shown separately.`;
         el.append(text, document.createTextNode(' '), note);
         refs.results.appendChild(el);
       }
@@ -2501,6 +2540,14 @@ function init() {
         }
         appendHighlighted(body, m.text, s.query, s.translationId, scriptMode);
         hit.append(body);
+        const sourceCell = VerseAvailability.cell(window.MARANATHA_TRANSLATIONS[s.translationId], m.bookId, m.chapter, m.verse);
+        if (sourceCell.placeholder && sourceCell.note) {
+          const note = document.createElement('small');
+          note.className = 'verse-source-note';
+          note.setAttribute('role', 'note');
+          note.textContent = sourceCell.note;
+          hit.append(note);
+        }
       }
 
       const openHit = () => jumpToVerse(m.bookId, m.chapter, m.verse);
