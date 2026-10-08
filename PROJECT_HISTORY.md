@@ -2767,3 +2767,26 @@ wording: age/wording caveats remain in the review table, boundary notices are
 inline. Technical acceptance applies only to the proposed pilot; human textual
 adjudication, actual phone/browser review and merge/push approval remain open.
 See `build/reports/stage2b-independent-ACCEPTANCE.md`. No merge/push/deletion.
+
+### 2026-10-08 — Vulgata Clementina implemented; LXX alignment paused
+
+On `codex/vulgata-clementina`, the existing uncommitted LXX Stage2c work is
+preserved separately from the Latin commits. OpenCode with DeepSeek V4.1 Flash
+implemented the Latin importer and UI; Codex independently compared every
+output verse against raw XML and every extracted file against the pinned ZIP,
+then tightened metadata, parser rejection rules, Unicode whitespace handling,
+and first-load/book-change navigation checks. The earlier Pro invocation was
+stopped after the user corrected the model choice; it made no implementation changes.
+
+VULC is eBible's public-domain `latVUC`, Clementine 1598 with Migne 1880 Glossa:
+73 books, 1,334 chapters, 35,809 native numbered verses; 13,775 commentary
+notes remain in cached sources and are excluded from Scripture. Native numbering
+is preserved throughout, with separate reading blocks and no invented
+cross-edition correspondence. Canon and existing biblical corpora are unchanged.
+Esther 11–16, Daniel additions, Psalms and Sirach are documented and tested.
+
+Independent source checks, desktop/mobile file:// UI checks and parser-contract
+tests pass. The LXX Stage1 regression passes 15/15. Full npm regression results
+are recorded in the VULC validation report. Browser visual review remains manual:
+the Browser runtime could not be loaded because of a local permission error.
+No merge or push. See `docs/VULGATA_CLEMENTINA.md` and its source-defects ledger.
