@@ -111,6 +111,19 @@ tbody td {
 .greek-verse { font-family:'Cardo','Gentium Plus',serif; font-size:1.2rem; line-height:1.7; }
 /* Latin (Clementine Vulgate): left-to-right, on the existing serif face. */
 .latin-verse { font-family:'Cardo','Gentium Plus',serif; line-height:1.7; }
+/* Japanese (Bungo-yaku): left-to-right with a CJK/system fallback and normal
+   Japanese line breaking (no webfont or CDN required). */
+.japanese-verse {
+  font-family:'Hiragino Kaku Gothic ProN','Yu Gothic','Meiryo','Noto Sans JP','Noto Sans CJK JP',system-ui,sans-serif;
+  line-height:1.9;
+  overflow-wrap:normal;
+  word-break:normal;
+  line-break:strict;
+}
+.source-heading { margin:.2em 0 .6em; padding:.35em .55em; border-left:3px solid var(--line); background:var(--paper); }
+.source-heading-text { font-style:italic; }
+.source-heading-note { margin-left:.4em; font-size:.8em; opacity:.75; }
+.verse-source-gap { color:var(--muted); }
 
 tbody td:not(.reference):not(.translation-label):not(.verse-placeholder) { color:var(--verse-ink); }
 .empty { padding:18px; background:var(--paper); border:1px solid var(--line); }

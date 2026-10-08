@@ -31,6 +31,10 @@ class VerseAvailability {
         const text = data.books[bookId][chapter - 1]?.[verse - 1];
         const meta = this.metadata(data, bookId, chapter, verse);
         if (meta?.status === 'omitted') return { state: 'omitted', note: meta.note };
+        // A declared source gap: the slot is indexed but the source carries no
+        // separately indexed text. It is never filled from an adjacent verse or
+        // guessed; the notice is shown instead.
+        if (meta?.status === 'source-gap') return { state: 'source-gap', note: meta.note, context: meta.context };
         if (meta?.status === 'note') return { state: 'note', text: meta.text, note: meta.note };
         if (text) return { state: meta?.status === 'additional' ? 'additional' : 'text', text, note: meta?.note };
         return { state: 'missing-verse' };
@@ -54,23 +58,57 @@ class ReferenceParser {
             .trim();
     }
 
+    // Normalizes only the REFERENCE INPUT (never Scripture): full-width digits
+    // and separators to ASCII, the Japanese chapter/verse markers 章/節 to the
+    // usual ":"/"", and a trailing separator away. Book names themselves are
+    // untouched; Japanese no-space references such as ヨハネ3:16, ヨハネ ３：１６
+    // and ヨハネ3章16節 all become an ASCII-parseable form here.
+    static normalizeReferenceInput(value) {
+        return String(value)
+            .replace(/[\uFF10-\uFF19]/g, (d) => String.fromCharCode(d.charCodeAt(0) - 0xFEE0))
+            .replace(/\uFF1A/g, ':')
+            .replace(/\uFF1B/g, ';')
+            .replace(/\uFF0C/g, ',')
+            .replace(/[\uFF0D\u301C\uFF5E]/g, '-')
+            .replace(/\u3000/g, ' ')
+            .replace(/\u7AE0/g, ':')
+            .replace(/\u7BC0/g, '')
+            .replace(/[:]\s*$/, '');
+    }
+
     constructor(canon, locale, translations = () => (typeof window === 'undefined' ? {} : window.MARANATHA_TRANSLATIONS || {})) {
 
         this.canon = canon;
         this.translations = translations;
 
-        // A translation may cover chapters beyond the canon extent (for
-        // example the Clementine Vulgate's Esther 11-16). Such a chapter is a
-        // valid reference target when, and only when, a translation passed to
-        // this parser actually carries it — so a native reference is never
-        // accepted on the strength of an unrelated loaded edition.
-        this.hasNativeChapter = (bookId, chapter) => {
-            if (!Number.isInteger(chapter) || chapter < 1) return false;
-            for (const data of Object.values(this.translations() || {})) {
+        // The highest chapter number that may be referenced for a book. A
+        // translation may cover chapters beyond the canon extent (for example
+        // the Clementine Vulgate's Esther 11-16); such a chapter is valid when,
+        // and only when, a translation passed to this parser actually carries
+        // it — so a native reference is never accepted on the strength of an
+        // unrelated loaded edition.
+        //
+        // An edition that declares nativeReferenceScope (the Bungo-yaku) is
+        // authoritative for its own extent WHEN IT IS THE SOLE selected edition:
+        // its shorter Daniel (12 chapters) then genuinely excludes canon Daniel
+        // 13-14 instead of inheriting the provisional Catholic navigation
+        // skeleton. In a mixed selection the canon/maximum extent is kept, so
+        // existing mixed-view reference behaviour is unchanged.
+        this.maxChapter = (bookId) => {
+            const canonBook = this.canon.books.find((b) => b.id === bookId);
+            let max = canonBook ? canonBook.chapters.length : 0;
+            const trans = this.translations() || {};
+            const ids = Object.keys(trans);
+            if (ids.length === 1) {
+                const data = trans[ids[0]];
                 const arr = data && data.books && data.books[bookId];
-                if (Array.isArray(arr) && chapter <= arr.length && Array.isArray(arr[chapter - 1])) return true;
+                if (data && data.nativeReferenceScope && Array.isArray(arr)) return arr.length;
             }
-            return false;
+            for (const data of Object.values(trans)) {
+                const arr = data && data.books && data.books[bookId];
+                if (Array.isArray(arr) && arr.length > max) max = arr.length;
+            }
+            return max;
         };
 
         this.bookMap = new Map();
@@ -100,6 +138,34 @@ class ReferenceParser {
 
             }
 
+        }
+
+        // Japanese book names/aliases are merged independently of the chosen
+        // display locale, so ヨハネ3:16 resolves even when the UI language is
+        // English or Armenian. This is additive: existing aliases are never
+        // removed and a missing resource simply contributes nothing.
+        const japanese = (typeof window !== 'undefined' && window.MARANATHA_LOCALE_JA) || null;
+        // Japanese book-label selection also accepts the existing English
+        // names; this adds no changes to the established English/Armenian UI.
+        const english = (typeof window !== 'undefined' && window.MARANATHA_LOCALE_EN) || null;
+        if (locale.language === 'ja' && english?.books) {
+            for (const book of canon.books) {
+                const info = english.books[book.id];
+                if (!info) continue;
+                for (const alias of [info.name, ...(info.aliases || [])]) {
+                    this.bookMap.set(ReferenceParser.normalizeKey(alias), book);
+                }
+            }
+        }
+        if (japanese && japanese.books && japanese !== locale) {
+            for (const book of canon.books) {
+                const info = japanese.books[book.id];
+                if (!info) continue;
+                if (info.name) this.bookMap.set(ReferenceParser.normalizeKey(info.name), book);
+                for (const alias of info.aliases || []) {
+                    this.bookMap.set(ReferenceParser.normalizeKey(alias), book);
+                }
+            }
         }
 
     }
@@ -135,11 +201,21 @@ class ReferenceParser {
         // to chapterOnly below instead of being misread as book="4".
         const withBook = /^(.+?)\s+(\d+)(?::\s*([\d,\s-]+))?$/;
 
+        // "<book name><chapter>[:<verseSpec>]" with NO whitespace. This is how
+        // natural Japanese references are written (ヨハネ3:16); it is only
+        // accepted when the leading text resolves to a known book, so English
+        // behaviour is unchanged ("John" alone still falls through to the
+        // whole-book branch). The book side is matched non-greedily up to the
+        // first digit, and the longest known alias wins by construction because
+        // the whole leading text is looked up in the normalized book map.
+        const noSpaceBook = /^(.+?)(\d+)(?::\s*([\d,\s-]*))?$/;
+
         // "<chapter>[:<verseSpec>]" with no book — only valid when a
         // previous group in the same query already established one.
         const chapterOnly = /^(\d+)(?::\s*([\d,\s-]+))?$/;
 
-        const parts = input.split(';').map(part => part.trim()).filter(Boolean);
+        const parts = ReferenceParser.normalizeReferenceInput(input)
+            .split(';').map(part => part.trim()).filter(Boolean);
 
         if (!parts.length)
             throw new Error('Enter at least one reference.');
@@ -165,18 +241,25 @@ class ReferenceParser {
                 } else {
 
                     const fullMatch = part.match(withBook);
+                    const noSpaceMatch = fullMatch ? null : part.match(noSpaceBook);
+                    const noSpaceBookEntry = noSpaceMatch
+                        ? this.bookMap.get(ReferenceParser.normalizeKey(noSpaceMatch[1]))
+                        : null;
 
-                    if (fullMatch) {
+                    if (fullMatch || noSpaceBookEntry) {
 
-                        const [, bookText, chapterMatch, verseSpecMatch] = fullMatch;
-                        const book = this.bookMap.get(ReferenceParser.normalizeKey(bookText));
+                        const match = fullMatch || noSpaceMatch;
+                        const bookText = match[1];
+                        const book = fullMatch
+                            ? this.bookMap.get(ReferenceParser.normalizeKey(bookText))
+                            : noSpaceBookEntry;
 
                         if (!book)
                             throw new Error(`Unknown book "${bookText.trim()}".`);
 
                         bookId = book.id;
-                        chapterText = chapterMatch;
-                        verseSpec = verseSpecMatch;
+                        chapterText = match[2];
+                        verseSpec = match[3];
 
                     } else {
 
@@ -200,7 +283,7 @@ class ReferenceParser {
                 const chapter = Number(chapterText);
 
                 if (!Number.isInteger(chapter) || chapter < 1
-                    || (chapter > book.chapters.length && !this.hasNativeChapter(bookId, chapter)))
+                    || chapter > this.maxChapter(bookId))
                     throw new Error(`"${part}" — chapter ${chapterText} does not exist in this book.`);
 
                 const available = VerseAvailability.references(this.canon, this.translations(), bookId, chapter);
@@ -273,6 +356,7 @@ class ReferenceParser {
   const LOCALES = [
     { id: 'en', label: 'English', global: 'MARANATHA_LOCALE_EN' },
     { id: 'hy', label: 'Հայերէն', global: 'MARANATHA_LOCALE_HY' },
+    { id: 'ja', label: '日本語', global: 'MARANATHA_LOCALE_JA' },
   ];
 
   let locale = window.MARANATHA_LOCALE_EN;
@@ -313,6 +397,13 @@ class ReferenceParser {
     // translation whose print edition eBible does not identify.
     { id: 'delitzsch', label: 'Delitzsch Hebrew NT (1877)', short: 'Delitzsch', src: 'data/delitzsch.js', group: 'delitzsch', description: 'Hebrew translation of the Greek New Testament by Franz Delitzsch, first published in 1877. This unpointed eBible digital text does not identify its underlying print edition.' },
     { id: 'delitzsch1901', label: 'Delitzsch Hebrew NT (1901, vocalized)', short: 'Delitzsch 1901', src: 'data/delitzsch1901.js', group: 'delitzsch', description: 'Vocalized Hebrew translation of the Greek New Testament by Franz Delitzsch, first published in 1877 and imported from the British & Foreign Bible Society 1901 (twelfth) edition, Berlin. Public domain. Its verse numbering differs from canon.js in seven chapters; each is disclosed in the reading view.' },
+    // The Classical Japanese Bible (Bungo-yaku / Taisho-kaiyaku), imported from
+    // the CrossWire Bible Society JapBungo 2.0 SWORD module (Public Domain). It
+    // declares nativeVersification (its own reading blocks are never row-aligned
+    // with canon-numbered editions) and nativeReferenceScope (as the sole
+    // selected edition its source extent, including 12 Daniel chapters, is
+    // authoritative). Its three source gaps are disclosed inline.
+    { id: 'bungo', label: 'Bungo-yaku (Meiji OT / Taisho NT)', short: 'BUNGO', src: 'data/bungo.js', description: 'Classical literary Japanese (bungo) Protestant Bible, from the CrossWire Bible Society JapBungo module 2.0 (2022-08-17). The Old Testament follows the Meiji translation (1887) and the New Testament the Taisho translation (1917); the module identifies the printed witnesses as the 1953 OT and 1950 NT printings. DistributionLicense=Public Domain. Read in the source-indexed numbering (66 books, 1189 chapters, 31102 indexed verse slots). Daniel has 12 chapters and the deuterocanonical books are absent. Three source slots (Exodus 7:25, 2 Samuel 19:25, 2 Chronicles 2:13) carry no separately indexed text and are shown as declared source gaps.' },
   ];
 
   // Grouped translations share ONE checkbox with an edition dropdown. Each
@@ -1017,6 +1108,29 @@ function init() {
     element.classList.add('latin-verse');
   }
 
+  // Japanese-language styling for the Bungo-yaku. Left-to-right, tagged
+  // lang="ja" so the browser applies CJK line breaking and a Japanese-capable
+  // system font fallback. No webfont or CDN is required.
+  function styleJapaneseLanguageVerse(element) {
+    element.dir = 'ltr';
+    element.lang = 'ja';
+    element.classList.add('japanese-verse');
+  }
+
+  // The declared language of a loaded translation, used to route search
+  // normalization and verse styling.
+  function translationLanguage(translationId) {
+    const data = (window.MARANATHA_TRANSLATIONS || {})[translationId];
+    return (data && data.language) || null;
+  }
+
+  function styleByTranslationLanguage(element, translationId) {
+    if (isSquareHebrew(translationId)) { styleHebrewLanguageVerse(element); return; }
+    const language = translationLanguage(translationId);
+    if (language === 'la') styleLatinLanguageVerse(element);
+    else if (language === 'ja') styleJapaneseLanguageVerse(element);
+  }
+
   function isSquareHebrew(id) { return id === 'delitzsch' || id === 'delitzsch1901'; }
 
   function getStoredAppearance() {
@@ -1519,7 +1633,7 @@ function init() {
       if (!Array.isArray(arr)) return null;
       const canonBook = canon.books.find(b => b.id === bookId);
       return {
-        source: arr.filter(Boolean).length,
+        source: arr.length,
         canon: (canonBook && canonBook.chapters[chapterNum - 1]) || 0,
         native: true,
         note: 'This translation keeps its own native verse numbering; equal verse numbers are not a verified correspondence with other translations.',
@@ -1540,6 +1654,16 @@ function init() {
   function effectiveChapterCount(bookId, translationIds = selectedTranslationIds()) {
     const all = window.MARANATHA_TRANSLATIONS || {};
     const canonBook = canon.books.find(b => b.id === bookId);
+    // A sole edition that declares nativeReferenceScope owns its own chapter
+    // extent: the Bungo-yaku's Daniel genuinely ends at chapter 12 rather than
+    // inheriting the provisional Catholic navigation skeleton. A mixed
+    // selection keeps the canon/maximum extent, so existing mixed-view
+    // navigation (including the Clementine Vulgate's extra chapters) is intact.
+    if (translationIds.length === 1) {
+      const data = all[translationIds[0]];
+      const arr = data && data.books && data.books[bookId];
+      if (data && data.nativeReferenceScope && Array.isArray(arr)) return arr.length;
+    }
     let count = canonBook ? canonBook.chapters.length : 0;
     for (const id of translationIds) {
       const arr = all[id]?.books?.[bookId];
@@ -1719,15 +1843,31 @@ function init() {
       }
       if (tId === 'he') {
         styleHebrewVerse(td, scriptMode);
-      } else if (isSquareHebrew(tId)) {
-        styleHebrewLanguageVerse(td);
       } else if (tId === 'byz') {
         td.lang = 'el';
         td.classList.add('greek-verse');
-      } else if (tId === 'vulc') {
-        styleLatinLanguageVerse(td);
+      } else {
+        styleByTranslationLanguage(td, tId);
       }
     } else {
+      if (cell.state === 'source-gap') {
+        // A declared source gap: a factual placeholder, never omitted Scripture
+        // and never text copied from another slot.
+        td.classList.add('verse-placeholder', 'verse-source-gap');
+        td.textContent = '(no separately indexed text)';
+        const note = document.createElement('small');
+        note.className = 'verse-source-note';
+        note.setAttribute('role', 'note');
+        note.textContent = [cell.note, cell.context].filter(Boolean).join(' ');
+        td.appendChild(note);
+        if (cell.availableIn?.length) {
+          const other = document.createElement('small');
+          other.className = 'verse-source-note';
+          other.textContent = `Available in loaded translations: ${cell.availableIn.join(', ')}.`;
+          td.appendChild(other);
+        }
+        return;
+      }
       td.className = 'verse-placeholder';
       td.textContent = cell.state === 'loading' ? '(loading…)'
         : cell.state === 'missing-book' ? '(not available in this translation)'
@@ -1979,6 +2119,30 @@ function init() {
       }
     }
 
+    // Source headings (Psalm superscriptions) are preserved from the source
+    // module and rendered separately before the verses; they are never merged
+    // into the verse text, and their status as source-indexed headings is
+    // disclosed.
+    for (const t of translations) {
+      const data = (window.MARANATHA_TRANSLATIONS || {})[t.id];
+      const headings = data && data.psalmHeadings && data.psalmHeadings[bookId] && data.psalmHeadings[bookId][chapterNum];
+      if (!headings) continue;
+      for (const heading of headings) {
+        const el = document.createElement('p');
+        el.className = 'source-heading';
+        el.setAttribute('role', 'note');
+        const text = document.createElement('span');
+        text.className = 'source-heading-text';
+        if (data.language) text.lang = data.language;
+        text.textContent = heading.text;
+        const note = document.createElement('small');
+        note.className = 'source-heading-note';
+        note.textContent = `Source superscription (${t.short || t.label}); shown separately from the verse text.`;
+        el.append(text, document.createTextNode(' '), note);
+        refs.results.appendChild(el);
+      }
+    }
+
     const content = layout === 'multicolumn'
       ? multiColumn(bookId, chapterNum, verses, translations, { highlight, anchorFirst, exactVerses })
       : layout === 'multirow'
@@ -2102,7 +2266,18 @@ function init() {
   // fresh on each search and nothing extra is stored.
   // ---------------------------------------------------------------------
 
-  function normalizeSearchText(text) {
+  function isJapaneseSearchLanguage(language) {
+    return language === 'ja';
+  }
+
+  // Language-aware normalization. Hebrew/Paleo, Greek and Latin keep their
+  // existing NFD + combining-mark stripping (identical to before). Japanese
+  // uses NFC only, so a precomposed kana is one unit: querying か can no longer
+  // match inside が, ば/ぱ no longer match は, and precomposed/decomposed input
+  // for the SAME character still matches. No width/kana/NFKC folding is added,
+  // and the stored Scripture is never changed.
+  function normalizeSearchText(text, language) {
+    if (isJapaneseSearchLanguage(language)) return String(text).normalize('NFC');
     let out = '';
     // Paleo-Hebrew has no separate final forms. Normalize both scripts to
     // the same consonants so copied Paleo text can find the source spelling.
@@ -2115,10 +2290,57 @@ function init() {
     return out;
   }
 
+  // Iterates code points with their UTF-16 index (surrogate safe).
+  function codePointsWithIndex(text) {
+    const out = [];
+    for (let i = 0; i < text.length;) {
+      const ch = String.fromCodePoint(text.codePointAt(i));
+      out.push({ ch, index: i });
+      i += ch.length;
+    }
+    return out;
+  }
+
+  // Japanese search form: segment the original text into grapheme clusters
+  // (a base code point plus following combining marks/variation selectors) and
+  // NFC each whole cluster. This keeps voicing marks attached and makes a match
+  // map back to exact original start/end offsets, so copy/highlighting never
+  // cuts a supplementary character or variation selector in half.
+  function buildJapaneseSearchForm(text) {
+    let form = '';
+    const map = [];
+    const ends = [];
+    let clusterStart = 0;
+    let clusterEnd = 0;
+    let clusterText = '';
+    const flush = () => {
+      if (!clusterText) return;
+      for (const ch of clusterText.normalize('NFC')) {
+        for (let k = 0; k < ch.length; k++) { form += ch[k]; map.push(clusterStart); ends.push(clusterEnd); }
+      }
+      clusterText = '';
+    };
+    for (const { ch, index } of codePointsWithIndex(text)) {
+      const isMark = /\p{M}/u.test(ch);
+      if (isMark && clusterText) {
+        clusterText += ch;
+        clusterEnd = index + ch.length;
+      } else {
+        flush();
+        clusterStart = index;
+        clusterEnd = index + ch.length;
+        clusterText = ch;
+      }
+    }
+    flush();
+    return { form, map, ends };
+  }
+
   // Normalized form plus a map from each normalized character back to its
   // index in the original text, so a match can be highlighted in the original
   // (diacritics intact).
-  function buildSearchForm(text) {
+  function buildSearchForm(text, language) {
+    if (isJapaneseSearchLanguage(language)) return buildJapaneseSearchForm(text);
     let form = '';
     const map = [];
     for (let i = 0; i < text.length; i++) {
@@ -2132,7 +2354,8 @@ function init() {
   }
 
   function searchVerses(data, query) {
-    const needle = normalizeSearchText(query);
+    const language = data && data.language;
+    const needle = normalizeSearchText(query, language);
     const matches = [];
     if (!needle) return { matches, total: 0 };
 
@@ -2144,7 +2367,7 @@ function init() {
         if (!Array.isArray(chapter)) continue;
         for (let vi = 0; vi < chapter.length; vi++) {
           const text = chapter[vi];
-          if (text && normalizeSearchText(text).includes(needle)) {
+          if (text && normalizeSearchText(text, language).includes(needle)) {
             matches.push({ bookId: book.id, chapter: ci + 1, verse: vi + 1, text });
           }
         }
@@ -2157,8 +2380,9 @@ function init() {
   // <mark>. Uses text nodes only (never innerHTML), so user input is safe.
   function appendHighlighted(container, text, query, translationId, scriptMode) {
     const display = (part) => verseDisplayText(part, translationId, scriptMode);
-    const needle = normalizeSearchText(query);
-    const { form, map } = buildSearchForm(text);
+    const language = translationLanguage(translationId);
+    const needle = normalizeSearchText(query, language);
+    const { form, map, ends } = buildSearchForm(text, language);
     let from = 0;
     let lastEnd = 0;
     let found = false;
@@ -2166,11 +2390,17 @@ function init() {
       const idx = form.indexOf(needle, from);
       if (idx === -1) break;
       const start = map[idx];
-      let end = map[idx + needle.length - 1] + 1;
-      // A matched base letter may carry trailing combining marks (e.g. Hebrew
-      // niqqud). Keep them inside the highlight rather than orphaning them in
-      // the following text node. Shared by every translation's highlighting.
-      while (end < text.length && /\p{M}/u.test(text[end])) end++;
+      let end;
+      if (ends) {
+        // Japanese: the grapheme cluster's exact original end.
+        end = ends[idx + needle.length - 1];
+      } else {
+        end = map[idx + needle.length - 1] + 1;
+        // A matched base letter may carry trailing combining marks (e.g. Hebrew
+        // niqqud). Keep them inside the highlight rather than orphaning them in
+        // the following text node. Shared by every translation's highlighting.
+        while (end < text.length && /\p{M}/u.test(text[end])) end++;
+      }
       if (!(start < end)) { from = idx + needle.length; continue; }
       container.appendChild(document.createTextNode(display(text.slice(lastEnd, start))));
       const mark = document.createElement('mark');
@@ -2262,8 +2492,7 @@ function init() {
         const body = document.createElement('span');
         body.className = 'search-text';
         if (s.translationId === 'he') styleHebrewVerse(body, scriptMode);
-        else if (isSquareHebrew(s.translationId)) styleHebrewLanguageVerse(body);
-        else if (s.translationId === 'vulc') styleLatinLanguageVerse(body);
+        else styleByTranslationLanguage(body, s.translationId);
         if (scriptModes.length > 1) {
           const label = document.createElement('small');
           label.className = 'mobile-translation-label';
@@ -2332,19 +2561,29 @@ function init() {
     const others = displayTranslations(selectedTranslations()).filter((t) =>
       t.id !== excludeId && loaded.has(t.id) && window.MARANATHA_TRANSLATIONS[t.id]);
 
-    // The Clementine Vulgate keeps its own native verse numbering. Presenting a
-    // same-numbered verse from a different edition as an aligned comparison
-    // would assert a correspondence that has not been established — in either
-    // direction — so all cross-edition alignment involving vulc is suppressed
-    // and replaced with a visible native-numbering notice.
-    const vulcInvolved = excludeId === 'vulc' || others.some((t) => t.id === 'vulc');
-    if (vulcInvolved && isNativeVersification({ id: 'vulc' })) {
+    // Every native-numbered edition (the Clementine Vulgate and the Bungo-yaku)
+    // keeps its own verse numbering. Presenting a same-numbered verse from a
+    // different edition as an aligned comparison would assert a correspondence
+    // that has not been established — in either direction — so all cross-edition
+    // alignment involving a native edition is suppressed and replaced with a
+    // visible native-numbering notice. This applies equally whether the search
+    // itself ran in a native edition or in a canon-numbered one.
+    const excludedNative = isNativeVersification({ id: excludeId });
+    const nativeOthers = others.filter((t) => isNativeVersification(t));
+    if (excludedNative || nativeOthers.length) {
+      const names = [
+        ...(excludedNative ? [excludeId] : []),
+        ...nativeOthers.map((t) => t.id),
+      ].map((id) => (TRANSLATIONS.find((x) => x.id === id) || {}).label || id);
+      const label = names.join(', ');
       const notice = document.createElement('p');
       notice.className = 'notice versification-notice compare-native-notice';
       notice.setAttribute('role', 'note');
-      notice.textContent = 'Vulgata Clementina (1598) is shown in its own native verse numbering. Same-numbered verses in another translation are not a verified correspondence, so no aligned comparison is shown.';
+      notice.textContent = names.length === 1
+        ? `${label} is shown in its own native verse numbering. Same-numbered verses in another translation are not a verified correspondence, so no aligned comparison is shown.`
+        : `${label} are shown in their own native verse numbering. Same-numbered verses in another translation are not a verified correspondence, so no aligned comparison is shown.`;
       panel.appendChild(notice);
-      if (excludeId === 'vulc') return panel;
+      if (excludedNative) return panel;
     }
 
     for (const t of others) {
@@ -2371,11 +2610,11 @@ function init() {
       if (verseText) {
         if (t.id === 'he') {
           styleHebrewVerse(text, t.scriptMode);
-        } else if (isSquareHebrew(t.id)) {
-          styleHebrewLanguageVerse(text);
         } else if (t.id === 'byz') {
           text.lang = 'el';
           text.classList.add('greek-verse');
+        } else {
+          styleByTranslationLanguage(text, t.id);
         }
         appendHighlighted(text, verseText, query, t.id, t.scriptMode);
         if (cell.state === 'note') {
@@ -3146,8 +3385,7 @@ function init() {
     const caption = document.createElement('div');
     caption.className = 'interlinear-caption';
     caption.dir = 'auto';
-    if (isSquareHebrew(translation.id)) styleHebrewLanguageVerse(caption);
-    else if (translation.id === 'vulc') styleLatinLanguageVerse(caption);
+    styleByTranslationLanguage(caption, translation.id);
     caption.textContent = cell.text;
     block.appendChild(caption);
     if (cell.state === 'note') {
@@ -4013,4 +4251,16 @@ function init() {
   }
 
   function setMessage(message) { refs.message.textContent = message; }
+
+  // Read-only test surface for the offline search regression suite. It exposes
+  // the language-aware normalization and highlight mapping so kana voicing and
+  // canonical equivalence can be asserted directly, without a full render. It
+  // changes no behaviour and is not used by the application itself.
+  if (window.MARANATHA_ENABLE_TEST_HOOKS === true) window.MARANATHA_SEARCH_TEST = Object.freeze({
+    normalizeSearchText,
+    buildSearchForm,
+    searchVerses,
+    appendHighlighted,
+    translationLanguage,
+  });
 })();

@@ -9,11 +9,12 @@ thin `app.js` + `index.html` + `style.css` front end with no framework.
 
 ## Status
 
-**Ten translations are registered: World English Bible (WEB-C,
+**Eleven translations are registered: World English Bible (WEB-C,
 73 books), King James Version (KJV, 66 books), Byzantine Majority Text (Greek
 NT, 27 books), Hebrew (OSHB, 39 protocanonical OT books), Luther 1912, Louis
-Segond 1910, the two Delitzsch Hebrew NT editions, and the Western Armenian NT
-(1853, under audit), and Vulgata Clementina (1598, Latin, VULC).** Only WEB is selected by default; open `index.html`, tick
+Segond 1910, the two Delitzsch Hebrew NT editions, the Western Armenian NT
+(1853, under audit), Vulgata Clementina (1598, Latin, VULC), and Bungo-yaku
+(Classical Japanese, BUNGO).** Only WEB is selected by default; open `index.html`, tick
 another translation, pick a book/chapter, and you'll see them side by side.
 WEB-C supplies the 7 Catholic deuterocanonical books (Tobit, Judith, Wisdom,
 Sirach, Baruch, 1–2 Maccabees); translations that do not cover them (e.g. KJV)
@@ -320,6 +321,13 @@ Patriarchs, etc. are explicitly out of scope).
   The two are distinct editions, not a vowel-display toggle. Their IDs, text,
   numbering, metadata, source disclosures and versification handling are
   independent.
+- Bungo-yaku (Classical Japanese, public domain) — the Meiji Old Testament
+  (1887) and Taisho New Testament (1917), imported via
+  `build/import-bungo.mjs` from the CrossWire Bible Society `JapBungo` 2.0
+  SWORD module (2022-08-17). 66 books, 1189 chapters, 31102 indexed verse
+  slots. It is read in its own source-indexed numbering, with 12 Daniel
+  chapters and three disclosed source gaps; see `docs/BUNGO.md` and
+  `docs/BUNGO_SOURCE_DEFECTS.md`.
 
 RSV-CE is explicitly excluded: copyrighted by the National Council of
 Churches, not freely redistributable.
@@ -459,6 +467,51 @@ Behaviour:
   (or reported out of range) — another verse is never silently substituted.
 - Search selectors/state, comparison panels and interlinear captions all follow
   the active edition, including when the edition is switched during a search.
+
+## Bungo-yaku (Classical Japanese)
+
+`BUNGO` is the **Bungo-yaku / Taisho-kaiyaku** — the Classical Japanese
+Protestant Bible, with the Meiji Old Testament (1887) and the Taisho New
+Testament (1917). It is imported from the CrossWire Bible Society **JapBungo**
+2.0 SWORD module (2022-08-17), whose metadata records
+`DistributionLicense=Public Domain`, `Encoding=UTF-8`, `SourceType=OSIS` and
+the printed witnesses as the 1953 Old Testament and 1950 New Testament. The
+module's `TextSource` (`http://bible.salterrae.net/`) is presently
+DNS-unavailable, so the importer relies on the pinned official CrossWire binary
+distribution and asserts no new publisher permission and no worldwide
+public-domain determination. Full provenance is in `data/LICENSE-bungo.md`.
+
+Key properties:
+
+- **66 books / 1189 chapters / 31102 indexed verse slots** (31099 carry text).
+  The numbering follows the KJV scheme of the source module, not `canon.js`.
+- **Three declared source gaps** — Exodus 7:25, 2 Samuel 19:25 and
+  2 Chronicles 2:13 — carry no separately indexed text. They are retained as
+  empty slots with an explicit notice, never filled from an adjacent verse or
+  guessed. See `docs/BUNGO_SOURCE_DEFECTS.md`.
+- **`nativeVersification`** keeps Bungo in its own reading block (browsing,
+  reference and mobile) and suppresses all same-numbered cross-edition
+  comparisons in both search directions.
+- **`nativeReferenceScope`** makes the source extent authoritative when Bungo is
+  the sole selected edition, so Daniel has 12 chapters and Daniel 13–14 are
+  invalid; the deuterocanonical books are absent. In a mixed selection the canon
+  navigation is kept, and missing books/verses behave as elsewhere.
+- **Psalm superscriptions** and the OSIS ruby/gloss readings are preserved
+  separately from the verse text; no gloss or heading is appended to Scripture.
+- **Japanese references** work in English/Armenian UIs too: `ヨハネ3:16`,
+  `ヨハネ ３：１６`, `ヨハネ3章16節`, with longest-alias matching that keeps
+  1–3 John and the Corinthian letters distinct.
+- **Japanese search** is substring-based with an NFC grapheme-aware form, so
+  querying か does not match inside が and ば/ぱ do not match は, while
+  precomposed/decomposed input for the same character still matches.
+
+Reproduce with:
+
+```bash
+node build/build-bungo-locale.mjs --check
+node build/import-bungo.mjs --check
+node build/test-bungo.mjs
+```
 
 ## Project structure
 

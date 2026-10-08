@@ -1,5 +1,67 @@
 # Maranatha Project History
 
+## Bungo-yaku (Classical Japanese) — October 8, 2026
+
+The **Bungo-yaku / Taisho-kaiyaku** — the Meiji Old Testament (1887) and Taisho
+New Testament (1917), as compiled in the CrossWire Bible Society `JapBungo` 2.0
+SWORD module (2022-08-17, `DistributionLicense=Public Domain`, `Versification=KJV`)
+— is now a registered translation (`bungo`, short `BUNGO`, language `ja`). The
+official `JapBungo-2.0.zip` is pinned by SHA-256, and the extracted zText
+(`{ot,nt}.{bzs,bzv,bzz}`), the module configuration and the SWORD structural
+header `sword-canon.h` are all hash-pinned and cached. The header is parsed as a
+factual book/chapter/verse table only; the counts are never derived from
+`canon.js` or another Bible text. The module `TextSource`
+(`http://bible.salterrae.net/`) is presently DNS-unavailable; the import relies
+on the official pinned distribution licence and documents this instead of
+substituting another edition.
+
+`build/import-bungo.mjs` decodes the zText container directly: 12-byte `.bzs`
+block entries, 10-byte `.bzv` records and zlib `.bzz` blocks, validating every
+byte range, decompressed size and UTF-8 sequence. The `.bzv` index interleaves a
+root record, one testament record, one book header and one chapter header per
+book/chapter before the verse records; all structural records are examined and
+textual/heading material is preserved separately. The module holds **66 books,
+1189 chapters, 31102 indexed verse slots (31099 with text)**, 332 709 inline
+`<w gloss>` ruby readings (excluded from Scripture, counted) and 139 Psalm
+superscriptions (kept as separate source headings). Three indexed slots —
+Exodus 7:25, 2 Samuel 19:25, 2 Chronicles 2:13 — carry no separately indexed
+text; they are retained as empty slots with the disclosure `No separately
+indexed text in this source slot` and a source-defects ledger entry, never
+filled from an adjacent verse or guessed.
+
+The translation declares **`nativeVersification`** (its own reading block in
+browsing, reference and mobile views; cross-edition comparison suppressed in
+both search directions) and **`nativeReferenceScope`** (when it is the sole
+selected edition its source extent is authoritative, so Daniel has 12 chapters
+and Daniel 13–14 are invalid). Mixed selections keep the canon navigation, the
+Clementine Vulgate's extra chapters behave as before, and the original-language
+interlinear is disabled with an explanation rather than captioned by Bungo.
+Source-gap metadata is added to availability and rendered as an explanatory
+placeholder.
+
+A curated Japanese locale (`data/locales/ja.{json,js}`, builder
+`build/build-bungo-locale.mjs`, resource `build/sources/bungo/book-names.json`)
+provides 66 grounded Japanese book names plus aliases and English fallback for
+the seven deuterocanonical books; the English and Armenian locale outputs are
+untouched. Japanese aliases are merged into the reference parser independently
+of the display locale, and input is normalized (full-width digits/separators,
+`章`/`節`, trailing separator) so `ヨハネ3:16`, `ヨハネ ３：１６` and
+`ヨハネ3章16節` resolve, with longest-alias matching keeping 1–3 John and the
+Corinthian letters distinct. Japanese search gained an NFC, grapheme-aware form
+that keeps voicing significant (か does not match が; ば/ぱ do not match は),
+matches canonical equivalents, preserves exact punctuation and maps highlights
+back to untouched text; Hebrew/Greek/Latin search is unchanged.
+
+The shell cache version was bumped `v55 → v56` (app.js/index.html/style.css and
+the new `data/locales/ja.js`), with the exact version assertions in the existing
+tests updated; the data cache stays `v3`. `build/test-bungo.mjs` covers pinned
+hashes, the full 31102-slot byte-level comparison, import rejections, a
+non-mutating `--check`, real JSDOM desktop/mobile loading with network blocked,
+reference forms, native scope, comparison suppression, interlinear guards,
+parallel/pane loading and the Japanese search properties. `npm test` now also
+runs `build/build-bungo-locale.mjs --check`, `build/import-bungo.mjs --check`
+and `build/test-bungo.mjs`.
+
 ## Paleo-Hebrew display — October 6, 2026
 
 Reading settings now offer Square Hebrew / Paleo-Hebrew for the existing
