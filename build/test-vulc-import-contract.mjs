@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import { parseVulgata } from './import-vulgata-clementina.mjs';
+const verse = '<p><v id="1" bcv="GEN.1.1"/>æœéëe\u0301\u00a0A\u202fB<f><ft>COMMENTARY</ft></f><ve/></p>';
+const book = `<book id="GEN"><c id="1"/>${verse}</book>`;
+const xml = `<usfx><languageCode>lat</languageCode>${book}</usfx>`;
+assert.equal(parseVulgata(xml).books.GEN[0][0], 'æœéëe\u0301\u00a0A\u202fB');
+assert.throws(() => parseVulgata(xml.replace(book, book + book)), /Duplicate source book/);
+assert.throws(() => parseVulgata(xml.replace('<c id="1"/>', '<c id="1"/><c id="1"/>')), /Duplicate.*chapter/);
+assert.throws(() => parseVulgata(xml.replace('<c id="1"/>', '<c id="2"/>')), /missing.*chapter/);
+assert.throws(() => parseVulgata(xml.replace(verse, verse + verse)), /Duplicate.*verse/);
+assert.throws(() => parseVulgata(xml.replace('id="1" bcv="GEN.1.1"', 'id="2" bcv="GEN.1.2"')), /missing.*verse/);
+assert.throws(() => parseVulgata(xml.replace(verse, '<uninspected>Scripture</uninspected>')), /Unknown tag/);
+console.log('PASS import contract: Unicode and non-ASCII whitespace preserved; commentary excluded; duplicate books/chapters/verses, gaps, and unknown tags rejected.');
