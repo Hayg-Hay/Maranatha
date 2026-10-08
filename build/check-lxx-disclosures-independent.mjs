@@ -40,7 +40,7 @@ await check('counts-and-source-labels-preserved',()=>{
 await check('shipped-js-exactly-matches-json',()=>{const ctx={window:{}};vm.runInNewContext(fs.readFileSync(path.join(root,'data/lxx-swete.js'),'utf8'),ctx);assert.deepEqual(JSON.parse(JSON.stringify(ctx.window.MARANATHA_TRANSLATIONS['lxx-swete'])),after);});
 await check('versioned-loader-and-cache-versions',()=>{
   assert.match(fs.readFileSync(path.join(root,'app.js'),'utf8'),/script\.src\s*=\s*['"]data\/lxx-swete\.js\?v=disclosures-20261007['"]/);
-  const sw=fs.readFileSync(path.join(root,'service-worker.js'),'utf8');assert.match(sw,/CACHE_VERSION\s*=\s*'v53'/);assert.match(sw,/DATA_CACHE_VERSION\s*=\s*'v3'/);
+  const sw=fs.readFileSync(path.join(root,'service-worker.js'),'utf8');assert.match(sw,/CACHE_VERSION\s*=\s*'v54'/);assert.match(sw,/DATA_CACHE_VERSION\s*=\s*'v3'/);
 });
 await check('old-cache-bypassed-new-data-cached-and-offline-reused',async()=>{
   const origin='https://example.test',prefix=origin+'/Maranatha/';
