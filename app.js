@@ -2118,9 +2118,10 @@ function init() {
       head.appendChild(toggleBtn);
     }
 
-    // Visible disclosure for an edition whose verse numbering differs from the
-    // canon: shown before the table so a reader is never misled into treating a
-    // row as the same reference across translations.
+    // Keep the Latin disclosure after its passage so independent parallel
+    // reading panes begin at the same height. Other numbering notices retain
+    // their existing placement.
+    const trailingNotices = [];
     if (versificationDisclosure) {
       for (const t of translations) {
         const v = versificationEntry(t, bookId, chapterNum);
@@ -2131,7 +2132,8 @@ function init() {
         notice.textContent = v.native
           ? `${t.label} is shown in its own native verse numbering (${v.source} verses in this chapter of the source edition); it is not aligned row-for-row with any other translation, and equal verse numbers are not a verified correspondence.`
           : `${t.label} uses a different verse numbering in this chapter (${v.source} verses; canon.js expects ${v.canon}). ${v.note} Its verses below are numbered as in the source edition and are not aligned row-for-row with canon-numbered translations.`;
-        refs.results.appendChild(notice);
+        if (t.id === 'vulc') trailingNotices.push(notice);
+        else refs.results.appendChild(notice);
       }
     }
 
@@ -2188,6 +2190,7 @@ function init() {
         ? multiRow(bookId, chapterNum, verses, translations, { highlight, anchorFirst, exactVerses })
         : mobileReading(bookId, chapterNum, verses, translations, { highlight, anchorFirst, exactVerses });
     refs.results.appendChild(content);
+    refs.results.append(...trailingNotices);
   }
 
   function renderBrowseChapter(translations, layout) {
