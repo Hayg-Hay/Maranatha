@@ -1,0 +1,5 @@
+Peshitta.zip -text
+module/** -text
+source-files.json text eol=lf
+upstream.html -text
+import-source-files.json text eol=lf

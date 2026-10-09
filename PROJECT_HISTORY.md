@@ -1,5 +1,19 @@
 # Maranatha Project History
 
+## Syriac Peshitta and Murdock English NT — October 9, 2026
+
+Implemented independently credited, source-pinned NT witnesses. Syriac has
+7,957 records after explicit Mark 9:50 marker recovery; Murdock has 7,960 native
+indexed units, 19 separate footnotes and ten unfilled indexed slots. Three
+explicitly appended Murdock native units are restored with a ledger. Five later
+Syriac books have collapsed provenance notes. English Lord wording remains;
+MarYa is read in Syriac. Local OFL Noto Syriac Western font and mark-aware search
+are included; shell v65 retains data cache v3. One basic file:// app smoke passed.
+Independent fidelity/tests/regression and commit/push are delegated to manual
+DeepSeek handoff; unresolved source-boundary issues return to Codex.
+See docs/PESHITTA.md.
+
+
 ## Malaysian Malay KSZI — October 9, 2026
 
 Implemented the eBible zlmKSZI New Testament: 27 books, 260 chapters, 7,958

@@ -1,0 +1,19 @@
+{
+  "source": "https://github.com/notofonts/syriac/releases/tag/NotoSansSyriacWestern-v3.001",
+  "version": "3.001",
+  "license": "SIL OFL 1.1",
+  "files": [
+    {
+      "path": "fonts/NotoSansSyriacWestern-Regular.ttf",
+      "sha256": "fecd6eecb3d0bcd959d1fa5eec5eb696f60cb907fb15f292a53ee4bf04e3b3f5"
+    },
+    {
+      "path": "fonts/NotoSansSyriacWestern-OFL.txt",
+      "sha256": "6442860dad2700aabece2ac7252680b1a5bfc0987cec1ca0c3d605ab8f0b7975"
+    },
+    {
+      "path": "build/sources/peshitta-font/NotoSansSyriacWestern-v3.001.zip",
+      "sha256": "af7be7126fb74df594fdb28e78c3a113c5f4515250f1a1a36ac09595e743a00f"
+    }
+  ]
+}

@@ -1,0 +1,2938 @@
+{
+  "status": "Raw KJV-shaped slot inventory only; independent reference/fidelity audit still required.",
+  "manifest": {
+    "source": "https://www.crosswire.org/ftpmirror/pub/sword/packages/rawzip/Peshitta.zip",
+    "retrieved": "2026-10-09",
+    "files": [
+      {
+        "path": "Peshitta.zip",
+        "size": 324100,
+        "sha256": "badce0aa0a9b70a9c81891ed48d5a9e86de1e24d12ad4ad378e060e03cabc7b9"
+      },
+      {
+        "path": "module/mods.d/peshitta.conf",
+        "size": 1276,
+        "sha256": "a4b45f9fdfed3c514f6acd55f90022ae19b4ae4a5c0953adfd17d549ea9e71c7"
+      },
+      {
+        "path": "module/modules/texts/ztext/peshitta/nt.bzs",
+        "size": 348,
+        "sha256": "c11c52629db2e4693212cf5387ce9f0fc62e2f32f979b1fba6d46f177c37a04e"
+      },
+      {
+        "path": "module/modules/texts/ztext/peshitta/nt.bzv",
+        "size": 82460,
+        "sha256": "4776db6f0666611a30ff70282603e6cd08e4920f04d8b645d5daa8d62fc61eef"
+      },
+      {
+        "path": "module/modules/texts/ztext/peshitta/nt.bzz",
+        "size": 312983,
+        "sha256": "45a1948c5a760fe9b321899751213ac0534d32d9b02df1d3bc5ed96e1cc74c9d"
+      },
+      {
+        "path": "module/modules/texts/ztext/peshitta/ot.bzs",
+        "size": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "module/modules/texts/ztext/peshitta/ot.bzv",
+        "size": 241150,
+        "sha256": "2540b76b8dea6c2e33755e045050b277fb953962c21eb52e09228bde18515ded"
+      },
+      {
+        "path": "module/modules/texts/ztext/peshitta/ot.bzz",
+        "size": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ]
+  },
+  "config": "[Peshitta]\nModDrv=zText\nDataPath=./modules/texts/ztext/peshitta/\nCompressType=ZIP\nBlockType=BOOK\nEncoding=UTF-8\nSourceType=OSIS\nSwordVersionDate=2020-02-08\nLang=syr\nLCSH=Bible.Syriac\nMinimumVersion=1.5.9\nVersification=KJV\nDirection=RtoL\nFont=Code2000\nDescription=Syriac Peshitta\nAbout=The Peshitta (Classical Syriac: ܦܫܺܝܛܬܳܐ‎ or ܦܫܝܼܛܬܵܐ pšīṭtā) is the standard version of the Bible for churches in the Syriac tradition. The text is that published by the British and Foreign Bible Society in 1905\\par Public Domain\\par Courtesy John Richards.\nAbout_fr=La Peshitta (syriaque (araméen) : ܦܫܝܛܬܐ) est la plus ancienne traduction syriaque de l'Ancien et du Nouveau Testament. L'Ancien Testament de la Peshitta a été traduit de l'hébreu. À l'exception du Diatessaron, le Nouveau Testament de la Peshitta a été traduit du grec (bien que cela soit contesté par quelques chercheurs). Le texte est publié par the British and Foreign Bible Society en 1905.\nTextSource=http://www.tertullian.org/rpearse/thesyriaclibrary/new_testament.htm or http://madenkha.net/holy_bible/\nDistributionLicense=Public Domain\nHistory_1.1=(2002-01-01) tagged as right to left\nVersion=2.0\nHistory_2.0=(2020-02-08) New TextSource, fix emptyvss issues\nInstallSize=636941\n",
+  "ntBlocks": 29,
+  "indexRecords": 8246,
+  "verses": 7957,
+  "books": {
+    "MAT": {
+      "chapters": 28,
+      "slots": 1071,
+      "nonempty": 1071
+    },
+    "MRK": {
+      "chapters": 16,
+      "slots": 678,
+      "nonempty": 677
+    },
+    "LUK": {
+      "chapters": 24,
+      "slots": 1151,
+      "nonempty": 1151
+    },
+    "JHN": {
+      "chapters": 21,
+      "slots": 879,
+      "nonempty": 879
+    },
+    "ACT": {
+      "chapters": 28,
+      "slots": 1007,
+      "nonempty": 1007
+    },
+    "ROM": {
+      "chapters": 16,
+      "slots": 433,
+      "nonempty": 433
+    },
+    "1CO": {
+      "chapters": 16,
+      "slots": 437,
+      "nonempty": 437
+    },
+    "2CO": {
+      "chapters": 13,
+      "slots": 257,
+      "nonempty": 257
+    },
+    "GAL": {
+      "chapters": 6,
+      "slots": 149,
+      "nonempty": 149
+    },
+    "EPH": {
+      "chapters": 6,
+      "slots": 155,
+      "nonempty": 155
+    },
+    "PHP": {
+      "chapters": 4,
+      "slots": 104,
+      "nonempty": 104
+    },
+    "COL": {
+      "chapters": 4,
+      "slots": 95,
+      "nonempty": 95
+    },
+    "1TH": {
+      "chapters": 5,
+      "slots": 89,
+      "nonempty": 89
+    },
+    "2TH": {
+      "chapters": 3,
+      "slots": 47,
+      "nonempty": 47
+    },
+    "1TI": {
+      "chapters": 6,
+      "slots": 113,
+      "nonempty": 113
+    },
+    "2TI": {
+      "chapters": 4,
+      "slots": 83,
+      "nonempty": 83
+    },
+    "TIT": {
+      "chapters": 3,
+      "slots": 46,
+      "nonempty": 46
+    },
+    "PHM": {
+      "chapters": 1,
+      "slots": 25,
+      "nonempty": 25
+    },
+    "HEB": {
+      "chapters": 13,
+      "slots": 303,
+      "nonempty": 303
+    },
+    "JAS": {
+      "chapters": 5,
+      "slots": 108,
+      "nonempty": 108
+    },
+    "1PE": {
+      "chapters": 5,
+      "slots": 105,
+      "nonempty": 105
+    },
+    "2PE": {
+      "chapters": 3,
+      "slots": 61,
+      "nonempty": 61
+    },
+    "1JN": {
+      "chapters": 5,
+      "slots": 105,
+      "nonempty": 105
+    },
+    "2JN": {
+      "chapters": 1,
+      "slots": 13,
+      "nonempty": 13
+    },
+    "3JN": {
+      "chapters": 1,
+      "slots": 14,
+      "nonempty": 14
+    },
+    "JUD": {
+      "chapters": 1,
+      "slots": 25,
+      "nonempty": 25
+    },
+    "REV": {
+      "chapters": 22,
+      "slots": 404,
+      "nonempty": 404
+    }
+  },
+  "empty": [
+    "MRK.9.50"
+  ],
+  "tags": {
+    "chapter": 260,
+    "div": 287
+  },
+  "marks": 0,
+  "syriacLetters": 461009,
+  "otNonempty": 0,
+  "structuralWithText": [
+    {
+      "slot": 1,
+      "block": 0,
+      "offset": 0,
+      "length": 68,
+      "raw": "<milestone type=\"x-importer\" subType=\"x-osis2mod\" n=\"$Rev: 3431 $\"/>"
+    },
+    {
+      "book": "MAT",
+      "slot": 2,
+      "block": 1,
+      "offset": 0,
+      "length": 234,
+      "raw": "<div canonical=\"true\" osisID=\"Matt\" sID=\"gen2\" type=\"book\"/> <milestone n=\"\" type=\"x-usfm-h\"/> <milestone n=\"\" type=\"x-usfm-toc1\"/> <milestone n=\"\" type=\"x-usfm-toc2\"/> <milestone n=\"\" type=\"x-usfm-toc3\"/> <div sID=\"gen3\" type=\"x-p\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 1,
+      "slot": 3,
+      "block": 1,
+      "offset": 234,
+      "length": 45,
+      "raw": "<chapter n=\"1\" osisID=\"Matt.1\" sID=\"Matt.1\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 2,
+      "slot": 29,
+      "block": 1,
+      "offset": 3250,
+      "length": 73,
+      "raw": "<div sID=\"gen4\" type=\"x-p\"/><chapter n=\"2\" osisID=\"Matt.2\" sID=\"Matt.2\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 3,
+      "slot": 53,
+      "block": 1,
+      "offset": 6694,
+      "length": 73,
+      "raw": "<div sID=\"gen5\" type=\"x-p\"/><chapter n=\"3\" osisID=\"Matt.3\" sID=\"Matt.3\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 4,
+      "slot": 71,
+      "block": 1,
+      "offset": 9049,
+      "length": 73,
+      "raw": "<div sID=\"gen6\" type=\"x-p\"/><chapter n=\"4\" osisID=\"Matt.4\" sID=\"Matt.4\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 5,
+      "slot": 97,
+      "block": 1,
+      "offset": 12321,
+      "length": 73,
+      "raw": "<div sID=\"gen7\" type=\"x-p\"/><chapter n=\"5\" osisID=\"Matt.5\" sID=\"Matt.5\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 6,
+      "slot": 146,
+      "block": 1,
+      "offset": 18337,
+      "length": 73,
+      "raw": "<div sID=\"gen8\" type=\"x-p\"/><chapter n=\"6\" osisID=\"Matt.6\" sID=\"Matt.6\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 7,
+      "slot": 181,
+      "block": 1,
+      "offset": 23158,
+      "length": 73,
+      "raw": "<div sID=\"gen9\" type=\"x-p\"/><chapter n=\"7\" osisID=\"Matt.7\" sID=\"Matt.7\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 8,
+      "slot": 211,
+      "block": 1,
+      "offset": 26757,
+      "length": 74,
+      "raw": "<div sID=\"gen10\" type=\"x-p\"/><chapter n=\"8\" osisID=\"Matt.8\" sID=\"Matt.8\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 9,
+      "slot": 246,
+      "block": 1,
+      "offset": 31111,
+      "length": 74,
+      "raw": "<div sID=\"gen11\" type=\"x-p\"/><chapter n=\"9\" osisID=\"Matt.9\" sID=\"Matt.9\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 10,
+      "slot": 285,
+      "block": 1,
+      "offset": 35704,
+      "length": 77,
+      "raw": "<div sID=\"gen12\" type=\"x-p\"/><chapter n=\"10\" osisID=\"Matt.10\" sID=\"Matt.10\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 11,
+      "slot": 328,
+      "block": 1,
+      "offset": 41045,
+      "length": 77,
+      "raw": "<div sID=\"gen13\" type=\"x-p\"/><chapter n=\"11\" osisID=\"Matt.11\" sID=\"Matt.11\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 12,
+      "slot": 359,
+      "block": 1,
+      "offset": 44830,
+      "length": 77,
+      "raw": "<div sID=\"gen14\" type=\"x-p\"/><chapter n=\"12\" osisID=\"Matt.12\" sID=\"Matt.12\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 13,
+      "slot": 410,
+      "block": 1,
+      "offset": 51252,
+      "length": 77,
+      "raw": "<div sID=\"gen15\" type=\"x-p\"/><chapter n=\"13\" osisID=\"Matt.13\" sID=\"Matt.13\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 14,
+      "slot": 469,
+      "block": 1,
+      "offset": 58901,
+      "length": 77,
+      "raw": "<div sID=\"gen16\" type=\"x-p\"/><chapter n=\"14\" osisID=\"Matt.14\" sID=\"Matt.14\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 15,
+      "slot": 506,
+      "block": 1,
+      "offset": 63116,
+      "length": 77,
+      "raw": "<div sID=\"gen17\" type=\"x-p\"/><chapter n=\"15\" osisID=\"Matt.15\" sID=\"Matt.15\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 16,
+      "slot": 546,
+      "block": 1,
+      "offset": 67932,
+      "length": 77,
+      "raw": "<div sID=\"gen18\" type=\"x-p\"/><chapter n=\"16\" osisID=\"Matt.16\" sID=\"Matt.16\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 17,
+      "slot": 575,
+      "block": 1,
+      "offset": 71938,
+      "length": 77,
+      "raw": "<div sID=\"gen19\" type=\"x-p\"/><chapter n=\"17\" osisID=\"Matt.17\" sID=\"Matt.17\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 18,
+      "slot": 603,
+      "block": 1,
+      "offset": 75687,
+      "length": 77,
+      "raw": "<div sID=\"gen20\" type=\"x-p\"/><chapter n=\"18\" osisID=\"Matt.18\" sID=\"Matt.18\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 19,
+      "slot": 639,
+      "block": 1,
+      "offset": 80276,
+      "length": 77,
+      "raw": "<div sID=\"gen21\" type=\"x-p\"/><chapter n=\"19\" osisID=\"Matt.19\" sID=\"Matt.19\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 20,
+      "slot": 670,
+      "block": 1,
+      "offset": 84470,
+      "length": 77,
+      "raw": "<div sID=\"gen22\" type=\"x-p\"/><chapter n=\"20\" osisID=\"Matt.20\" sID=\"Matt.20\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 21,
+      "slot": 705,
+      "block": 1,
+      "offset": 88793,
+      "length": 77,
+      "raw": "<div sID=\"gen23\" type=\"x-p\"/><chapter n=\"21\" osisID=\"Matt.21\" sID=\"Matt.21\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 22,
+      "slot": 752,
+      "block": 1,
+      "offset": 95298,
+      "length": 77,
+      "raw": "<div sID=\"gen24\" type=\"x-p\"/><chapter n=\"22\" osisID=\"Matt.22\" sID=\"Matt.22\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 23,
+      "slot": 799,
+      "block": 1,
+      "offset": 100133,
+      "length": 77,
+      "raw": "<div sID=\"gen25\" type=\"x-p\"/><chapter n=\"23\" osisID=\"Matt.23\" sID=\"Matt.23\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 24,
+      "slot": 839,
+      "block": 1,
+      "offset": 105346,
+      "length": 77,
+      "raw": "<div sID=\"gen26\" type=\"x-p\"/><chapter n=\"24\" osisID=\"Matt.24\" sID=\"Matt.24\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 25,
+      "slot": 891,
+      "block": 1,
+      "offset": 111269,
+      "length": 77,
+      "raw": "<div sID=\"gen27\" type=\"x-p\"/><chapter n=\"25\" osisID=\"Matt.25\" sID=\"Matt.25\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 26,
+      "slot": 938,
+      "block": 1,
+      "offset": 116939,
+      "length": 77,
+      "raw": "<div sID=\"gen28\" type=\"x-p\"/><chapter n=\"26\" osisID=\"Matt.26\" sID=\"Matt.26\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 27,
+      "slot": 1014,
+      "block": 1,
+      "offset": 126123,
+      "length": 77,
+      "raw": "<div sID=\"gen29\" type=\"x-p\"/><chapter n=\"27\" osisID=\"Matt.27\" sID=\"Matt.27\"/>"
+    },
+    {
+      "book": "MAT",
+      "chapter": 28,
+      "slot": 1081,
+      "block": 1,
+      "offset": 133974,
+      "length": 77,
+      "raw": "<div sID=\"gen30\" type=\"x-p\"/><chapter n=\"28\" osisID=\"Matt.28\" sID=\"Matt.28\"/>"
+    },
+    {
+      "book": "MRK",
+      "slot": 1102,
+      "block": 2,
+      "offset": 0,
+      "length": 236,
+      "raw": "<div canonical=\"true\" osisID=\"Mark\" sID=\"gen31\" type=\"book\"/> <milestone n=\"\" type=\"x-usfm-h\"/> <milestone n=\"\" type=\"x-usfm-toc1\"/> <milestone n=\"\" type=\"x-usfm-toc2\"/> <milestone n=\"\" type=\"x-usfm-toc3\"/> <div sID=\"gen32\" type=\"x-p\"/>"
+    },
+    {
+      "book": "MRK",
+      "chapter": 1,
+      "slot": 1103,
+      "block": 2,
+      "offset": 236,
+      "length": 45,
+      "raw": "<chapter n=\"1\" osisID=\"Mark.1\" sID=\"Mark.1\"/>"
+    },
+    {
+      "book": "MRK",
+      "chapter": 2,
+      "slot": 1149,
+      "block": 2,
+      "offset": 5354,
+      "length": 74,
+      "raw": "<div sID=\"gen33\" type=\"x-p\"/><chapter n=\"2\" osisID=\"Mark.2\" sID=\"Mark.2\"/>"
+    },
+    {
+      "book": "MRK",
+      "chapter": 3,
+      "slot": 1178,
+      "block": 2,
+      "offset": 9229,
+      "length": 74,
+      "raw": "<div sID=\"gen34\" type=\"x-p\"/><chapter n=\"3\" osisID=\"Mark.3\" sID=\"Mark.3\"/>"
+    },
+    {
+      "book": "MRK",
+      "chapter": 4,
+      "slot": 1214,
+      "block": 2,
+      "offset": 13179,
+      "length": 74,
+      "raw": "<div sID=\"gen35\" type=\"x-p\"/><chapter n=\"4\" osisID=\"Mark.4\" sID=\"Mark.4\"/>"
+    },
+    {
+      "book": "MRK",
+      "chapter": 5,
+      "slot": 1256,
+      "block": 2,
+      "offset": 18040,
+      "length": 74,
+      "raw": "<div sID=\"gen36\" type=\"x-p\"/><chapter n=\"5\" osisID=\"Mark.5\" sID=\"Mark.5\"/>"
+    },
+    {
+      "book": "MRK",
+      "chapter": 6,
+      "slot": 1300,
+      "block": 2,
+      "offset": 23090,
+      "length": 74,
+      "raw": "<div sID=\"gen37\" type=\"x-p\"/><chapter n=\"6\" osisID=\"Mark.6\" sID=\"Mark.6\"/>"
+    },
+    {
+      "book": "MRK",
+      "chapter": 7,
+      "slot": 1357,
+      "block": 2,
+      "offset": 30698,
+      "length": 74,
+      "raw": "<div sID=\"gen38\" type=\"x-p\"/><chapter n=\"7\" osisID=\"Mark.7\" sID=\"Mark.7\"/>"
+    },
+    {
+      "book": "MRK",
+      "chapter": 8,
+      "slot": 1395,
+      "block": 2,
+      "offset": 35457,
+      "length": 74,
+      "raw": "<div sID=\"gen39\" type=\"x-p\"/><chapter n=\"8\" osisID=\"Mark.8\" sID=\"Mark.8\"/>"
+    },
+    {
+      "book": "MRK",
+      "chapter": 9,
+      "slot": 1434,
+      "block": 2,
+      "offset": 40324,
+      "length": 74,
+      "raw": "<div sID=\"gen40\" type=\"x-p\"/><chapter n=\"9\" osisID=\"Mark.9\" sID=\"Mark.9\"/>"
+    },
+    {
+      "book": "MRK",
+      "chapter": 10,
+      "slot": 1485,
+      "block": 2,
+      "offset": 46831,
+      "length": 77,
+      "raw": "<div sID=\"gen41\" type=\"x-p\"/><chapter n=\"10\" osisID=\"Mark.10\" sID=\"Mark.10\"/>"
+    },
+    {
+      "book": "MRK",
+      "chapter": 11,
+      "slot": 1538,
+      "block": 2,
+      "offset": 53523,
+      "length": 77,
+      "raw": "<div sID=\"gen42\" type=\"x-p\"/><chapter n=\"11\" osisID=\"Mark.11\" sID=\"Mark.11\"/>"
+    },
+    {
+      "book": "MRK",
+      "chapter": 12,
+      "slot": 1572,
+      "block": 2,
+      "offset": 58084,
+      "length": 77,
+      "raw": "<div sID=\"gen43\" type=\"x-p\"/><chapter n=\"12\" osisID=\"Mark.12\" sID=\"Mark.12\"/>"
+    },
+    {
+      "book": "MRK",
+      "chapter": 13,
+      "slot": 1617,
+      "block": 2,
+      "offset": 64091,
+      "length": 77,
+      "raw": "<div sID=\"gen44\" type=\"x-p\"/><chapter n=\"13\" osisID=\"Mark.13\" sID=\"Mark.13\"/>"
+    },
+    {
+      "book": "MRK",
+      "chapter": 14,
+      "slot": 1655,
+      "block": 2,
+      "offset": 68852,
+      "length": 77,
+      "raw": "<div sID=\"gen45\" type=\"x-p\"/><chapter n=\"14\" osisID=\"Mark.14\" sID=\"Mark.14\"/>"
+    },
+    {
+      "book": "MRK",
+      "chapter": 15,
+      "slot": 1728,
+      "block": 2,
+      "offset": 77881,
+      "length": 77,
+      "raw": "<div sID=\"gen46\" type=\"x-p\"/><chapter n=\"15\" osisID=\"Mark.15\" sID=\"Mark.15\"/>"
+    },
+    {
+      "book": "MRK",
+      "chapter": 16,
+      "slot": 1776,
+      "block": 2,
+      "offset": 83222,
+      "length": 77,
+      "raw": "<div sID=\"gen47\" type=\"x-p\"/><chapter n=\"16\" osisID=\"Mark.16\" sID=\"Mark.16\"/>"
+    },
+    {
+      "book": "LUK",
+      "slot": 1797,
+      "block": 3,
+      "offset": 0,
+      "length": 236,
+      "raw": "<div canonical=\"true\" osisID=\"Luke\" sID=\"gen48\" type=\"book\"/> <milestone n=\"\" type=\"x-usfm-h\"/> <milestone n=\"\" type=\"x-usfm-toc1\"/> <milestone n=\"\" type=\"x-usfm-toc2\"/> <milestone n=\"\" type=\"x-usfm-toc3\"/> <div sID=\"gen49\" type=\"x-p\"/>"
+    },
+    {
+      "book": "LUK",
+      "chapter": 1,
+      "slot": 1798,
+      "block": 3,
+      "offset": 236,
+      "length": 45,
+      "raw": "<chapter n=\"1\" osisID=\"Luke.1\" sID=\"Luke.1\"/>"
+    },
+    {
+      "book": "LUK",
+      "chapter": 2,
+      "slot": 1879,
+      "block": 3,
+      "offset": 8599,
+      "length": 74,
+      "raw": "<div sID=\"gen50\" type=\"x-p\"/><chapter n=\"2\" osisID=\"Luke.2\" sID=\"Luke.2\"/>"
+    },
+    {
+      "book": "LUK",
+      "chapter": 3,
+      "slot": 1932,
+      "block": 3,
+      "offset": 14993,
+      "length": 74,
+      "raw": "<div sID=\"gen51\" type=\"x-p\"/><chapter n=\"3\" osisID=\"Luke.3\" sID=\"Luke.3\"/>"
+    },
+    {
+      "book": "LUK",
+      "chapter": 4,
+      "slot": 1971,
+      "block": 3,
+      "offset": 19585,
+      "length": 74,
+      "raw": "<div sID=\"gen52\" type=\"x-p\"/><chapter n=\"4\" osisID=\"Luke.4\" sID=\"Luke.4\"/>"
+    },
+    {
+      "book": "LUK",
+      "chapter": 5,
+      "slot": 2016,
+      "block": 3,
+      "offset": 25314,
+      "length": 74,
+      "raw": "<div sID=\"gen53\" type=\"x-p\"/><chapter n=\"5\" osisID=\"Luke.5\" sID=\"Luke.5\"/>"
+    },
+    {
+      "book": "LUK",
+      "chapter": 6,
+      "slot": 2056,
+      "block": 3,
+      "offset": 30849,
+      "length": 74,
+      "raw": "<div sID=\"gen54\" type=\"x-p\"/><chapter n=\"6\" osisID=\"Luke.6\" sID=\"Luke.6\"/>"
+    },
+    {
+      "book": "LUK",
+      "chapter": 7,
+      "slot": 2106,
+      "block": 3,
+      "offset": 37761,
+      "length": 74,
+      "raw": "<div sID=\"gen55\" type=\"x-p\"/><chapter n=\"7\" osisID=\"Luke.7\" sID=\"Luke.7\"/>"
+    },
+    {
+      "book": "LUK",
+      "chapter": 8,
+      "slot": 2157,
+      "block": 3,
+      "offset": 44564,
+      "length": 74,
+      "raw": "<div sID=\"gen56\" type=\"x-p\"/><chapter n=\"8\" osisID=\"Luke.8\" sID=\"Luke.8\"/>"
+    },
+    {
+      "book": "LUK",
+      "chapter": 9,
+      "slot": 2214,
+      "block": 3,
+      "offset": 52677,
+      "length": 74,
+      "raw": "<div sID=\"gen57\" type=\"x-p\"/><chapter n=\"9\" osisID=\"Luke.9\" sID=\"Luke.9\"/>"
+    },
+    {
+      "book": "LUK",
+      "chapter": 10,
+      "slot": 2277,
+      "block": 3,
+      "offset": 61232,
+      "length": 77,
+      "raw": "<div sID=\"gen58\" type=\"x-p\"/><chapter n=\"10\" osisID=\"Luke.10\" sID=\"Luke.10\"/>"
+    },
+    {
+      "book": "LUK",
+      "chapter": 11,
+      "slot": 2320,
+      "block": 3,
+      "offset": 66944,
+      "length": 77,
+      "raw": "<div sID=\"gen59\" type=\"x-p\"/><chapter n=\"11\" osisID=\"Luke.11\" sID=\"Luke.11\"/>"
+    },
+    {
+      "book": "LUK",
+      "chapter": 12,
+      "slot": 2375,
+      "block": 3,
+      "offset": 74511,
+      "length": 77,
+      "raw": "<div sID=\"gen60\" type=\"x-p\"/><chapter n=\"12\" osisID=\"Luke.12\" sID=\"Luke.12\"/>"
+    },
+    {
+      "book": "LUK",
+      "chapter": 13,
+      "slot": 2435,
+      "block": 3,
+      "offset": 82424,
+      "length": 77,
+      "raw": "<div sID=\"gen61\" type=\"x-p\"/><chapter n=\"13\" osisID=\"Luke.13\" sID=\"Luke.13\"/>"
+    },
+    {
+      "book": "LUK",
+      "chapter": 14,
+      "slot": 2471,
+      "block": 3,
+      "offset": 87434,
+      "length": 77,
+      "raw": "<div sID=\"gen62\" type=\"x-p\"/><chapter n=\"14\" osisID=\"Luke.14\" sID=\"Luke.14\"/>"
+    },
+    {
+      "book": "LUK",
+      "chapter": 15,
+      "slot": 2507,
+      "block": 3,
+      "offset": 92022,
+      "length": 77,
+      "raw": "<div sID=\"gen63\" type=\"x-p\"/><chapter n=\"15\" osisID=\"Luke.15\" sID=\"Luke.15\"/>"
+    },
+    {
+      "book": "LUK",
+      "chapter": 16,
+      "slot": 2540,
+      "block": 3,
+      "offset": 95989,
+      "length": 77,
+      "raw": "<div sID=\"gen64\" type=\"x-p\"/><chapter n=\"16\" osisID=\"Luke.16\" sID=\"Luke.16\"/>"
+    },
+    {
+      "book": "LUK",
+      "chapter": 17,
+      "slot": 2572,
+      "block": 3,
+      "offset": 100496,
+      "length": 77,
+      "raw": "<div sID=\"gen65\" type=\"x-p\"/><chapter n=\"17\" osisID=\"Luke.17\" sID=\"Luke.17\"/>"
+    },
+    {
+      "book": "LUK",
+      "chapter": 18,
+      "slot": 2610,
+      "block": 3,
+      "offset": 104942,
+      "length": 77,
+      "raw": "<div sID=\"gen66\" type=\"x-p\"/><chapter n=\"18\" osisID=\"Luke.18\" sID=\"Luke.18\"/>"
+    },
+    {
+      "book": "LUK",
+      "chapter": 19,
+      "slot": 2654,
+      "block": 3,
+      "offset": 110267,
+      "length": 77,
+      "raw": "<div sID=\"gen67\" type=\"x-p\"/><chapter n=\"19\" osisID=\"Luke.19\" sID=\"Luke.19\"/>"
+    },
+    {
+      "book": "LUK",
+      "chapter": 20,
+      "slot": 2703,
+      "block": 3,
+      "offset": 115910,
+      "length": 77,
+      "raw": "<div sID=\"gen68\" type=\"x-p\"/><chapter n=\"20\" osisID=\"Luke.20\" sID=\"Luke.20\"/>"
+    },
+    {
+      "book": "LUK",
+      "chapter": 21,
+      "slot": 2751,
+      "block": 3,
+      "offset": 121357,
+      "length": 77,
+      "raw": "<div sID=\"gen69\" type=\"x-p\"/><chapter n=\"21\" osisID=\"Luke.21\" sID=\"Luke.21\"/>"
+    },
+    {
+      "book": "LUK",
+      "chapter": 22,
+      "slot": 2790,
+      "block": 3,
+      "offset": 126112,
+      "length": 77,
+      "raw": "<div sID=\"gen70\" type=\"x-p\"/><chapter n=\"22\" osisID=\"Luke.22\" sID=\"Luke.22\"/>"
+    },
+    {
+      "book": "LUK",
+      "chapter": 23,
+      "slot": 2862,
+      "block": 3,
+      "offset": 134143,
+      "length": 77,
+      "raw": "<div sID=\"gen71\" type=\"x-p\"/><chapter n=\"23\" osisID=\"Luke.23\" sID=\"Luke.23\"/>"
+    },
+    {
+      "book": "LUK",
+      "chapter": 24,
+      "slot": 2919,
+      "block": 3,
+      "offset": 140985,
+      "length": 77,
+      "raw": "<div sID=\"gen72\" type=\"x-p\"/><chapter n=\"24\" osisID=\"Luke.24\" sID=\"Luke.24\"/>"
+    },
+    {
+      "book": "JHN",
+      "slot": 2973,
+      "block": 4,
+      "offset": 0,
+      "length": 236,
+      "raw": "<div canonical=\"true\" osisID=\"John\" sID=\"gen73\" type=\"book\"/> <milestone n=\"\" type=\"x-usfm-h\"/> <milestone n=\"\" type=\"x-usfm-toc1\"/> <milestone n=\"\" type=\"x-usfm-toc2\"/> <milestone n=\"\" type=\"x-usfm-toc3\"/> <div sID=\"gen74\" type=\"x-p\"/>"
+    },
+    {
+      "book": "JHN",
+      "chapter": 1,
+      "slot": 2974,
+      "block": 4,
+      "offset": 236,
+      "length": 45,
+      "raw": "<chapter n=\"1\" osisID=\"John.1\" sID=\"John.1\"/>"
+    },
+    {
+      "book": "JHN",
+      "chapter": 2,
+      "slot": 3026,
+      "block": 4,
+      "offset": 6207,
+      "length": 74,
+      "raw": "<div sID=\"gen75\" type=\"x-p\"/><chapter n=\"2\" osisID=\"John.2\" sID=\"John.2\"/>"
+    },
+    {
+      "book": "JHN",
+      "chapter": 3,
+      "slot": 3052,
+      "block": 4,
+      "offset": 9278,
+      "length": 74,
+      "raw": "<div sID=\"gen76\" type=\"x-p\"/><chapter n=\"3\" osisID=\"John.3\" sID=\"John.3\"/>"
+    },
+    {
+      "book": "JHN",
+      "chapter": 4,
+      "slot": 3089,
+      "block": 4,
+      "offset": 14143,
+      "length": 74,
+      "raw": "<div sID=\"gen77\" type=\"x-p\"/><chapter n=\"4\" osisID=\"John.4\" sID=\"John.4\"/>"
+    },
+    {
+      "book": "JHN",
+      "chapter": 5,
+      "slot": 3144,
+      "block": 4,
+      "offset": 20838,
+      "length": 74,
+      "raw": "<div sID=\"gen78\" type=\"x-p\"/><chapter n=\"5\" osisID=\"John.5\" sID=\"John.5\"/>"
+    },
+    {
+      "book": "JHN",
+      "chapter": 6,
+      "slot": 3192,
+      "block": 4,
+      "offset": 27064,
+      "length": 74,
+      "raw": "<div sID=\"gen79\" type=\"x-p\"/><chapter n=\"6\" osisID=\"John.6\" sID=\"John.6\"/>"
+    },
+    {
+      "book": "JHN",
+      "chapter": 7,
+      "slot": 3264,
+      "block": 4,
+      "offset": 35829,
+      "length": 74,
+      "raw": "<div sID=\"gen80\" type=\"x-p\"/><chapter n=\"7\" osisID=\"John.7\" sID=\"John.7\"/>"
+    },
+    {
+      "book": "JHN",
+      "chapter": 8,
+      "slot": 3318,
+      "block": 4,
+      "offset": 42322,
+      "length": 74,
+      "raw": "<div sID=\"gen81\" type=\"x-p\"/><chapter n=\"8\" osisID=\"John.8\" sID=\"John.8\"/>"
+    },
+    {
+      "book": "JHN",
+      "chapter": 9,
+      "slot": 3378,
+      "block": 4,
+      "offset": 50421,
+      "length": 74,
+      "raw": "<div sID=\"gen82\" type=\"x-p\"/><chapter n=\"9\" osisID=\"John.9\" sID=\"John.9\"/>"
+    },
+    {
+      "book": "JHN",
+      "chapter": 10,
+      "slot": 3420,
+      "block": 4,
+      "offset": 55574,
+      "length": 77,
+      "raw": "<div sID=\"gen83\" type=\"x-p\"/><chapter n=\"10\" osisID=\"John.10\" sID=\"John.10\"/>"
+    },
+    {
+      "book": "JHN",
+      "chapter": 11,
+      "slot": 3463,
+      "block": 4,
+      "offset": 60691,
+      "length": 77,
+      "raw": "<div sID=\"gen84\" type=\"x-p\"/><chapter n=\"11\" osisID=\"John.11\" sID=\"John.11\"/>"
+    },
+    {
+      "book": "JHN",
+      "chapter": 12,
+      "slot": 3521,
+      "block": 4,
+      "offset": 67528,
+      "length": 77,
+      "raw": "<div sID=\"gen85\" type=\"x-p\"/><chapter n=\"12\" osisID=\"John.12\" sID=\"John.12\"/>"
+    },
+    {
+      "book": "JHN",
+      "chapter": 13,
+      "slot": 3572,
+      "block": 4,
+      "offset": 73903,
+      "length": 77,
+      "raw": "<div sID=\"gen86\" type=\"x-p\"/><chapter n=\"13\" osisID=\"John.13\" sID=\"John.13\"/>"
+    },
+    {
+      "book": "JHN",
+      "chapter": 14,
+      "slot": 3611,
+      "block": 4,
+      "offset": 79083,
+      "length": 77,
+      "raw": "<div sID=\"gen87\" type=\"x-p\"/><chapter n=\"14\" osisID=\"John.14\" sID=\"John.14\"/>"
+    },
+    {
+      "book": "JHN",
+      "chapter": 15,
+      "slot": 3643,
+      "block": 4,
+      "offset": 83127,
+      "length": 77,
+      "raw": "<div sID=\"gen88\" type=\"x-p\"/><chapter n=\"15\" osisID=\"John.15\" sID=\"John.15\"/>"
+    },
+    {
+      "book": "JHN",
+      "chapter": 16,
+      "slot": 3671,
+      "block": 4,
+      "offset": 86575,
+      "length": 77,
+      "raw": "<div sID=\"gen89\" type=\"x-p\"/><chapter n=\"16\" osisID=\"John.16\" sID=\"John.16\"/>"
+    },
+    {
+      "book": "JHN",
+      "chapter": 17,
+      "slot": 3705,
+      "block": 4,
+      "offset": 90890,
+      "length": 77,
+      "raw": "<div sID=\"gen90\" type=\"x-p\"/><chapter n=\"17\" osisID=\"John.17\" sID=\"John.17\"/>"
+    },
+    {
+      "book": "JHN",
+      "chapter": 18,
+      "slot": 3732,
+      "block": 4,
+      "offset": 94343,
+      "length": 77,
+      "raw": "<div sID=\"gen91\" type=\"x-p\"/><chapter n=\"18\" osisID=\"John.18\" sID=\"John.18\"/>"
+    },
+    {
+      "book": "JHN",
+      "chapter": 19,
+      "slot": 3773,
+      "block": 4,
+      "offset": 100148,
+      "length": 77,
+      "raw": "<div sID=\"gen92\" type=\"x-p\"/><chapter n=\"19\" osisID=\"John.19\" sID=\"John.19\"/>"
+    },
+    {
+      "book": "JHN",
+      "chapter": 20,
+      "slot": 3816,
+      "block": 4,
+      "offset": 106293,
+      "length": 77,
+      "raw": "<div sID=\"gen93\" type=\"x-p\"/><chapter n=\"20\" osisID=\"John.20\" sID=\"John.20\"/>"
+    },
+    {
+      "book": "JHN",
+      "chapter": 21,
+      "slot": 3848,
+      "block": 4,
+      "offset": 110637,
+      "length": 77,
+      "raw": "<div sID=\"gen94\" type=\"x-p\"/><chapter n=\"21\" osisID=\"John.21\" sID=\"John.21\"/>"
+    },
+    {
+      "book": "ACT",
+      "slot": 3874,
+      "block": 5,
+      "offset": 0,
+      "length": 236,
+      "raw": "<div canonical=\"true\" osisID=\"Acts\" sID=\"gen95\" type=\"book\"/> <milestone n=\"\" type=\"x-usfm-h\"/> <milestone n=\"\" type=\"x-usfm-toc1\"/> <milestone n=\"\" type=\"x-usfm-toc2\"/> <milestone n=\"\" type=\"x-usfm-toc3\"/> <div sID=\"gen96\" type=\"x-p\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 1,
+      "slot": 3875,
+      "block": 5,
+      "offset": 236,
+      "length": 45,
+      "raw": "<chapter n=\"1\" osisID=\"Acts.1\" sID=\"Acts.1\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 2,
+      "slot": 3902,
+      "block": 5,
+      "offset": 4317,
+      "length": 74,
+      "raw": "<div sID=\"gen97\" type=\"x-p\"/><chapter n=\"2\" osisID=\"Acts.2\" sID=\"Acts.2\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 3,
+      "slot": 3950,
+      "block": 5,
+      "offset": 10799,
+      "length": 74,
+      "raw": "<div sID=\"gen98\" type=\"x-p\"/><chapter n=\"3\" osisID=\"Acts.3\" sID=\"Acts.3\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 4,
+      "slot": 3977,
+      "block": 5,
+      "offset": 14588,
+      "length": 74,
+      "raw": "<div sID=\"gen99\" type=\"x-p\"/><chapter n=\"4\" osisID=\"Acts.4\" sID=\"Acts.4\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 5,
+      "slot": 4015,
+      "block": 5,
+      "offset": 20034,
+      "length": 75,
+      "raw": "<div sID=\"gen100\" type=\"x-p\"/><chapter n=\"5\" osisID=\"Acts.5\" sID=\"Acts.5\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 6,
+      "slot": 4058,
+      "block": 5,
+      "offset": 26442,
+      "length": 75,
+      "raw": "<div sID=\"gen101\" type=\"x-p\"/><chapter n=\"6\" osisID=\"Acts.6\" sID=\"Acts.6\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 7,
+      "slot": 4074,
+      "block": 5,
+      "offset": 28837,
+      "length": 75,
+      "raw": "<div sID=\"gen102\" type=\"x-p\"/><chapter n=\"7\" osisID=\"Acts.7\" sID=\"Acts.7\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 8,
+      "slot": 4135,
+      "block": 5,
+      "offset": 37368,
+      "length": 75,
+      "raw": "<div sID=\"gen103\" type=\"x-p\"/><chapter n=\"8\" osisID=\"Acts.8\" sID=\"Acts.8\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 9,
+      "slot": 4176,
+      "block": 5,
+      "offset": 43113,
+      "length": 75,
+      "raw": "<div sID=\"gen104\" type=\"x-p\"/><chapter n=\"9\" osisID=\"Acts.9\" sID=\"Acts.9\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 10,
+      "slot": 4220,
+      "block": 5,
+      "offset": 49573,
+      "length": 78,
+      "raw": "<div sID=\"gen105\" type=\"x-p\"/><chapter n=\"10\" osisID=\"Acts.10\" sID=\"Acts.10\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 11,
+      "slot": 4269,
+      "block": 5,
+      "offset": 56282,
+      "length": 78,
+      "raw": "<div sID=\"gen106\" type=\"x-p\"/><chapter n=\"11\" osisID=\"Acts.11\" sID=\"Acts.11\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 12,
+      "slot": 4300,
+      "block": 5,
+      "offset": 60411,
+      "length": 78,
+      "raw": "<div sID=\"gen107\" type=\"x-p\"/><chapter n=\"12\" osisID=\"Acts.12\" sID=\"Acts.12\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 13,
+      "slot": 4326,
+      "block": 5,
+      "offset": 64515,
+      "length": 78,
+      "raw": "<div sID=\"gen108\" type=\"x-p\"/><chapter n=\"13\" osisID=\"Acts.13\" sID=\"Acts.13\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 14,
+      "slot": 4379,
+      "block": 5,
+      "offset": 72179,
+      "length": 78,
+      "raw": "<div sID=\"gen109\" type=\"x-p\"/><chapter n=\"14\" osisID=\"Acts.14\" sID=\"Acts.14\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 15,
+      "slot": 4408,
+      "block": 5,
+      "offset": 76506,
+      "length": 78,
+      "raw": "<div sID=\"gen110\" type=\"x-p\"/><chapter n=\"15\" osisID=\"Acts.15\" sID=\"Acts.15\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 16,
+      "slot": 4450,
+      "block": 5,
+      "offset": 82290,
+      "length": 78,
+      "raw": "<div sID=\"gen111\" type=\"x-p\"/><chapter n=\"16\" osisID=\"Acts.16\" sID=\"Acts.16\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 17,
+      "slot": 4491,
+      "block": 5,
+      "offset": 88517,
+      "length": 78,
+      "raw": "<div sID=\"gen112\" type=\"x-p\"/><chapter n=\"17\" osisID=\"Acts.17\" sID=\"Acts.17\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 18,
+      "slot": 4526,
+      "block": 5,
+      "offset": 94600,
+      "length": 78,
+      "raw": "<div sID=\"gen113\" type=\"x-p\"/><chapter n=\"18\" osisID=\"Acts.18\" sID=\"Acts.18\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 19,
+      "slot": 4555,
+      "block": 5,
+      "offset": 99170,
+      "length": 78,
+      "raw": "<div sID=\"gen114\" type=\"x-p\"/><chapter n=\"19\" osisID=\"Acts.19\" sID=\"Acts.19\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 20,
+      "slot": 4597,
+      "block": 5,
+      "offset": 105954,
+      "length": 78,
+      "raw": "<div sID=\"gen115\" type=\"x-p\"/><chapter n=\"20\" osisID=\"Acts.20\" sID=\"Acts.20\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 21,
+      "slot": 4636,
+      "block": 5,
+      "offset": 111679,
+      "length": 78,
+      "raw": "<div sID=\"gen116\" type=\"x-p\"/><chapter n=\"21\" osisID=\"Acts.21\" sID=\"Acts.21\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 22,
+      "slot": 4677,
+      "block": 5,
+      "offset": 118164,
+      "length": 78,
+      "raw": "<div sID=\"gen117\" type=\"x-p\"/><chapter n=\"22\" osisID=\"Acts.22\" sID=\"Acts.22\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 23,
+      "slot": 4708,
+      "block": 5,
+      "offset": 122724,
+      "length": 78,
+      "raw": "<div sID=\"gen118\" type=\"x-p\"/><chapter n=\"23\" osisID=\"Acts.23\" sID=\"Acts.23\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 24,
+      "slot": 4744,
+      "block": 5,
+      "offset": 128204,
+      "length": 78,
+      "raw": "<div sID=\"gen119\" type=\"x-p\"/><chapter n=\"24\" osisID=\"Acts.24\" sID=\"Acts.24\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 25,
+      "slot": 4772,
+      "block": 5,
+      "offset": 132414,
+      "length": 78,
+      "raw": "<div sID=\"gen120\" type=\"x-p\"/><chapter n=\"25\" osisID=\"Acts.25\" sID=\"Acts.25\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 26,
+      "slot": 4800,
+      "block": 5,
+      "offset": 136830,
+      "length": 78,
+      "raw": "<div sID=\"gen121\" type=\"x-p\"/><chapter n=\"26\" osisID=\"Acts.26\" sID=\"Acts.26\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 27,
+      "slot": 4833,
+      "block": 5,
+      "offset": 141941,
+      "length": 78,
+      "raw": "<div sID=\"gen122\" type=\"x-p\"/><chapter n=\"27\" osisID=\"Acts.27\" sID=\"Acts.27\"/>"
+    },
+    {
+      "book": "ACT",
+      "chapter": 28,
+      "slot": 4878,
+      "block": 5,
+      "offset": 148808,
+      "length": 78,
+      "raw": "<div sID=\"gen123\" type=\"x-p\"/><chapter n=\"28\" osisID=\"Acts.28\" sID=\"Acts.28\"/>"
+    },
+    {
+      "book": "ROM",
+      "slot": 4910,
+      "block": 6,
+      "offset": 0,
+      "length": 237,
+      "raw": "<div canonical=\"true\" osisID=\"Rom\" sID=\"gen124\" type=\"book\"/> <milestone n=\"\" type=\"x-usfm-h\"/> <milestone n=\"\" type=\"x-usfm-toc1\"/> <milestone n=\"\" type=\"x-usfm-toc2\"/> <milestone n=\"\" type=\"x-usfm-toc3\"/> <div sID=\"gen125\" type=\"x-p\"/>"
+    },
+    {
+      "book": "ROM",
+      "chapter": 1,
+      "slot": 4911,
+      "block": 6,
+      "offset": 237,
+      "length": 43,
+      "raw": "<chapter n=\"1\" osisID=\"Rom.1\" sID=\"Rom.1\"/>"
+    },
+    {
+      "book": "ROM",
+      "chapter": 2,
+      "slot": 4944,
+      "block": 6,
+      "offset": 4751,
+      "length": 73,
+      "raw": "<div sID=\"gen126\" type=\"x-p\"/><chapter n=\"2\" osisID=\"Rom.2\" sID=\"Rom.2\"/>"
+    },
+    {
+      "book": "ROM",
+      "chapter": 3,
+      "slot": 4974,
+      "block": 6,
+      "offset": 8817,
+      "length": 73,
+      "raw": "<div sID=\"gen127\" type=\"x-p\"/><chapter n=\"3\" osisID=\"Rom.3\" sID=\"Rom.3\"/>"
+    },
+    {
+      "book": "ROM",
+      "chapter": 4,
+      "slot": 5006,
+      "block": 6,
+      "offset": 12226,
+      "length": 73,
+      "raw": "<div sID=\"gen128\" type=\"x-p\"/><chapter n=\"4\" osisID=\"Rom.4\" sID=\"Rom.4\"/>"
+    },
+    {
+      "book": "ROM",
+      "chapter": 5,
+      "slot": 5032,
+      "block": 6,
+      "offset": 15595,
+      "length": 73,
+      "raw": "<div sID=\"gen129\" type=\"x-p\"/><chapter n=\"5\" osisID=\"Rom.5\" sID=\"Rom.5\"/>"
+    },
+    {
+      "book": "ROM",
+      "chapter": 6,
+      "slot": 5054,
+      "block": 6,
+      "offset": 18823,
+      "length": 73,
+      "raw": "<div sID=\"gen130\" type=\"x-p\"/><chapter n=\"6\" osisID=\"Rom.6\" sID=\"Rom.6\"/>"
+    },
+    {
+      "book": "ROM",
+      "chapter": 7,
+      "slot": 5078,
+      "block": 6,
+      "offset": 21927,
+      "length": 73,
+      "raw": "<div sID=\"gen131\" type=\"x-p\"/><chapter n=\"7\" osisID=\"Rom.7\" sID=\"Rom.7\"/>"
+    },
+    {
+      "book": "ROM",
+      "chapter": 8,
+      "slot": 5104,
+      "block": 6,
+      "offset": 25494,
+      "length": 73,
+      "raw": "<div sID=\"gen132\" type=\"x-p\"/><chapter n=\"8\" osisID=\"Rom.8\" sID=\"Rom.8\"/>"
+    },
+    {
+      "book": "ROM",
+      "chapter": 9,
+      "slot": 5144,
+      "block": 6,
+      "offset": 30581,
+      "length": 73,
+      "raw": "<div sID=\"gen133\" type=\"x-p\"/><chapter n=\"9\" osisID=\"Rom.9\" sID=\"Rom.9\"/>"
+    },
+    {
+      "book": "ROM",
+      "chapter": 10,
+      "slot": 5178,
+      "block": 6,
+      "offset": 34780,
+      "length": 76,
+      "raw": "<div sID=\"gen134\" type=\"x-p\"/><chapter n=\"10\" osisID=\"Rom.10\" sID=\"Rom.10\"/>"
+    },
+    {
+      "book": "ROM",
+      "chapter": 11,
+      "slot": 5200,
+      "block": 6,
+      "offset": 37389,
+      "length": 76,
+      "raw": "<div sID=\"gen135\" type=\"x-p\"/><chapter n=\"11\" osisID=\"Rom.11\" sID=\"Rom.11\"/>"
+    },
+    {
+      "book": "ROM",
+      "chapter": 12,
+      "slot": 5237,
+      "block": 6,
+      "offset": 42320,
+      "length": 76,
+      "raw": "<div sID=\"gen136\" type=\"x-p\"/><chapter n=\"12\" osisID=\"Rom.12\" sID=\"Rom.12\"/>"
+    },
+    {
+      "book": "ROM",
+      "chapter": 13,
+      "slot": 5259,
+      "block": 6,
+      "offset": 45288,
+      "length": 76,
+      "raw": "<div sID=\"gen137\" type=\"x-p\"/><chapter n=\"13\" osisID=\"Rom.13\" sID=\"Rom.13\"/>"
+    },
+    {
+      "book": "ROM",
+      "chapter": 14,
+      "slot": 5274,
+      "block": 6,
+      "offset": 47612,
+      "length": 76,
+      "raw": "<div sID=\"gen138\" type=\"x-p\"/><chapter n=\"14\" osisID=\"Rom.14\" sID=\"Rom.14\"/>"
+    },
+    {
+      "book": "ROM",
+      "chapter": 15,
+      "slot": 5298,
+      "block": 6,
+      "offset": 50703,
+      "length": 76,
+      "raw": "<div sID=\"gen139\" type=\"x-p\"/><chapter n=\"15\" osisID=\"Rom.15\" sID=\"Rom.15\"/>"
+    },
+    {
+      "book": "ROM",
+      "chapter": 16,
+      "slot": 5332,
+      "block": 6,
+      "offset": 55068,
+      "length": 76,
+      "raw": "<div sID=\"gen140\" type=\"x-p\"/><chapter n=\"16\" osisID=\"Rom.16\" sID=\"Rom.16\"/>"
+    },
+    {
+      "book": "1CO",
+      "slot": 5360,
+      "block": 7,
+      "offset": 0,
+      "length": 238,
+      "raw": "<div canonical=\"true\" osisID=\"1Cor\" sID=\"gen141\" type=\"book\"/> <milestone n=\"\" type=\"x-usfm-h\"/> <milestone n=\"\" type=\"x-usfm-toc1\"/> <milestone n=\"\" type=\"x-usfm-toc2\"/> <milestone n=\"\" type=\"x-usfm-toc3\"/> <div sID=\"gen142\" type=\"x-p\"/>"
+    },
+    {
+      "book": "1CO",
+      "chapter": 1,
+      "slot": 5361,
+      "block": 7,
+      "offset": 238,
+      "length": 45,
+      "raw": "<chapter n=\"1\" osisID=\"1Cor.1\" sID=\"1Cor.1\"/>"
+    },
+    {
+      "book": "1CO",
+      "chapter": 2,
+      "slot": 5393,
+      "block": 7,
+      "offset": 4218,
+      "length": 75,
+      "raw": "<div sID=\"gen143\" type=\"x-p\"/><chapter n=\"2\" osisID=\"1Cor.2\" sID=\"1Cor.2\"/>"
+    },
+    {
+      "book": "1CO",
+      "chapter": 3,
+      "slot": 5410,
+      "block": 7,
+      "offset": 6458,
+      "length": 75,
+      "raw": "<div sID=\"gen144\" type=\"x-p\"/><chapter n=\"3\" osisID=\"1Cor.3\" sID=\"1Cor.3\"/>"
+    },
+    {
+      "book": "1CO",
+      "chapter": 4,
+      "slot": 5434,
+      "block": 7,
+      "offset": 9457,
+      "length": 75,
+      "raw": "<div sID=\"gen145\" type=\"x-p\"/><chapter n=\"4\" osisID=\"1Cor.4\" sID=\"1Cor.4\"/>"
+    },
+    {
+      "book": "1CO",
+      "chapter": 5,
+      "slot": 5456,
+      "block": 7,
+      "offset": 12464,
+      "length": 75,
+      "raw": "<div sID=\"gen146\" type=\"x-p\"/><chapter n=\"5\" osisID=\"1Cor.5\" sID=\"1Cor.5\"/>"
+    },
+    {
+      "book": "1CO",
+      "chapter": 6,
+      "slot": 5470,
+      "block": 7,
+      "offset": 14504,
+      "length": 75,
+      "raw": "<div sID=\"gen147\" type=\"x-p\"/><chapter n=\"6\" osisID=\"1Cor.6\" sID=\"1Cor.6\"/>"
+    },
+    {
+      "book": "1CO",
+      "chapter": 7,
+      "slot": 5491,
+      "block": 7,
+      "offset": 17366,
+      "length": 75,
+      "raw": "<div sID=\"gen148\" type=\"x-p\"/><chapter n=\"7\" osisID=\"1Cor.7\" sID=\"1Cor.7\"/>"
+    },
+    {
+      "book": "1CO",
+      "chapter": 8,
+      "slot": 5532,
+      "block": 7,
+      "offset": 23150,
+      "length": 75,
+      "raw": "<div sID=\"gen149\" type=\"x-p\"/><chapter n=\"8\" osisID=\"1Cor.8\" sID=\"1Cor.8\"/>"
+    },
+    {
+      "book": "1CO",
+      "chapter": 9,
+      "slot": 5546,
+      "block": 7,
+      "offset": 25020,
+      "length": 75,
+      "raw": "<div sID=\"gen150\" type=\"x-p\"/><chapter n=\"9\" osisID=\"1Cor.9\" sID=\"1Cor.9\"/>"
+    },
+    {
+      "book": "1CO",
+      "chapter": 10,
+      "slot": 5574,
+      "block": 7,
+      "offset": 28958,
+      "length": 78,
+      "raw": "<div sID=\"gen151\" type=\"x-p\"/><chapter n=\"10\" osisID=\"1Cor.10\" sID=\"1Cor.10\"/>"
+    },
+    {
+      "book": "1CO",
+      "chapter": 11,
+      "slot": 5608,
+      "block": 7,
+      "offset": 33072,
+      "length": 78,
+      "raw": "<div sID=\"gen152\" type=\"x-p\"/><chapter n=\"11\" osisID=\"1Cor.11\" sID=\"1Cor.11\"/>"
+    },
+    {
+      "book": "1CO",
+      "chapter": 12,
+      "slot": 5643,
+      "block": 7,
+      "offset": 37466,
+      "length": 78,
+      "raw": "<div sID=\"gen153\" type=\"x-p\"/><chapter n=\"12\" osisID=\"1Cor.12\" sID=\"1Cor.12\"/>"
+    },
+    {
+      "book": "1CO",
+      "chapter": 13,
+      "slot": 5675,
+      "block": 7,
+      "offset": 41615,
+      "length": 78,
+      "raw": "<div sID=\"gen154\" type=\"x-p\"/><chapter n=\"13\" osisID=\"1Cor.13\" sID=\"1Cor.13\"/>"
+    },
+    {
+      "book": "1CO",
+      "chapter": 14,
+      "slot": 5689,
+      "block": 7,
+      "offset": 43416,
+      "length": 78,
+      "raw": "<div sID=\"gen155\" type=\"x-p\"/><chapter n=\"14\" osisID=\"1Cor.14\" sID=\"1Cor.14\"/>"
+    },
+    {
+      "book": "1CO",
+      "chapter": 15,
+      "slot": 5730,
+      "block": 7,
+      "offset": 48868,
+      "length": 78,
+      "raw": "<div sID=\"gen156\" type=\"x-p\"/><chapter n=\"15\" osisID=\"1Cor.15\" sID=\"1Cor.15\"/>"
+    },
+    {
+      "book": "1CO",
+      "chapter": 16,
+      "slot": 5789,
+      "block": 7,
+      "offset": 55748,
+      "length": 78,
+      "raw": "<div sID=\"gen157\" type=\"x-p\"/><chapter n=\"16\" osisID=\"1Cor.16\" sID=\"1Cor.16\"/>"
+    },
+    {
+      "book": "2CO",
+      "slot": 5814,
+      "block": 8,
+      "offset": 0,
+      "length": 238,
+      "raw": "<div canonical=\"true\" osisID=\"2Cor\" sID=\"gen158\" type=\"book\"/> <milestone n=\"\" type=\"x-usfm-h\"/> <milestone n=\"\" type=\"x-usfm-toc1\"/> <milestone n=\"\" type=\"x-usfm-toc2\"/> <milestone n=\"\" type=\"x-usfm-toc3\"/> <div sID=\"gen159\" type=\"x-p\"/>"
+    },
+    {
+      "book": "2CO",
+      "chapter": 1,
+      "slot": 5815,
+      "block": 8,
+      "offset": 238,
+      "length": 45,
+      "raw": "<chapter n=\"1\" osisID=\"2Cor.1\" sID=\"2Cor.1\"/>"
+    },
+    {
+      "book": "2CO",
+      "chapter": 2,
+      "slot": 5840,
+      "block": 8,
+      "offset": 3935,
+      "length": 75,
+      "raw": "<div sID=\"gen160\" type=\"x-p\"/><chapter n=\"2\" osisID=\"2Cor.2\" sID=\"2Cor.2\"/>"
+    },
+    {
+      "book": "2CO",
+      "chapter": 3,
+      "slot": 5858,
+      "block": 8,
+      "offset": 6219,
+      "length": 75,
+      "raw": "<div sID=\"gen161\" type=\"x-p\"/><chapter n=\"3\" osisID=\"2Cor.3\" sID=\"2Cor.3\"/>"
+    },
+    {
+      "book": "2CO",
+      "chapter": 4,
+      "slot": 5877,
+      "block": 8,
+      "offset": 8848,
+      "length": 75,
+      "raw": "<div sID=\"gen162\" type=\"x-p\"/><chapter n=\"4\" osisID=\"2Cor.4\" sID=\"2Cor.4\"/>"
+    },
+    {
+      "book": "2CO",
+      "chapter": 5,
+      "slot": 5896,
+      "block": 8,
+      "offset": 11500,
+      "length": 75,
+      "raw": "<div sID=\"gen163\" type=\"x-p\"/><chapter n=\"5\" osisID=\"2Cor.5\" sID=\"2Cor.5\"/>"
+    },
+    {
+      "book": "2CO",
+      "chapter": 6,
+      "slot": 5918,
+      "block": 8,
+      "offset": 14284,
+      "length": 75,
+      "raw": "<div sID=\"gen164\" type=\"x-p\"/><chapter n=\"6\" osisID=\"2Cor.6\" sID=\"2Cor.6\"/>"
+    },
+    {
+      "book": "2CO",
+      "chapter": 7,
+      "slot": 5937,
+      "block": 8,
+      "offset": 16728,
+      "length": 75,
+      "raw": "<div sID=\"gen165\" type=\"x-p\"/><chapter n=\"7\" osisID=\"2Cor.7\" sID=\"2Cor.7\"/>"
+    },
+    {
+      "book": "2CO",
+      "chapter": 8,
+      "slot": 5954,
+      "block": 8,
+      "offset": 19516,
+      "length": 75,
+      "raw": "<div sID=\"gen166\" type=\"x-p\"/><chapter n=\"8\" osisID=\"2Cor.8\" sID=\"2Cor.8\"/>"
+    },
+    {
+      "book": "2CO",
+      "chapter": 9,
+      "slot": 5979,
+      "block": 8,
+      "offset": 22907,
+      "length": 75,
+      "raw": "<div sID=\"gen167\" type=\"x-p\"/><chapter n=\"9\" osisID=\"2Cor.9\" sID=\"2Cor.9\"/>"
+    },
+    {
+      "book": "2CO",
+      "chapter": 10,
+      "slot": 5995,
+      "block": 8,
+      "offset": 25314,
+      "length": 78,
+      "raw": "<div sID=\"gen168\" type=\"x-p\"/><chapter n=\"10\" osisID=\"2Cor.10\" sID=\"2Cor.10\"/>"
+    },
+    {
+      "book": "2CO",
+      "chapter": 11,
+      "slot": 6014,
+      "block": 8,
+      "offset": 28104,
+      "length": 78,
+      "raw": "<div sID=\"gen169\" type=\"x-p\"/><chapter n=\"11\" osisID=\"2Cor.11\" sID=\"2Cor.11\"/>"
+    },
+    {
+      "book": "2CO",
+      "chapter": 12,
+      "slot": 6048,
+      "block": 8,
+      "offset": 32896,
+      "length": 78,
+      "raw": "<div sID=\"gen170\" type=\"x-p\"/><chapter n=\"12\" osisID=\"2Cor.12\" sID=\"2Cor.12\"/>"
+    },
+    {
+      "book": "2CO",
+      "chapter": 13,
+      "slot": 6070,
+      "block": 8,
+      "offset": 36496,
+      "length": 78,
+      "raw": "<div sID=\"gen171\" type=\"x-p\"/><chapter n=\"13\" osisID=\"2Cor.13\" sID=\"2Cor.13\"/>"
+    },
+    {
+      "book": "GAL",
+      "slot": 6085,
+      "block": 9,
+      "offset": 0,
+      "length": 237,
+      "raw": "<div canonical=\"true\" osisID=\"Gal\" sID=\"gen172\" type=\"book\"/> <milestone n=\"\" type=\"x-usfm-h\"/> <milestone n=\"\" type=\"x-usfm-toc1\"/> <milestone n=\"\" type=\"x-usfm-toc2\"/> <milestone n=\"\" type=\"x-usfm-toc3\"/> <div sID=\"gen173\" type=\"x-p\"/>"
+    },
+    {
+      "book": "GAL",
+      "chapter": 1,
+      "slot": 6086,
+      "block": 9,
+      "offset": 237,
+      "length": 43,
+      "raw": "<chapter n=\"1\" osisID=\"Gal.1\" sID=\"Gal.1\"/>"
+    },
+    {
+      "book": "GAL",
+      "chapter": 2,
+      "slot": 6111,
+      "block": 9,
+      "offset": 3140,
+      "length": 73,
+      "raw": "<div sID=\"gen174\" type=\"x-p\"/><chapter n=\"2\" osisID=\"Gal.2\" sID=\"Gal.2\"/>"
+    },
+    {
+      "book": "GAL",
+      "chapter": 3,
+      "slot": 6133,
+      "block": 9,
+      "offset": 6591,
+      "length": 73,
+      "raw": "<div sID=\"gen175\" type=\"x-p\"/><chapter n=\"3\" osisID=\"Gal.3\" sID=\"Gal.3\"/>"
+    },
+    {
+      "book": "GAL",
+      "chapter": 4,
+      "slot": 6163,
+      "block": 9,
+      "offset": 10589,
+      "length": 73,
+      "raw": "<div sID=\"gen176\" type=\"x-p\"/><chapter n=\"4\" osisID=\"Gal.4\" sID=\"Gal.4\"/>"
+    },
+    {
+      "book": "GAL",
+      "chapter": 5,
+      "slot": 6195,
+      "block": 9,
+      "offset": 14320,
+      "length": 73,
+      "raw": "<div sID=\"gen177\" type=\"x-p\"/><chapter n=\"5\" osisID=\"Gal.5\" sID=\"Gal.5\"/>"
+    },
+    {
+      "book": "GAL",
+      "chapter": 6,
+      "slot": 6222,
+      "block": 9,
+      "offset": 17443,
+      "length": 73,
+      "raw": "<div sID=\"gen178\" type=\"x-p\"/><chapter n=\"6\" osisID=\"Gal.6\" sID=\"Gal.6\"/>"
+    },
+    {
+      "book": "EPH",
+      "slot": 6241,
+      "block": 10,
+      "offset": 0,
+      "length": 237,
+      "raw": "<div canonical=\"true\" osisID=\"Eph\" sID=\"gen179\" type=\"book\"/> <milestone n=\"\" type=\"x-usfm-h\"/> <milestone n=\"\" type=\"x-usfm-toc1\"/> <milestone n=\"\" type=\"x-usfm-toc2\"/> <milestone n=\"\" type=\"x-usfm-toc3\"/> <div sID=\"gen180\" type=\"x-p\"/>"
+    },
+    {
+      "book": "EPH",
+      "chapter": 1,
+      "slot": 6242,
+      "block": 10,
+      "offset": 237,
+      "length": 43,
+      "raw": "<chapter n=\"1\" osisID=\"Eph.1\" sID=\"Eph.1\"/>"
+    },
+    {
+      "book": "EPH",
+      "chapter": 2,
+      "slot": 6266,
+      "block": 10,
+      "offset": 3023,
+      "length": 73,
+      "raw": "<div sID=\"gen181\" type=\"x-p\"/><chapter n=\"2\" osisID=\"Eph.2\" sID=\"Eph.2\"/>"
+    },
+    {
+      "book": "EPH",
+      "chapter": 3,
+      "slot": 6289,
+      "block": 10,
+      "offset": 5946,
+      "length": 73,
+      "raw": "<div sID=\"gen182\" type=\"x-p\"/><chapter n=\"3\" osisID=\"Eph.3\" sID=\"Eph.3\"/>"
+    },
+    {
+      "book": "EPH",
+      "chapter": 4,
+      "slot": 6311,
+      "block": 10,
+      "offset": 8440,
+      "length": 73,
+      "raw": "<div sID=\"gen183\" type=\"x-p\"/><chapter n=\"4\" osisID=\"Eph.4\" sID=\"Eph.4\"/>"
+    },
+    {
+      "book": "EPH",
+      "chapter": 5,
+      "slot": 6344,
+      "block": 10,
+      "offset": 12354,
+      "length": 73,
+      "raw": "<div sID=\"gen184\" type=\"x-p\"/><chapter n=\"5\" osisID=\"Eph.5\" sID=\"Eph.5\"/>"
+    },
+    {
+      "book": "EPH",
+      "chapter": 6,
+      "slot": 6378,
+      "block": 10,
+      "offset": 16222,
+      "length": 73,
+      "raw": "<div sID=\"gen185\" type=\"x-p\"/><chapter n=\"6\" osisID=\"Eph.6\" sID=\"Eph.6\"/>"
+    },
+    {
+      "book": "PHP",
+      "slot": 6403,
+      "block": 11,
+      "offset": 0,
+      "length": 238,
+      "raw": "<div canonical=\"true\" osisID=\"Phil\" sID=\"gen186\" type=\"book\"/> <milestone n=\"\" type=\"x-usfm-h\"/> <milestone n=\"\" type=\"x-usfm-toc1\"/> <milestone n=\"\" type=\"x-usfm-toc2\"/> <milestone n=\"\" type=\"x-usfm-toc3\"/> <div sID=\"gen187\" type=\"x-p\"/>"
+    },
+    {
+      "book": "PHP",
+      "chapter": 1,
+      "slot": 6404,
+      "block": 11,
+      "offset": 238,
+      "length": 45,
+      "raw": "<chapter n=\"1\" osisID=\"Phil.1\" sID=\"Phil.1\"/>"
+    },
+    {
+      "book": "PHP",
+      "chapter": 2,
+      "slot": 6435,
+      "block": 11,
+      "offset": 4124,
+      "length": 75,
+      "raw": "<div sID=\"gen188\" type=\"x-p\"/><chapter n=\"2\" osisID=\"Phil.2\" sID=\"Phil.2\"/>"
+    },
+    {
+      "book": "PHP",
+      "chapter": 3,
+      "slot": 6466,
+      "block": 11,
+      "offset": 7938,
+      "length": 75,
+      "raw": "<div sID=\"gen189\" type=\"x-p\"/><chapter n=\"3\" osisID=\"Phil.3\" sID=\"Phil.3\"/>"
+    },
+    {
+      "book": "PHP",
+      "chapter": 4,
+      "slot": 6488,
+      "block": 11,
+      "offset": 10945,
+      "length": 75,
+      "raw": "<div sID=\"gen190\" type=\"x-p\"/><chapter n=\"4\" osisID=\"Phil.4\" sID=\"Phil.4\"/>"
+    },
+    {
+      "book": "COL",
+      "slot": 6512,
+      "block": 12,
+      "offset": 0,
+      "length": 237,
+      "raw": "<div canonical=\"true\" osisID=\"Col\" sID=\"gen191\" type=\"book\"/> <milestone n=\"\" type=\"x-usfm-h\"/> <milestone n=\"\" type=\"x-usfm-toc1\"/> <milestone n=\"\" type=\"x-usfm-toc2\"/> <milestone n=\"\" type=\"x-usfm-toc3\"/> <div sID=\"gen192\" type=\"x-p\"/>"
+    },
+    {
+      "book": "COL",
+      "chapter": 1,
+      "slot": 6513,
+      "block": 12,
+      "offset": 237,
+      "length": 43,
+      "raw": "<chapter n=\"1\" osisID=\"Col.1\" sID=\"Col.1\"/>"
+    },
+    {
+      "book": "COL",
+      "chapter": 2,
+      "slot": 6543,
+      "block": 12,
+      "offset": 4072,
+      "length": 73,
+      "raw": "<div sID=\"gen193\" type=\"x-p\"/><chapter n=\"2\" osisID=\"Col.2\" sID=\"Col.2\"/>"
+    },
+    {
+      "book": "COL",
+      "chapter": 3,
+      "slot": 6567,
+      "block": 12,
+      "offset": 7290,
+      "length": 73,
+      "raw": "<div sID=\"gen194\" type=\"x-p\"/><chapter n=\"3\" osisID=\"Col.3\" sID=\"Col.3\"/>"
+    },
+    {
+      "book": "COL",
+      "chapter": 4,
+      "slot": 6593,
+      "block": 12,
+      "offset": 10449,
+      "length": 73,
+      "raw": "<div sID=\"gen195\" type=\"x-p\"/><chapter n=\"4\" osisID=\"Col.4\" sID=\"Col.4\"/>"
+    },
+    {
+      "book": "1TH",
+      "slot": 6612,
+      "block": 13,
+      "offset": 0,
+      "length": 240,
+      "raw": "<div canonical=\"true\" osisID=\"1Thess\" sID=\"gen196\" type=\"book\"/> <milestone n=\"\" type=\"x-usfm-h\"/> <milestone n=\"\" type=\"x-usfm-toc1\"/> <milestone n=\"\" type=\"x-usfm-toc2\"/> <milestone n=\"\" type=\"x-usfm-toc3\"/> <div sID=\"gen197\" type=\"x-p\"/>"
+    },
+    {
+      "book": "1TH",
+      "chapter": 1,
+      "slot": 6613,
+      "block": 13,
+      "offset": 240,
+      "length": 49,
+      "raw": "<chapter n=\"1\" osisID=\"1Thess.1\" sID=\"1Thess.1\"/>"
+    },
+    {
+      "book": "1TH",
+      "chapter": 2,
+      "slot": 6624,
+      "block": 13,
+      "offset": 1888,
+      "length": 79,
+      "raw": "<div sID=\"gen198\" type=\"x-p\"/><chapter n=\"2\" osisID=\"1Thess.2\" sID=\"1Thess.2\"/>"
+    },
+    {
+      "book": "1TH",
+      "chapter": 3,
+      "slot": 6645,
+      "block": 13,
+      "offset": 5104,
+      "length": 79,
+      "raw": "<div sID=\"gen199\" type=\"x-p\"/><chapter n=\"3\" osisID=\"1Thess.3\" sID=\"1Thess.3\"/>"
+    },
+    {
+      "book": "1TH",
+      "chapter": 4,
+      "slot": 6659,
+      "block": 13,
+      "offset": 7051,
+      "length": 79,
+      "raw": "<div sID=\"gen200\" type=\"x-p\"/><chapter n=\"4\" osisID=\"1Thess.4\" sID=\"1Thess.4\"/>"
+    },
+    {
+      "book": "1TH",
+      "chapter": 5,
+      "slot": 6678,
+      "block": 13,
+      "offset": 9632,
+      "length": 79,
+      "raw": "<div sID=\"gen201\" type=\"x-p\"/><chapter n=\"5\" osisID=\"1Thess.5\" sID=\"1Thess.5\"/>"
+    },
+    {
+      "book": "2TH",
+      "slot": 6707,
+      "block": 14,
+      "offset": 0,
+      "length": 240,
+      "raw": "<div canonical=\"true\" osisID=\"2Thess\" sID=\"gen202\" type=\"book\"/> <milestone n=\"\" type=\"x-usfm-h\"/> <milestone n=\"\" type=\"x-usfm-toc1\"/> <milestone n=\"\" type=\"x-usfm-toc2\"/> <milestone n=\"\" type=\"x-usfm-toc3\"/> <div sID=\"gen203\" type=\"x-p\"/>"
+    },
+    {
+      "book": "2TH",
+      "chapter": 1,
+      "slot": 6708,
+      "block": 14,
+      "offset": 240,
+      "length": 49,
+      "raw": "<chapter n=\"1\" osisID=\"2Thess.1\" sID=\"2Thess.1\"/>"
+    },
+    {
+      "book": "2TH",
+      "chapter": 2,
+      "slot": 6721,
+      "block": 14,
+      "offset": 2081,
+      "length": 79,
+      "raw": "<div sID=\"gen204\" type=\"x-p\"/><chapter n=\"2\" osisID=\"2Thess.2\" sID=\"2Thess.2\"/>"
+    },
+    {
+      "book": "2TH",
+      "chapter": 3,
+      "slot": 6739,
+      "block": 14,
+      "offset": 4485,
+      "length": 79,
+      "raw": "<div sID=\"gen205\" type=\"x-p\"/><chapter n=\"3\" osisID=\"2Thess.3\" sID=\"2Thess.3\"/>"
+    },
+    {
+      "book": "1TI",
+      "slot": 6758,
+      "block": 15,
+      "offset": 0,
+      "length": 238,
+      "raw": "<div canonical=\"true\" osisID=\"1Tim\" sID=\"gen206\" type=\"book\"/> <milestone n=\"\" type=\"x-usfm-h\"/> <milestone n=\"\" type=\"x-usfm-toc1\"/> <milestone n=\"\" type=\"x-usfm-toc2\"/> <milestone n=\"\" type=\"x-usfm-toc3\"/> <div sID=\"gen207\" type=\"x-p\"/>"
+    },
+    {
+      "book": "1TI",
+      "chapter": 1,
+      "slot": 6759,
+      "block": 15,
+      "offset": 238,
+      "length": 45,
+      "raw": "<chapter n=\"1\" osisID=\"1Tim.1\" sID=\"1Tim.1\"/>"
+    },
+    {
+      "book": "1TI",
+      "chapter": 2,
+      "slot": 6780,
+      "block": 15,
+      "offset": 3230,
+      "length": 75,
+      "raw": "<div sID=\"gen208\" type=\"x-p\"/><chapter n=\"2\" osisID=\"1Tim.2\" sID=\"1Tim.2\"/>"
+    },
+    {
+      "book": "1TI",
+      "chapter": 3,
+      "slot": 6796,
+      "block": 15,
+      "offset": 5046,
+      "length": 75,
+      "raw": "<div sID=\"gen209\" type=\"x-p\"/><chapter n=\"3\" osisID=\"1Tim.3\" sID=\"1Tim.3\"/>"
+    },
+    {
+      "book": "1TI",
+      "chapter": 4,
+      "slot": 6813,
+      "block": 15,
+      "offset": 7258,
+      "length": 75,
+      "raw": "<div sID=\"gen210\" type=\"x-p\"/><chapter n=\"4\" osisID=\"1Tim.4\" sID=\"1Tim.4\"/>"
+    },
+    {
+      "book": "1TI",
+      "chapter": 5,
+      "slot": 6830,
+      "block": 15,
+      "offset": 9356,
+      "length": 75,
+      "raw": "<div sID=\"gen211\" type=\"x-p\"/><chapter n=\"5\" osisID=\"1Tim.5\" sID=\"1Tim.5\"/>"
+    },
+    {
+      "book": "1TI",
+      "chapter": 6,
+      "slot": 6856,
+      "block": 15,
+      "offset": 12898,
+      "length": 75,
+      "raw": "<div sID=\"gen212\" type=\"x-p\"/><chapter n=\"6\" osisID=\"1Tim.6\" sID=\"1Tim.6\"/>"
+    },
+    {
+      "book": "2TI",
+      "slot": 6878,
+      "block": 16,
+      "offset": 0,
+      "length": 238,
+      "raw": "<div canonical=\"true\" osisID=\"2Tim\" sID=\"gen213\" type=\"book\"/> <milestone n=\"\" type=\"x-usfm-h\"/> <milestone n=\"\" type=\"x-usfm-toc1\"/> <milestone n=\"\" type=\"x-usfm-toc2\"/> <milestone n=\"\" type=\"x-usfm-toc3\"/> <div sID=\"gen214\" type=\"x-p\"/>"
+    },
+    {
+      "book": "2TI",
+      "chapter": 1,
+      "slot": 6879,
+      "block": 16,
+      "offset": 238,
+      "length": 45,
+      "raw": "<chapter n=\"1\" osisID=\"2Tim.1\" sID=\"2Tim.1\"/>"
+    },
+    {
+      "book": "2TI",
+      "chapter": 2,
+      "slot": 6898,
+      "block": 16,
+      "offset": 2689,
+      "length": 75,
+      "raw": "<div sID=\"gen215\" type=\"x-p\"/><chapter n=\"2\" osisID=\"2Tim.2\" sID=\"2Tim.2\"/>"
+    },
+    {
+      "book": "2TI",
+      "chapter": 3,
+      "slot": 6925,
+      "block": 16,
+      "offset": 6147,
+      "length": 75,
+      "raw": "<div sID=\"gen216\" type=\"x-p\"/><chapter n=\"3\" osisID=\"2Tim.3\" sID=\"2Tim.3\"/>"
+    },
+    {
+      "book": "2TI",
+      "chapter": 4,
+      "slot": 6943,
+      "block": 16,
+      "offset": 8500,
+      "length": 75,
+      "raw": "<div sID=\"gen217\" type=\"x-p\"/><chapter n=\"4\" osisID=\"2Tim.4\" sID=\"2Tim.4\"/>"
+    },
+    {
+      "book": "TIT",
+      "slot": 6966,
+      "block": 17,
+      "offset": 0,
+      "length": 239,
+      "raw": "<div canonical=\"true\" osisID=\"Titus\" sID=\"gen218\" type=\"book\"/> <milestone n=\"\" type=\"x-usfm-h\"/> <milestone n=\"\" type=\"x-usfm-toc1\"/> <milestone n=\"\" type=\"x-usfm-toc2\"/> <milestone n=\"\" type=\"x-usfm-toc3\"/> <div sID=\"gen219\" type=\"x-p\"/>"
+    },
+    {
+      "book": "TIT",
+      "chapter": 1,
+      "slot": 6967,
+      "block": 17,
+      "offset": 239,
+      "length": 47,
+      "raw": "<chapter n=\"1\" osisID=\"Titus.1\" sID=\"Titus.1\"/>"
+    },
+    {
+      "book": "TIT",
+      "chapter": 2,
+      "slot": 6984,
+      "block": 17,
+      "offset": 2872,
+      "length": 77,
+      "raw": "<div sID=\"gen220\" type=\"x-p\"/><chapter n=\"2\" osisID=\"Titus.2\" sID=\"Titus.2\"/>"
+    },
+    {
+      "book": "TIT",
+      "chapter": 3,
+      "slot": 7000,
+      "block": 17,
+      "offset": 4905,
+      "length": 77,
+      "raw": "<div sID=\"gen221\" type=\"x-p\"/><chapter n=\"3\" osisID=\"Titus.3\" sID=\"Titus.3\"/>"
+    },
+    {
+      "book": "PHM",
+      "slot": 7016,
+      "block": 18,
+      "offset": 0,
+      "length": 238,
+      "raw": "<div canonical=\"true\" osisID=\"Phlm\" sID=\"gen222\" type=\"book\"/> <milestone n=\"\" type=\"x-usfm-h\"/> <milestone n=\"\" type=\"x-usfm-toc1\"/> <milestone n=\"\" type=\"x-usfm-toc2\"/> <milestone n=\"\" type=\"x-usfm-toc3\"/> <div sID=\"gen223\" type=\"x-p\"/>"
+    },
+    {
+      "book": "PHM",
+      "chapter": 1,
+      "slot": 7017,
+      "block": 18,
+      "offset": 238,
+      "length": 45,
+      "raw": "<chapter n=\"1\" osisID=\"Phlm.1\" sID=\"Phlm.1\"/>"
+    },
+    {
+      "book": "HEB",
+      "slot": 7043,
+      "block": 19,
+      "offset": 0,
+      "length": 237,
+      "raw": "<div canonical=\"true\" osisID=\"Heb\" sID=\"gen224\" type=\"book\"/> <milestone n=\"\" type=\"x-usfm-h\"/> <milestone n=\"\" type=\"x-usfm-toc1\"/> <milestone n=\"\" type=\"x-usfm-toc2\"/> <milestone n=\"\" type=\"x-usfm-toc3\"/> <div sID=\"gen225\" type=\"x-p\"/>"
+    },
+    {
+      "book": "HEB",
+      "chapter": 1,
+      "slot": 7044,
+      "block": 19,
+      "offset": 237,
+      "length": 43,
+      "raw": "<chapter n=\"1\" osisID=\"Heb.1\" sID=\"Heb.1\"/>"
+    },
+    {
+      "book": "HEB",
+      "chapter": 2,
+      "slot": 7059,
+      "block": 19,
+      "offset": 2124,
+      "length": 73,
+      "raw": "<div sID=\"gen226\" type=\"x-p\"/><chapter n=\"2\" osisID=\"Heb.2\" sID=\"Heb.2\"/>"
+    },
+    {
+      "book": "HEB",
+      "chapter": 3,
+      "slot": 7078,
+      "block": 19,
+      "offset": 4818,
+      "length": 73,
+      "raw": "<div sID=\"gen227\" type=\"x-p\"/><chapter n=\"3\" osisID=\"Heb.3\" sID=\"Heb.3\"/>"
+    },
+    {
+      "book": "HEB",
+      "chapter": 4,
+      "slot": 7098,
+      "block": 19,
+      "offset": 7162,
+      "length": 73,
+      "raw": "<div sID=\"gen228\" type=\"x-p\"/><chapter n=\"4\" osisID=\"Heb.4\" sID=\"Heb.4\"/>"
+    },
+    {
+      "book": "HEB",
+      "chapter": 5,
+      "slot": 7115,
+      "block": 19,
+      "offset": 9590,
+      "length": 73,
+      "raw": "<div sID=\"gen229\" type=\"x-p\"/><chapter n=\"5\" osisID=\"Heb.5\" sID=\"Heb.5\"/>"
+    },
+    {
+      "book": "HEB",
+      "chapter": 6,
+      "slot": 7130,
+      "block": 19,
+      "offset": 11765,
+      "length": 73,
+      "raw": "<div sID=\"gen230\" type=\"x-p\"/><chapter n=\"6\" osisID=\"Heb.6\" sID=\"Heb.6\"/>"
+    },
+    {
+      "book": "HEB",
+      "chapter": 7,
+      "slot": 7151,
+      "block": 19,
+      "offset": 14463,
+      "length": 73,
+      "raw": "<div sID=\"gen231\" type=\"x-p\"/><chapter n=\"7\" osisID=\"Heb.7\" sID=\"Heb.7\"/>"
+    },
+    {
+      "book": "HEB",
+      "chapter": 8,
+      "slot": 7180,
+      "block": 19,
+      "offset": 18377,
+      "length": 73,
+      "raw": "<div sID=\"gen232\" type=\"x-p\"/><chapter n=\"8\" osisID=\"Heb.8\" sID=\"Heb.8\"/>"
+    },
+    {
+      "book": "HEB",
+      "chapter": 9,
+      "slot": 7194,
+      "block": 19,
+      "offset": 20675,
+      "length": 73,
+      "raw": "<div sID=\"gen233\" type=\"x-p\"/><chapter n=\"9\" osisID=\"Heb.9\" sID=\"Heb.9\"/>"
+    },
+    {
+      "book": "HEB",
+      "chapter": 10,
+      "slot": 7223,
+      "block": 19,
+      "offset": 25171,
+      "length": 76,
+      "raw": "<div sID=\"gen234\" type=\"x-p\"/><chapter n=\"10\" osisID=\"Heb.10\" sID=\"Heb.10\"/>"
+    },
+    {
+      "book": "HEB",
+      "chapter": 11,
+      "slot": 7263,
+      "block": 19,
+      "offset": 30060,
+      "length": 76,
+      "raw": "<div sID=\"gen235\" type=\"x-p\"/><chapter n=\"11\" osisID=\"Heb.11\" sID=\"Heb.11\"/>"
+    },
+    {
+      "book": "HEB",
+      "chapter": 12,
+      "slot": 7304,
+      "block": 19,
+      "offset": 36066,
+      "length": 76,
+      "raw": "<div sID=\"gen236\" type=\"x-p\"/><chapter n=\"12\" osisID=\"Heb.12\" sID=\"Heb.12\"/>"
+    },
+    {
+      "book": "HEB",
+      "chapter": 13,
+      "slot": 7334,
+      "block": 19,
+      "offset": 40463,
+      "length": 76,
+      "raw": "<div sID=\"gen237\" type=\"x-p\"/><chapter n=\"13\" osisID=\"Heb.13\" sID=\"Heb.13\"/>"
+    },
+    {
+      "book": "JAS",
+      "slot": 7360,
+      "block": 20,
+      "offset": 0,
+      "length": 237,
+      "raw": "<div canonical=\"true\" osisID=\"Jas\" sID=\"gen238\" type=\"book\"/> <milestone n=\"\" type=\"x-usfm-h\"/> <milestone n=\"\" type=\"x-usfm-toc1\"/> <milestone n=\"\" type=\"x-usfm-toc2\"/> <milestone n=\"\" type=\"x-usfm-toc3\"/> <div sID=\"gen239\" type=\"x-p\"/>"
+    },
+    {
+      "book": "JAS",
+      "chapter": 1,
+      "slot": 7361,
+      "block": 20,
+      "offset": 237,
+      "length": 43,
+      "raw": "<chapter n=\"1\" osisID=\"Jas.1\" sID=\"Jas.1\"/>"
+    },
+    {
+      "book": "JAS",
+      "chapter": 2,
+      "slot": 7389,
+      "block": 20,
+      "offset": 3542,
+      "length": 73,
+      "raw": "<div sID=\"gen240\" type=\"x-p\"/><chapter n=\"2\" osisID=\"Jas.2\" sID=\"Jas.2\"/>"
+    },
+    {
+      "book": "JAS",
+      "chapter": 3,
+      "slot": 7416,
+      "block": 20,
+      "offset": 7086,
+      "length": 73,
+      "raw": "<div sID=\"gen241\" type=\"x-p\"/><chapter n=\"3\" osisID=\"Jas.3\" sID=\"Jas.3\"/>"
+    },
+    {
+      "book": "JAS",
+      "chapter": 4,
+      "slot": 7435,
+      "block": 20,
+      "offset": 9653,
+      "length": 73,
+      "raw": "<div sID=\"gen242\" type=\"x-p\"/><chapter n=\"4\" osisID=\"Jas.4\" sID=\"Jas.4\"/>"
+    },
+    {
+      "book": "JAS",
+      "chapter": 5,
+      "slot": 7453,
+      "block": 20,
+      "offset": 12073,
+      "length": 73,
+      "raw": "<div sID=\"gen243\" type=\"x-p\"/><chapter n=\"5\" osisID=\"Jas.5\" sID=\"Jas.5\"/>"
+    },
+    {
+      "book": "1PE",
+      "slot": 7474,
+      "block": 21,
+      "offset": 0,
+      "length": 238,
+      "raw": "<div canonical=\"true\" osisID=\"1Pet\" sID=\"gen244\" type=\"book\"/> <milestone n=\"\" type=\"x-usfm-h\"/> <milestone n=\"\" type=\"x-usfm-toc1\"/> <milestone n=\"\" type=\"x-usfm-toc2\"/> <milestone n=\"\" type=\"x-usfm-toc3\"/> <div sID=\"gen245\" type=\"x-p\"/>"
+    },
+    {
+      "book": "1PE",
+      "chapter": 1,
+      "slot": 7475,
+      "block": 21,
+      "offset": 238,
+      "length": 45,
+      "raw": "<chapter n=\"1\" osisID=\"1Pet.1\" sID=\"1Pet.1\"/>"
+    },
+    {
+      "book": "1PE",
+      "chapter": 2,
+      "slot": 7501,
+      "block": 21,
+      "offset": 4237,
+      "length": 75,
+      "raw": "<div sID=\"gen246\" type=\"x-p\"/><chapter n=\"2\" osisID=\"1Pet.2\" sID=\"1Pet.2\"/>"
+    },
+    {
+      "book": "1PE",
+      "chapter": 3,
+      "slot": 7527,
+      "block": 21,
+      "offset": 8123,
+      "length": 75,
+      "raw": "<div sID=\"gen247\" type=\"x-p\"/><chapter n=\"3\" osisID=\"1Pet.3\" sID=\"1Pet.3\"/>"
+    },
+    {
+      "book": "1PE",
+      "chapter": 4,
+      "slot": 7550,
+      "block": 21,
+      "offset": 11860,
+      "length": 75,
+      "raw": "<div sID=\"gen248\" type=\"x-p\"/><chapter n=\"4\" osisID=\"1Pet.4\" sID=\"1Pet.4\"/>"
+    },
+    {
+      "book": "1PE",
+      "chapter": 5,
+      "slot": 7570,
+      "block": 21,
+      "offset": 14652,
+      "length": 75,
+      "raw": "<div sID=\"gen249\" type=\"x-p\"/><chapter n=\"5\" osisID=\"1Pet.5\" sID=\"1Pet.5\"/>"
+    },
+    {
+      "book": "2PE",
+      "slot": 7585,
+      "block": 22,
+      "offset": 0,
+      "length": 238,
+      "raw": "<div canonical=\"true\" osisID=\"2Pet\" sID=\"gen250\" type=\"book\"/> <milestone n=\"\" type=\"x-usfm-h\"/> <milestone n=\"\" type=\"x-usfm-toc1\"/> <milestone n=\"\" type=\"x-usfm-toc2\"/> <milestone n=\"\" type=\"x-usfm-toc3\"/> <div sID=\"gen251\" type=\"x-p\"/>"
+    },
+    {
+      "book": "2PE",
+      "chapter": 1,
+      "slot": 7586,
+      "block": 22,
+      "offset": 238,
+      "length": 45,
+      "raw": "<chapter n=\"1\" osisID=\"2Pet.1\" sID=\"2Pet.1\"/>"
+    },
+    {
+      "book": "2PE",
+      "chapter": 2,
+      "slot": 7608,
+      "block": 22,
+      "offset": 3741,
+      "length": 75,
+      "raw": "<div sID=\"gen252\" type=\"x-p\"/><chapter n=\"2\" osisID=\"2Pet.2\" sID=\"2Pet.2\"/>"
+    },
+    {
+      "book": "2PE",
+      "chapter": 3,
+      "slot": 7631,
+      "block": 22,
+      "offset": 7631,
+      "length": 75,
+      "raw": "<div sID=\"gen253\" type=\"x-p\"/><chapter n=\"3\" osisID=\"2Pet.3\" sID=\"2Pet.3\"/>"
+    },
+    {
+      "book": "1JN",
+      "slot": 7650,
+      "block": 23,
+      "offset": 0,
+      "length": 239,
+      "raw": "<div canonical=\"true\" osisID=\"1John\" sID=\"gen254\" type=\"book\"/> <milestone n=\"\" type=\"x-usfm-h\"/> <milestone n=\"\" type=\"x-usfm-toc1\"/> <milestone n=\"\" type=\"x-usfm-toc2\"/> <milestone n=\"\" type=\"x-usfm-toc3\"/> <div sID=\"gen255\" type=\"x-p\"/>"
+    },
+    {
+      "book": "1JN",
+      "chapter": 1,
+      "slot": 7651,
+      "block": 23,
+      "offset": 239,
+      "length": 47,
+      "raw": "<chapter n=\"1\" osisID=\"1John.1\" sID=\"1John.1\"/>"
+    },
+    {
+      "book": "1JN",
+      "chapter": 2,
+      "slot": 7662,
+      "block": 23,
+      "offset": 1742,
+      "length": 77,
+      "raw": "<div sID=\"gen256\" type=\"x-p\"/><chapter n=\"2\" osisID=\"1John.2\" sID=\"1John.2\"/>"
+    },
+    {
+      "book": "1JN",
+      "chapter": 3,
+      "slot": 7692,
+      "block": 23,
+      "offset": 6001,
+      "length": 77,
+      "raw": "<div sID=\"gen257\" type=\"x-p\"/><chapter n=\"3\" osisID=\"1John.3\" sID=\"1John.3\"/>"
+    },
+    {
+      "book": "1JN",
+      "chapter": 4,
+      "slot": 7717,
+      "block": 23,
+      "offset": 9230,
+      "length": 77,
+      "raw": "<div sID=\"gen258\" type=\"x-p\"/><chapter n=\"4\" osisID=\"1John.4\" sID=\"1John.4\"/>"
+    },
+    {
+      "book": "1JN",
+      "chapter": 5,
+      "slot": 7739,
+      "block": 23,
+      "offset": 12240,
+      "length": 77,
+      "raw": "<div sID=\"gen259\" type=\"x-p\"/><chapter n=\"5\" osisID=\"1John.5\" sID=\"1John.5\"/>"
+    },
+    {
+      "book": "2JN",
+      "slot": 7761,
+      "block": 24,
+      "offset": 0,
+      "length": 239,
+      "raw": "<div canonical=\"true\" osisID=\"2John\" sID=\"gen260\" type=\"book\"/> <milestone n=\"\" type=\"x-usfm-h\"/> <milestone n=\"\" type=\"x-usfm-toc1\"/> <milestone n=\"\" type=\"x-usfm-toc2\"/> <milestone n=\"\" type=\"x-usfm-toc3\"/> <div sID=\"gen261\" type=\"x-p\"/>"
+    },
+    {
+      "book": "2JN",
+      "chapter": 1,
+      "slot": 7762,
+      "block": 24,
+      "offset": 239,
+      "length": 47,
+      "raw": "<chapter n=\"1\" osisID=\"2John.1\" sID=\"2John.1\"/>"
+    },
+    {
+      "book": "3JN",
+      "slot": 7776,
+      "block": 25,
+      "offset": 0,
+      "length": 239,
+      "raw": "<div canonical=\"true\" osisID=\"3John\" sID=\"gen262\" type=\"book\"/> <milestone n=\"\" type=\"x-usfm-h\"/> <milestone n=\"\" type=\"x-usfm-toc1\"/> <milestone n=\"\" type=\"x-usfm-toc2\"/> <milestone n=\"\" type=\"x-usfm-toc3\"/> <div sID=\"gen263\" type=\"x-p\"/>"
+    },
+    {
+      "book": "3JN",
+      "chapter": 1,
+      "slot": 7777,
+      "block": 25,
+      "offset": 239,
+      "length": 47,
+      "raw": "<chapter n=\"1\" osisID=\"3John.1\" sID=\"3John.1\"/>"
+    },
+    {
+      "book": "JUD",
+      "slot": 7792,
+      "block": 27,
+      "offset": 0,
+      "length": 238,
+      "raw": "<div canonical=\"true\" osisID=\"Jude\" sID=\"gen264\" type=\"book\"/> <milestone n=\"\" type=\"x-usfm-h\"/> <milestone n=\"\" type=\"x-usfm-toc1\"/> <milestone n=\"\" type=\"x-usfm-toc2\"/> <milestone n=\"\" type=\"x-usfm-toc3\"/> <div sID=\"gen265\" type=\"x-p\"/>"
+    },
+    {
+      "book": "JUD",
+      "chapter": 1,
+      "slot": 7793,
+      "block": 27,
+      "offset": 238,
+      "length": 45,
+      "raw": "<chapter n=\"1\" osisID=\"Jude.1\" sID=\"Jude.1\"/>"
+    },
+    {
+      "book": "REV",
+      "slot": 7819,
+      "block": 28,
+      "offset": 0,
+      "length": 237,
+      "raw": "<div canonical=\"true\" osisID=\"Rev\" sID=\"gen266\" type=\"book\"/> <milestone n=\"\" type=\"x-usfm-h\"/> <milestone n=\"\" type=\"x-usfm-toc1\"/> <milestone n=\"\" type=\"x-usfm-toc2\"/> <milestone n=\"\" type=\"x-usfm-toc3\"/> <div sID=\"gen267\" type=\"x-p\"/>"
+    },
+    {
+      "book": "REV",
+      "chapter": 1,
+      "slot": 7820,
+      "block": 28,
+      "offset": 237,
+      "length": 43,
+      "raw": "<chapter n=\"1\" osisID=\"Rev.1\" sID=\"Rev.1\"/>"
+    },
+    {
+      "book": "REV",
+      "chapter": 2,
+      "slot": 7841,
+      "block": 28,
+      "offset": 3367,
+      "length": 73,
+      "raw": "<div sID=\"gen268\" type=\"x-p\"/><chapter n=\"2\" osisID=\"Rev.2\" sID=\"Rev.2\"/>"
+    },
+    {
+      "book": "REV",
+      "chapter": 3,
+      "slot": 7871,
+      "block": 28,
+      "offset": 7829,
+      "length": 73,
+      "raw": "<div sID=\"gen269\" type=\"x-p\"/><chapter n=\"3\" osisID=\"Rev.3\" sID=\"Rev.3\"/>"
+    },
+    {
+      "book": "REV",
+      "chapter": 4,
+      "slot": 7894,
+      "block": 28,
+      "offset": 11340,
+      "length": 73,
+      "raw": "<div sID=\"gen270\" type=\"x-p\"/><chapter n=\"4\" osisID=\"Rev.4\" sID=\"Rev.4\"/>"
+    },
+    {
+      "book": "REV",
+      "chapter": 5,
+      "slot": 7906,
+      "block": 28,
+      "offset": 13662,
+      "length": 73,
+      "raw": "<div sID=\"gen271\" type=\"x-p\"/><chapter n=\"5\" osisID=\"Rev.5\" sID=\"Rev.5\"/>"
+    },
+    {
+      "book": "REV",
+      "chapter": 6,
+      "slot": 7921,
+      "block": 28,
+      "offset": 16083,
+      "length": 73,
+      "raw": "<div sID=\"gen272\" type=\"x-p\"/><chapter n=\"6\" osisID=\"Rev.6\" sID=\"Rev.6\"/>"
+    },
+    {
+      "book": "REV",
+      "chapter": 7,
+      "slot": 7939,
+      "block": 28,
+      "offset": 18826,
+      "length": 73,
+      "raw": "<div sID=\"gen273\" type=\"x-p\"/><chapter n=\"7\" osisID=\"Rev.7\" sID=\"Rev.7\"/>"
+    },
+    {
+      "book": "REV",
+      "chapter": 8,
+      "slot": 7957,
+      "block": 28,
+      "offset": 21757,
+      "length": 73,
+      "raw": "<div sID=\"gen274\" type=\"x-p\"/><chapter n=\"8\" osisID=\"Rev.8\" sID=\"Rev.8\"/>"
+    },
+    {
+      "book": "REV",
+      "chapter": 9,
+      "slot": 7971,
+      "block": 28,
+      "offset": 23808,
+      "length": 73,
+      "raw": "<div sID=\"gen275\" type=\"x-p\"/><chapter n=\"9\" osisID=\"Rev.9\" sID=\"Rev.9\"/>"
+    },
+    {
+      "book": "REV",
+      "chapter": 10,
+      "slot": 7993,
+      "block": 28,
+      "offset": 27053,
+      "length": 76,
+      "raw": "<div sID=\"gen276\" type=\"x-p\"/><chapter n=\"10\" osisID=\"Rev.10\" sID=\"Rev.10\"/>"
+    },
+    {
+      "book": "REV",
+      "chapter": 11,
+      "slot": 8005,
+      "block": 28,
+      "offset": 28797,
+      "length": 76,
+      "raw": "<div sID=\"gen277\" type=\"x-p\"/><chapter n=\"11\" osisID=\"Rev.11\" sID=\"Rev.11\"/>"
+    },
+    {
+      "book": "REV",
+      "chapter": 12,
+      "slot": 8025,
+      "block": 28,
+      "offset": 32158,
+      "length": 76,
+      "raw": "<div sID=\"gen278\" type=\"x-p\"/><chapter n=\"12\" osisID=\"Rev.12\" sID=\"Rev.12\"/>"
+    },
+    {
+      "book": "REV",
+      "chapter": 13,
+      "slot": 8043,
+      "block": 28,
+      "offset": 34912,
+      "length": 76,
+      "raw": "<div sID=\"gen279\" type=\"x-p\"/><chapter n=\"13\" osisID=\"Rev.13\" sID=\"Rev.13\"/>"
+    },
+    {
+      "book": "REV",
+      "chapter": 14,
+      "slot": 8062,
+      "block": 28,
+      "offset": 37947,
+      "length": 76,
+      "raw": "<div sID=\"gen280\" type=\"x-p\"/><chapter n=\"14\" osisID=\"Rev.14\" sID=\"Rev.14\"/>"
+    },
+    {
+      "book": "REV",
+      "chapter": 15,
+      "slot": 8083,
+      "block": 28,
+      "offset": 41552,
+      "length": 76,
+      "raw": "<div sID=\"gen281\" type=\"x-p\"/><chapter n=\"15\" osisID=\"Rev.15\" sID=\"Rev.15\"/>"
+    },
+    {
+      "book": "REV",
+      "chapter": 16,
+      "slot": 8092,
+      "block": 28,
+      "offset": 43189,
+      "length": 76,
+      "raw": "<div sID=\"gen282\" type=\"x-p\"/><chapter n=\"16\" osisID=\"Rev.16\" sID=\"Rev.16\"/>"
+    },
+    {
+      "book": "REV",
+      "chapter": 17,
+      "slot": 8114,
+      "block": 28,
+      "offset": 46260,
+      "length": 76,
+      "raw": "<div sID=\"gen283\" type=\"x-p\"/><chapter n=\"17\" osisID=\"Rev.17\" sID=\"Rev.17\"/>"
+    },
+    {
+      "book": "REV",
+      "chapter": 18,
+      "slot": 8133,
+      "block": 28,
+      "offset": 49388,
+      "length": 76,
+      "raw": "<div sID=\"gen284\" type=\"x-p\"/><chapter n=\"18\" osisID=\"Rev.18\" sID=\"Rev.18\"/>"
+    },
+    {
+      "book": "REV",
+      "chapter": 19,
+      "slot": 8158,
+      "block": 28,
+      "offset": 53353,
+      "length": 76,
+      "raw": "<div sID=\"gen285\" type=\"x-p\"/><chapter n=\"19\" osisID=\"Rev.19\" sID=\"Rev.19\"/>"
+    },
+    {
+      "book": "REV",
+      "chapter": 20,
+      "slot": 8180,
+      "block": 28,
+      "offset": 56941,
+      "length": 76,
+      "raw": "<div sID=\"gen286\" type=\"x-p\"/><chapter n=\"20\" osisID=\"Rev.20\" sID=\"Rev.20\"/>"
+    },
+    {
+      "book": "REV",
+      "chapter": 21,
+      "slot": 8196,
+      "block": 28,
+      "offset": 59541,
+      "length": 76,
+      "raw": "<div sID=\"gen287\" type=\"x-p\"/><chapter n=\"21\" osisID=\"Rev.21\" sID=\"Rev.21\"/>"
+    },
+    {
+      "book": "REV",
+      "chapter": 22,
+      "slot": 8224,
+      "block": 28,
+      "offset": 63883,
+      "length": 76,
+      "raw": "<div sID=\"gen288\" type=\"x-p\"/><chapter n=\"22\" osisID=\"Rev.22\" sID=\"Rev.22\"/>"
+    }
+  ],
+  "samples": [
+    {
+      "ref": "MAT.1.1",
+      "slot": 4,
+      "block": 1,
+      "offset": 279,
+      "length": 89,
+      "raw": "ܟܬܒܐ ܕܝܠܝܕܘܬܗ ܕܝܫܘܥ ܡܫܝܚܐ ܒܪܗ ܕܕܘܝܕ ܒܪܗ ܕܐܒܪܗܡ ܀ ",
+      "containsMarya": false
+    },
+    {
+      "ref": "MRK.8.38",
+      "slot": 1433,
+      "block": 2,
+      "offset": 40075,
+      "length": 249,
+      "raw": "ܟܠ ܓܝܪ ܕܢܒܗܬ ܒܝ ܘܒܡܠܝ ܒܫܪܒܬܐ ܗܕܐ ܚܛܝܬܐ ܘܓܝܪܬܐ ܘܐܦ ܒܪܗ ܕܐܢܫܐ ܢܒܗܬ ܒܗ ܡܐ ܕܐܬܐ ܒܫܘܒܚܐ ܕܐܒܘܗܝ ܥܡ ܡܠܐܟܘܗܝ ܩܕܝܫܐ ܀  <chapter eID=\"Mark.8\"/><div eID=\"gen39\" type=\"x-p\"/>",
+      "containsMarya": false
+    },
+    {
+      "ref": "MRK.9.1",
+      "slot": 1435,
+      "block": 2,
+      "offset": 40398,
+      "length": 193,
+      "raw": "ܘܐܡܪ ܗܘܐ ܠܗܘܢ ܐܡܝܢ ܐܡܪ ܐܢܐ ܠܟܘܢ ܕܐܝܬ ܐܢܫܐ ܕܩܝܡܝܢ ܬܢܢ ܕܠܐ ܢܛܥܡܘܢ ܡܘܬܐ ܥܕܡܐ ܕܢܚܙܘܢ ܡܠܟܘܬܗ ܕܐܠܗܐ ܕܐܬܬ ܒܚܝܠܐ ܀ ",
+      "containsMarya": false
+    },
+    {
+      "ref": "MRK.9.2",
+      "slot": 1436,
+      "block": 2,
+      "offset": 40591,
+      "length": 170,
+      "raw": "ܘܒܬܪ ܫܬܐ ܝܘܡܝܢ ܕܒܪ ܝܫܘܥ ܠܟܐܦܐ ܘܠܝܥܩܘܒ ܘܠܝܘܚܢܢ ܘܐܤܩ ܐܢܘܢ ܠܛܘܪܐ ܪܡܐ ܒܠܚܘܕܝܗܘܢ ܘܐܬܚܠܦ ܠܥܢܝܗܘܢ ܀ ",
+      "containsMarya": false
+    },
+    {
+      "ref": "MRK.9.49",
+      "slot": 1483,
+      "block": 2,
+      "offset": 46558,
+      "length": 273,
+      "raw": "ܟܠ ܓܝܪ ܒܢܘܪܐ ܢܬܡܠܚ ܘܟܠ ܕܒܚܬܐ ܒܡܠܚܐ ܬܬܡܠܚ ܀ 50 ܫܦܝܪܐ ܗܝ ܡܠܚܐ ܐܢ ܕܝܢ ܡܠܚܐ ܬܦܟܗ ܒܡܢܐ ܬܬܡܠܚ ܬܗܘܐ ܒܟܘܢ ܡܠܚܐ ܘܒܫܝܢܐ ܗܘܘ ܚܕ ܥܡ ܚܕ ܀  <chapter eID=\"Mark.9\"/><div eID=\"gen40\" type=\"x-p\"/>",
+      "containsMarya": false
+    },
+    {
+      "ref": "MRK.9.50",
+      "slot": 1484,
+      "block": 0,
+      "offset": 0,
+      "length": 0,
+      "raw": "",
+      "containsMarya": false
+    },
+    {
+      "ref": "LUK.22.17",
+      "slot": 2807,
+      "block": 3,
+      "offset": 127760,
+      "length": 79,
+      "raw": "ܘܢܤܒ ܟܤܐ ܘܐܘܕܝ ܘܐܡܪ ܤܒܘ ܗܢܐ ܘܦܠܓܘ ܒܝܢܬܟܘܢ ܀ ",
+      "containsMarya": false
+    },
+    {
+      "ref": "LUK.22.18",
+      "slot": 2808,
+      "block": 3,
+      "offset": 127839,
+      "length": 118,
+      "raw": "ܐܡܪ ܐܢܐ ܓܝܪ ܠܟܘܢ ܕܠܐ ܐܫܬܐ ܡܢ ܝܠܕܐ ܕܓܦܬܐ ܥܕܡܐ ܕܬܐܬܐ ܡܠܟܘܬܐ ܕܐܠܗܐ ܀ ",
+      "containsMarya": false
+    },
+    {
+      "ref": "JHN.7.53",
+      "slot": 3317,
+      "block": 4,
+      "offset": 42230,
+      "length": 92,
+      "raw": "ܐܙܠ ܗܟܝܠ ܟܠܚܕ ܠܒܝܬܗ ܀  <chapter eID=\"John.7\"/><div eID=\"gen80\" type=\"x-p\"/>",
+      "containsMarya": false
+    },
+    {
+      "ref": "JHN.8.1",
+      "slot": 3319,
+      "block": 4,
+      "offset": 42396,
+      "length": 48,
+      "raw": "ܝܫܘܥ ܕܝܢ ܐܙܠ ܠܛܘܪܐ ܕܙܝܬܐ ܀ ",
+      "containsMarya": false
+    },
+    {
+      "ref": "ROM.10.9",
+      "slot": 5187,
+      "block": 6,
+      "offset": 35750,
+      "length": 120,
+      "raw": "ܘܐܢ ܬܘܕܐ ܒܦܘܡܟ ܒܡܪܢ ܝܫܘܥ ܘܬܗܝܡܢ ܒܠܒܟ ܕܐܠܗܐ ܐܩܝܡܗ ܡܢ ܒܝܬ ܡܝܬܐ ܬܚܐ ܀ ",
+      "containsMarya": false
+    },
+    {
+      "ref": "1CO.8.6",
+      "slot": 5538,
+      "block": 7,
+      "offset": 23833,
+      "length": 157,
+      "raw": "ܐܠܐ ܠܢ ܕܝܠܢ ܚܕ ܗܘ ܐܠܗܐ ܐܒܐ ܕܟܠ ܡܢܗ ܘܚܢܢ ܒܗ ܘܚܕ ܡܪܝܐ ܝܫܘܥ ܡܫܝܚܐ ܕܟܠ ܒܐܝܕܗ ܘܐܦ ܚܢܢ ܒܐܝܕܗ ܀ ",
+      "containsMarya": true
+    },
+    {
+      "ref": "1CO.12.3",
+      "slot": 5646,
+      "block": 7,
+      "offset": 37732,
+      "length": 222,
+      "raw": "ܡܛܠ ܗܢܐ ܡܘܕܥ ܐܢܐ ܠܟܘܢ ܕܠܝܬ ܐܢܫ ܕܒܪܘܚܐ ܕܐܠܗܐ ܡܡܠܠ ܘܐܡܪ ܕܚܪܡ ܗܘ ܝܫܘܥ ܘܐܦܠܐ ܐܢܫ ܡܫܟܚ ܠܡܐܡܪ ܕܡܪܝܐ ܗܘ ܝܫܘܥ ܐܠܐ ܐܢ ܒܪܘܚܐ ܕܩܘܕܫܐ ܀ ",
+      "containsMarya": true
+    },
+    {
+      "ref": "PHP.2.11",
+      "slot": 6446,
+      "block": 11,
+      "offset": 5327,
+      "length": 97,
+      "raw": "ܘܟܠ ܠܫܢ ܢܘܕܐ ܕܡܪܝܐ ܗܘ ܝܫܘܥ ܡܫܝܚܐ ܠܫܘܒܚܐ ܕܐܠܗܐ ܐܒܘܗܝ ܀ ",
+      "containsMarya": true
+    },
+    {
+      "ref": "2PE.1.1",
+      "slot": 7587,
+      "block": 22,
+      "offset": 283,
+      "length": 202,
+      "raw": "ܫܡܥܘܢ ܦܛܪܘܤ ܥܒܕܐ ܘܫܠܝܚܐ ܕܝܫܘܥ ܡܫܝܚܐ ܠܐܝܠܝܢ ܕܠܗܝܡܢܘܬܐ ܫܘܝܬ ܒܐܝܩܪܐ ܥܡܢ ܐܫܬܘܝܘ ܒܙܕܝܩܘܬܐ ܕܡܪܢ ܘܦܪܘܩܢ ܝܫܘܥ ܡܫܝܚܐ ܀ ",
+      "containsMarya": false
+    },
+    {
+      "ref": "2JN.1.1",
+      "slot": 7763,
+      "block": 24,
+      "offset": 286,
+      "length": 190,
+      "raw": "ܩܫܝܫܐ ܠܓܒܝܬܐ ܩܘܪܝܐ ܘܠܒܢܝܗ ܐܝܠܝܢ ܕܐܢܐ ܡܚܒ ܐܢܐ ܒܫܪܪܐ ܠܐ ܗܘܐ ܕܝܢ ܐܢܐ ܒܠܚܘܕܝ ܐܠܐ ܟܠܗܘܢ ܐܝܠܝܢ ܕܝܕܥܘܗܝ ܠܫܪܪܐ ܀ ",
+      "containsMarya": false
+    },
+    {
+      "ref": "3JN.1.1",
+      "slot": 7778,
+      "block": 25,
+      "offset": 286,
+      "length": 77,
+      "raw": "ܩܫܝܫܐ ܠܓܐܝܘܤ ܚܒܝܒ ܠܗܘ ܕܐܢܐ ܡܚܒ ܐܢܐ ܒܫܪܪܐ ܀ ",
+      "containsMarya": false
+    },
+    {
+      "ref": "JUD.1.1",
+      "slot": 7794,
+      "block": 27,
+      "offset": 283,
+      "length": 162,
+      "raw": "ܝܗܘܕܐ ܥܒܕܐ ܕܝܫܘܥ ܡܫܝܚܐ ܐܚܐ ܕܝܢ ܕܝܥܩܘܒ ܠܥܡܡܐ ܩܪܝܐ ܕܒܐܠܗܐ ܐܒܐ ܪܚܝܡܝܢ ܘܒܝܫܘܥ ܡܫܝܚܐ ܢܛܝܪܝܢ ܀ ",
+      "containsMarya": false
+    },
+    {
+      "ref": "REV.1.1",
+      "slot": 7821,
+      "block": 28,
+      "offset": 280,
+      "length": 186,
+      "raw": "ܓܠܝܢܐ ܕܝܫܘܥ ܡܫܝܚܐ ܕܝܗܒ ܠܗ ܐܠܗܐ ܠܡܚܘܝܘ ܠܥܒܕܘܗܝ ܡܐ ܕܝܗܝܒ ܠܡܗܘܐ ܒܥܓܠ ܘܫܘܕܥ ܟܕ ܫܠܚ ܒܝܕ ܡܠܐܟܗ ܠܥܒܕܗ ܝܘܚܢܢ ܀ ",
+      "containsMarya": false
+    }
+  ]
+}

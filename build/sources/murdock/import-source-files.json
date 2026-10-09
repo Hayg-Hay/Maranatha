@@ -1,0 +1,39 @@
+{
+  "source": "https://www.crosswire.org/sword/modules/ModInfo.jsp?modName=Murdock",
+  "retrieved": "2026-10-09",
+  "archiveSha256": "4f0adeba385acbfa37921f66677d4aaf99e23b4e65ca162f122832689036641f",
+  "files": [
+    {
+      "path": "Murdock.zip",
+      "sha256": "4f0adeba385acbfa37921f66677d4aaf99e23b4e65ca162f122832689036641f"
+    },
+    {
+      "path": "module/mods.d/murdock.conf",
+      "sha256": "f0791130aa0409b0a49710e08733f21fa5b6d53149f4dac3285d12e70e405178"
+    },
+    {
+      "path": "module/modules/texts/ztext/murdock/appendix",
+      "sha256": "5c167cfc4538de34772711624b60123062ba6b7a9e3fd07899c9017c47d90688"
+    },
+    {
+      "path": "module/modules/texts/ztext/murdock/errata",
+      "sha256": "63d4a82c4a2127bb0331e55a277b8907e02523d2fb0f11316f475fa1e1b8594f"
+    },
+    {
+      "path": "module/modules/texts/ztext/murdock/nt.bzs",
+      "sha256": "589548f47ed1542e50f9d04e75e221f4ad9915cb96bb31ac6cb122d76e805235"
+    },
+    {
+      "path": "module/modules/texts/ztext/murdock/nt.bzv",
+      "sha256": "c9be4a3b14291f9bdb18e5862988025afa16545ff30370d04c5abc67caa88a09"
+    },
+    {
+      "path": "module/modules/texts/ztext/murdock/nt.bzz",
+      "sha256": "f4c0f36db741f1d1ddc730764b2e276ec6eb699ca9a525bd8616253f72a37467"
+    },
+    {
+      "path": "preface-witness.html",
+      "sha256": "607a0b9cf58b7cd31d1134eba330a72ce763e0c744154dc6d475ae5ac047ae40"
+    }
+  ]
+}

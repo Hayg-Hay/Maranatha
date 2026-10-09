@@ -1,0 +1,17 @@
+{
+  "status": "Boundary warnings require original source checks; no text repair performed.",
+  "samples": [
+    {
+      "ref": "ROM.7.25",
+      "raw": "I thank God; by means of our Lord Jesus Messiah <FI>I shall be rescued.<Fi> [ (Romans 7:26) Now, therefore, in my conscience, I am a servant of the law of God; but in my flesh, I am a servant of the law of sin. ] "
+    },
+    {
+      "ref": "3JN.1.14",
+      "raw": "But I hope soon to see thee, and to converse mouth to mouth. [ (III John 1:15) Peace be with thee. The friends salute thee. Salute the friends, severally, by name. ] "
+    },
+    {
+      "ref": "REV.12.17",
+      "raw": "And the dragon was enraged against the woman; and he went to make war upon the residue of her seed, who keep the commandments of God, and have the testimony of Jesus. [ (Revelation of John 12:18) And he stood on the sand of the sea. ] "
+    }
+  ]
+}

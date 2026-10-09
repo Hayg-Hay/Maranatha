@@ -1,0 +1,46 @@
+{
+  "source": "https://www.crosswire.org/ftpmirror/pub/sword/packages/rawzip/Peshitta.zip",
+  "retrieved": "2026-10-09",
+  "files": [
+    {
+      "path": "Peshitta.zip",
+      "size": 324100,
+      "sha256": "badce0aa0a9b70a9c81891ed48d5a9e86de1e24d12ad4ad378e060e03cabc7b9"
+    },
+    {
+      "path": "module/mods.d/peshitta.conf",
+      "size": 1276,
+      "sha256": "a4b45f9fdfed3c514f6acd55f90022ae19b4ae4a5c0953adfd17d549ea9e71c7"
+    },
+    {
+      "path": "module/modules/texts/ztext/peshitta/nt.bzs",
+      "size": 348,
+      "sha256": "c11c52629db2e4693212cf5387ce9f0fc62e2f32f979b1fba6d46f177c37a04e"
+    },
+    {
+      "path": "module/modules/texts/ztext/peshitta/nt.bzv",
+      "size": 82460,
+      "sha256": "4776db6f0666611a30ff70282603e6cd08e4920f04d8b645d5daa8d62fc61eef"
+    },
+    {
+      "path": "module/modules/texts/ztext/peshitta/nt.bzz",
+      "size": 312983,
+      "sha256": "45a1948c5a760fe9b321899751213ac0534d32d9b02df1d3bc5ed96e1cc74c9d"
+    },
+    {
+      "path": "module/modules/texts/ztext/peshitta/ot.bzs",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "module/modules/texts/ztext/peshitta/ot.bzv",
+      "size": 241150,
+      "sha256": "2540b76b8dea6c2e33755e045050b277fb953962c21eb52e09228bde18515ded"
+    },
+    {
+      "path": "module/modules/texts/ztext/peshitta/ot.bzz",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

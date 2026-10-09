@@ -615,6 +615,15 @@ remain intact. Headings are collapsed below reading; no Psalms/OT are included.
 See [docs/KSZI.md](docs/KSZI.md). Independent fidelity/integration/regression
 verification is delegated to the manual DeepSeek handoff before commit/push.
 
+## Syriac Peshitta and Murdock English NT
+
+The paired NT witnesses are separately credited: CrossWire Syriac Peshitta
+and Murdock English. Syriac uses local RTL typography; MarYa remains in Syriac
+and Lord stays unchanged in English. Source-marker/native-reference conversions
+are recorded; Murdock's ten empty indexed slots remain under source audit.
+See [docs/PESHITTA.md](docs/PESHITTA.md). Basic functionality passed; independent
+fidelity/integration/regression verification is delegated before commit/push.
+
 ## Project structure
 
 ```
