@@ -1,5 +1,18 @@
 # Maranatha Project History
 
+## Vietnamese OVCB — October 9, 2026
+
+Added Biblica Open Vietnamese Contemporary Bible 2015 (`ovcb`) from eBible
+USFM/USFX archives with original copyright/metadata and CC BY-SA 4.0 notices.
+All 66 books, 1,189 chapters and 31,096 source records are preserved. Eight
+missing positions remain unfilled; 1,562 notes and 2,539 headings/superscriptions
+are collapsed below reading. Vietnamese reference aliases, NFC/NFD-safe search
+and exact copied/highlighted text are covered by offline desktop/mobile tests.
+Ordinary chapters use shared reference rows; 3 John, Romans 14 and Revelation
+12–13 have explicit exceptions. A separate USFX reader checks every verse and
+annotation against the imported USFM. Shell cache v63 adds the small locale;
+data cache v3 remains. See `docs/OVCB.md`.
+
 ## Filipino / Tagalog ASD — October 9, 2026
 
 Added Biblica Open Ang Salita ng Diyos 2025 (`asd`) from the user-supplied USFM

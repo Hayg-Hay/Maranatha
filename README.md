@@ -575,6 +575,14 @@ Notes are collapsed below Scripture. See [docs/ASD.md](docs/ASD.md).
 
 Reproduce and validate with `npm run test:asd`.
 
+## Vietnamese OVCB
+
+Biblica Open Vietnamese Contemporary Bible 2015 (`ovcb`) adds all 66 books
+under CC BY-SA 4.0, Vietnamese book labels/references and Unicode-safe search.
+Ordinary chapters share comparison rows; source boundary/content-placement
+exceptions read separately. Notes are collapsed below Scripture.
+See [docs/OVCB.md](docs/OVCB.md); validate with `npm run test:ovcb`.
+
 ## Project structure
 
 ```

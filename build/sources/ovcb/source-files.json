@@ -1,0 +1,336 @@
+{
+  "source": "https://ebible.org/bible/details.php?id=vieovcb",
+  "retrieved": "2026-10-09",
+  "archives": [
+    {
+      "path": "vieovcb_usfm.zip",
+      "sha256": "8f2849522bd6b88724edecb4972252e8ce536d4381c1e9dd20d36de537e0f880"
+    },
+    {
+      "path": "vieovcb_usfx.zip",
+      "sha256": "b5b31cc61c16ccabca9d9d23e7c27a37b32e0a93e05531e7f8046cf76aef375e"
+    }
+  ],
+  "files": [
+    {
+      "path": "copyright.htm",
+      "sha256": "5c06d0188ce83beeea9349affa5aad908adc59d6d589d6db8581b8f94902397c"
+    },
+    {
+      "path": "usfm/02-GENvieovcb.usfm",
+      "sha256": "eebc428bbf8e779b0c7e856b72a4a9dfdc4d20ad9ae0d02e2a2fbb301c9ab791"
+    },
+    {
+      "path": "usfm/03-EXOvieovcb.usfm",
+      "sha256": "8eaa895169e2d5c04e9613df77c329e797af60d62e0434a29153662fca2fcbb0"
+    },
+    {
+      "path": "usfm/04-LEVvieovcb.usfm",
+      "sha256": "0e45f8d17e664926df8483e19e0980ca6cfd337c786f44868942365d6cb7d1eb"
+    },
+    {
+      "path": "usfm/05-NUMvieovcb.usfm",
+      "sha256": "b40bbb5159fa06bf8e00b251bc8dcd17323acc1f3a056c11aa3c3f6844b714ca"
+    },
+    {
+      "path": "usfm/06-DEUvieovcb.usfm",
+      "sha256": "78857b768abce3e7531631e9001a34ca10c7beb263f32f13668ea73b0edd9255"
+    },
+    {
+      "path": "usfm/07-JOSvieovcb.usfm",
+      "sha256": "e7df7a9497f7a30bb8079e457a53f90cf78774738655b8f31d46cc135cc7f2c6"
+    },
+    {
+      "path": "usfm/08-JDGvieovcb.usfm",
+      "sha256": "bc9c0d90e05627b0583b517176b75e74ed679c0c645b3bd5bd0fdfd669cf19cb"
+    },
+    {
+      "path": "usfm/09-RUTvieovcb.usfm",
+      "sha256": "2291333bfcebc31cc2683be44a24749047ff6153d9d0407210fb8691f9e1a252"
+    },
+    {
+      "path": "usfm/10-1SAvieovcb.usfm",
+      "sha256": "6750ea5bcc3ca382c3159d3637e9dacc4b0f49e0e464723e47cfb08db2a7780c"
+    },
+    {
+      "path": "usfm/11-2SAvieovcb.usfm",
+      "sha256": "747a9e82b6d4cefdc14be025d2b6f8ffe606b930f5077cc63da9102e9b03c689"
+    },
+    {
+      "path": "usfm/12-1KIvieovcb.usfm",
+      "sha256": "72713cb9a69955bb6ee86e1c2b3a770bc6e8cebfe0b529ea2546be49d35a85e1"
+    },
+    {
+      "path": "usfm/13-2KIvieovcb.usfm",
+      "sha256": "4bb6a16b3e3135d8c6b420635283f21039eeceae84463365d4037ba8673747d7"
+    },
+    {
+      "path": "usfm/14-1CHvieovcb.usfm",
+      "sha256": "541883bdddbb28ffbce9024fe3e5ce9e836a4aad9482dcfa8da0d6f2132fb364"
+    },
+    {
+      "path": "usfm/15-2CHvieovcb.usfm",
+      "sha256": "6023daa43a3f0264e86b7d7031faa242ecb86f08ccec75557daee68f899096ca"
+    },
+    {
+      "path": "usfm/16-EZRvieovcb.usfm",
+      "sha256": "228fd949306eb62bc78b4af5f0fa2b219c04b5b4c9a1bff2e8bfa59fa9d27085"
+    },
+    {
+      "path": "usfm/17-NEHvieovcb.usfm",
+      "sha256": "775c091e4c2f8b95755114fa49a9aa616cc0d6ed39388f6f85445d59e0c17bb6"
+    },
+    {
+      "path": "usfm/18-ESTvieovcb.usfm",
+      "sha256": "29511c2a49333fc41dd7355d3891c27064c294df2706aa942d0ec8bbf47f12a1"
+    },
+    {
+      "path": "usfm/19-JOBvieovcb.usfm",
+      "sha256": "37eccc2a73e00669e121685b2a702e0034934b44da606622bf3feb0b8cbb951e"
+    },
+    {
+      "path": "usfm/20-PSAvieovcb.usfm",
+      "sha256": "c3038fd6a5e23abf3ea06cc69565dae8da48444995ad14ccfb439224cbf2d2a3"
+    },
+    {
+      "path": "usfm/21-PROvieovcb.usfm",
+      "sha256": "0eba3d74e2a782ef058692d213711fd6a592595111511ac181ff9734586ed463"
+    },
+    {
+      "path": "usfm/22-ECCvieovcb.usfm",
+      "sha256": "47cdca115305f3ea540817aeb9d9d7c01875d79aec8a55b4cc480a54d911d8e0"
+    },
+    {
+      "path": "usfm/23-SNGvieovcb.usfm",
+      "sha256": "a0a87c4dd71a14fa18115e7bfd0937e0ee78ea5a411b30e20b19ac5efe8754f7"
+    },
+    {
+      "path": "usfm/24-ISAvieovcb.usfm",
+      "sha256": "6208808cfafc2ecf9b25dc74af326dc1d3f416bec20d7abf23b4f52539651dad"
+    },
+    {
+      "path": "usfm/25-JERvieovcb.usfm",
+      "sha256": "4883fa1e1009c612ae5771b340c0620706c88b1f045471a7b32e4fa16aa38f25"
+    },
+    {
+      "path": "usfm/26-LAMvieovcb.usfm",
+      "sha256": "4c89b9a2608f1aea1486ad4f9b5d9573e5b545959e0e9102ca50d2a17fd98bb6"
+    },
+    {
+      "path": "usfm/27-EZKvieovcb.usfm",
+      "sha256": "1c25b2980c9669f96531ee7f34bd06a9363d44d5501ad453d04224a8db1e226b"
+    },
+    {
+      "path": "usfm/28-DANvieovcb.usfm",
+      "sha256": "8b6b69c426d06014ae1f4f9a0dfbb678be8de9c4ac1ca3f6532f34f216cacfeb"
+    },
+    {
+      "path": "usfm/29-HOSvieovcb.usfm",
+      "sha256": "a9c02f9fdab1aee2e52898ce1ae05616409e35548ad6839388d793e927a07c02"
+    },
+    {
+      "path": "usfm/30-JOLvieovcb.usfm",
+      "sha256": "f4892bd8287c1700ace0902e6cd25708257cab331294ee1e51bf977be0dd670f"
+    },
+    {
+      "path": "usfm/31-AMOvieovcb.usfm",
+      "sha256": "e2d03375d7857204c4bbd656302a5239b8d1e45b6755f8a8f1639d802e4f0fc1"
+    },
+    {
+      "path": "usfm/32-OBAvieovcb.usfm",
+      "sha256": "3a69e9a644f636ae1b40e4a7c68cf75bd0e479df4b6d81a770675c6966ae10f8"
+    },
+    {
+      "path": "usfm/33-JONvieovcb.usfm",
+      "sha256": "96f07da8cfbb858cc31c03ddddc083ba887210bc2fa8da42665117f4c7b44526"
+    },
+    {
+      "path": "usfm/34-MICvieovcb.usfm",
+      "sha256": "5e9682d41ac6eae5c98595e16b33286aacc948d6b02956d3d8183b5defe1c578"
+    },
+    {
+      "path": "usfm/35-NAMvieovcb.usfm",
+      "sha256": "1dc43c69b13c1ad3e97f15537a53b0a4602767db2a53840a34595b55282949a1"
+    },
+    {
+      "path": "usfm/36-HABvieovcb.usfm",
+      "sha256": "28397b6dcf4b2760739f2a184985c0dcdcf9ecb867a175a06e9f5fdc876bd84d"
+    },
+    {
+      "path": "usfm/37-ZEPvieovcb.usfm",
+      "sha256": "e6f2ee03f8fa644ed71190bf2ac1a80d5d294d281b1d6baa54ab471a2bfcf6c5"
+    },
+    {
+      "path": "usfm/38-HAGvieovcb.usfm",
+      "sha256": "05688f6c12394a1de1712aa789104e7e0f8ff14c46a24155830145ede6678c85"
+    },
+    {
+      "path": "usfm/39-ZECvieovcb.usfm",
+      "sha256": "aa65c51d1eb405c09c04f36cbd7c2ab65829107c026cced8ebdc46d68b47f653"
+    },
+    {
+      "path": "usfm/40-MALvieovcb.usfm",
+      "sha256": "628c65f7b35f6d638d2d161b774be2b552c4801460f25f358adb9150b33c54bd"
+    },
+    {
+      "path": "usfm/46-MATvieovcb.usfm",
+      "sha256": "345ec0f36d9b4bc27d55b5daa64dc9c77a13c7a65edce49089d09404f9f39b46"
+    },
+    {
+      "path": "usfm/47-MRKvieovcb.usfm",
+      "sha256": "609db06974f8014e036cbfe3cc184910758108d6d00db31b05aba24bc43151eb"
+    },
+    {
+      "path": "usfm/48-LUKvieovcb.usfm",
+      "sha256": "12577f6c8e90eb9b92353c7dd22db88f28b4b583bae4776391cced31993b9e8e"
+    },
+    {
+      "path": "usfm/49-JHNvieovcb.usfm",
+      "sha256": "871be528157c898ba85984972bac81fdd6adfa48cd66f4555e32b750b0aa3d05"
+    },
+    {
+      "path": "usfm/51-ROMvieovcb.usfm",
+      "sha256": "241acbc96b9ba3e26d2328878ff0e5b954fe3c48864d8b338bfbf6fdbbbf84e6"
+    },
+    {
+      "path": "usfm/52-1COvieovcb.usfm",
+      "sha256": "4bf9cb040dbc3d6af4745134539f5cd89f6cdb8be7323c569ade03edba428e4f"
+    },
+    {
+      "path": "usfm/53-2COvieovcb.usfm",
+      "sha256": "23e32aa8c2a3ccd6fb3fffa6632455a6daa8cab45fe15723a4b14a1ff9024146"
+    },
+    {
+      "path": "usfm/54-GALvieovcb.usfm",
+      "sha256": "0a9b9de8508459c6043466289fad065fb06844e74094df544a9d23a8623dc4e8"
+    },
+    {
+      "path": "usfm/55-EPHvieovcb.usfm",
+      "sha256": "e4127082ba50c645220762f12851d7a69f4b4dc873868005ff70e27534020078"
+    },
+    {
+      "path": "usfm/56-PHPvieovcb.usfm",
+      "sha256": "edc7d1fc8db86927ba5b4e8cd244c1e560345b059bce29fe8f4a9aae789d2c19"
+    },
+    {
+      "path": "usfm/57-COLvieovcb.usfm",
+      "sha256": "2ebb524db854182cd79a50881b663bbd23c7831753b3863246f569b1c3841649"
+    },
+    {
+      "path": "usfm/58-1THvieovcb.usfm",
+      "sha256": "563b0551c05a821fa4b564d96e53b37ae77ee8e406973292e8769e3a65d87af7"
+    },
+    {
+      "path": "usfm/59-2THvieovcb.usfm",
+      "sha256": "f5f3213448def130654c94d5f8d581255ff654822e42bdd87474defdffe3bda4"
+    },
+    {
+      "path": "usfm/60-1TIvieovcb.usfm",
+      "sha256": "9d7a6c0d4ad141894e0005ce017b1783459b6b307fdb1ce5af286512762210a9"
+    },
+    {
+      "path": "usfm/61-2TIvieovcb.usfm",
+      "sha256": "28d8c76b044a43763eea238fa4fdcfa402221b76ef855f22c3bdc752dcd755f4"
+    },
+    {
+      "path": "usfm/62-TITvieovcb.usfm",
+      "sha256": "747f91cab2b404e91dd02feb92e52b7139dc009b722c12d8bcbae8a4a6a94929"
+    },
+    {
+      "path": "usfm/63-PHMvieovcb.usfm",
+      "sha256": "33e0e3129849ad1c3ab44c75cfd5abbf47f26603e65eb8f537d23019159ee7fa"
+    },
+    {
+      "path": "usfm/64-HEBvieovcb.usfm",
+      "sha256": "45c8b17736a39a42beceb0e90ad228852cabc5d3c72df73367d1ee9c6ebb3d1c"
+    },
+    {
+      "path": "usfm/65-JASvieovcb.usfm",
+      "sha256": "fb3b351c805de8abafab735ef06d48642e16f9e5b9088442c5b35dda1420f91c"
+    },
+    {
+      "path": "usfm/67-2PEvieovcb.usfm",
+      "sha256": "df60edf904ff313bf2893511448a7f4bc80dbb488dc6d1f00efa5cc836f37556"
+    },
+    {
+      "path": "usfm/68-1JNvieovcb.usfm",
+      "sha256": "53537ea7145a7e45c56d6a8d6647c7208cccaa050025bbc8fc212eb0be479744"
+    },
+    {
+      "path": "usfm/69-2JNvieovcb.usfm",
+      "sha256": "d2795ebfd9b6d8a996d8fbce3329f1ddd8b6cabf8fcb74ce2cd4412c8f0a34c9"
+    },
+    {
+      "path": "usfm/71-JUDvieovcb.usfm",
+      "sha256": "efdfaa9babd0f1bb93f24900d277ee91d7ed0a801973281e78c50e2dfbf63960"
+    },
+    {
+      "path": "usfm/72-REVvieovcb.usfm",
+      "sha256": "82b3a9b9d6d461d77fd41f43f3070c9a8e66a21185072a1b1e99bd994b1a6aec"
+    },
+    {
+      "path": "usfm/74-ACTvieovcb.usfm",
+      "sha256": "409cb287aa50715723c218949cb2dfa1cf36e81d9fbeca05acef4aede069a606"
+    },
+    {
+      "path": "usfm/90-1PEvieovcb.usfm",
+      "sha256": "4a3d7ca8f29e7fe65b2cde1a268578bbc9270992d9d6f90884c4c9ea32195410"
+    },
+    {
+      "path": "usfm/94-3JNvieovcb.usfm",
+      "sha256": "bb42cbffc3a5d0caff8323d65c96912d31e49534d216ec8d9db53770e398ce9f"
+    },
+    {
+      "path": "usfm/copr.htm",
+      "sha256": "4f7eb879b790c2c5c20beb629088efa12cd8cd12c1da40d7a5d817983aa22936"
+    },
+    {
+      "path": "usfm/dejavuserif.css",
+      "sha256": "ef2d27c85b36f6ee78e69e000e334a487bdea3f2e1c539044b6d0f6488db1f2f"
+    },
+    {
+      "path": "usfm/keys.asc",
+      "sha256": "8659487be35d9a79b8bb41eb68db1e96e9a1933792f683b88e0de50cd3841942"
+    },
+    {
+      "path": "usfx/BookNames.xml",
+      "sha256": "db70ad1844484e727ed1912685907b5086ebce6e1554f24e1e51ed8a5f9f3fa5"
+    },
+    {
+      "path": "usfx/copr.htm",
+      "sha256": "4f7eb879b790c2c5c20beb629088efa12cd8cd12c1da40d7a5d817983aa22936"
+    },
+    {
+      "path": "usfx/dejavuserif.css",
+      "sha256": "ef2d27c85b36f6ee78e69e000e334a487bdea3f2e1c539044b6d0f6488db1f2f"
+    },
+    {
+      "path": "usfx/keys.asc",
+      "sha256": "8659487be35d9a79b8bb41eb68db1e96e9a1933792f683b88e0de50cd3841942"
+    },
+    {
+      "path": "usfx/vieovcb-VernacularAdditional.xml",
+      "sha256": "a10cd9d92778c583653357dfa91540978b0a286502f924e28722ce77b1fbb851"
+    },
+    {
+      "path": "usfx/vieovcb-VernacularParms.xml",
+      "sha256": "9cf5b39d2a5b7f7db45bb7c44e8970c7678f9a68e8641a6e8908d3848e75905d"
+    },
+    {
+      "path": "usfx/vieovcb_usfx.xml",
+      "sha256": "fd3069647596734fd3ce79bd9c8395c5a159a295c4a4ab565dd4abfc50882879"
+    },
+    {
+      "path": "usfx/vieovcbmetadata.xml",
+      "sha256": "ace47b6f8eff094e590b7574bb6c1532ac0fd74f2c51f8773964ab9551b8573c"
+    },
+    {
+      "path": "vieovcb_usfm.zip",
+      "sha256": "8f2849522bd6b88724edecb4972252e8ce536d4381c1e9dd20d36de537e0f880"
+    },
+    {
+      "path": "vieovcb_usfx.zip",
+      "sha256": "b5b31cc61c16ccabca9d9d23e7c27a37b32e0a93e05531e7f8046cf76aef375e"
+    }
+  ]
+}

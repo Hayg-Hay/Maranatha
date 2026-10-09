@@ -156,7 +156,7 @@ class ReferenceParser {
         // Japanese book-label selection also accepts the existing English
         // names; this adds no changes to the established English/Armenian UI.
         const english = (typeof window !== 'undefined' && window.MARANATHA_LOCALE_EN) || null;
-        if (['ja', 'zh-Hant', 'id', 'th', 'tl'].includes(locale.language) && english?.books) {
+        if (['ja', 'zh-Hant', 'id', 'th', 'tl', 'vi'].includes(locale.language) && english?.books) {
             for (const book of canon.books) {
                 const info = english.books[book.id];
                 if (!info) continue;
@@ -213,6 +213,17 @@ class ReferenceParser {
         if (filipino?.books && filipino !== locale) {
             for (const book of canon.books) {
                 const info = filipino.books[book.id];
+                if (!info) continue;
+                for (const alias of [info.name, ...(info.aliases || [])]) {
+                    this.bookMap.set(ReferenceParser.normalizeKey(alias), book);
+                }
+            }
+        }
+
+        const vietnamese = (typeof window !== 'undefined' && window.MARANATHA_LOCALE_VI) || null;
+        if (vietnamese?.books && vietnamese !== locale) {
+            for (const book of canon.books) {
+                const info = vietnamese.books[book.id];
                 if (!info) continue;
                 for (const alias of [info.name, ...(info.aliases || [])]) {
                     this.bookMap.set(ReferenceParser.normalizeKey(alias), book);
@@ -411,6 +422,7 @@ class ReferenceParser {
     { id: 'ja', label: '日本語', global: 'MARANATHA_LOCALE_JA' },
     { id: 'zh-Hant', label: '繁體中文', global: 'MARANATHA_LOCALE_ZH_HANT' },
     { id: 'id', label: 'Bahasa Indonesia', global: 'MARANATHA_LOCALE_ID' },
+    { id: 'vi', label: 'Tiếng Việt', global: 'MARANATHA_LOCALE_VI' },
     { id: 'tl', label: 'Filipino / Tagalog', global: 'MARANATHA_LOCALE_TL' },
     { id: 'th', label: 'ภาษาไทย', global: 'MARANATHA_LOCALE_TH' },
   ];
@@ -470,6 +482,7 @@ class ReferenceParser {
     { id: 'otb-ja', label: 'Open Translation Bible (Japanese)', short: 'OTB-JA', src: 'data/otb-ja.js', description: 'The publisher\u2019s Open Translation Bible (OTB) Japanese edition, launched December 2025 and released under CC BY-SA 4.0 (openbible.uk). Read in its own native reference numbering (66 books, 1189 chapters, 31103 numbered source records). Daniel has 12 chapters. The publisher does not document the translation or editorial method, so this edition is not accuracy-certified. Two source records (Matthew 23:14 and John 5:4) contain only a bracketed placeholder with no Scripture text and are shown exactly as supplied. Converted offline from the publisher JSON; each verse\u2019s original text segments are preserved.' },
     { id: 'cuv-traditional', label: 'Chinese Union Version (Traditional, New Punctuation, 上帝)', short: 'CUV-T', src: 'data/cuv-traditional.js', description: '新標點和合本・繁體・上帝版. Traditional Chinese New Punctuation CUV, from eBible.org cmn-cu89t (distributor declares Public Domain). The older CUV wording is retained; this is not the Revised Chinese Union Version. Source numbering and 70 combined passages are preserved in their own reading block. Footnotes and headings are shown separately; 11 references have no separately numbered source record.' },
     { id: 'ayt', label: 'Alkitab Yang Terbuka (Indonesian)', short: 'AYT', src: 'data/ayt.js', description: 'Indonesian AYT from the official YLSA datasets. Copyright YLSA-AYT 2011,2024; non-commercial distribution with attribution and share-alike terms. All 66 books are included. Ordinary passages are compared by matching publisher references; Isaiah 22 and Romans 14 are read separately because of source content-placement differences. Three Isaiah records contain only source reference pointers.' },
+    { id: 'ovcb', label: 'Biblica® Open Vietnamese Contemporary Bible™ (2015)', short: 'OVCB', src: 'data/ovcb.js', description: 'Biblica Thiên Ban Kinh Thánh Hiện Đại, Vietnamese, copyright © 1982, 1987, 1994, 2005, 2015 Biblica, Inc., CC BY-SA 4.0. All 66 books; eight absent numbered records remain unfilled. Notes/headings are collapsed below Scripture. Ordinary chapters share comparison rows; 3 John, Romans 14 and Revelation 12–13 use separate reading blocks.' },
     { id: 'asd', label: 'Biblica® Open Ang Salita ng Diyos™ (2025)', short: 'ASD', src: 'data/asd.js', description: 'Modern Filipino/Tagalog Bible, copyright © 2009, 2011, 2014, 2025 Biblica, Inc., CC BY-SA 4.0. All 66 books; 185 combined passages preserved intact. Ordinary chapters share reference comparison rows. Chapters with combined ranges or documented boundary/content-placement differences read separately. Source notes/headings are collapsed below Scripture.' },
     { id: 'tcv', label: 'Biblica® Open Thai Common Version™ (2025)', short: 'TCV', src: 'data/tcv.js', description: 'Biblica Open Thai Common Version 2025, copyright © 2025 Biblica, Inc., distributed under CC BY-SA 4.0. All 66 books are included. Thai words, punctuation and source word separators are preserved. Sixteen numbered positions have no main verse text; their source notes remain available below the passage. Ordinary references share comparison rows; 3 John and Romans 14 use independent reading blocks.' },
   ];
@@ -1209,6 +1222,11 @@ function init() {
       element.dir = 'ltr';
       element.lang = 'id';
       element.classList.add('indonesian-verse');
+    }
+    else if (language === 'vi') {
+      element.lang = 'vi'; element.dir = 'ltr';
+      element.classList.add('vietnamese-verse');
+      element.style.whiteSpace = 'pre-wrap';
     }
     else if (language === 'tl') {
       element.lang = 'tl';
@@ -2438,7 +2456,7 @@ function init() {
   // ---------------------------------------------------------------------
 
   function isGraphemeSearchLanguage(language) {
-    return language === 'ja' || language === 'zh-Hant' || language === 'zh-Hans' || language === 'th';
+    return language === 'ja' || language === 'zh-Hant' || language === 'zh-Hans' || language === 'th' || language === 'vi';
   }
 
   // Language-aware normalization. Hebrew/Paleo, Greek and Latin keep their
@@ -2448,6 +2466,7 @@ function init() {
   // for the SAME character still matches. No width/kana/NFKC folding is added,
   // and the stored Scripture is never changed.
   function normalizeSearchText(text, language) {
+    if (language === 'vi') return String(text).normalize('NFC').toLowerCase();
     if (language === 'th') return String(text).replace(/[\u200B\r\n]/g, '').normalize('NFC');
     if (isGraphemeSearchLanguage(language)) return String(text).normalize('NFC');
     let out = '';
@@ -2505,7 +2524,7 @@ function init() {
     let clusterText = '';
     const flush = () => {
       if (!clusterText) return;
-      for (const ch of clusterText.normalize('NFC')) {
+      for (const ch of normalizeSearchText(clusterText, language)) {
         for (let k = 0; k < ch.length; k++) { form += ch[k]; map.push(clusterStart); ends.push(clusterEnd); }
       }
       clusterText = '';
