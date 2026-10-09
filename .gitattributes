@@ -7,3 +7,4 @@ build/sources/ayt/** -text -whitespace
 build/sources/tcv/** -text -whitespace
 build/sources/asd/** -text -whitespace
 build/sources/ovcb/** -text -whitespace
+build/sources/kszi/** -text -whitespace

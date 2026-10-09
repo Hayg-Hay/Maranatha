@@ -7,6 +7,30 @@ data loaded via `<script>` tags (not `fetch`, so it works from `file://` with no
 server), `build/` for the reproducible pipeline that produces that data, and a
 thin `app.js` + `index.html` + `style.css` front end with no framework.
 
+## Translation integration workflow
+
+For all future Maranatha translation integrations, minimize Codex allowance
+usage without sacrificing correctness. Codex handles architecture, complex
+implementation, and decisions requiring careful reasoning. Once implementation
+is complete and basic functionality is established, Codex stops and does not
+run the entire regression suite.
+
+Codex supplies a concise ASCII handoff prompt for the user to give manually to
+DeepSeek OpenCode. The handoff must cover:
+
+- Independent source fidelity checks.
+- Dedicated integration tests.
+- The full regression suite (`npm test`).
+- Routine fixes and retesting until verification succeeds.
+- Git diff and staging verification, excluding unrelated work.
+- Commit and push after successful verification.
+
+Delegate routine execution aggressively. Avoid repetitive polling, log
+inspection, and unnecessary micro-checks in Codex. Return to Codex only for
+genuinely complex problems, architectural uncertainty, or unresolved Scripture
+fidelity discrepancies. Do not automatically message DeepSeek; the user passes
+the ASCII prompt manually.
+
 ## Status
 
 **Fifteen translations are registered: World English Bible (WEB-C,
@@ -582,6 +606,14 @@ under CC BY-SA 4.0, Vietnamese book labels/references and Unicode-safe search.
 Ordinary chapters share comparison rows; source boundary/content-placement
 exceptions read separately. Notes are collapsed below Scripture.
 See [docs/OVCB.md](docs/OVCB.md); validate with `npm run test:ovcb`.
+
+## Malaysian Malay KSZI
+
+Kitab Suci Zabur dan Injil (`kszi`) adds the 27-book Malaysian Malay New
+Testament under CC BY-ND 4.0. Isa al-Masih, Yahya and all original wording
+remain intact. Headings are collapsed below reading; no Psalms/OT are included.
+See [docs/KSZI.md](docs/KSZI.md). Independent fidelity/integration/regression
+verification is delegated to the manual DeepSeek handoff before commit/push.
 
 ## Project structure
 

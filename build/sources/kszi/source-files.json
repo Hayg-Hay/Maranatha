@@ -1,0 +1,180 @@
+{
+  "source": "https://ebible.org/Scriptures/details.php?id=zlmKSZI",
+  "retrieved": "2026-10-09",
+  "archives": [
+    {
+      "path": "zlmKSZI_usfm.zip",
+      "sha256": "9965c3bba4ff8a32661dfa4ced01b502bead7c316eaed26908b2dbd678f72239"
+    },
+    {
+      "path": "zlmKSZI_usfx.zip",
+      "sha256": "319fecff0ac2f56a5fbac16bf6b9a43ab1fd8b954c246d0e724812a91e4884a4"
+    }
+  ],
+  "files": [
+    {
+      "path": "copyright.htm",
+      "sha256": "2a27b017f9dc9c02e40a7cd1274653b6fc934bb04caa03923ebb92805dac4b7d"
+    },
+    {
+      "path": "usfm/46-MATzlmKSZI.usfm",
+      "sha256": "fe5b2f7073e855f93956bd9a4d945cd5317fb883627e6b2dc236d650ab035538"
+    },
+    {
+      "path": "usfm/47-MRKzlmKSZI.usfm",
+      "sha256": "79dfe142beaf38499e6ab1eee602f4ead06834cf44f4f6c0dc8532847d6f82e3"
+    },
+    {
+      "path": "usfm/48-LUKzlmKSZI.usfm",
+      "sha256": "363307ac32a7ebe7605bea162b8dd548a7970699fd0566069fd1511aedc0f7c5"
+    },
+    {
+      "path": "usfm/49-JHNzlmKSZI.usfm",
+      "sha256": "a3ab1035c69f99a455521e40f52b3468476bef56ff39ab89bd522b313c595d35"
+    },
+    {
+      "path": "usfm/50-ACTzlmKSZI.usfm",
+      "sha256": "d57e0703a6b7d7ff9e5546585edfff3cf1f71588252427216185e529a4e95fee"
+    },
+    {
+      "path": "usfm/51-ROMzlmKSZI.usfm",
+      "sha256": "721d78e40e125eedd0aca7e4cda93b1b2874738e4f66a36ed4293391e58386b0"
+    },
+    {
+      "path": "usfm/52-1COzlmKSZI.usfm",
+      "sha256": "c18b1b04ff19ff5ec5c7f1af0904e826b9d56721f17e4e4ca02b4adf9c400d21"
+    },
+    {
+      "path": "usfm/53-2COzlmKSZI.usfm",
+      "sha256": "1c4f061a6f9d1d92e894486bb088d032b5fecadcc01a9285349315491775bc8b"
+    },
+    {
+      "path": "usfm/54-GALzlmKSZI.usfm",
+      "sha256": "22e0144944d2b1c98bcfd84a978a450a2dbf857818748ceda23c809c9686c8fb"
+    },
+    {
+      "path": "usfm/55-EPHzlmKSZI.usfm",
+      "sha256": "9d922940620fc8797a78d54786237b282fbcf73729cc61e4554d5c4388bfb6a8"
+    },
+    {
+      "path": "usfm/56-PHPzlmKSZI.usfm",
+      "sha256": "0e89ea463c3735505bb4badbb4ded50af9c890ba3e358fe421c7bc7e4a88cb43"
+    },
+    {
+      "path": "usfm/57-COLzlmKSZI.usfm",
+      "sha256": "2c52e29f5df2e42e51fda8740c849df6d98b6016d2e497c0d5ab0966236f6855"
+    },
+    {
+      "path": "usfm/58-1THzlmKSZI.usfm",
+      "sha256": "7c197e805b07985a57f3f8bf1d075709ab9298e2d92142f28ba3178dc2a5561a"
+    },
+    {
+      "path": "usfm/59-2THzlmKSZI.usfm",
+      "sha256": "b44b34dbdcb42eed70faba4dfeb8ff66bc82038005963460942f90d380cd3ce4"
+    },
+    {
+      "path": "usfm/60-1TIzlmKSZI.usfm",
+      "sha256": "7ee149d3cfec191e8c23096e1c737c2bddc96b0ce12c9f97eb60b182295e2d21"
+    },
+    {
+      "path": "usfm/61-2TIzlmKSZI.usfm",
+      "sha256": "e29b361e9bbb54f63280caee334dedd9c407a25c32dbd82da51c3f3c2e383c28"
+    },
+    {
+      "path": "usfm/62-TITzlmKSZI.usfm",
+      "sha256": "85a43463833ca7bff3184db96f981328d2e84cac8cd88768e4c7b6cb6891700e"
+    },
+    {
+      "path": "usfm/63-PHMzlmKSZI.usfm",
+      "sha256": "cfa90ad9b3eafd6fb55f7e6a81703a216f8f0bbfe8b3a929e208ada2b00382e1"
+    },
+    {
+      "path": "usfm/64-HEBzlmKSZI.usfm",
+      "sha256": "fa46ab8583739a6aad5f4ff0cf7af3a6e8c5a10a0758d2bfe9f06f0d2d0c1d3f"
+    },
+    {
+      "path": "usfm/65-JASzlmKSZI.usfm",
+      "sha256": "813f9ed39931b7b2f09c971698f8fd8a4d76f2e9b22fa5d24cebf571a861a38a"
+    },
+    {
+      "path": "usfm/66-1PEzlmKSZI.usfm",
+      "sha256": "51236e3e5d9341e585bd64f084672b60c66acb7450c9ca8891ea6be81a58ed1b"
+    },
+    {
+      "path": "usfm/67-2PEzlmKSZI.usfm",
+      "sha256": "68e094f3f9eee422c5367b1fa83ca4982faaaf7b154274542a6f41ff5f9a1174"
+    },
+    {
+      "path": "usfm/68-1JNzlmKSZI.usfm",
+      "sha256": "c6acff260659270a0e7722282a1c8d769fafbd8508aededc1c30332aa119fb54"
+    },
+    {
+      "path": "usfm/69-2JNzlmKSZI.usfm",
+      "sha256": "d547ab502946e31cdfd7b36c1396de5d1c6b9b5856e801bedb71f14dc0134cb5"
+    },
+    {
+      "path": "usfm/70-3JNzlmKSZI.usfm",
+      "sha256": "9a3689924a8179c5728ec9cefb60368bebc6a55628d5ce025a6ceab8b83cab95"
+    },
+    {
+      "path": "usfm/71-JUDzlmKSZI.usfm",
+      "sha256": "2f9f2f409088f2e438c3e6335178a6890ae65725d81f7d09c5d94cbdad3c310b"
+    },
+    {
+      "path": "usfm/72-REVzlmKSZI.usfm",
+      "sha256": "94a198a1e3560ddc2ebaf63662849d5a4e749a72689948a885d31e84731cb10e"
+    },
+    {
+      "path": "usfm/copr.htm",
+      "sha256": "4f971ac66231b5d0ac844cbb27e4a6b0d6a2de189834293ee0287ec6f3964d4f"
+    },
+    {
+      "path": "usfm/haiola.css",
+      "sha256": "41266c3439202578bfecdafb2d1eaced5a41ae3e79c4d535885bcb70569fc0ab"
+    },
+    {
+      "path": "usfm/keys.asc",
+      "sha256": "8659487be35d9a79b8bb41eb68db1e96e9a1933792f683b88e0de50cd3841942"
+    },
+    {
+      "path": "usfx/BookNames.xml",
+      "sha256": "07c05c5fc7729eb78edde4c2761037b275c9d29aa1bdc733108e48ef3c67465e"
+    },
+    {
+      "path": "usfx/copr.htm",
+      "sha256": "4f971ac66231b5d0ac844cbb27e4a6b0d6a2de189834293ee0287ec6f3964d4f"
+    },
+    {
+      "path": "usfx/haiola.css",
+      "sha256": "41266c3439202578bfecdafb2d1eaced5a41ae3e79c4d535885bcb70569fc0ab"
+    },
+    {
+      "path": "usfx/keys.asc",
+      "sha256": "8659487be35d9a79b8bb41eb68db1e96e9a1933792f683b88e0de50cd3841942"
+    },
+    {
+      "path": "usfx/zlmKSZI-VernacularAdditional.xml",
+      "sha256": "935b43e2aa962badc251a0544cba0d5ec5adcb042602ca628f0e5df07068eb04"
+    },
+    {
+      "path": "usfx/zlmKSZI-VernacularParms.xml",
+      "sha256": "6a1a26cd234834823bcb8bab63e1eaa95a74fc7e4a5950a714c1fc71226d1767"
+    },
+    {
+      "path": "usfx/zlmKSZI_usfx.xml",
+      "sha256": "66e88cfc45e09fe019bfe460bd19e1695f62c38c2d999e6680711a56a2561b50"
+    },
+    {
+      "path": "usfx/zlmKSZImetadata.xml",
+      "sha256": "ebe8b8fddd5d36fc46d966b7e6423fabf4a1c871d68d403dbfde0c98b9fca96c"
+    },
+    {
+      "path": "zlmKSZI_usfm.zip",
+      "sha256": "9965c3bba4ff8a32661dfa4ced01b502bead7c316eaed26908b2dbd678f72239"
+    },
+    {
+      "path": "zlmKSZI_usfx.zip",
+      "sha256": "319fecff0ac2f56a5fbac16bf6b9a43ab1fd8b954c246d0e724812a91e4884a4"
+    }
+  ]
+}

@@ -1,5 +1,15 @@
 # Maranatha Project History
 
+## Malaysian Malay KSZI — October 9, 2026
+
+Implemented the eBible zlmKSZI New Testament: 27 books, 260 chapters, 7,958
+source records and 733 separate headings. Source terminology, including
+Isa al-Masih and Yahya, is preserved under CC BY-ND 4.0. Original archives
+and metadata are hash-pinned. Malay reference aliases/labels and offline
+reading passed a basic smoke check. Independent fidelity, dedicated tests
+and full regression verification remain with DeepSeek under the README
+workflow. No commit/push by Codex. See `docs/KSZI.md`.
+
 ## Vietnamese OVCB — October 9, 2026
 
 Added Biblica Open Vietnamese Contemporary Bible 2015 (`ovcb`) from eBible

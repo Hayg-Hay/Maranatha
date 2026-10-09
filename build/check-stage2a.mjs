@@ -116,7 +116,7 @@ function staticChecks() {
   out('css-aligned-cell-rules', /\.aligned-cell\s*\{/.test(css) && /\.aligned-source-ref\s*\{/.test(css));
 
   const sw = read('service-worker.js');
-  out('sw-shell-v63', /CACHE_VERSION\s*=\s*'v63'/.test(sw));
+  out('sw-shell-v64', /CACHE_VERSION\s*=\s*'v64'/.test(sw));
   out('sw-data-v3-kept', /DATA_CACHE_VERSION\s*=\s*'v3'/.test(sw));
   out('sw-keeps-data-cache-on-activate', /keep = new Set\(\[SHELL_CACHE, DATA_CACHE\]\)/.test(sw));
   out('sw-data-cache-ignores-query-false', /ignoreSearch: cacheName !== DATA_CACHE/.test(sw));

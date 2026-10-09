@@ -1,0 +1,442 @@
+{
+  "language": "ms",
+  "label": "Bahasa Melayu",
+  "testaments": {
+    "OT": "Perjanjian Lama",
+    "NT": "Perjanjian Baru"
+  },
+  "books": {
+    "GEN": {
+      "name": "Genesis",
+      "aliases": [
+        "Gen"
+      ]
+    },
+    "EXO": {
+      "name": "Exodus",
+      "aliases": [
+        "Ex",
+        "Exod"
+      ]
+    },
+    "LEV": {
+      "name": "Leviticus",
+      "aliases": [
+        "Lev"
+      ]
+    },
+    "NUM": {
+      "name": "Numbers",
+      "aliases": [
+        "Num"
+      ]
+    },
+    "DEU": {
+      "name": "Deuteronomy",
+      "aliases": [
+        "Deut",
+        "Dt"
+      ]
+    },
+    "JOS": {
+      "name": "Joshua",
+      "aliases": [
+        "Josh"
+      ]
+    },
+    "JDG": {
+      "name": "Judges",
+      "aliases": [
+        "Judg",
+        "Jdg"
+      ]
+    },
+    "RUT": {
+      "name": "Ruth",
+      "aliases": [
+        "Ru"
+      ]
+    },
+    "1SA": {
+      "name": "1 Samuel",
+      "aliases": [
+        "1 Sam",
+        "1Sm",
+        "1 Sm"
+      ]
+    },
+    "2SA": {
+      "name": "2 Samuel",
+      "aliases": [
+        "2 Sam",
+        "2Sm",
+        "2 Sm"
+      ]
+    },
+    "1KI": {
+      "name": "1 Kings",
+      "aliases": [
+        "1 Kgs",
+        "1 K",
+        "1 Kg"
+      ]
+    },
+    "2KI": {
+      "name": "2 Kings",
+      "aliases": [
+        "2 Kgs",
+        "2 K",
+        "2 Kg"
+      ]
+    },
+    "1CH": {
+      "name": "1 Chronicles",
+      "aliases": [
+        "1 Chr",
+        "1 Chron",
+        "1 Ch"
+      ]
+    },
+    "2CH": {
+      "name": "2 Chronicles",
+      "aliases": [
+        "2 Chr",
+        "2 Chron",
+        "2 Ch"
+      ]
+    },
+    "EZR": {
+      "name": "Ezra",
+      "aliases": [
+        "Ezr"
+      ]
+    },
+    "NEH": {
+      "name": "Nehemiah",
+      "aliases": [
+        "Neh"
+      ]
+    },
+    "TOB": {
+      "name": "Tobit",
+      "aliases": [
+        "Tob",
+        "Tobias"
+      ]
+    },
+    "JDT": {
+      "name": "Judith",
+      "aliases": [
+        "Jdt",
+        "Judith"
+      ]
+    },
+    "EST": {
+      "name": "Esther",
+      "aliases": [
+        "Esth",
+        "Est"
+      ]
+    },
+    "1MA": {
+      "name": "1 Maccabees",
+      "aliases": [
+        "1 Macc",
+        "1 Mac",
+        "1 Mc"
+      ]
+    },
+    "2MA": {
+      "name": "2 Maccabees",
+      "aliases": [
+        "2 Macc",
+        "2 Mac",
+        "2 Mc"
+      ]
+    },
+    "JOB": {
+      "name": "Job",
+      "aliases": [
+        "Jb"
+      ]
+    },
+    "PSA": {
+      "name": "Psalms",
+      "aliases": [
+        "Ps",
+        "Psalm",
+        "Psa",
+        "Psm"
+      ]
+    },
+    "PRO": {
+      "name": "Proverbs",
+      "aliases": [
+        "Prov",
+        "Prv",
+        "Pr"
+      ]
+    },
+    "ECC": {
+      "name": "Ecclesiastes",
+      "aliases": [
+        "Eccl",
+        "Qoheleth",
+        "Qoh"
+      ]
+    },
+    "SNG": {
+      "name": "Song of Solomon",
+      "aliases": [
+        "Song",
+        "Song of Songs",
+        "Canticles",
+        "Cant",
+        "SOS"
+      ]
+    },
+    "WIS": {
+      "name": "Wisdom",
+      "aliases": [
+        "Wis",
+        "Wisdom of Solomon"
+      ]
+    },
+    "SIR": {
+      "name": "Sirach",
+      "aliases": [
+        "Sir",
+        "Ecclesiasticus",
+        "Ben Sira",
+        "Sirach"
+      ]
+    },
+    "ISA": {
+      "name": "Isaiah",
+      "aliases": [
+        "Is",
+        "Isa"
+      ]
+    },
+    "JER": {
+      "name": "Jeremiah",
+      "aliases": [
+        "Jer"
+      ]
+    },
+    "LAM": {
+      "name": "Lamentations",
+      "aliases": [
+        "Lam"
+      ]
+    },
+    "BAR": {
+      "name": "Baruch",
+      "aliases": [
+        "Bar"
+      ]
+    },
+    "EZK": {
+      "name": "Ezekiel",
+      "aliases": [
+        "Ezek",
+        "Eze"
+      ]
+    },
+    "DAN": {
+      "name": "Daniel",
+      "aliases": [
+        "Dan",
+        "Dn"
+      ]
+    },
+    "HOS": {
+      "name": "Hosea",
+      "aliases": [
+        "Hos",
+        "Osee"
+      ]
+    },
+    "JOL": {
+      "name": "Joel",
+      "aliases": [
+        "Joe"
+      ]
+    },
+    "AMO": {
+      "name": "Amos",
+      "aliases": [
+        "Am"
+      ]
+    },
+    "OBA": {
+      "name": "Obadiah",
+      "aliases": [
+        "Obad",
+        "Ob"
+      ]
+    },
+    "JON": {
+      "name": "Jonah",
+      "aliases": [
+        "Jon"
+      ]
+    },
+    "MIC": {
+      "name": "Micah",
+      "aliases": [
+        "Mic",
+        "Mich"
+      ]
+    },
+    "NAM": {
+      "name": "Nahum",
+      "aliases": [
+        "Nah"
+      ]
+    },
+    "HAB": {
+      "name": "Habakkuk",
+      "aliases": [
+        "Hab"
+      ]
+    },
+    "ZEP": {
+      "name": "Zephaniah",
+      "aliases": [
+        "Zeph",
+        "Zep",
+        "Soph"
+      ]
+    },
+    "HAG": {
+      "name": "Haggai",
+      "aliases": [
+        "Hag",
+        "Agg"
+      ]
+    },
+    "ZEC": {
+      "name": "Zechariah",
+      "aliases": [
+        "Zech",
+        "Zec",
+        "Zach"
+      ]
+    },
+    "MAL": {
+      "name": "Malachi",
+      "aliases": [
+        "Mal"
+      ]
+    },
+    "MAT": {
+      "name": "Matius",
+      "aliases": []
+    },
+    "MRK": {
+      "name": "Markus",
+      "aliases": []
+    },
+    "LUK": {
+      "name": "Lukas",
+      "aliases": []
+    },
+    "JHN": {
+      "name": "Yahya",
+      "aliases": []
+    },
+    "ACT": {
+      "name": "Kisah Para Rasul",
+      "aliases": []
+    },
+    "ROM": {
+      "name": "Rom",
+      "aliases": []
+    },
+    "1CO": {
+      "name": "1 Korintus",
+      "aliases": []
+    },
+    "2CO": {
+      "name": "2 Korintus",
+      "aliases": []
+    },
+    "GAL": {
+      "name": "Galatia",
+      "aliases": []
+    },
+    "EPH": {
+      "name": "Efesus",
+      "aliases": []
+    },
+    "PHP": {
+      "name": "Filipi",
+      "aliases": []
+    },
+    "COL": {
+      "name": "Kolose",
+      "aliases": []
+    },
+    "1TH": {
+      "name": "1 Tesalonika",
+      "aliases": []
+    },
+    "2TH": {
+      "name": "2 Tesalonika",
+      "aliases": []
+    },
+    "1TI": {
+      "name": "1 Timotius",
+      "aliases": []
+    },
+    "2TI": {
+      "name": "2 Timotius",
+      "aliases": []
+    },
+    "TIT": {
+      "name": "Titus",
+      "aliases": []
+    },
+    "PHM": {
+      "name": "Filemon",
+      "aliases": []
+    },
+    "HEB": {
+      "name": "Ibrani",
+      "aliases": []
+    },
+    "JAS": {
+      "name": "Yakobus",
+      "aliases": []
+    },
+    "1PE": {
+      "name": "1 Petrus",
+      "aliases": []
+    },
+    "2PE": {
+      "name": "2 Petrus",
+      "aliases": []
+    },
+    "1JN": {
+      "name": "1 Yahya",
+      "aliases": []
+    },
+    "2JN": {
+      "name": "2 Yahya",
+      "aliases": []
+    },
+    "3JN": {
+      "name": "3 Yahya",
+      "aliases": []
+    },
+    "JUD": {
+      "name": "Yuda",
+      "aliases": []
+    },
+    "REV": {
+      "name": "Wahyu",
+      "aliases": []
+    }
+  }
+}
