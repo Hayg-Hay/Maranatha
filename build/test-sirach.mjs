@@ -62,6 +62,9 @@ for (const layout of ['multicolumn', 'multirow']) {
 }
 dom.window.narrowTest = true;
 go('Sir 26:25,28-29');
+assert.equal(document.querySelectorAll('.comparison-table-rows tbody tr').length, 3, 'explicit Multi-row remains available at narrow widths');
+document.querySelector('#layout').value = 'auto';
+go('Sir 26:25,28-29');
 assert.equal(document.querySelectorAll('.mobile-verse').length, 3);
 assert.match(document.querySelector('#results').textContent, /26:28.*For two things/s);
 assert.match(document.querySelector('#results').textContent, /omitted in this translation/);

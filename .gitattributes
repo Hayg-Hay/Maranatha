@@ -3,3 +3,4 @@ build/sources/vulgata-clementina/** -text
 build/sources/bungo/** -text
 build/sources/otb-ja/** -text
 build/sources/cuv-traditional/** -text -whitespace
+build/sources/ayt/** -text -whitespace

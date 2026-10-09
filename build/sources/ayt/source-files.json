@@ -1,0 +1,295 @@
+{
+  "source": "https://github.com/sabdacode/ayt",
+  "commit": "8ff5d79c5b0645d634ce6374a2cb0a56a8253cd5",
+  "retrieved": "2026-10-09",
+  "files": [
+    {
+      "path": "LICENSE.html",
+      "sha256": "7989a2da40fed1a7a0ecbc13591bd8e178777ced09315fcb25bbbc5ae44909ac"
+    },
+    {
+      "path": "README.md",
+      "sha256": "24aaca789d6be95d649ad16e9f7bae672c2cd42f27239921c030ed1669583a64"
+    },
+    {
+      "path": "csv/ayt.csv",
+      "sha256": "57c878ab6ee8bdd1487b20dde4c043e1f09be73ba900e5dc3dec305a18d8338b"
+    },
+    {
+      "path": "json/ayt.json",
+      "sha256": "fc1c9ab022fa77af17250d900bf0c175bb3d32870658af231fca7498a99112e5"
+    },
+    {
+      "path": "sfm/per-books/01GEN.SFM",
+      "sha256": "7a814d80c1e000484766af342468ce18c6b2dde36bfb184d310c295530ef71a4"
+    },
+    {
+      "path": "sfm/per-books/02EXO.SFM",
+      "sha256": "aa4af4ed100bd46bd9e8f2b45e18852e00152df740c0a90106ea9af69a0eac20"
+    },
+    {
+      "path": "sfm/per-books/03LEV.SFM",
+      "sha256": "02ff3972e0f95f38ed96e90a1429e88a260cc627b2a7476e5ccd4a748607715b"
+    },
+    {
+      "path": "sfm/per-books/04NUM.SFM",
+      "sha256": "eea256696e916822908a5d563a4c9f84ab5e1c650700bcb741bf0798283a4453"
+    },
+    {
+      "path": "sfm/per-books/05DEU.SFM",
+      "sha256": "7563803d2ac105b4bde148af84ae298aefb55b702ef7d45808a63248413d101d"
+    },
+    {
+      "path": "sfm/per-books/06JOS.SFM",
+      "sha256": "36382dc8608cae086aa80818fec2628e7c5dfd1e81797a241419173355456c6f"
+    },
+    {
+      "path": "sfm/per-books/07JDG.SFM",
+      "sha256": "0ddd6f804735e18ea095d29d13ad0c88cf0395cff877b67a1e9ecdc4230a64d2"
+    },
+    {
+      "path": "sfm/per-books/08RUT.SFM",
+      "sha256": "9db27db34973d62af13eb8ffe73b8fc1a9bf17b49926bb47131ce8fdb5c7e998"
+    },
+    {
+      "path": "sfm/per-books/091SA.SFM",
+      "sha256": "4e1263ccb5b8542fd86a3b9ad6d766c6b47a315415e9b9671425f49303520f41"
+    },
+    {
+      "path": "sfm/per-books/102SA.SFM",
+      "sha256": "69cf17351247ff11ac7cf7d5b1e9acce283f6b040624bc93458fe4e43c32cbb4"
+    },
+    {
+      "path": "sfm/per-books/111KI.SFM",
+      "sha256": "fee19b69fbfee44721c87f7902b21dfe335b8755ac8c5d70067056d76ae9d813"
+    },
+    {
+      "path": "sfm/per-books/122KI.SFM",
+      "sha256": "6d3f9070adcd8319926ac425e367acd9677c6ad983240116b5cd6694ddadc7bb"
+    },
+    {
+      "path": "sfm/per-books/131CH.SFM",
+      "sha256": "46cfeb39fbf3191e5cac285a1f0b0695e9fd1b194819cff4be2777993fe2fd90"
+    },
+    {
+      "path": "sfm/per-books/142CH.SFM",
+      "sha256": "c44da97c5dc4bfc6f7c71e89c3232d06e1dae4a29613de908a3e918d8204ddcb"
+    },
+    {
+      "path": "sfm/per-books/15EZR.SFM",
+      "sha256": "21e439e08999c02cd69ce4c4224d4dfe4d60a6d739c519fc7c5ea4725c6d06f9"
+    },
+    {
+      "path": "sfm/per-books/16NEH.SFM",
+      "sha256": "33eeea9eac355ff234ca7cd692e9ff97813fff18fe06ebc645bc3ab9c324592d"
+    },
+    {
+      "path": "sfm/per-books/17EST.SFM",
+      "sha256": "cd433a5144513837def3d30b33f92dd3a98a8704df9089ec751cfd31d21628f9"
+    },
+    {
+      "path": "sfm/per-books/18JOB.SFM",
+      "sha256": "49e44031344d3973509bae041f6e6ad0f7eceb21146ce76f320204897f289a08"
+    },
+    {
+      "path": "sfm/per-books/19PSA.SFM",
+      "sha256": "1121008280f82e90350539cf5a9090ad9bbaa8ddeb4dbc5d7d5a94fbc1e1bebf"
+    },
+    {
+      "path": "sfm/per-books/20PRO.SFM",
+      "sha256": "aa7cdec93fa2fba9e0171a4f211bbea82e978a6ac109678fc65ef89ffdb75aee"
+    },
+    {
+      "path": "sfm/per-books/21ECC.SFM",
+      "sha256": "838a6b1be9b248eff5941c17307fe3b4e827a45a52417143be6f8332b653b79a"
+    },
+    {
+      "path": "sfm/per-books/22SNG.SFM",
+      "sha256": "73fd91725fe90077d9fb112efc920dfdad088614ee47cabd468df85ac6bff449"
+    },
+    {
+      "path": "sfm/per-books/23ISA.SFM",
+      "sha256": "5f553f92c4d4d737fac037dc8e1ba45010c60b6340d18504a03bc196a237ab6e"
+    },
+    {
+      "path": "sfm/per-books/24JER.SFM",
+      "sha256": "ed2a96375d93d81bc002435f3fd76295b98e09a955c455bf62a237681c7e0112"
+    },
+    {
+      "path": "sfm/per-books/25LAM.SFM",
+      "sha256": "2ab3497072b35fc695be98a18e97f011fba0a7e59e8bc0ef46568c6e02ea79a1"
+    },
+    {
+      "path": "sfm/per-books/26EZK.SFM",
+      "sha256": "c34cf8b1eff8013a52f0ae28c35cdc83ce1e206e54bf00f2cdab4c24bdd68c3b"
+    },
+    {
+      "path": "sfm/per-books/27DAN.SFM",
+      "sha256": "4d3082acfd12168f19ff7ee796df771a928d7f9d7bfc6798238fd8a4cc90b456"
+    },
+    {
+      "path": "sfm/per-books/28HOS.SFM",
+      "sha256": "fc09eb734e80f711a488d695c3d0f29e44b410cba53eb075701eda19d2d0725a"
+    },
+    {
+      "path": "sfm/per-books/29JOL.SFM",
+      "sha256": "1e201f5baa2bdda134b7711e725ebfd9b5799796cdc5ddaea1aa8e61e311d304"
+    },
+    {
+      "path": "sfm/per-books/30AMO.SFM",
+      "sha256": "b24169f54134b37bc2c58695c7c319e0c5361ea9aa23aac863552046d64ac376"
+    },
+    {
+      "path": "sfm/per-books/31OBA.SFM",
+      "sha256": "5eacd8602325fc37c6980e64cac8156103a28a136a8f5c2c7368749239905fde"
+    },
+    {
+      "path": "sfm/per-books/32JON.SFM",
+      "sha256": "3d0cc56fddfd560670d8d6bcfbb1b459b80a9aefb1b16ae83a766d689369f35e"
+    },
+    {
+      "path": "sfm/per-books/33MIC.SFM",
+      "sha256": "d99f58f43153531dd233f319d4134e9f81b488704be1e90204caf469a01c1f50"
+    },
+    {
+      "path": "sfm/per-books/34NAM.SFM",
+      "sha256": "f30c11b18fa26d31b785f66638b8c88722713b98df17ddcbbd798442240bcbd2"
+    },
+    {
+      "path": "sfm/per-books/35HAB.SFM",
+      "sha256": "b2911adbc15398866f9b3c527b8d4721dc9f486aad453c4e3935127022e9b507"
+    },
+    {
+      "path": "sfm/per-books/36ZEP.SFM",
+      "sha256": "151f607d61b1d8b1cbfeb10f7ff176d8796e356c5e534de40198b3b3663f62f9"
+    },
+    {
+      "path": "sfm/per-books/37HAG.SFM",
+      "sha256": "5f9e3d9fd9a57120a31ca2cebaa41376110ab740f5f3bcfb6946b0de48923d2e"
+    },
+    {
+      "path": "sfm/per-books/38ZEC.SFM",
+      "sha256": "9402477c6b086e5372f644f29c000294a517f7ce87fa5a8939a1d23e78f595e8"
+    },
+    {
+      "path": "sfm/per-books/39MAL.SFM",
+      "sha256": "6859ff81ce310e7ed53f6ce05a4fc097369d8c82a20d1e6bcbb0c72cae670168"
+    },
+    {
+      "path": "sfm/per-books/41MAT.SFM",
+      "sha256": "d40f9e9d190bbe78d0b2d5692b87e66054dad2321396af4d3a346d4dd9ed8267"
+    },
+    {
+      "path": "sfm/per-books/42MRK.SFM",
+      "sha256": "004990d8e2b23c2960cac79ea9bde109be7b198d3db7d8282fe521dd00289282"
+    },
+    {
+      "path": "sfm/per-books/43LUK.SFM",
+      "sha256": "441eab00ba127844d7c27383316a893575b72e30f63720eae9b8b5cf31b0bf41"
+    },
+    {
+      "path": "sfm/per-books/44JHN.SFM",
+      "sha256": "b148927108701fab6f83d3b382e677cae257577d313511175cf1c39e409e8e5b"
+    },
+    {
+      "path": "sfm/per-books/45ACT.SFM",
+      "sha256": "3ee4e9197ee7dbffe25f771bf3732508c497a3388b6fcb76634f88ed8fa43f62"
+    },
+    {
+      "path": "sfm/per-books/46ROM.SFM",
+      "sha256": "4ddfd94c57383438e0963047cfbaec473b50862494ea64cc2da6ddb53215643d"
+    },
+    {
+      "path": "sfm/per-books/471CO.SFM",
+      "sha256": "4f2f091ac911e0d8687e69eb49d5b2a7835e34ec2d0884ac763ee14b8a408c65"
+    },
+    {
+      "path": "sfm/per-books/482CO.SFM",
+      "sha256": "a57f1b20124d2181fb2e18c7748d321fe303652f8f362974c1a1ac9425108fb2"
+    },
+    {
+      "path": "sfm/per-books/49GAL.SFM",
+      "sha256": "9e0d0073f1e82aa7ed876855908d9ffc3cbc6800794631d39942ee63710ae474"
+    },
+    {
+      "path": "sfm/per-books/50EPH.SFM",
+      "sha256": "3a886ff8408d6f31aaadf64b93bd67999d84ac9985a13f51911157ab19903a92"
+    },
+    {
+      "path": "sfm/per-books/51PHP.SFM",
+      "sha256": "481fdd0ea7e0b986e7b6b2aa9cb7bb5765d7db9b9d6e11cac9e7c31fbf7e6b25"
+    },
+    {
+      "path": "sfm/per-books/52COL.SFM",
+      "sha256": "dca2d4552529654a3abea53d164a65d1d8b6f4ec63bb4585d4b6bfa759a5344f"
+    },
+    {
+      "path": "sfm/per-books/531TH.SFM",
+      "sha256": "de9cf34165aa861bffc7b217d98e8fab86c78238f0f8541418af9089841b67b9"
+    },
+    {
+      "path": "sfm/per-books/542TH.SFM",
+      "sha256": "831bf42c4144697a1a1b31184be8fbbdc5a218b2aadd881731aded7d14efd71d"
+    },
+    {
+      "path": "sfm/per-books/551TI.SFM",
+      "sha256": "c9f0cc256be4379e5a96b439c5dca327c9e88dc93627c40044f1494930853f2f"
+    },
+    {
+      "path": "sfm/per-books/562TI.SFM",
+      "sha256": "1cd5cdb276ccf2a170e8c7110124380b6c6da2b1ca6b0c4661fcc70aea286f28"
+    },
+    {
+      "path": "sfm/per-books/57TIT.SFM",
+      "sha256": "3f1e79b7f548cd53701259a81bc56d6fb85e8317e10d7cb00aa07fc6b8d13ed5"
+    },
+    {
+      "path": "sfm/per-books/58PHM.SFM",
+      "sha256": "a5260415ea4a87ccb8e00386403571ad6edc492aaadba694779e22375ac379ea"
+    },
+    {
+      "path": "sfm/per-books/59HEB.SFM",
+      "sha256": "00b54cea850f2945599e33cebcd649b0789b3e2e5fbb3f1a0738b3db5bb059c1"
+    },
+    {
+      "path": "sfm/per-books/60JAS.SFM",
+      "sha256": "dd6b7a3c9feac4e9315dd116159959e796d1e2b97a186b0c844948217d0ba069"
+    },
+    {
+      "path": "sfm/per-books/611PE.SFM",
+      "sha256": "6bb7154203356eec95e3f4d50fc446eb0816b637e6e8d19a052e4e095ee370ba"
+    },
+    {
+      "path": "sfm/per-books/622PE.SFM",
+      "sha256": "c2a97ecab69338b50c7a89123e8bd43aa352b66d56bcfe71bc6221248f67e676"
+    },
+    {
+      "path": "sfm/per-books/631JN.SFM",
+      "sha256": "480685176ffc5bc2b1920a7333a7b1f7991cf634476e2a83190a0fa8d5ac4a07"
+    },
+    {
+      "path": "sfm/per-books/642JN.SFM",
+      "sha256": "92069eee4dfa5685f1ad0d8d4e8b36ba6a7e01af5b82897aed121e0784ab0955"
+    },
+    {
+      "path": "sfm/per-books/653JN.SFM",
+      "sha256": "a91481dfb72d92cc760b39c7cd26f08ec690770cdd01e8593c465d59c455bac4"
+    },
+    {
+      "path": "sfm/per-books/66JUD.SFM",
+      "sha256": "fe56e41144004e1cb53b9b44d41a527f84435b37e8d9fc4a3cd7bb94f812c2a3"
+    },
+    {
+      "path": "sfm/per-books/67REV.SFM",
+      "sha256": "e11c8d29c48dc00ed23ba8ba80411d0df21af5450ff4d2a847b2bb3120d6d0fb"
+    },
+    {
+      "path": "upstream-commit.txt",
+      "sha256": "72490f59e79494967e0d556529a7d4d674792e8072f362e5a246eddee2206ebc"
+    },
+    {
+      "path": "upstream.zip",
+      "sha256": "e38586c549fac39e8cb0183cc1ee3053ee09755503edf4473c17bf56376c9342"
+    }
+  ]
+}

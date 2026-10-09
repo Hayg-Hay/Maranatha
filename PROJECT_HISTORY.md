@@ -1,5 +1,19 @@
 # Maranatha Project History
 
+## Indonesian AYT — October 9, 2026
+
+Added the official YLSA **Alkitab Yang Terbuka** (`ayt`) snapshot, with all 66
+books and Indonesian book labels/reference aliases. The importer preserves
+publisher JSON reading text, cross-checks all 31,102 records against SFM, and
+retains notes and headings below the passage. Ordinary references use shared
+comparison rows; Isaiah 22 and Romans 14 have explicit content-placement
+exceptions. Three source reference pointers remain unfilled. A separate
+independent checker compares all CSV text and SFM annotations. The dataset
+retains YLSA copyright and non-commercial attribution/share-alike terms; no
+numbered CC licence is invented. Source bytes are pinned and protected from Git
+line-ending conversion. Shell cache v60 adds the Indonesian locale while keeping
+data cache v3. See `docs/AYT.md` and `data/LICENSE-ayt.md`.
+
 ## Traditional Chinese New Punctuation CUV — October 9, 2026
 
 Added `cuv-traditional` / CUV-T: **新標點和合本・繁體・上帝版**, from the

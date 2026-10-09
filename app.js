@@ -153,7 +153,7 @@ class ReferenceParser {
         // Japanese book-label selection also accepts the existing English
         // names; this adds no changes to the established English/Armenian UI.
         const english = (typeof window !== 'undefined' && window.MARANATHA_LOCALE_EN) || null;
-        if ((locale.language === 'ja' || locale.language === 'zh-Hant') && english?.books) {
+        if (['ja', 'zh-Hant', 'id'].includes(locale.language) && english?.books) {
             for (const book of canon.books) {
                 const info = english.books[book.id];
                 if (!info) continue;
@@ -177,6 +177,17 @@ class ReferenceParser {
         if (chinese?.books && chinese !== locale) {
             for (const book of canon.books) {
                 const info = chinese.books[book.id];
+                if (!info) continue;
+                for (const alias of [info.name, ...(info.aliases || [])]) {
+                    this.bookMap.set(ReferenceParser.normalizeKey(alias), book);
+                }
+            }
+        }
+
+        const indonesian = (typeof window !== 'undefined' && window.MARANATHA_LOCALE_ID) || null;
+        if (indonesian?.books && indonesian !== locale) {
+            for (const book of canon.books) {
+                const info = indonesian.books[book.id];
                 if (!info) continue;
                 for (const alias of [info.name, ...(info.aliases || [])]) {
                     this.bookMap.set(ReferenceParser.normalizeKey(alias), book);
@@ -374,6 +385,7 @@ class ReferenceParser {
     { id: 'hy', label: 'Հայերէն', global: 'MARANATHA_LOCALE_HY' },
     { id: 'ja', label: '日本語', global: 'MARANATHA_LOCALE_JA' },
     { id: 'zh-Hant', label: '繁體中文', global: 'MARANATHA_LOCALE_ZH_HANT' },
+    { id: 'id', label: 'Bahasa Indonesia', global: 'MARANATHA_LOCALE_ID' },
   ];
 
   let locale = window.MARANATHA_LOCALE_EN;
@@ -430,6 +442,7 @@ class ReferenceParser {
     // the publisher and is not asserted here; the edition is not accuracy-certified.
     { id: 'otb-ja', label: 'Open Translation Bible (Japanese)', short: 'OTB-JA', src: 'data/otb-ja.js', description: 'The publisher\u2019s Open Translation Bible (OTB) Japanese edition, launched December 2025 and released under CC BY-SA 4.0 (openbible.uk). Read in its own native reference numbering (66 books, 1189 chapters, 31103 numbered source records). Daniel has 12 chapters. The publisher does not document the translation or editorial method, so this edition is not accuracy-certified. Two source records (Matthew 23:14 and John 5:4) contain only a bracketed placeholder with no Scripture text and are shown exactly as supplied. Converted offline from the publisher JSON; each verse\u2019s original text segments are preserved.' },
     { id: 'cuv-traditional', label: 'Chinese Union Version (Traditional, New Punctuation, 上帝)', short: 'CUV-T', src: 'data/cuv-traditional.js', description: '新標點和合本・繁體・上帝版. Traditional Chinese New Punctuation CUV, from eBible.org cmn-cu89t (distributor declares Public Domain). The older CUV wording is retained; this is not the Revised Chinese Union Version. Source numbering and 70 combined passages are preserved in their own reading block. Footnotes and headings are shown separately; 11 references have no separately numbered source record.' },
+    { id: 'ayt', label: 'Alkitab Yang Terbuka (Indonesian)', short: 'AYT', src: 'data/ayt.js', description: 'Indonesian AYT from the official YLSA datasets. Copyright YLSA-AYT 2011,2024; non-commercial distribution with attribution and share-alike terms. All 66 books are included. Ordinary passages are compared by matching publisher references; Isaiah 22 and Romans 14 are read separately because of source content-placement differences. Three Isaiah records contain only source reference pointers.' },
   ];
 
   // Grouped translations share ONE checkbox with an edition dropdown. Each
@@ -1163,6 +1176,11 @@ function init() {
       element.lang = 'zh-Hant';
       element.classList.add('chinese-verse');
     }
+    else if (language === 'id') {
+      element.dir = 'ltr';
+      element.lang = 'id';
+      element.classList.add('indonesian-verse');
+    }
   }
 
   function isSquareHebrew(id) { return id === 'delitzsch' || id === 'delitzsch1901'; }
@@ -1528,7 +1546,7 @@ function init() {
     const selected = selectedTranslations();
     const selectedIds = new Set(selected.map(t => t.id));
     const anyNativeLoaded = Object.values(all).some(d => d && d.nativeVersification);
-    const nativeInPlay = anyNativeLoaded || selected.some(t => isNativeVersification(t));
+    const nativeInPlay = anyNativeLoaded || selected.some(t => isNativeVersification(t) || all[t.id]?.nativeReferenceScope);
     const out = {};
     for (const [id, data] of Object.entries(all)) {
       const isNative = !!(data && data.nativeVersification);
@@ -1650,6 +1668,10 @@ function init() {
   // evidence of correspondence either.
   function isNativeVersification(t) {
     return !!(t && (window.MARANATHA_TRANSLATIONS || {})[t.id]?.nativeVersification);
+  }
+
+  function hasReferenceComparisonException(t, bookId, chapterNum) {
+    return !!(t && (window.MARANATHA_TRANSLATIONS || {})[t.id]?.versification?.[bookId]?.[chapterNum]?.comparisonUnavailable);
   }
 
   // Edge cases for translations that declare an edition-specific versification
@@ -2164,19 +2186,19 @@ function init() {
       head.appendChild(toggleBtn);
     }
 
-    // Chinese annotations remain available below the passage without placing
+    // Edition annotations remain available below the passage without placing
     // a chapter's headings and footnotes between its title and first verse.
-    let chineseDetails = null;
+    let sourceDetails = null;
     const annotationContainer = (translation) => {
-      if (translation.id !== 'cuv-traditional') return refs.results;
-      if (!chineseDetails) {
-        chineseDetails = document.createElement('details');
-        chineseDetails.className = 'passage-source-details';
+      if (translation.id !== 'cuv-traditional' && !(window.MARANATHA_TRANSLATIONS || {})[translation.id]?.collapseSourceAnnotations) return refs.results;
+      if (!sourceDetails) {
+        sourceDetails = document.createElement('details');
+        sourceDetails.className = 'passage-source-details';
         const summary = document.createElement('summary');
-        summary.textContent = 'CUV-T notes and edition details';
-        chineseDetails.appendChild(summary);
+        summary.textContent = translations.length === 1 ? `${translation.short || translation.label} notes and edition details` : 'Source notes and edition details';
+        sourceDetails.appendChild(summary);
       }
-      return chineseDetails;
+      return sourceDetails;
     };
 
     // Keep the Latin disclosure after its passage so independent parallel
@@ -2255,7 +2277,7 @@ function init() {
         : mobileReading(bookId, chapterNum, verses, translations, { highlight, anchorFirst, exactVerses });
     refs.results.appendChild(content);
     refs.results.append(...trailingNotices);
-    if (chineseDetails) refs.results.appendChild(chineseDetails);
+    if (sourceDetails) refs.results.appendChild(sourceDetails);
   }
 
   function renderBrowseChapter(translations, layout) {
@@ -2683,8 +2705,8 @@ function init() {
     // alignment involving a native edition is suppressed and replaced with a
     // visible native-numbering notice. This applies equally whether the search
     // itself ran in a native edition or in a canon-numbered one.
-    const excludedNative = isNativeVersification({ id: excludeId });
-    const nativeOthers = others.filter((t) => isNativeVersification(t));
+    const excludedNative = isNativeVersification({ id: excludeId }) || hasReferenceComparisonException({ id: excludeId }, match.bookId, match.chapter);
+    const nativeOthers = others.filter((t) => isNativeVersification(t) || hasReferenceComparisonException(t, match.bookId, match.chapter));
     if (excludedNative || nativeOthers.length) {
       const names = [
         ...(excludedNative ? [excludeId] : []),
@@ -2694,9 +2716,13 @@ function init() {
       const notice = document.createElement('p');
       notice.className = 'notice versification-notice compare-native-notice';
       notice.setAttribute('role', 'note');
-      notice.textContent = names.length === 1
-        ? `${label} is shown in its own native verse numbering. Same-numbered verses in another translation are not a verified correspondence, so no aligned comparison is shown.`
-        : `${label} are shown in their own native verse numbering. Same-numbered verses in another translation are not a verified correspondence, so no aligned comparison is shown.`;
+      const passageException = hasReferenceComparisonException({ id: excludeId }, match.bookId, match.chapter)
+        || nativeOthers.some(t => hasReferenceComparisonException(t, match.bookId, match.chapter));
+      notice.textContent = passageException
+        ? `${label} is read independently in this passage because of source content-placement differences. No same-numbered comparison is shown.`
+        : names.length === 1
+          ? `${label} is shown in its own native verse numbering. Same-numbered verses in another translation are not a verified correspondence, so no aligned comparison is shown.`
+          : `${label} are shown in their own native verse numbering. Same-numbered verses in another translation are not a verified correspondence, so no aligned comparison is shown.`;
       panel.appendChild(notice);
       if (excludedNative) return panel;
     }
@@ -2704,7 +2730,7 @@ function init() {
     for (const t of others) {
       // A native-numbered edition is never shown as a same-numbered verse
       // beside another edition; the notice above explains why.
-      if (isNativeVersification(t)) continue;
+      if (isNativeVersification(t) || hasReferenceComparisonException(t, match.bookId, match.chapter)) continue;
       const row = document.createElement('div');
       row.className = 'compare-row';
 
@@ -4264,10 +4290,15 @@ function init() {
     // a verified correspondence, so the interlinear is disabled with a visible
     // explanation and the independent Latin reading is kept instead.
     const interlinear = activeInterlinear();
-    const nativeCaption = interlinear && baseTranslations[0] && isNativeVersification(baseTranslations[0])
+    const captionGroups = viewState.mode === 'reference' ? viewState.groups
+      : [{ bookId: currentBook()?.id, chapter: Number(refs.chapter.value) }];
+    const captionException = baseTranslations[0] && captionGroups.some(g => hasReferenceComparisonException(baseTranslations[0], g.bookId, g.chapter));
+    const nativeCaption = interlinear && baseTranslations[0] && (isNativeVersification(baseTranslations[0]) || captionException)
       ? baseTranslations[0] : null;
     if (interlinear && nativeCaption) {
-      setMessage(`${nativeCaption.label} keeps its own native verse numbering, so the ${interlinear.label} interlinear is not aligned to it; showing the independent reading.`);
+      setMessage(captionException
+        ? `${nativeCaption.label} has a source content-placement exception in this passage, so the ${interlinear.label} interlinear is not aligned to it; showing the independent reading.`
+        : `${nativeCaption.label} keeps its own native verse numbering, so the ${interlinear.label} interlinear is not aligned to it; showing the independent reading.`);
     }
     if (interlinear && !nativeCaption) {
       setMessage('');
