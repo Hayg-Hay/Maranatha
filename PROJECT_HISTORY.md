@@ -1,5 +1,19 @@
 # Maranatha Project History
 
+## Thai Common Version 2025 — October 9, 2026
+
+Added **Biblica® Open Thai Common Version™ 2025** (`tcv`) from the supplied
+66-book USFM ZIP, with a reproducible hash-pinned import and independent raw
+source comparison. All 31,103 indexed positions are retained, including 16
+positions without main text; source notes and headings remain separate and
+collapsed below reading. Thai references accept source names/abbreviations and
+Thai numerals. Search retains Thai marks and ignores layout separators only
+in mapped search forms, preserving exact original text in highlights and copy.
+Ordinary passages share reference comparison rows; 3 John and Romans 14 have
+explicit exceptions. Published CC BY-SA 4.0 licence evidence is retained
+separately because the ZIP has no metadata.xml. Shell cache v61 adds the Thai
+locale without invalidating data cache v3. See `docs/TCV.md`.
+
 ## Indonesian AYT — October 9, 2026
 
 Added the official YLSA **Alkitab Yang Terbuka** (`ayt`) snapshot, with all 66

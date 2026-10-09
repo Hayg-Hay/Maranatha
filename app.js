@@ -55,11 +55,13 @@ class ReferenceParser {
     // Corinthians" all resolve to the same book without a separate alias.
     static normalizeKey(value) {
         return String(value)
+            .normalize('NFC')
             .toLowerCase()
             .replace(/^(\d+)(?:st|nd|rd|th)\b/, '$1')
             .replace(/^(i{1,3})(?=\s|\b)/, (m) => String(m.length))
             .replace(/[.'’\u2019-]/g, '')
             .replace(/\s+/g, '')
+            .replace(/\u200B/g, '')
             .trim();
     }
 
@@ -71,6 +73,7 @@ class ReferenceParser {
     static normalizeReferenceInput(value) {
         return String(value)
             .replace(/[\uFF10-\uFF19]/g, (d) => String.fromCharCode(d.charCodeAt(0) - 0xFEE0))
+            .replace(/[\u0E50-\u0E59]/g, (d) => String.fromCharCode(48 + d.charCodeAt(0) - 0x0E50))
             .replace(/\uFF1A/g, ':')
             .replace(/\uFF1B/g, ';')
             .replace(/\uFF0C/g, ',')
@@ -153,7 +156,7 @@ class ReferenceParser {
         // Japanese book-label selection also accepts the existing English
         // names; this adds no changes to the established English/Armenian UI.
         const english = (typeof window !== 'undefined' && window.MARANATHA_LOCALE_EN) || null;
-        if (['ja', 'zh-Hant', 'id'].includes(locale.language) && english?.books) {
+        if (['ja', 'zh-Hant', 'id', 'th'].includes(locale.language) && english?.books) {
             for (const book of canon.books) {
                 const info = english.books[book.id];
                 if (!info) continue;
@@ -188,6 +191,17 @@ class ReferenceParser {
         if (indonesian?.books && indonesian !== locale) {
             for (const book of canon.books) {
                 const info = indonesian.books[book.id];
+                if (!info) continue;
+                for (const alias of [info.name, ...(info.aliases || [])]) {
+                    this.bookMap.set(ReferenceParser.normalizeKey(alias), book);
+                }
+            }
+        }
+
+        const thai = (typeof window !== 'undefined' && window.MARANATHA_LOCALE_TH) || null;
+        if (thai?.books && thai !== locale) {
+            for (const book of canon.books) {
+                const info = thai.books[book.id];
                 if (!info) continue;
                 for (const alias of [info.name, ...(info.aliases || [])]) {
                     this.bookMap.set(ReferenceParser.normalizeKey(alias), book);
@@ -386,6 +400,7 @@ class ReferenceParser {
     { id: 'ja', label: '日本語', global: 'MARANATHA_LOCALE_JA' },
     { id: 'zh-Hant', label: '繁體中文', global: 'MARANATHA_LOCALE_ZH_HANT' },
     { id: 'id', label: 'Bahasa Indonesia', global: 'MARANATHA_LOCALE_ID' },
+    { id: 'th', label: 'ภาษาไทย', global: 'MARANATHA_LOCALE_TH' },
   ];
 
   let locale = window.MARANATHA_LOCALE_EN;
@@ -443,6 +458,7 @@ class ReferenceParser {
     { id: 'otb-ja', label: 'Open Translation Bible (Japanese)', short: 'OTB-JA', src: 'data/otb-ja.js', description: 'The publisher\u2019s Open Translation Bible (OTB) Japanese edition, launched December 2025 and released under CC BY-SA 4.0 (openbible.uk). Read in its own native reference numbering (66 books, 1189 chapters, 31103 numbered source records). Daniel has 12 chapters. The publisher does not document the translation or editorial method, so this edition is not accuracy-certified. Two source records (Matthew 23:14 and John 5:4) contain only a bracketed placeholder with no Scripture text and are shown exactly as supplied. Converted offline from the publisher JSON; each verse\u2019s original text segments are preserved.' },
     { id: 'cuv-traditional', label: 'Chinese Union Version (Traditional, New Punctuation, 上帝)', short: 'CUV-T', src: 'data/cuv-traditional.js', description: '新標點和合本・繁體・上帝版. Traditional Chinese New Punctuation CUV, from eBible.org cmn-cu89t (distributor declares Public Domain). The older CUV wording is retained; this is not the Revised Chinese Union Version. Source numbering and 70 combined passages are preserved in their own reading block. Footnotes and headings are shown separately; 11 references have no separately numbered source record.' },
     { id: 'ayt', label: 'Alkitab Yang Terbuka (Indonesian)', short: 'AYT', src: 'data/ayt.js', description: 'Indonesian AYT from the official YLSA datasets. Copyright YLSA-AYT 2011,2024; non-commercial distribution with attribution and share-alike terms. All 66 books are included. Ordinary passages are compared by matching publisher references; Isaiah 22 and Romans 14 are read separately because of source content-placement differences. Three Isaiah records contain only source reference pointers.' },
+    { id: 'tcv', label: 'Biblica® Open Thai Common Version™ (2025)', short: 'TCV', src: 'data/tcv.js', description: 'Biblica Open Thai Common Version 2025, copyright © 2025 Biblica, Inc., distributed under CC BY-SA 4.0. All 66 books are included. Thai words, punctuation and source word separators are preserved. Sixteen numbered positions have no main verse text; their source notes remain available below the passage. Ordinary references share comparison rows; 3 John and Romans 14 use independent reading blocks.' },
   ];
 
   // Grouped translations share ONE checkbox with an edition dropdown. Each
@@ -1180,6 +1196,11 @@ function init() {
       element.dir = 'ltr';
       element.lang = 'id';
       element.classList.add('indonesian-verse');
+    }
+    else if (language === 'th') {
+      element.dir = 'ltr';
+      element.lang = 'th';
+      element.classList.add('thai-verse');
     }
   }
 
@@ -2264,7 +2285,9 @@ function init() {
         text.textContent = entry.text;
         const note = document.createElement('small');
         note.className = 'source-note-label';
-        note.textContent = `Source note (${t.short || t.label}${entry.reference ? `; ${entry.reference}` : ''}) \u2014 not Scripture; shown separately.`;
+        note.textContent = entry.type === 'unnumbered-source'
+          ? `Unnumbered source text (${t.short || t.label}); retained separately without assigning a verse number.`
+          : `Source note (${t.short || t.label}${entry.reference ? `; ${entry.reference}` : ''}) \u2014 not Scripture; shown separately.`;
         el.append(text, document.createTextNode(' '), note);
         annotationContainer(t).appendChild(el);
       }
@@ -2395,8 +2418,8 @@ function init() {
   // fresh on each search and nothing extra is stored.
   // ---------------------------------------------------------------------
 
-  function isJapaneseSearchLanguage(language) {
-    return language === 'ja' || language === 'zh-Hant' || language === 'zh-Hans';
+  function isGraphemeSearchLanguage(language) {
+    return language === 'ja' || language === 'zh-Hant' || language === 'zh-Hans' || language === 'th';
   }
 
   // Language-aware normalization. Hebrew/Paleo, Greek and Latin keep their
@@ -2406,7 +2429,8 @@ function init() {
   // for the SAME character still matches. No width/kana/NFKC folding is added,
   // and the stored Scripture is never changed.
   function normalizeSearchText(text, language) {
-    if (isJapaneseSearchLanguage(language)) return String(text).normalize('NFC');
+    if (language === 'th') return String(text).replace(/[\u200B\r\n]/g, '').normalize('NFC');
+    if (isGraphemeSearchLanguage(language)) return String(text).normalize('NFC');
     let out = '';
     // Paleo-Hebrew has no separate final forms. Normalize both scripts to
     // the same consonants so copied Paleo text can find the source spelling.
@@ -2435,7 +2459,25 @@ function init() {
   // NFC each whole cluster. This keeps voicing marks attached and makes a match
   // map back to exact original start/end offsets, so copy/highlighting never
   // cuts a supplementary character or variation selector in half.
-  function buildJapaneseSearchForm(text) {
+  function buildGraphemeSearchForm(text, language) {
+    if (language === 'th' && typeof Intl.Segmenter === 'function') {
+      let filtered = '';
+      const starts = [], originalEnds = [];
+      for (const { ch, index } of codePointsWithIndex(text)) {
+        if (ch === '\u200B' || ch === '\r' || ch === '\n') continue;
+        filtered += ch;
+        for (let k = 0; k < ch.length; k++) { starts.push(index); originalEnds.push(index + ch.length); }
+      }
+      let form = '';
+      const map = [], ends = [];
+      for (const part of new Intl.Segmenter('th', { granularity: 'grapheme' }).segment(filtered)) {
+        const start = starts[part.index], end = originalEnds[part.index + part.segment.length - 1];
+        const normalized = part.segment.normalize('NFC');
+        form += normalized;
+        for (let k = 0; k < normalized.length; k++) { map.push(start); ends.push(end); }
+      }
+      return { form, map, ends };
+    }
     let form = '';
     const map = [];
     const ends = [];
@@ -2450,7 +2492,8 @@ function init() {
       clusterText = '';
     };
     for (const { ch, index } of codePointsWithIndex(text)) {
-      const isMark = /\p{M}/u.test(ch);
+      if (language === 'th' && (ch === '\u200B' || ch === '\r' || ch === '\n')) continue;
+      const isMark = /\p{M}/u.test(ch) || (language === 'th' && ch === '\u0E33');
       if (isMark && clusterText) {
         clusterText += ch;
         clusterEnd = index + ch.length;
@@ -2469,7 +2512,7 @@ function init() {
   // index in the original text, so a match can be highlighted in the original
   // (diacritics intact).
   function buildSearchForm(text, language) {
-    if (isJapaneseSearchLanguage(language)) return buildJapaneseSearchForm(text);
+    if (isGraphemeSearchLanguage(language)) return buildGraphemeSearchForm(text, language);
     let form = '';
     const map = [];
     for (let i = 0; i < text.length; i++) {
@@ -2530,7 +2573,7 @@ function init() {
         // the following text node. Shared by every translation's highlighting.
         while (end < text.length && /\p{M}/u.test(text[end])) end++;
       }
-      if (!(start < end)) { from = idx + needle.length; continue; }
+      if (!(start < end) || start < lastEnd) { from = idx + needle.length; continue; }
       container.appendChild(document.createTextNode(display(text.slice(lastEnd, start))));
       const mark = document.createElement('mark');
       mark.textContent = display(text.slice(start, end));

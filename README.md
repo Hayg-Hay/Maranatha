@@ -9,14 +9,15 @@ thin `app.js` + `index.html` + `style.css` front end with no framework.
 
 ## Status
 
-**Fourteen translations are registered: World English Bible (WEB-C,
+**Fifteen translations are registered: World English Bible (WEB-C,
 73 books), King James Version (KJV, 66 books), Byzantine Majority Text (Greek
 NT, 27 books), Hebrew (OSHB, 39 protocanonical OT books), Luther 1912, Louis
 Segond 1910, the two Delitzsch Hebrew NT editions, the Western Armenian NT
 (1853, under audit), Vulgata Clementina (1598, Latin, VULC), Bungo-yaku
 (Classical Japanese, BUNGO), the Open Translation Bible Japanese edition
 (OTB-JA), the Traditional Chinese New Punctuation Chinese Union Version
-(CUV-T, 新標點和合本・上帝版), and Alkitab Yang Terbuka (Indonesian, AYT).**
+(CUV-T, 新標點和合本・上帝版), Alkitab Yang Terbuka (Indonesian, AYT), and
+Biblica® Open Thai Common Version™ 2025 (TCV).**
 Only WEB is selected by default; open `index.html`, tick
 another translation, pick a book/chapter, and you'll see them side by side.
 WEB-C supplies the 7 Catholic deuterocanonical books (Tobit, Judith, Wisdom,

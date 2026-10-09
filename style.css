@@ -133,6 +133,13 @@ tbody td {
   overflow-wrap:normal;
   white-space:pre-wrap;
 }
+.thai-verse {
+  font-family:'Noto Sans Thai','Leelawadee UI','Tahoma',system-ui,sans-serif;
+  line-height:1.9;
+  white-space:pre-wrap;
+  word-break:normal;
+  overflow-wrap:normal;
+}
 .source-heading { margin:.2em 0 .6em; padding:.35em .55em; border-left:3px solid var(--line); background:var(--paper); }
 .source-heading-text { font-style:italic; }
 .source-heading-note { margin-left:.4em; font-size:.8em; opacity:.75; }
