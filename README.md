@@ -566,6 +566,15 @@ node build/check-otb-ja-independent.mjs
 node build/test-otb-ja.mjs
 ```
 
+## Filipino / Tagalog ASD
+
+Biblica Open Ang Salita ng Diyos 2025 (`asd`) adds all 66 books under CC BY-SA
+4.0, with Filipino book labels and aliases. Ordinary chapters share comparison
+rows; combined-range chapters and documented boundary exceptions read separately.
+Notes are collapsed below Scripture. See [docs/ASD.md](docs/ASD.md).
+
+Reproduce and validate with `npm run test:asd`.
+
 ## Project structure
 
 ```

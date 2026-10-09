@@ -1,0 +1,279 @@
+{
+  "source": "https://www.open.bible/bibles/biblica-open-tagalog-contemporary-bible-2025",
+  "received": "2026-10-09",
+  "archiveSha256": "68fae4f72a64f9568a1cf90f15a27ec8ac051c2b2cd8b86cae6df115d215a315",
+  "files": [
+    {
+      "path": "asd-2025-usfm.zip",
+      "sha256": "68fae4f72a64f9568a1cf90f15a27ec8ac051c2b2cd8b86cae6df115d215a315"
+    },
+    {
+      "path": "licence-evidence.md",
+      "sha256": "6463535e721d6f947a20a9ca0a44375ea2f7b074708290d6ecb6012d47689676"
+    },
+    {
+      "path": "usfm/1CH.usfm",
+      "sha256": "fe3b7387e2e3fb7f032a5def24a0ef2cb7519eb6000b94cc65bc04033f0196b5"
+    },
+    {
+      "path": "usfm/1CO.usfm",
+      "sha256": "aa356b1535327233fcb7f46b3d1816bd012afd9c685eb6df5211269e8eb22a2d"
+    },
+    {
+      "path": "usfm/1JN.usfm",
+      "sha256": "6d5b890d4aa3599bba22477caad7390873546e81a3270c253547a7fb6cb0d862"
+    },
+    {
+      "path": "usfm/1KI.usfm",
+      "sha256": "90d18dcc0c9c0d9f533390ae5a77c9d7e8da9399c8916b04e419c22c3372ff1a"
+    },
+    {
+      "path": "usfm/1PE.usfm",
+      "sha256": "a43e34976384a8f7282a6e4e220856c0800ec5714c588cc4a3ebd95c8723749f"
+    },
+    {
+      "path": "usfm/1SA.usfm",
+      "sha256": "de6b3bca2988b9798782682b95c2b56118c65a4a57a938fe40d0eef9c3c92d96"
+    },
+    {
+      "path": "usfm/1TH.usfm",
+      "sha256": "866f9e2982c057d71c72d72e29b4fb0c8ede5b473564d8f3be16d3884706a252"
+    },
+    {
+      "path": "usfm/1TI.usfm",
+      "sha256": "da37a7bdb7ca6d2fa804905ca90e4fe5006909cbec1388a37090da802e4069d7"
+    },
+    {
+      "path": "usfm/2CH.usfm",
+      "sha256": "7a8601004cd344b697094fabd0c9f42592dad8577a0a0a38f0d0dc6cac118369"
+    },
+    {
+      "path": "usfm/2CO.usfm",
+      "sha256": "482bc6535b9b5c40d98bedd43abc98e5f3feab428d258bbb410961eff116b66e"
+    },
+    {
+      "path": "usfm/2JN.usfm",
+      "sha256": "ba8d81e405f96135a46aa37d30c226c6306a41e8e2f6bc6896b80d5841d9d9ca"
+    },
+    {
+      "path": "usfm/2KI.usfm",
+      "sha256": "121927ffd3bbd70d0588f9343d05ec5d38c95ba0b1386033ca9f617ce27a2bd2"
+    },
+    {
+      "path": "usfm/2PE.usfm",
+      "sha256": "07e9372e41159943c2005c787d8b36688b27225c0666cc1367cc8b89e1ec8702"
+    },
+    {
+      "path": "usfm/2SA.usfm",
+      "sha256": "2716dc786ed92abcb89f89c2e3f9a598e515db6d83bc9c783b6a726bc9e6ed5e"
+    },
+    {
+      "path": "usfm/2TH.usfm",
+      "sha256": "af5e6729fd80bba8bf7505db086afa7c3b0216d928f88593a4f7c3bca017124c"
+    },
+    {
+      "path": "usfm/2TI.usfm",
+      "sha256": "c9162cd070fd2765ce985b18b76721116d64a7cb8461c161a2b01136f0ea2fee"
+    },
+    {
+      "path": "usfm/3JN.usfm",
+      "sha256": "2f65a9195f98e03240a4781ef8fa6dfbff579eb8e915462638400f4c5df10911"
+    },
+    {
+      "path": "usfm/ACT.usfm",
+      "sha256": "3a9dbae954d64925ca5f655f44b19df59b87e0d8395992a8abccccd09fa4252e"
+    },
+    {
+      "path": "usfm/AMO.usfm",
+      "sha256": "a551684d1949eed9f56bf841d5afa35476bb694f695b9aa1ce700a4f236069e1"
+    },
+    {
+      "path": "usfm/COL.usfm",
+      "sha256": "7d6b626f822a679fafbff817692f99661260a0cf039928eecc093fde8305d9a9"
+    },
+    {
+      "path": "usfm/DAN.usfm",
+      "sha256": "6d816554aba70008f31c8ae95295f11bb939ebf62729b48813b89ec8acf88332"
+    },
+    {
+      "path": "usfm/DEU.usfm",
+      "sha256": "67470055643bb7e5c5aeede7383d5d2cc55e04dd1698f65d046798d5e1944f81"
+    },
+    {
+      "path": "usfm/ECC.usfm",
+      "sha256": "0c4542e1c897542975e4bbd0f7af9eb3ae8dafa4c59af127efad51032e8a7cba"
+    },
+    {
+      "path": "usfm/EPH.usfm",
+      "sha256": "944471e94157c7a2c6f9504e7d0692aa4f3bbb3340c7a5e2b0519bad250513db"
+    },
+    {
+      "path": "usfm/EST.usfm",
+      "sha256": "13fef58664c4c9920ac616b95b5cb2b5ab71e43ddeb635fe3887b669893e0326"
+    },
+    {
+      "path": "usfm/EXO.usfm",
+      "sha256": "91f4d3af86c17ffe44bb0e4ca3e401dbcd39b3ccbffc15e5c842580e03435795"
+    },
+    {
+      "path": "usfm/EZK.usfm",
+      "sha256": "b768f36171bed268cafc38e46f0b6b23d9c47aca96f62b566e71cf3ad8e50f51"
+    },
+    {
+      "path": "usfm/EZR.usfm",
+      "sha256": "e285f41e075dad87905917738c23f1c789be6b9ad1cfd7a7d1d12523c72e7c25"
+    },
+    {
+      "path": "usfm/GAL.usfm",
+      "sha256": "a775624994673e70ded6747267d3f0b1f80f3ca038e49bd9880e812d05c5d04a"
+    },
+    {
+      "path": "usfm/GEN.usfm",
+      "sha256": "ffbfd1776e85fb35b0eb0a57b37a27fc502b631be61c14c46cc1a68543c0876e"
+    },
+    {
+      "path": "usfm/HAB.usfm",
+      "sha256": "9e86d66bc6ac305cc3bfe8f8dfaa928ff90f71b6d8645e7dbfb328965791777c"
+    },
+    {
+      "path": "usfm/HAG.usfm",
+      "sha256": "f944244e4850341d98b1935faf553ff90a0a966bc0122a213a5b04d36abfc7d9"
+    },
+    {
+      "path": "usfm/HEB.usfm",
+      "sha256": "a3baacf816b9c1a87ed8b25c7618eabd535f1b89737aae00c23b7dee8f9859e6"
+    },
+    {
+      "path": "usfm/HOS.usfm",
+      "sha256": "97400f9e60fa18ae308ca41b4b059376cfa6e28843a8829d5515c35bd4ca46e2"
+    },
+    {
+      "path": "usfm/ISA.usfm",
+      "sha256": "4049bef15c4248ffd805d51ea447c79db87c0a20b02ba1fc78bbe3c229f9a9f3"
+    },
+    {
+      "path": "usfm/JAS.usfm",
+      "sha256": "03e74290034bf98e31c94ecc45540773df7d98e6db8ccc4ff7bd1b8c50356e05"
+    },
+    {
+      "path": "usfm/JDG.usfm",
+      "sha256": "048696c1c3fe17a015b3696449fa0744199e1598f2888d25951eb9ceb6cbb60e"
+    },
+    {
+      "path": "usfm/JER.usfm",
+      "sha256": "7e061f97bcd342ded1b3dce8f41c9a0d25e4e2507f041650fd94ff7cc14e13a6"
+    },
+    {
+      "path": "usfm/JHN.usfm",
+      "sha256": "1ca5b6b5a0f7c09e7d7b61121df98fbde1a131df2ae32a3e60ec9b888d9ec9c8"
+    },
+    {
+      "path": "usfm/JOB.usfm",
+      "sha256": "e005aab17f402fb35b004c3a23f1f4fe2d60b2841fad6799076f2baaedce9b4f"
+    },
+    {
+      "path": "usfm/JOL.usfm",
+      "sha256": "189d559783aefd6f2bc0224a11e365ab342ad2d968017f31dd88aca6c59abea2"
+    },
+    {
+      "path": "usfm/JON.usfm",
+      "sha256": "a46b787fcd09f4ce8bc33403ce3542baf699e88b17b2dd15aec8a56f1abd38d1"
+    },
+    {
+      "path": "usfm/JOS.usfm",
+      "sha256": "62448301a8f691188e28ecf777aec09a046f213cbc12381d94cddc851e0f64a0"
+    },
+    {
+      "path": "usfm/JUD.usfm",
+      "sha256": "fce69dc163919602e04e720a27f5e9aeb387a0706401fd97910f3fa53ea1006d"
+    },
+    {
+      "path": "usfm/LAM.usfm",
+      "sha256": "599a04c6c783555161dd8cbf2a527ef0f2d3135adffd05ffb654dfedf30b4d84"
+    },
+    {
+      "path": "usfm/LEV.usfm",
+      "sha256": "7be1b01b3525ed5a0ccc45cf977dc89d10d0904fa4506730768a85628db10227"
+    },
+    {
+      "path": "usfm/LUK.usfm",
+      "sha256": "74cda8480156362f26ecb4d88b9a31b0fecd9cc74757aa6dba5c41528c32fc5b"
+    },
+    {
+      "path": "usfm/MAL.usfm",
+      "sha256": "4739d152e2a64618ae7e97d6ea264f344bbdc4d64a1a70ff695a30902f3b9e5f"
+    },
+    {
+      "path": "usfm/MAT.usfm",
+      "sha256": "c5d5a4a5db85455dab8f82008a5f7008797aadbaa11851a4af2338057b21eac6"
+    },
+    {
+      "path": "usfm/MIC.usfm",
+      "sha256": "08adc4862623eaa65be9a2c0c9a66c33914f814a9c021a106e6862f9e05667bc"
+    },
+    {
+      "path": "usfm/MRK.usfm",
+      "sha256": "87a08e6355faab84ae9f458beacc29dbadf74098badf8962d68a9ef157c21cb2"
+    },
+    {
+      "path": "usfm/NAM.usfm",
+      "sha256": "809e653a020ee96b2016185978caad4c734cc2c4eabf9c704f169f7b372230eb"
+    },
+    {
+      "path": "usfm/NEH.usfm",
+      "sha256": "603241379a72088afbc9ea662c89b37a5b8805d63a484fc0164fdfe9b16b7a33"
+    },
+    {
+      "path": "usfm/NUM.usfm",
+      "sha256": "632173f8b18656d24eba69fb75fddf147f828f82cee37793d3cc2a1674861ede"
+    },
+    {
+      "path": "usfm/OBA.usfm",
+      "sha256": "403249d1220ae9f2fec19fab057a4f87f7734d01bf6459e34983976d509e0668"
+    },
+    {
+      "path": "usfm/PHM.usfm",
+      "sha256": "f9b35a862d9d4ef19495d9b45307df0293c6cdf192b9a006810b95cb16019a42"
+    },
+    {
+      "path": "usfm/PHP.usfm",
+      "sha256": "d19f679673544a13c130e8c73c0d99c4eb80ac80445887d541d4a66902f2aab5"
+    },
+    {
+      "path": "usfm/PRO.usfm",
+      "sha256": "5bfd36c76299598f21ecd6bb063b4a004e464855cb186cf2778f651670ec1fd9"
+    },
+    {
+      "path": "usfm/PSA.usfm",
+      "sha256": "53196dae6d605dc16d9419e7f1a3e694fc6343484ec34206448e5d5af573850a"
+    },
+    {
+      "path": "usfm/REV.usfm",
+      "sha256": "f0d0e2455bcbb9631c1788e9a431499cd6a3b476dc866f7625ef74ced1beb074"
+    },
+    {
+      "path": "usfm/ROM.usfm",
+      "sha256": "bfb535c2064f56ffa673a0838890bd92f00725fb0d04ce3720c623a5b7a99193"
+    },
+    {
+      "path": "usfm/RUT.usfm",
+      "sha256": "62b50559fb18421f44db5846073b4b58e8a048b360e2acc18227c356b023c69b"
+    },
+    {
+      "path": "usfm/SNG.usfm",
+      "sha256": "ddbf15c457edfc35531cda6be684e424656fc668144debdb6b9f37e759baeeba"
+    },
+    {
+      "path": "usfm/TIT.usfm",
+      "sha256": "f78397f3d6573283b4a5b1b579470d7e62b5676fb6cc2fdeeeceae9a3ed8d221"
+    },
+    {
+      "path": "usfm/ZEC.usfm",
+      "sha256": "d4e791a2b28a8c69bda4d49b1536be56df51f61c6cfc48fdeddcf244437bc526"
+    },
+    {
+      "path": "usfm/ZEP.usfm",
+      "sha256": "8103fde5142fa8d14c43af26a94dba559d9962ebd4fdfd6f164a3f010a84b34b"
+    }
+  ]
+}

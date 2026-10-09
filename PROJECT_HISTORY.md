@@ -1,5 +1,18 @@
 # Maranatha Project History
 
+## Filipino / Tagalog ASD — October 9, 2026
+
+Added Biblica Open Ang Salita ng Diyos 2025 (`asd`) from the user-supplied USFM
+archive. All 66 books, 1,189 chapters, 30,868 source units and 185 combined
+ranges are preserved, with 2,333 footnotes and 2,707 headings/superscriptions
+kept separately below reading. Filipino book labels/aliases and exact offline
+text/search rendering are covered by real-app desktop/mobile tests. Ordinary
+chapters share reference comparison rows; 132 chapters have explicit combined
+range or boundary/content-placement exceptions. A separate raw-source checker
+verifies every unit/annotation. CC BY-SA 4.0 publisher notices and original
+archive bytes are retained. Shell cache v62 adds the small Filipino locale;
+data cache v3 remains intact. See `docs/ASD.md`.
+
 ## Thai Common Version 2025 — October 9, 2026
 
 Added **Biblica® Open Thai Common Version™ 2025** (`tcv`) from the supplied
