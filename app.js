@@ -35,6 +35,7 @@ class VerseAvailability {
         // separately indexed text. It is never filled from an adjacent verse or
         // guessed; the notice is shown instead.
         if (meta?.status === 'source-gap') return { state: 'source-gap', note: meta.note, context: meta.context };
+        if (meta?.status === 'combined-member') return { state: 'source-gap', note: `This reference belongs to the combined source passage ${chapter}:${meta.sourceLabel}, shown together at ${chapter}:${meta.combinedInto}.` };
         // A source placeholder: the source supplies only a bracketed marker, no
         // Scripture. The exact marker is still shown, with an authored notice
         // (never presented as a source footnote) that no text was supplied.
@@ -76,7 +77,7 @@ class ReferenceParser {
             .replace(/[\uFF0D\u301C\uFF5E]/g, '-')
             .replace(/\u3000/g, ' ')
             .replace(/\u7AE0/g, ':')
-            .replace(/\u7BC0/g, '')
+            .replace(/[\u7BC0\u8282]/g, '')
             .replace(/[:]\s*$/, '');
     }
 
@@ -152,7 +153,7 @@ class ReferenceParser {
         // Japanese book-label selection also accepts the existing English
         // names; this adds no changes to the established English/Armenian UI.
         const english = (typeof window !== 'undefined' && window.MARANATHA_LOCALE_EN) || null;
-        if (locale.language === 'ja' && english?.books) {
+        if ((locale.language === 'ja' || locale.language === 'zh-Hant') && english?.books) {
             for (const book of canon.books) {
                 const info = english.books[book.id];
                 if (!info) continue;
@@ -167,6 +168,17 @@ class ReferenceParser {
                 if (!info) continue;
                 if (info.name) this.bookMap.set(ReferenceParser.normalizeKey(info.name), book);
                 for (const alias of info.aliases || []) {
+                    this.bookMap.set(ReferenceParser.normalizeKey(alias), book);
+                }
+            }
+        }
+
+        const chinese = (typeof window !== 'undefined' && window.MARANATHA_LOCALE_ZH_HANT) || null;
+        if (chinese?.books && chinese !== locale) {
+            for (const book of canon.books) {
+                const info = chinese.books[book.id];
+                if (!info) continue;
+                for (const alias of [info.name, ...(info.aliases || [])]) {
                     this.bookMap.set(ReferenceParser.normalizeKey(alias), book);
                 }
             }
@@ -361,6 +373,7 @@ class ReferenceParser {
     { id: 'en', label: 'English', global: 'MARANATHA_LOCALE_EN' },
     { id: 'hy', label: 'Հայերէն', global: 'MARANATHA_LOCALE_HY' },
     { id: 'ja', label: '日本語', global: 'MARANATHA_LOCALE_JA' },
+    { id: 'zh-Hant', label: '繁體中文', global: 'MARANATHA_LOCALE_ZH_HANT' },
   ];
 
   let locale = window.MARANATHA_LOCALE_EN;
@@ -416,6 +429,7 @@ class ReferenceParser {
     // is authoritative). Translation/editorial provenance is not documented by
     // the publisher and is not asserted here; the edition is not accuracy-certified.
     { id: 'otb-ja', label: 'Open Translation Bible (Japanese)', short: 'OTB-JA', src: 'data/otb-ja.js', description: 'The publisher\u2019s Open Translation Bible (OTB) Japanese edition, launched December 2025 and released under CC BY-SA 4.0 (openbible.uk). Read in its own native reference numbering (66 books, 1189 chapters, 31103 numbered source records). Daniel has 12 chapters. The publisher does not document the translation or editorial method, so this edition is not accuracy-certified. Two source records (Matthew 23:14 and John 5:4) contain only a bracketed placeholder with no Scripture text and are shown exactly as supplied. Converted offline from the publisher JSON; each verse\u2019s original text segments are preserved.' },
+    { id: 'cuv-traditional', label: 'Chinese Union Version (Traditional, New Punctuation, 上帝)', short: 'CUV-T', src: 'data/cuv-traditional.js', description: '新標點和合本・繁體・上帝版. Traditional Chinese New Punctuation CUV, from eBible.org cmn-cu89t (distributor declares Public Domain). The older CUV wording is retained; this is not the Revised Chinese Union Version. Source numbering and 70 combined passages are preserved in their own reading block. Footnotes and headings are shown separately; 11 references have no separately numbered source record.' },
   ];
 
   // Grouped translations share ONE checkbox with an edition dropdown. Each
@@ -1143,6 +1157,11 @@ function init() {
     else if (language === 'ja') {
       styleJapaneseLanguageVerse(element);
       if (translationId === 'otb-ja') element.classList.add('otb-ja-verse');
+    }
+    else if (language === 'zh-Hant') {
+      element.dir = 'ltr';
+      element.lang = 'zh-Hant';
+      element.classList.add('chinese-verse');
     }
   }
 
@@ -1941,7 +1960,32 @@ function init() {
   // translation, side by side. Takes an explicit verse-number list (not a
   // start/end pair) so it can render discontiguous verses like "2,6-9"
   // just as easily as a full chapter.
+  // A native source unit may span several numbered positions. Collapse its
+  // members to the source start, including a query for a member alone; show the
+  // complete labelled unit once and never infer a split in its Scripture text.
+  function nativeReadingUnits(bookId, chapterNum, verses, translations, exactVerses) {
+    if (translations.length !== 1) return { verses, exactVerses };
+    const data = (window.MARANATHA_TRANSLATIONS || {})[translations[0].id];
+    if (!data?.nativeVersification) return { verses, exactVerses };
+    const metadata = data.verseMetadata?.[bookId]?.[chapterNum] || {};
+    const startFor = v => metadata[v]?.combinedInto || v;
+    return {
+      verses: [...new Set(verses.map(startFor))].sort((a, b) => a - b),
+      exactVerses: exactVerses ? new Set([...exactVerses].map(startFor)) : null,
+    };
+  }
+
+  function sourceVerseLabel(bookId, chapterNum, verse, translations) {
+    if (translations.length === 1) {
+      const data = (window.MARANATHA_TRANSLATIONS || {})[translations[0].id];
+      const label = data?.verseMetadata?.[bookId]?.[chapterNum]?.[verse]?.sourceLabel;
+      if (data?.nativeVersification && label) return `${chapterNum}:${label}`;
+    }
+    return `${chapterNum}:${verse}`;
+  }
+
   function multiColumn(bookId, chapterNum, verses, translations, { highlight = false, anchorFirst = false, exactVerses = null } = {}) {
+    ({ verses, exactVerses } = nativeReadingUnits(bookId, chapterNum, verses, translations, exactVerses));
     const table = document.createElement('table');
     table.className = 'comparison-table comparison-table-columns';
     const head = document.createElement('thead');
@@ -1960,7 +2004,7 @@ function init() {
       const tr = document.createElement('tr');
       const ref = document.createElement('td');
       ref.className = 'reference';
-      ref.textContent = `${chapterNum}:${v}`;
+      ref.textContent = sourceVerseLabel(bookId, chapterNum, v, translations);
       if (highlight) {
         if (exactVerses && exactVerses.has(v)) {
           tr.classList.add('highlighted-verse');
@@ -1988,6 +2032,7 @@ function init() {
   // translations listed as consecutive rows underneath it. Better than
   // multi-column when many translations are selected at once.
   function multiRow(bookId, chapterNum, verses, translations, { highlight = false, anchorFirst = false, exactVerses = null } = {}) {
+    ({ verses, exactVerses } = nativeReadingUnits(bookId, chapterNum, verses, translations, exactVerses));
     const table = document.createElement('table');
     table.className = 'comparison-table comparison-table-rows';
     const head = document.createElement('thead');
@@ -2017,7 +2062,7 @@ function init() {
         }
         const ref = document.createElement('td');
         ref.className = 'reference';
-        ref.textContent = `${chapterNum}:${v}`;
+        ref.textContent = sourceVerseLabel(bookId, chapterNum, v, [t]);
         const label = document.createElement('td');
         label.className = 'translation-label';
         label.textContent = t.label;
@@ -2036,6 +2081,7 @@ function init() {
   // labels. These stacked cards keep the verse number and text prominent;
   // translation labels appear only when there is something to compare.
   function mobileReading(bookId, chapterNum, verses, translations, { highlight = false, anchorFirst = false, exactVerses = null } = {}) {
+    ({ verses, exactVerses } = nativeReadingUnits(bookId, chapterNum, verses, translations, exactVerses));
     const list = document.createElement('div');
     list.className = 'mobile-verses';
 
@@ -2055,7 +2101,7 @@ function init() {
 
       const ref = document.createElement('div');
       ref.className = 'mobile-reference';
-      ref.textContent = `${chapterNum}:${v}`;
+      ref.textContent = sourceVerseLabel(bookId, chapterNum, v, translations);
       article.append(ref);
 
       translations.forEach((t) => {
@@ -2118,9 +2164,23 @@ function init() {
       head.appendChild(toggleBtn);
     }
 
+    // Chinese annotations remain available below the passage without placing
+    // a chapter's headings and footnotes between its title and first verse.
+    let chineseDetails = null;
+    const annotationContainer = (translation) => {
+      if (translation.id !== 'cuv-traditional') return refs.results;
+      if (!chineseDetails) {
+        chineseDetails = document.createElement('details');
+        chineseDetails.className = 'passage-source-details';
+        const summary = document.createElement('summary');
+        summary.textContent = 'CUV-T notes and edition details';
+        chineseDetails.appendChild(summary);
+      }
+      return chineseDetails;
+    };
+
     // Keep the Latin disclosure after its passage so independent parallel
-    // reading panes begin at the same height. Other numbering notices retain
-    // their existing placement.
+    // reading panes begin at the same height.
     const trailingNotices = [];
     if (versificationDisclosure) {
       for (const t of translations) {
@@ -2133,7 +2193,7 @@ function init() {
           ? `${t.label} is shown in its own native verse numbering (${v.source} verses in this chapter of the source edition); it is not aligned row-for-row with any other translation, and equal verse numbers are not a verified correspondence.`
           : `${t.label} uses a different verse numbering in this chapter (${v.source} verses; canon.js expects ${v.canon}). ${v.note} Its verses below are numbered as in the source edition and are not aligned row-for-row with canon-numbered translations.`;
         if (t.id === 'vulc') trailingNotices.push(notice);
-        else refs.results.appendChild(notice);
+        else annotationContainer(t).appendChild(notice);
       }
     }
 
@@ -2143,8 +2203,10 @@ function init() {
     // disclosed.
     for (const t of translations) {
       const data = (window.MARANATHA_TRANSLATIONS || {})[t.id];
-      const headings = data && data.psalmHeadings && data.psalmHeadings[bookId] && data.psalmHeadings[bookId][chapterNum];
-      if (!headings) continue;
+      const headings = [
+        ...(data?.psalmHeadings?.[bookId]?.[chapterNum] || []),
+        ...(data?.sourceHeadings?.[bookId]?.[chapterNum] || []),
+      ];
       for (const heading of headings) {
         const el = document.createElement('p');
         el.className = 'source-heading';
@@ -2155,9 +2217,11 @@ function init() {
         text.textContent = heading.text;
         const note = document.createElement('small');
         note.className = 'source-heading-note';
-        note.textContent = `Source superscription (${t.short || t.label}); shown separately from the verse text.`;
+        note.textContent = heading.type && heading.type !== 'superscription'
+          ? `Source ${heading.type === 'section-reference' ? 'parallel reference' : heading.type === 'speaker' ? 'speaker heading' : 'section heading'} (${t.short || t.label}; ${heading.withinVerse ? `within ${chapterNum}:${heading.withinVerse}` : heading.afterVerse ? `after ${chapterNum}:${heading.afterVerse}` : `before ${chapterNum}:1`}); shown separately from Scripture.`
+          : `Source superscription (${t.short || t.label}); shown separately from the verse text.`;
         el.append(text, document.createTextNode(' '), note);
-        refs.results.appendChild(el);
+        annotationContainer(t).appendChild(el);
       }
     }
 
@@ -2178,9 +2242,9 @@ function init() {
         text.textContent = entry.text;
         const note = document.createElement('small');
         note.className = 'source-note-label';
-        note.textContent = `Source note (${t.short || t.label}) \u2014 not Scripture; shown separately.`;
+        note.textContent = `Source note (${t.short || t.label}${entry.reference ? `; ${entry.reference}` : ''}) \u2014 not Scripture; shown separately.`;
         el.append(text, document.createTextNode(' '), note);
-        refs.results.appendChild(el);
+        annotationContainer(t).appendChild(el);
       }
     }
 
@@ -2191,6 +2255,7 @@ function init() {
         : mobileReading(bookId, chapterNum, verses, translations, { highlight, anchorFirst, exactVerses });
     refs.results.appendChild(content);
     refs.results.append(...trailingNotices);
+    if (chineseDetails) refs.results.appendChild(chineseDetails);
   }
 
   function renderBrowseChapter(translations, layout) {
@@ -2309,7 +2374,7 @@ function init() {
   // ---------------------------------------------------------------------
 
   function isJapaneseSearchLanguage(language) {
-    return language === 'ja';
+    return language === 'ja' || language === 'zh-Hant' || language === 'zh-Hans';
   }
 
   // Language-aware normalization. Hebrew/Paleo, Greek and Latin keep their
@@ -2526,7 +2591,7 @@ function init() {
       const ref = document.createElement('span');
       ref.className = 'search-ref';
       const bookName = (locale.books[m.bookId] && locale.books[m.bookId].name) || m.bookId;
-      ref.textContent = `${bookName} ${m.chapter}:${m.verse}`;
+      ref.textContent = `${bookName} ${sourceVerseLabel(m.bookId, m.chapter, m.verse, [{ id: s.translationId }])}`;
 
       hit.append(ref);
       const scriptModes = s.translationId === 'he' ? selectedHebrewScripts() : [undefined];
@@ -4263,10 +4328,11 @@ function init() {
     // (e.g. Clementine Esther 11-16) without moving the current chapter.
     refreshChapterOptions();
 
-    // At phone widths every selector choice uses the dedicated stacked
-    // reading view. Multi-column and multi-row remain meaningful desktop
-    // choices, but compressing either table onto a phone is less readable.
-    const layout = narrowScreen.matches
+    // Keep Automatic responsive, but honor an explicit Multi-row choice even
+    // in a narrow app pane or on a phone.
+    const layout = refs.layout.value === 'multirow'
+      ? 'multirow'
+      : narrowScreen.matches
       ? 'mobile'
       : refs.layout.value === 'auto'
         ? (baseTranslations.length > 5 ? 'multirow' : 'multicolumn')

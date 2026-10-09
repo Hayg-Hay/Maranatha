@@ -1,0 +1,322 @@
+{
+  "retrieved": "2026-10-09",
+  "source": "https://ebible.org/details.php?id=cmn-cu89t",
+  "files": [
+    {
+      "path": "cmn-cu89t_usfm.zip",
+      "sha256": "c54d665d2fed300bd167056f2549292de1b44b50e0cac82934e3a9602026e282"
+    },
+    {
+      "path": "cmn-cu89t_usfx.zip",
+      "sha256": "4013d659838eb4f9bf12d988530b6541bde3c0ff3c12749801e677eb4ef0fa78"
+    },
+    {
+      "path": "usfm/02-GENcmn-cu89t.usfm",
+      "sha256": "ddc0d42a58a35518062f827737f6f5f9959ae1b249545fa807109e304dc8b7ff"
+    },
+    {
+      "path": "usfm/03-EXOcmn-cu89t.usfm",
+      "sha256": "64dc39d5edd60e2de3043dce22577c097efff963e09b68283709d605fa5061f4"
+    },
+    {
+      "path": "usfm/04-LEVcmn-cu89t.usfm",
+      "sha256": "9ab9dbd0384738d86d5e4c201dca11debbf345849349d772d3d4c6eb6bdf53b8"
+    },
+    {
+      "path": "usfm/05-NUMcmn-cu89t.usfm",
+      "sha256": "c16aa460e5cc6bc94088450319ec9c7a2b4ae9ed2f9c1d43433bd6eaf5769ff9"
+    },
+    {
+      "path": "usfm/06-DEUcmn-cu89t.usfm",
+      "sha256": "3c03888a076d1655374e309a262926e13d613413b0674340dc98fff4fc86e1b7"
+    },
+    {
+      "path": "usfm/07-JOScmn-cu89t.usfm",
+      "sha256": "844a3e6eda2b38d1cfe84c60cc560e929a368b6006762909bfe6d317ea7f211d"
+    },
+    {
+      "path": "usfm/08-JDGcmn-cu89t.usfm",
+      "sha256": "28296782b189ab7e32949191599f6ce79c2e60d85299207f1220dc7fe3f3577f"
+    },
+    {
+      "path": "usfm/09-RUTcmn-cu89t.usfm",
+      "sha256": "99de24b071b36f15d62711b61c2211c12f677cb14f150b20474056c748f254dc"
+    },
+    {
+      "path": "usfm/10-1SAcmn-cu89t.usfm",
+      "sha256": "e8d6131b1a35524247ac8844d5f92c24dee33cf2ad016c04947d3387020d30a6"
+    },
+    {
+      "path": "usfm/11-2SAcmn-cu89t.usfm",
+      "sha256": "55a6d65bba191767ab8258f5aadc7507117d770c14558367d1bf42be418dd2c9"
+    },
+    {
+      "path": "usfm/12-1KIcmn-cu89t.usfm",
+      "sha256": "78a64eeefd5019743cc70719f2bf575b9f29c1efc5d2e9a17c92c4dbceb87c18"
+    },
+    {
+      "path": "usfm/13-2KIcmn-cu89t.usfm",
+      "sha256": "9e3954b92cd5950c3e9478fc51c01fbe195d0f9c72a0f02fe272a400df7f2915"
+    },
+    {
+      "path": "usfm/14-1CHcmn-cu89t.usfm",
+      "sha256": "b525b2dd737dec4b31ff785e3aeb8be5e8d26f763252f1b0a13e79278f59273a"
+    },
+    {
+      "path": "usfm/15-2CHcmn-cu89t.usfm",
+      "sha256": "14924202d933683e3188e99f1dfc53df2eb41e09f5060588ec9ffd750e6888cb"
+    },
+    {
+      "path": "usfm/16-EZRcmn-cu89t.usfm",
+      "sha256": "9355138183f51f99ead5017b2ee0e1553e2c2d401a7263e4331d76e2eae3641c"
+    },
+    {
+      "path": "usfm/17-NEHcmn-cu89t.usfm",
+      "sha256": "9a3e693e126ef35394a9b882334928f63e165db05a0958105a28659dcefb0708"
+    },
+    {
+      "path": "usfm/18-ESTcmn-cu89t.usfm",
+      "sha256": "bcaa71524a79e86ef2ecb8272ba16cfd6345f1cfcb9155c84079de5db7e8ac35"
+    },
+    {
+      "path": "usfm/19-JOBcmn-cu89t.usfm",
+      "sha256": "d3fc2cd9495c6847dbc725aaddf1dcfbb62743a251c8e620a94ea4fd30943715"
+    },
+    {
+      "path": "usfm/20-PSAcmn-cu89t.usfm",
+      "sha256": "fbf950c40c896224fc63de9e659643a6c36f8f9e03a2e641ace610cc716e6b89"
+    },
+    {
+      "path": "usfm/21-PROcmn-cu89t.usfm",
+      "sha256": "4f6039c7149c8e03171bff1f3c20d0b670ce70a680b8d3181715d3630cfeb8ae"
+    },
+    {
+      "path": "usfm/22-ECCcmn-cu89t.usfm",
+      "sha256": "506ef58b9295db494a60ce2e7fc588e16c248d351dea17764a885f9ee7b5748b"
+    },
+    {
+      "path": "usfm/23-SNGcmn-cu89t.usfm",
+      "sha256": "083dce793847ff09530fdb2e7deff760ec2215b1bf5b492664f0b5a16d472eb0"
+    },
+    {
+      "path": "usfm/24-ISAcmn-cu89t.usfm",
+      "sha256": "583aa0c40d120cf34bca1533d86a453b306ce6e742cacb89f7d5f14ea63d0a37"
+    },
+    {
+      "path": "usfm/25-JERcmn-cu89t.usfm",
+      "sha256": "607aa333324b5d7e145b6004628ba6eeb8f94f5bb04cba6dbcde6d189d587088"
+    },
+    {
+      "path": "usfm/26-LAMcmn-cu89t.usfm",
+      "sha256": "4685b79f9eba5efcf5ba9c937694f2f7ca1d962e0b24b60086d6da0870fa898e"
+    },
+    {
+      "path": "usfm/27-EZKcmn-cu89t.usfm",
+      "sha256": "070143adba2249ab150648919cb5f5f249579a2093fe232bba84b0f55e4c307f"
+    },
+    {
+      "path": "usfm/28-DANcmn-cu89t.usfm",
+      "sha256": "9823887e624ee6c04fbd9c942c7d3917cbc1d4d5424d9a14c4516ea272e8a4d7"
+    },
+    {
+      "path": "usfm/29-HOScmn-cu89t.usfm",
+      "sha256": "c9b15e3be91fdca625ab947899419ea167e186048a80ef29b750bf0aa8e46881"
+    },
+    {
+      "path": "usfm/30-JOLcmn-cu89t.usfm",
+      "sha256": "2db76a78bdef227112ff08e922a7b1c33d7930a314dbc2861833e14716256cc9"
+    },
+    {
+      "path": "usfm/31-AMOcmn-cu89t.usfm",
+      "sha256": "49c34ee3333e59dc3db7689ae8f0a7b9d1fbfe419ccabc70c791009552731540"
+    },
+    {
+      "path": "usfm/32-OBAcmn-cu89t.usfm",
+      "sha256": "105336aeb5e4fdd3fc1531d90eee913697bbfbab1f22c2eb8a42d6185ec875cc"
+    },
+    {
+      "path": "usfm/33-JONcmn-cu89t.usfm",
+      "sha256": "0b8996cb1f70fd54bfc4400c42cd7eca4ccc959244e6d455089ef44b33f5bb20"
+    },
+    {
+      "path": "usfm/34-MICcmn-cu89t.usfm",
+      "sha256": "beef756704503e7a639dae35981227b2966dc9ddc11d9a46d9cdb4f9312080dd"
+    },
+    {
+      "path": "usfm/35-NAMcmn-cu89t.usfm",
+      "sha256": "b641d64a673f9c72b63aaeea781c6eef31597d8a217901e4ed5a1b44113088e7"
+    },
+    {
+      "path": "usfm/36-HABcmn-cu89t.usfm",
+      "sha256": "4f7fd7d38236bccef2b1dbc90e8cffa9de20ef83d22864e379a3510f06d87a10"
+    },
+    {
+      "path": "usfm/37-ZEPcmn-cu89t.usfm",
+      "sha256": "4ec8a550c644f0488d46beca2f4b10fe1359c121ce12cd12f7e9629a15e2456c"
+    },
+    {
+      "path": "usfm/38-HAGcmn-cu89t.usfm",
+      "sha256": "2215dfe6886cd0860ea7fe7a739192d28beb752d111d1a94832fa668894e2a35"
+    },
+    {
+      "path": "usfm/39-ZECcmn-cu89t.usfm",
+      "sha256": "fd918ee5de902987278c10e390544bafff12055ba9c514797d99c4181fe0d122"
+    },
+    {
+      "path": "usfm/40-MALcmn-cu89t.usfm",
+      "sha256": "80bc7e23a377fb2b223dd36cba27365252d2c1dcd069043026e2ba888557da64"
+    },
+    {
+      "path": "usfm/70-MATcmn-cu89t.usfm",
+      "sha256": "626b63cb6ea6e372a6eefabc174ed5771ac93318cd9a6fbce28a1bd671c5b2a9"
+    },
+    {
+      "path": "usfm/71-MRKcmn-cu89t.usfm",
+      "sha256": "fd7d02bbbf0da771f8a9dde87e024aae1589dc6bdb346149ce31fe52a67f0041"
+    },
+    {
+      "path": "usfm/72-LUKcmn-cu89t.usfm",
+      "sha256": "7e1a1e8763f1e651a9326e8f545c61bafcff41bc4294d973dc12449e6a0a5121"
+    },
+    {
+      "path": "usfm/73-JHNcmn-cu89t.usfm",
+      "sha256": "d692d0509087472f18a46d4e3ce7d1000eb85aa2ca1978edf947cffecba8057b"
+    },
+    {
+      "path": "usfm/74-ACTcmn-cu89t.usfm",
+      "sha256": "be0c3a64db5fb4c152a0fb949feacb6080e1ea1b57e5a22c3814f9cd88dae61c"
+    },
+    {
+      "path": "usfm/75-ROMcmn-cu89t.usfm",
+      "sha256": "ee71f8b12669972fd866e6217de8ff53f13e8488b8e7926967926ba899f027f9"
+    },
+    {
+      "path": "usfm/76-1COcmn-cu89t.usfm",
+      "sha256": "f70b726383f4edb114c8708c3b03e16929dc3fe27349a247436baa65c97aed0e"
+    },
+    {
+      "path": "usfm/77-2COcmn-cu89t.usfm",
+      "sha256": "b0700c3112152d7f4e8a8a2974d609b95017715ab1dbdd0f4b00ce57b74c3927"
+    },
+    {
+      "path": "usfm/78-GALcmn-cu89t.usfm",
+      "sha256": "d6ec6ec6fd395edaf204c3adb5b1b0b80b173acf901852c12a926287b365699c"
+    },
+    {
+      "path": "usfm/79-EPHcmn-cu89t.usfm",
+      "sha256": "ea2d9ad6b8511dc8bf0c87b8cbfdea6d102adfe8188cf40c03029ae4366bb6c2"
+    },
+    {
+      "path": "usfm/80-PHPcmn-cu89t.usfm",
+      "sha256": "a27a1de498357bbc280cdd4c74702b683ca6bb03a744b2fc35d6844cbdb48bc4"
+    },
+    {
+      "path": "usfm/81-COLcmn-cu89t.usfm",
+      "sha256": "981b91df0fd0eac24d8fdaab0c986675fdbdfcb5e4e5efdfe850d34026926faf"
+    },
+    {
+      "path": "usfm/82-1THcmn-cu89t.usfm",
+      "sha256": "a32cf19aff816aafb57c8c48f6d4643dc61e529df6b5b3da1b4072541201f9cb"
+    },
+    {
+      "path": "usfm/83-2THcmn-cu89t.usfm",
+      "sha256": "2baaeb94eb4066a4c91a0300b0d6b353cd99518da682c875d7dedbb2e20af07e"
+    },
+    {
+      "path": "usfm/84-1TIcmn-cu89t.usfm",
+      "sha256": "8c9c51535a42cbbc7cd373e1027e35a3e149eb241cc5e4e5c16fef01db36f6bf"
+    },
+    {
+      "path": "usfm/85-2TIcmn-cu89t.usfm",
+      "sha256": "381cf772ce8700b7fbe033ec143896fca1cbf618050bbbf22e96787de3786fe8"
+    },
+    {
+      "path": "usfm/86-TITcmn-cu89t.usfm",
+      "sha256": "10083215f251f364c5d5b42c4e1f0f6b21651058ffd9845fe8a55424d73eb9de"
+    },
+    {
+      "path": "usfm/87-PHMcmn-cu89t.usfm",
+      "sha256": "a9e6311ddc7d11409bf45dda2a35a715d38e83e61f3c74839ad4fe9ae2ac328d"
+    },
+    {
+      "path": "usfm/88-HEBcmn-cu89t.usfm",
+      "sha256": "85da851f63173d98d060cd0e45da893cc77fc77010257a99676f4c4bb2553d47"
+    },
+    {
+      "path": "usfm/89-JAScmn-cu89t.usfm",
+      "sha256": "d93a377c5725ec4f1269b4dd4941fd516f3ae3e07a63eff102a6fe46580b6c61"
+    },
+    {
+      "path": "usfm/90-1PEcmn-cu89t.usfm",
+      "sha256": "522d132a9434989a992bc3cd79ab6bacfd9145778de4527749f08a15157dd060"
+    },
+    {
+      "path": "usfm/91-2PEcmn-cu89t.usfm",
+      "sha256": "9b765a22fc06df85006ee332aab288b2002873107920390240e22b87eea8f4c8"
+    },
+    {
+      "path": "usfm/92-1JNcmn-cu89t.usfm",
+      "sha256": "905aec325875a04485919796bf7bdf041ccf1a80ca20b9d8dbbe1996a6a596f2"
+    },
+    {
+      "path": "usfm/93-2JNcmn-cu89t.usfm",
+      "sha256": "a8e2b2d5d219f0e8f2fd88649dcb7aca87deff53684d88c580c447c9e594a689"
+    },
+    {
+      "path": "usfm/94-3JNcmn-cu89t.usfm",
+      "sha256": "87a07acf92e09c0e7844419244a88750c72515a980842e1663f5db7656b4a237"
+    },
+    {
+      "path": "usfm/95-JUDcmn-cu89t.usfm",
+      "sha256": "acaf293d10c1ee78f007fb97edcf2e5e198542445a2f3a1272e0050c05bbd804"
+    },
+    {
+      "path": "usfm/96-REVcmn-cu89t.usfm",
+      "sha256": "94e2e81f9c1805490684ebfd1cb82850e5a5d186ea280b631c12de6df99fbf34"
+    },
+    {
+      "path": "usfm/copr.htm",
+      "sha256": "8d6737fc6e8b6449062636061b4864d2ad65cfa412dcb4392b7b031928a39e63"
+    },
+    {
+      "path": "usfm/haiola.css",
+      "sha256": "41266c3439202578bfecdafb2d1eaced5a41ae3e79c4d535885bcb70569fc0ab"
+    },
+    {
+      "path": "usfm/keys.asc",
+      "sha256": "8659487be35d9a79b8bb41eb68db1e96e9a1933792f683b88e0de50cd3841942"
+    },
+    {
+      "path": "usfx/BookNames.xml",
+      "sha256": "00ea40293054df50ace211e8541fae89f6cc22d376665ce78d3a7167805bad24"
+    },
+    {
+      "path": "usfx/cmn-cu89t-VernacularAdditional.xml",
+      "sha256": "d793a84d388a729f461e5f2ac3cd307ae1015e68c8e09bb1c856d2efc3e6d380"
+    },
+    {
+      "path": "usfx/cmn-cu89t-VernacularParms.xml",
+      "sha256": "96390cebb6483fb944453ba236b90fc0b232bfe495e1ae421ac04122fbff481e"
+    },
+    {
+      "path": "usfx/cmn-cu89t_usfx.xml",
+      "sha256": "425b9dd31de05b74f904291bbcd30d3cdabb1cd73c66aec85434436c3f52a992"
+    },
+    {
+      "path": "usfx/cmn-cu89tmetadata.xml",
+      "sha256": "b35405ddd145f998f4d9f8a29bed5620979a0e8be1bde8fd1f0133997040114e"
+    },
+    {
+      "path": "usfx/copr.htm",
+      "sha256": "8d6737fc6e8b6449062636061b4864d2ad65cfa412dcb4392b7b031928a39e63"
+    },
+    {
+      "path": "usfx/haiola.css",
+      "sha256": "41266c3439202578bfecdafb2d1eaced5a41ae3e79c4d535885bcb70569fc0ab"
+    },
+    {
+      "path": "usfx/keys.asc",
+      "sha256": "8659487be35d9a79b8bb41eb68db1e96e9a1933792f683b88e0de50cd3841942"
+    }
+  ]
+}

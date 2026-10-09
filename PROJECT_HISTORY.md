@@ -1,5 +1,19 @@
 # Maranatha Project History
 
+## Traditional Chinese New Punctuation CUV — October 9, 2026
+
+Added `cuv-traditional` / CUV-T: **新標點和合本・繁體・上帝版**, from the
+hash-pinned eBible `cmn-cu89t` USFX/USFM archives. All 31,021 numbered source
+records, 70 combined passages, 1,013 footnotes and source headings are retained.
+Eleven positions lacking separately numbered text are disclosed without filling
+them. Combined-unit references show the complete source range once. Traditional
+book labels and Traditional/Simplified reference aliases are available, with CJK
+styling and grapheme-aware search. Native reference isolation, comparison and
+interlinear guards reuse the existing edition support. The shell cache advances
+to v58, preserving the existing v3 data cache. See `docs/CUV_TRADITIONAL.md` for
+provenance, exact inventory and validation commands. South Asian languages are
+the next requested phase.
+
 ## Open Translation Bible (Japanese) — October 8, 2026
 
 The publisher's recent **Open Translation Bible (OTB) Japanese edition**
