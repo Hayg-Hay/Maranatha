@@ -16,7 +16,7 @@
   "source": "Pinned CrossWire Murdock module with original appendix/errata and a reproduced 1852 authorial preface. That preface identifies BFBS 1816/1826 with Leusden/Schaaf 1717 and Gutbir consultation; this English work is not a translation of our later Syriac witness. See data/LICENSE-murdock.md.",
   "translatedSourceEdition": "BFBS Syriac editions London 1816 and 1826; Leusden/Schaaf Leyden 1717 and Gutbir consulted (authorial preface)",
   "conversionNote": "Technical conversion only: GBF footnotes are stored separately; italic styling tags are flattened without removing their words. Three explicitly labelled appended native verse units are restored, with converter framing retained in the ledger/raw source. No English words are replaced or modernized.",
-  "description": "English Syriac NT translation, with its own earlier textual bases, native verse labels and 19 footnotes. Ten empty indexed slots remain unfilled and need source-boundary verification. Lord/THE LORD wording stays unchanged; no MarYa substitution.",
+  "description": "English Syriac NT translation, with its own earlier textual bases, native verse labels and 19 footnotes. Ten empty indexed slots are verified merged/shifted indexing residues; their wording remains in adjacent source slots identified in the notices. Lord/THE LORD wording stays unchanged; no MarYa substitution.",
   "nativeVersification": false,
   "nativeReferenceScope": true,
   "collapseSourceAnnotations": true,
@@ -8735,11 +8735,15 @@
       "26": {
         "30": {
           "status": "source-gap",
-          "note": "The distributed module has no main text in this indexed slot. It has not been filled from another edition; whether this is omission or a boundary residue requires source verification."
+          "reason": "index-boundary-residue",
+          "sourceTextRef": "MAT.26.29",
+          "note": "This indexed slot is empty because the corresponding wording is stored in the adjacent source slot MAT 26:29. Source verification identifies merged/shifted indexing residue, not omitted wording. The original slots remain unchanged; no text has been supplied from another edition."
         },
         "45": {
           "status": "source-gap",
-          "note": "The distributed module has no main text in this indexed slot. It has not been filled from another edition; whether this is omission or a boundary residue requires source verification."
+          "reason": "index-boundary-residue",
+          "sourceTextRef": "MAT.26.46",
+          "note": "This indexed slot is empty because the corresponding wording is stored in the adjacent source slot MAT 26:46. Source verification identifies merged/shifted indexing residue, not omitted wording. The original slots remain unchanged; no text has been supplied from another edition."
         }
       }
     },
@@ -8747,25 +8751,33 @@
       "4": {
         "10": {
           "status": "source-gap",
-          "note": "The distributed module has no main text in this indexed slot. It has not been filled from another edition; whether this is omission or a boundary residue requires source verification."
+          "reason": "index-boundary-residue",
+          "sourceTextRef": "MRK.4.9",
+          "note": "This indexed slot is empty because the corresponding wording is stored in the adjacent source slot MRK 4:9. Source verification identifies merged/shifted indexing residue, not omitted wording. The original slots remain unchanged; no text has been supplied from another edition."
         }
       },
       "8": {
         "19": {
           "status": "source-gap",
-          "note": "The distributed module has no main text in this indexed slot. It has not been filled from another edition; whether this is omission or a boundary residue requires source verification."
+          "reason": "index-boundary-residue",
+          "sourceTextRef": "MRK.8.18",
+          "note": "This indexed slot is empty because the corresponding wording is stored in the adjacent source slot MRK 8:18. Source verification identifies merged/shifted indexing residue, not omitted wording. The original slots remain unchanged; no text has been supplied from another edition."
         }
       },
       "9": {
         "31": {
           "status": "source-gap",
-          "note": "The distributed module has no main text in this indexed slot. It has not been filled from another edition; whether this is omission or a boundary residue requires source verification."
+          "reason": "index-boundary-residue",
+          "sourceTextRef": "MRK.9.30",
+          "note": "This indexed slot is empty because the corresponding wording is stored in the adjacent source slot MRK 9:30. Source verification identifies merged/shifted indexing residue, not omitted wording. The original slots remain unchanged; no text has been supplied from another edition."
         }
       },
       "11": {
         "19": {
           "status": "source-gap",
-          "note": "The distributed module has no main text in this indexed slot. It has not been filled from another edition; whether this is omission or a boundary residue requires source verification."
+          "reason": "index-boundary-residue",
+          "sourceTextRef": "MRK.11.18",
+          "note": "This indexed slot is empty because the corresponding wording is stored in the adjacent source slot MRK 11:18. Source verification identifies merged/shifted indexing residue, not omitted wording. The original slots remain unchanged; no text has been supplied from another edition."
         }
       }
     },
@@ -8773,7 +8785,9 @@
       "18": {
         "35": {
           "status": "source-gap",
-          "note": "The distributed module has no main text in this indexed slot. It has not been filled from another edition; whether this is omission or a boundary residue requires source verification."
+          "reason": "index-boundary-residue",
+          "sourceTextRef": "LUK.18.34",
+          "note": "This indexed slot is empty because the corresponding wording is stored in the adjacent source slot LUK 18:34. Source verification identifies merged/shifted indexing residue, not omitted wording. The original slots remain unchanged; no text has been supplied from another edition."
         }
       }
     },
@@ -8781,13 +8795,17 @@
       "19": {
         "41": {
           "status": "source-gap",
-          "note": "The distributed module has no main text in this indexed slot. It has not been filled from another edition; whether this is omission or a boundary residue requires source verification."
+          "reason": "index-boundary-residue",
+          "sourceTextRef": "ACT.19.40",
+          "note": "This indexed slot is empty because the corresponding wording is stored in the adjacent source slot ACT 19:40. Source verification identifies merged/shifted indexing residue, not omitted wording. The original slots remain unchanged; no text has been supplied from another edition."
         }
       },
       "20": {
         "17": {
           "status": "source-gap",
-          "note": "The distributed module has no main text in this indexed slot. It has not been filled from another edition; whether this is omission or a boundary residue requires source verification."
+          "reason": "index-boundary-residue",
+          "sourceTextRef": "ACT.20.16",
+          "note": "This indexed slot is empty because the corresponding wording is stored in the adjacent source slot ACT 20:16. Source verification identifies merged/shifted indexing residue, not omitted wording. The original slots remain unchanged; no text has been supplied from another edition."
         }
       }
     },
@@ -8795,7 +8813,9 @@
       "13": {
         "14": {
           "status": "source-gap",
-          "note": "The distributed module has no main text in this indexed slot. It has not been filled from another edition; whether this is omission or a boundary residue requires source verification."
+          "reason": "index-boundary-residue",
+          "sourceTextRef": "2CO.13.13",
+          "note": "This indexed slot is empty because the corresponding wording is stored in the adjacent source slot 2CO 13:13. Source verification identifies merged/shifted indexing residue, not omitted wording. The original slots remain unchanged; no text has been supplied from another edition."
         }
       }
     }

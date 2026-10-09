@@ -653,5 +653,5 @@ code { font-family:Consolas, monospace; }
 }
 
 /* Local OFL Syriac font; source letters/marks are never rewritten. */
-@font-face { font-family: 'Noto Sans Syriac Western'; src: url('fonts/NotoSansSyriacWestern-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
-.syriac-verse { font-family: 'Noto Sans Syriac Western', 'Estrangelo Edessa', serif; direction: rtl; unicode-bidi: isolate; font-size: 1.35em; line-height: 1.85; white-space: pre-wrap; }
+@font-face { font-family: 'Noto Sans Syriac'; src: url('fonts/NotoSansSyriac-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
+.syriac-verse { font-family: 'Noto Sans Syriac', 'Estrangelo Edessa', serif; direction: rtl; unicode-bidi: isolate; display: block; text-align: right; font-size: 1.25em; line-height: 1.7; white-space: pre-wrap; }

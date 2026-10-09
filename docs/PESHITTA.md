@@ -48,10 +48,12 @@ metadata, never claimed to be original authorial words. Nothing replaces Lord.
 
 **Ten Murdock slots remain empty:** Matthew 26:30, 26:45; Mark 4:10, 8:19,
 9:31, 11:19; Luke 18:35; Acts 19:41, 20:17; 2 Corinthians 13:14. These receive
-factual indexed-slot gap notices, not invented restorations. The registry
-discloses pending source-boundary verification. DeepSeek must distinguish
-omission from merged/shifted residue using matching source evidence; complex
-or unresolved fidelity questions must return to Codex.
+indexed-slot notices with the adjacent source reference. DeepSeek's independent
+audit (build/check-peshitta-independent.mjs) found the corresponding wording in
+neighbouring indexed slots for all ten: merged/shifted indexing residue, not
+omitted wording. The importer checks these wording anchors before assigning
+reason=index-boundary-residue and sourceTextRef. It leaves all slots and words
+unchanged. This finding does not certify every verse boundary in the edition.
 
 Ordinary chapters follow existing matching-reference comparison policy.
 Romans 14 is separate for both witnesses because WEB's doxology placement
@@ -61,8 +63,10 @@ differs. Murdock additionally separates Romans 7, 3 John 1 and Revelation
 ## Syriac display and search
 
 Syriac spans have `lang=syr`, RTL direction, isolated bidi layout and local
-Noto Sans Syriac Western v3.001. Source letters remain unchanged; Serto font
-style does not rewrite Unicode. Font bytes, release archive and OFL are
+Noto Sans Syriac v3.000 (Estrangela), with explicit right alignment. The former
+Western Serto face looked too thin/angular for the reading view. Source letters
+remain unchanged; changing the font does not rewrite Unicode. Both font releases,
+their bytes, release archives and OFL are
 recorded in `build/sources/peshitta-font/font-manifest.json`.
 
 Search forms use NFC and ignore only Syriac combining-point range U+0730–074A,
@@ -76,8 +80,9 @@ MarYa at 1 Corinthians 12:3 is verified in the actual pinned archive. Romans
 substitution or extra annotation layer is implemented**, as the user requested.
 Footnotes and provenance are collapsed below Scripture, never mixed into copy.
 
-Shell cache v65 adds the local font; data cache v3 is retained and translation
-files cache lazily. No remote font/CDN is used at runtime.
+Shell cache v66 precaches the local Estrangela font. Data cache v3 is retained;
+Murdock uses data/murdock.js?v=2 to refresh the verified notices without discarding
+other offline translations. No remote font/CDN is used at runtime.
 
 ## Verification status and manual handoff
 

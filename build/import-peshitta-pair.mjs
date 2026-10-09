@@ -9,6 +9,20 @@ export const ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'
 const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
 const pins={peshitta:'1a2dfaaabaeca19e299160f0159953cc395962f65561b76af561a3ff89959d9b',murdock:'ec34bd7d100067058da280a99f50da9757333242489b06ffd26766c042342bbd'};
 const later=new Set(['2PE','2JN','3JN','JUD','REV']);
+// Independently verified adjacent-slot wording: check-peshitta-independent.mjs.
+// These are indexing residues; preserve the empty slots and all source wording.
+const murdockResidue={
+ 'MAT.26.30':['MAT.26.29','went forth to the mount of Olives'],
+ 'MAT.26.45':['MAT.26.46','Sleep on now, and take rest'],
+ 'MRK.4.10':['MRK.4.9','when they were by themselves'],
+ 'MRK.8.19':['MRK.8.18','When I broke the five loaves to five thousand'],
+ 'MRK.9.31':['MRK.9.30','he taught his disciples, and said to them'],
+ 'MRK.11.19':['MRK.11.18','when it was evening, they went out from the city'],
+ 'LUK.18.35':['LUK.18.34','a blind man was sitting by the side of the way, begging'],
+ 'ACT.19.41':['ACT.19.40','he dismissed the assembly'],
+ 'ACT.20.17':['ACT.20.16','he sent and called the Elders of the church at Ephesus'],
+ '2CO.13.14':['2CO.13.13','the communion of the Holy Spirit be with you all'],
+};
 export function verifySource(id){const dir=path.join(ROOT,'build/sources',id),bytes=fs.readFileSync(`${dir}/import-source-files.json`);if(sha(bytes)!==pins[id])throw Error(`Changed ${id} manifest`);const m=JSON.parse(bytes);for(const f of m.files){const target=path.resolve(dir,f.path);if(!target.startsWith(dir+path.sep)||sha(fs.readFileSync(target))!==f.sha256)throw Error(`Changed ${id} source: ${f.path}`);}return m;}
 const put=(o,b,c,n)=>{o[b]||={};o[b][c]||=[];o[b][c].push(n);};
 export function loadAndBuild(id){
@@ -62,14 +76,21 @@ export function loadAndBuild(id){
   exception('REV',12,'Murdock retains native Revelation 12:18; other editions include this material at 13:1.');
   exception('REV',13,'The Revelation 12:18 / 13:1 placement differs between these witnesses.');
  }
- for(const [b,chs]of Object.entries(books))chs.forEach((chapter,c)=>chapter.forEach((text,v)=>{inventory.records++;if(!text){inventory.emptyRefs.push(`${b}.${c+1}.${v+1}`);verseMetadata[b]||={};verseMetadata[b][c+1]||={};verseMetadata[b][c+1][v+1]={status:'source-gap',note:'The distributed module has no main text in this indexed slot. It has not been filled from another edition; whether this is omission or a boundary residue requires source verification.'};}}));
+ for(const [b,chs]of Object.entries(books))chs.forEach((chapter,c)=>chapter.forEach((text,v)=>{inventory.records++;if(!text){
+  const ref=`${b}.${c+1}.${v+1}`,evidence=id==='murdock'?murdockResidue[ref]:undefined;
+  if(!evidence)throw Error(`Unverified empty source slot ${id} ${ref}`);
+  const [neighbor,anchor]=evidence,[nb,nc,nv]=neighbor.split('.');
+  if(!books[nb]?.[Number(nc)-1]?.[Number(nv)-1]?.includes(anchor))throw Error(`Changed residue evidence ${ref}`);
+  inventory.emptyRefs.push(ref);verseMetadata[b]||={};verseMetadata[b][c+1]||={};
+  verseMetadata[b][c+1][v+1]={status:'source-gap',reason:'index-boundary-residue',sourceTextRef:neighbor,note:`This indexed slot is empty because the corresponding wording is stored in the adjacent source slot ${nb} ${nc}:${nv}. Source verification identifies merged/shifted indexing residue, not omitted wording. The original slots remain unchanged; no text has been supplied from another edition.`};
+ }}));
  if(inventory.records!==(id==='peshitta'?7957:7960)||inventory.footnotes!==(id==='murdock'?19:0))throw Error('Changed NT inventory');
  return{id,short:id==='peshitta'?'PESH':'MUR',label:id==='peshitta'?'Syriac Peshitta (BFBS digital NT)':'James Murdock’s English Syriac NT (1852)',language:id==='peshitta'?'syr':'en',languageName:id==='peshitta'?'Classical Syriac':'English',direction:id==='peshitta'?'rtl':'ltr',scope:'NT',
  sourcePublisher:'CrossWire digital distributor',sourceEdition:id==='peshitta'?'Peshitta 2.0, 2020-02-08; config identifies BFBS 1905 / John Richards':'Murdock 1.2, 2002-01-01; config identifies publication 1852',sourceUrl:manifest.source,sourceManifestSha256:pins[id],sourceArchiveSha256:manifest.archiveSha256,sourceRetrievalDate:manifest.retrieved,license:'Public Domain (as declared by CrossWire)',
  source:id==='peshitta'?'Pinned CrossWire Peshitta module and named John Richards/Roger Pearse upstream witness. Module labels the BFBS text 1905, but its 27-book scope includes later Syriac books; no exact complete print impression is asserted. Original source/markup retained. See data/LICENSE-peshitta.md.':'Pinned CrossWire Murdock module with original appendix/errata and a reproduced 1852 authorial preface. That preface identifies BFBS 1816/1826 with Leusden/Schaaf 1717 and Gutbir consultation; this English work is not a translation of our later Syriac witness. See data/LICENSE-murdock.md.',
  translatedSourceEdition:id==='murdock'?'BFBS Syriac editions London 1816 and 1826; Leusden/Schaaf Leyden 1717 and Gutbir consulted (authorial preface)':undefined,
  conversionNote:id==='peshitta'?'Technical conversion only: chapter/div markup is preserved as raw metadata, not Scripture; explicit verse marker 50 restores the Mark 9:49/50 boundary. Words, punctuation and Unicode stay unchanged. No English substitution or MarYa annotation is added.':'Technical conversion only: GBF footnotes are stored separately; italic styling tags are flattened without removing their words. Three explicitly labelled appended native verse units are restored, with converter framing retained in the ledger/raw source. No English words are replaced or modernized.',
- description:id==='peshitta'?'27-book unpointed Syriac NT, including five later-supplied books identified in edition notes. MarYa remains in the original Syriac. No OT text.':'English Syriac NT translation, with its own earlier textual bases, native verse labels and 19 footnotes. Ten empty indexed slots remain unfilled and need source-boundary verification. Lord/THE LORD wording stays unchanged; no MarYa substitution.',
+ description:id==='peshitta'?'27-book unpointed Syriac NT, including five later-supplied books identified in edition notes. MarYa remains in the original Syriac. No OT text.':'English Syriac NT translation, with its own earlier textual bases, native verse labels and 19 footnotes. Ten empty indexed slots are verified merged/shifted indexing residues; their wording remains in adjacent source slots identified in the notices. Lord/THE LORD wording stays unchanged; no MarYa substitution.',
  nativeVersification:false,nativeReferenceScope:true,collapseSourceAnnotations:true,referenceComparison:'matching published reference identifiers only; not a claim that English was translated from this exact Syriac witness',
  books,sourceNotes,bookProvenance,verseMetadata,versification,conversionLedger,sourceInventory:inventory,sourceStructuralRecords:source.structural.filter(r=>r.raw)};
 }

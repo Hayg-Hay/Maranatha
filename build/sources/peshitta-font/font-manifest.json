@@ -14,6 +14,24 @@
     {
       "path": "build/sources/peshitta-font/NotoSansSyriacWestern-v3.001.zip",
       "sha256": "af7be7126fb74df594fdb28e78c3a113c5f4515250f1a1a36ac09595e743a00f"
+    },
+    {
+      "path": "fonts/NotoSansSyriac-Regular.ttf",
+      "sha256": "4440929bf1a47bb50179e8d8495641d208c63d607355e451f29ea2d3e5343290"
+    },
+    {
+      "path": "fonts/NotoSansSyriac-OFL.txt",
+      "sha256": "6442860dad2700aabece2ac7252680b1a5bfc0987cec1ca0c3d605ab8f0b7975"
+    },
+    {
+      "path": "build/sources/peshitta-font/NotoSansSyriac-v3.000.zip",
+      "sha256": "1d31ac6f3f221332005e10d74af6e0e9bb2fb4ed67c306788d12acba33616538"
     }
-  ]
+  ],
+  "displayFont": {
+    "family": "Noto Sans Syriac",
+    "style": "Estrangela",
+    "version": "3.000",
+    "source": "https://github.com/notofonts/syriac/releases/tag/NotoSansSyriac-v3.000"
+  }
 }

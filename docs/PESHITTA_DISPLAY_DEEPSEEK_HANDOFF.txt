@@ -1,0 +1,26 @@
+Verify the Peshitta display and Murdock notice follow-up. Read docs/PESHITTA.md.
+
+Changes: local Noto Sans Syriac 3.000 Estrangela replaces Western Serto in CSS;
+RTL verses align right; shell cache v66 precaches the new font. Murdock notices
+identify all ten verified indexing residues and their adjacent source slots.
+The importer validates wording anchors; Scripture/slots remain unchanged.
+data/murdock.js?v=2 refreshes metadata while retaining offline data cache v3.
+
+Independently verify fonts/archive/license hashes and source fidelity; compare
+Scripture books, notes and conversion ledger against HEAD. Verify all ten gap
+notices against build/check-peshitta-independent.mjs and the raw source.
+Run dedicated Peshitta tests, service-worker tests, then npm test. Fix routine
+issues and retest. Check actual browser font loading, joined Syriac shapes,
+RTL alignment, wrapping, mobile view, search highlights/copy, dark/light modes,
+and an existing offline cache upgrade (new notices + font).
+
+Review git diff and staged diff. Stage only this follow-up, using partial
+staging for app.js and build/check-stage2a.mjs: unrelated LXX work is present.
+Scope: importer; murdock.js/json; app.js MUR registry hunk; style.css Syriac
+hunk; service-worker.js; font manifest; new NotoSansSyriac font/OFL/README and
+release ZIP; docs/PESHITTA.md; this handoff; cache-version/font expectation
+hunks in check-stage2a, test-delitzsch, test-delitzsch1901, test-service-worker
+and test-peshitta. Old Western font/source archives remain preserved.
+Do not stage build/cache, Armenian research/PDFs or other unrelated files.
+Commit and push after successful verification. Return to Codex only for complex
+architecture problems or unresolved Scripture fidelity discrepancies.

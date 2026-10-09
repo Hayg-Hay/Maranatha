@@ -7,7 +7,7 @@
 //   node build/test-service-worker.mjs
 //
 // It asserts:
-//   - install precaches the NEW shell (maranatha-shell-v65);
+//   - install precaches the NEW shell (maranatha-shell-v66);
 //   - activate keeps the existing data cache (maranatha-data-v3) and every file
 //     already stored in it (previously downloaded translations / Greek books);
 //   - activate deletes the OLD shell cache (maranatha-shell-v29);
@@ -102,9 +102,9 @@ async function main() {
   await fire(env.listeners, 'install');
   await fire(env.listeners, 'activate');
 
-  check('install creates the new shell cache (maranatha-shell-v65)', caches.store.has('maranatha-shell-v65'));
-  check('new shell cache is populated', (caches.store.get('maranatha-shell-v65') || new Map()).size > 0);
-  check('Paleo converter, Chinese/Indonesian/Thai locales and fonts are precached for offline reading', ['./hebrew-script.js', './data/locales/zh-Hant.js', './data/locales/id.js', './data/locales/th.js', './data/locales/tl.js', './data/locales/vi.js', './data/locales/ms.js', './fonts/NotoSansSyriacWestern-Regular.ttf', './fonts/NotoSansPhoenician-Regular.ttf', './fonts/ProtoCanaanite.ttf'].every(url => caches.store.get('maranatha-shell-v65')?.has(url)));
+  check('install creates the new shell cache (maranatha-shell-v66)', caches.store.has('maranatha-shell-v66'));
+  check('new shell cache is populated', (caches.store.get('maranatha-shell-v66') || new Map()).size > 0);
+  check('Paleo converter, Chinese/Indonesian/Thai locales and fonts are precached for offline reading', ['./hebrew-script.js', './data/locales/zh-Hant.js', './data/locales/id.js', './data/locales/th.js', './data/locales/tl.js', './data/locales/vi.js', './data/locales/ms.js', './fonts/NotoSansSyriac-Regular.ttf', './fonts/NotoSansPhoenician-Regular.ttf', './fonts/ProtoCanaanite.ttf'].every(url => caches.store.get('maranatha-shell-v66')?.has(url)));
   check('activation preserves the existing data cache (maranatha-data-v3)', caches.store.has('maranatha-data-v3'));
   check('activation deletes the old shell cache (maranatha-shell-v29)', !caches.store.has('maranatha-shell-v29'));
 
@@ -148,7 +148,7 @@ async function main() {
   check('Hebrew preview files are not precached into the shell', !/berean-hebrew/.test(shellList));
   check('the large Delitzsch translations are not precached into the shell', !/delitzsch/.test(shellList));
   check('data cache version is v3 (unchanged by the Hebrew preview)', /DATA_CACHE_VERSION\s*=\s*'v3'/.test(swSource));
-  check('shell cache version was bumped for the app change', /CACHE_VERSION\s*=\s*'v65'/.test(swSource));
+  check('shell cache version was bumped for the app change', /CACHE_VERSION\s*=\s*'v66'/.test(swSource));
 
   check('data cache honors version query strings for corrected WEB data', /ignoreSearch: cacheName !== DATA_CACHE/.test(swSource));
 

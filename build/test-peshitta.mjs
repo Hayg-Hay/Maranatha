@@ -45,11 +45,11 @@ for (const entry of fontManifest.files) {
   assert.equal(sha(fs.readFileSync(target)), entry.sha256, `font hash ${entry.path}`);
 }
 const sw = read('service-worker.js');
-assert(/CACHE_VERSION\s*=\s*'v65'/.test(sw)); assert(/DATA_CACHE_VERSION\s*=\s*'v3'/.test(sw));
-assert(sw.includes(`'./fonts/NotoSansSyriacWestern-Regular.ttf'`));
+assert(/CACHE_VERSION\s*=\s*'v66'/.test(sw)); assert(/DATA_CACHE_VERSION\s*=\s*'v3'/.test(sw));
+assert(sw.includes(`'./fonts/NotoSansSyriac-Regular.ttf'`));
 assert(!/https?:\/\//.test(sw.split('SHELL_FILES')[1].split(']')[0]), 'shell files must be local');
 const css = read('style.css');
-assert(/@font-face[^}]*NotoSansSyriacWestern-Regular\.ttf/.test(css));
+assert(/@font-face[^}]*NotoSansSyriac-Regular\.ttf/.test(css));
 assert(/\.syriac-verse\s*\{[^}]*direction:\s*rtl/.test(css));
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -94,7 +94,7 @@ for (const narrow of [false, true]) {
     assert.equal(pureText(cell), syr.books['1CO'][11][2]);
     assert.equal(cell.lang, 'syr'); assert.equal(cell.dir, 'rtl');
     assert.equal(w.getComputedStyle(cell).direction, 'rtl');
-    assert(w.getComputedStyle(cell).fontFamily.includes('Noto Sans Syriac Western'));
+    assert(w.getComputedStyle(cell).fontFamily.includes('Noto Sans Syriac'));
     ref(w, 'Mark 9:49'); assert(hasVerse(d, syr.books.MRK[8][48]));
     ref(w, 'Mark 9:50'); assert(hasVerse(d, syr.books.MRK[8][49]));
     // No Old Testament text is invented.
