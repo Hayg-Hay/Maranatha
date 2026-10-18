@@ -2031,6 +2031,17 @@ function init() {
     return selectedTranslations().map(t => t.id);
   }
 
+  function updateTranslationSummary() {
+    const editions = selectedTranslations();
+    const audited = editions.filter(t => t.note).length;
+    const selected = editions.length === 1 ? editions[0].short || editions[0].label
+      : editions.length ? `${editions.length} selected` : 'None selected';
+    q('#translations-summary').textContent = `· ${selected}${audited ? ` · ${audited} under audit` : ''}`;
+    const summary = q('#translation-tools > summary');
+    summary.title = editions.map(t => t.label).join(' / ') || 'Select an edition to read';
+    summary.setAttribute('aria-label', `Translations. ${summary.title}.${audited ? ` ${audited} under audit.` : ''} Select editions for canon reading.`);
+  }
+
   // Number of chapters actually shown for a book: the canon extent, extended by
   // any loaded translation in `translationIds` that carries native extra
   // chapters (e.g. Clementine Esther 11-16). Never rewrites canon.js. The
@@ -4751,6 +4762,7 @@ function init() {
   }
 
   function render({ scrollToReference = true } = {}) {
+    updateTranslationSummary();
     q('#bookmark-passage').disabled = true;
     q('#back-to-search').hidden = !searchReturn || (refs.viewMode.value === 'canon' && viewState.mode === 'search');
     if (searchReturn) q('#back-to-search').title = `Return to “${searchReturn.search.query}” in ${searchReturn.search.translationLabel}`;

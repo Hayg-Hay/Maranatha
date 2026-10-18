@@ -169,8 +169,8 @@ code { font-family:Consolas, monospace; }
 .panel-heading h2 { margin:0; font-size:1.25rem; }
 .panel-heading p { margin:2px 0 0; color:var(--muted); font-size:.9rem; }
 .offline-badge { flex:none; padding:4px 9px; border:1px solid var(--line); color:var(--muted); background:var(--paper); font-size:.75rem; }
-.lookup-grid { display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1fr); gap:24px; }
-.chapter-bar { display:flex; flex-wrap:wrap; align-items:end; gap:14px; padding:14px 0; }
+.lookup-grid { display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1fr); gap:16px; }
+.chapter-bar { display:flex; flex-wrap:wrap; align-items:end; gap:14px; padding:10px 0; }
 /* The flex display above would otherwise override the hidden attribute, leaving
    an empty bar (or hidden-in-canon controls) visible. Same pattern as
    .compare-panel[hidden]. */
@@ -192,7 +192,10 @@ code { font-family:Consolas, monospace; }
 .hebrew-script-info > summary:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
 .hebrew-script-info p { margin:6px 0 0; color:var(--muted); }
 .chapter-actions { display:flex; flex-wrap:wrap; gap:12px; }
-.tool-sections { display:grid; grid-template-columns:minmax(0, 1.6fr) minmax(10rem, .7fr) minmax(10rem, .7fr); gap:8px; }
+.tool-sections { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); align-items:start; gap:8px; }
+.tool-sections > .tool-section[open] { grid-column:1 / -1; }
+.tool-summary-state { font-weight:normal; overflow-wrap:anywhere; }
+.tool-section > summary:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
 .tool-section { min-width:0; border:1px solid var(--line); background:var(--paper); }
 .tool-section > summary { padding:9px 11px; cursor:pointer; font-size:.9rem; font-weight:bold; color:var(--accent); user-select:none; }
 .tool-section > summary:hover { background:var(--hover); }
@@ -200,7 +203,6 @@ code { font-family:Consolas, monospace; }
 .tool-section > fieldset,
 .tool-section > .study-row,
 .tool-section > .settings-row { padding:10px 11px; }
-.translations-section { grid-row:span 2; }
 .translations-hint { padding:0 11px; }
 #translations { display:flex; flex-wrap:wrap; align-items:flex-start; gap:8px 14px; }
 .translation-option { display:flex; flex-wrap:wrap; align-items:flex-start; gap:5px; min-width:0; max-width:100%; }
@@ -663,8 +665,8 @@ code { font-family:Consolas, monospace; }
 @font-face { font-family: 'Noto Sans Coptic'; src: url('fonts/NotoSansCoptic-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
 .coptic-verse { font-family: 'Noto Sans Coptic', serif; direction: ltr; unicode-bidi: isolate; text-align: left; font-size: 1.2em; line-height: 1.8; white-space: pre-wrap; }
 /* One shared bookmark toolbar serves every reading view. */
-#reading-actions { margin: 1rem 0; }
-#reading-actions > .tool-section { margin-top: .75rem; }
+#reading-actions { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); align-items:start; gap:8px; margin:.5rem 0; }
+#reading-actions > .tool-section[open], #reading-actions > form, #reading-actions > [role="status"] { grid-column:1 / -1; }
 #bookmark-editor { margin: .75rem 0; }
 #bookmark-editor input { max-width: 100%; box-sizing: border-box; font: inherit; }
 .bookmark-content { padding: .75rem 1rem; }
@@ -684,17 +686,20 @@ code { font-family:Consolas, monospace; }
 .copy-status { margin-inline-start: .5rem; font-size: .9rem; }
 .copy-fallback { margin: .75rem 0; max-width: 100%; }
 .copy-fallback textarea { display: block; width: min(42rem, 100%); box-sizing: border-box; font: inherit; color: var(--ink); background: var(--paper); margin-bottom: .5rem; }
-#reader-focus-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: .5rem 1rem; margin: 1rem 0; }
+#reader-focus-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: .5rem 1rem; margin: .5rem 0; }
+#bookmark-passage { margin-inline-end:auto; }
 #reader-focus-hint { margin-inline-end: auto; color: var(--muted); }
 .reader-focus .shell > header,
 .reader-focus .browse-panel,
 .reader-focus #reading-actions,
+.reader-focus #bookmark-passage,
 .reader-focus #parallel-view .chapter-bar { display: none; }
 .reader-focus .shell { margin-top: 0; }
 .reader-focus #reader-focus-bar { position: sticky; top: 0; z-index: 20; margin-top: 0; padding: .5rem 0; background: var(--body-bg); border-bottom: 1px solid var(--line); }
 .reader-focus #current-reference { scroll-margin-top: 7rem; }
 .reader-focus #results { scroll-margin-top: 7rem; }
 .search-excerpt-hint { color: var(--muted); font-size: .9rem; }
+@media (max-width:420px) { #reading-actions { grid-template-columns:minmax(0, 1fr); } }
 .print-passage-button { margin-inline-start: .5rem; }
 #print-preview { max-width: 60rem; margin: 2rem auto; padding: 1.5rem; background: #fff; color: #111; border: 1px solid var(--border); scroll-margin-top: 7rem; }
 #print-preview[hidden] { display: none; }

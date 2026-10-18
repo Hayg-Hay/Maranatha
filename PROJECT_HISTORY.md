@@ -1,5 +1,21 @@
 # Maranatha Project History
 
+## Calmer reading controls - October 18, 2026
+
+On `codex/calmer-reading`, implemented consolidation priority 1 only:
+Translations starts collapsed with selected-edition and existing audit-status
+summaries; Study tools and Reading settings remain collapsed. The alignment
+pilot and its warning now belong to Study tools. Bookmark/focus actions share
+a compact row, with saved/recent disclosures below; navigation stays visible.
+Scripture, numbering, sources and the default reading/resume policy are
+unchanged. Shell v76 retains data cache v3. Added desktop/mobile DOM journeys
+for disclosure access, selection/audit summaries, grouped editions, native
+reading/copy/print/bookmark/focus and resume. Existing feature, grouped-edition,
+interlinear and cache checks cover compatibility. Full corpus regression,
+visual/device and screen-reader acceptance are not established by these checks.
+The user approved committing, merging to main and pushing this increment on
+2026-10-18. See docs/CALMER_READING.md.
+
 ## Print-size choices - October 18, 2026
 
 At the user's request, worked directly on main to add 12/14/16/18/24 pt print

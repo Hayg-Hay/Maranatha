@@ -34,6 +34,11 @@ the ASCII prompt manually.
 
 ## Status
 
+**Calmer reading controls:** Translations, Study tools and Reading settings
+start collapsed, with the active canon editions summarized. Navigation stays
+visible; bookmark/focus actions share a row, with saved/recent lists below.
+See [first consolidation step](docs/CALMER_READING.md).
+
 **Print passage:** review a clean, credited source passage, then print it or
 choose Save as PDF in the browser's print dialog. The print layout excludes
 navigation and tools. See [print passage](docs/PRINT_PASSAGE.md).

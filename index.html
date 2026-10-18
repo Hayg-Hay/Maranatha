@@ -103,17 +103,13 @@
       </div>
 
       <div class="tool-sections">
-        <details class="tool-section translations-section" open>
-          <summary>Translations</summary>
+        <details id="translation-tools" class="tool-section translations-section">
+          <summary>Translations <span id="translations-summary" class="tool-summary-state">· WEB</span></summary>
           <p class="hint translations-hint">Septuagint (Swete): choose View &rarr; LXX (native numbering) or Parallel reading (independent numbering)</p>
           <fieldset id="translations" aria-label="Translations"></fieldset>
-          <div class="alignment-pilot">
-            <label class="inline-check"><input type="checkbox" id="lxx-alignment-pilot"> LXX alignment pilot (Genesis 1&ndash;15)</label>
-            <p id="lxx-alignment-notice" class="hint alignment-notice" role="note">Canon view only. AI-proposed correspondences for Genesis 1&ndash;15 awaiting human review; the Greek is read from the native Swete text and is never guessed.</p>
-          </div>
         </details>
 
-        <details class="tool-section">
+        <details id="study-tools" class="tool-section">
           <summary>Study tools</summary>
           <div class="study-row">
             <span class="interlinear-mode-stack">
@@ -145,10 +141,14 @@
               </select>
             </span>
           </div>
+          <div class="alignment-pilot">
+            <label class="inline-check"><input type="checkbox" id="lxx-alignment-pilot"> LXX alignment pilot (Genesis 1&ndash;15)</label>
+            <p id="lxx-alignment-notice" class="hint alignment-notice" role="note">Canon view only. AI-proposed correspondences for Genesis 1&ndash;15 awaiting human review; the Greek is read from the native Swete text and is never guessed.</p>
+          </div>
           <p id="berean-cache-status" class="berean-cache-status" role="status" aria-live="polite"></p>
         </details>
 
-        <details class="tool-section">
+        <details id="reading-settings" class="tool-section">
           <summary>Reading settings</summary>
           <div class="settings-row">
             <div class="hebrew-script-setting">
@@ -184,8 +184,14 @@
       </div>
     </section>
 
-    <section id="reading-actions" aria-label="Save this reading">
+    <div id="reader-focus-bar" role="group" aria-label="Reading controls">
       <button id="bookmark-passage" type="button" disabled>Bookmark this passage</button>
+      <button id="back-to-search" type="button" hidden>Back to search results</button>
+      <span id="reader-focus-hint" hidden>Reader focus · Escape to exit</span>
+      <button id="reader-focus-toggle" type="button" aria-pressed="false" disabled>Enter reader focus</button>
+    </div>
+
+    <section id="reading-actions" aria-label="Saved and recent readings">
       <form id="bookmark-editor" hidden>
         <p id="bookmark-preview"></p>
         <label for="bookmark-name">Name (optional)</label>
@@ -213,12 +219,6 @@
       </details>
       <p id="recent-status" role="status" aria-live="polite"></p>
     </section>
-
-    <div id="reader-focus-bar" role="group" aria-label="Reading controls">
-      <button id="back-to-search" type="button" hidden>Back to search results</button>
-      <span id="reader-focus-hint" hidden>Reader focus · Escape to exit</span>
-      <button id="reader-focus-toggle" type="button" aria-pressed="false" disabled>Enter reader focus</button>
-    </div>
 
     <section id="message" class="message" aria-live="polite"></section>
 
