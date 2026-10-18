@@ -1,5 +1,26 @@
 # Maranatha Project History
 
+This is a chronological record. Earlier branch states, cache versions,
+approval restrictions and pending-work statements describe their recorded
+milestones; they are not necessarily the current application state. Use the
+[current README](README.md) and [documentation index](docs/INDEX.md) for the
+shipped feature inventory, and individual evidence records for verification
+scope. Historical verification claims are not a new audit of today's tree.
+
+## Documentation consolidation - October 18, 2026
+
+On `codex/documentation-consolidation`, completed the documentation-only part
+of priority 3. Replaced the accumulated README with a current quick-start,
+21-edition inventory plus separate native LXX, feature/view guidance, offline
+and storage limits, architecture and verification workflow. Added docs/INDEX.md
+to separate usage, edition evidence, study records and historical planning.
+Preserved the full earlier README in a labelled historical snapshot with
+repository-relative links adjusted. Current inventory and local links were
+checked against the registry/generated metadata and retained files. No runtime
+code, source data, cache version or feature was changed; no new textual audit
+or complete regression run is implied. The user approved committing, merging
+to main and pushing this increment on 2026-10-18.
+
 ## Edition-information consolidation - October 18, 2026
 
 On `codex/edition-information`, implemented consolidation priority 2: a shared
