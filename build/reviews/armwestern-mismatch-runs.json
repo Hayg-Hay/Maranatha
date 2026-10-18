@@ -1,0 +1,200 @@
+{
+  "status": "160 differing slots; grouped differences, not a defect count.",
+  "chapters": 20,
+  "runCount": 25,
+  "runs": [
+    {
+      "book": "MAT",
+      "chapter": 1,
+      "start": 7,
+      "end": 8,
+      "count": 2
+    },
+    {
+      "book": "MAT",
+      "chapter": 1,
+      "start": 10,
+      "end": 16,
+      "count": 7
+    },
+    {
+      "book": "MAT",
+      "chapter": 17,
+      "start": 14,
+      "end": 27,
+      "count": 14
+    },
+    {
+      "book": "MAT",
+      "chapter": 22,
+      "start": 2,
+      "end": 3,
+      "count": 2
+    },
+    {
+      "book": "MAT",
+      "chapter": 22,
+      "start": 42,
+      "end": 43,
+      "count": 2
+    },
+    {
+      "book": "MRK",
+      "chapter": 8,
+      "start": 38,
+      "end": 38,
+      "count": 1
+    },
+    {
+      "book": "MRK",
+      "chapter": 9,
+      "start": 1,
+      "end": 50,
+      "count": 50
+    },
+    {
+      "book": "LUK",
+      "chapter": 4,
+      "start": 18,
+      "end": 19,
+      "count": 2
+    },
+    {
+      "book": "LUK",
+      "chapter": 4,
+      "start": 38,
+      "end": 44,
+      "count": 7
+    },
+    {
+      "book": "LUK",
+      "chapter": 9,
+      "start": 42,
+      "end": 44,
+      "count": 3
+    },
+    {
+      "book": "LUK",
+      "chapter": 20,
+      "start": 5,
+      "end": 6,
+      "count": 2
+    },
+    {
+      "book": "LUK",
+      "chapter": 20,
+      "start": 16,
+      "end": 17,
+      "count": 2
+    },
+    {
+      "book": "JHN",
+      "chapter": 6,
+      "start": 51,
+      "end": 71,
+      "count": 21
+    },
+    {
+      "book": "JHN",
+      "chapter": 10,
+      "start": 22,
+      "end": 23,
+      "count": 2
+    },
+    {
+      "book": "JHN",
+      "chapter": 10,
+      "start": 41,
+      "end": 42,
+      "count": 2
+    },
+    {
+      "book": "ACT",
+      "chapter": 7,
+      "start": 60,
+      "end": 60,
+      "count": 1
+    },
+    {
+      "book": "ACT",
+      "chapter": 14,
+      "start": 6,
+      "end": 28,
+      "count": 23
+    },
+    {
+      "book": "ACT",
+      "chapter": 19,
+      "start": 41,
+      "end": 41,
+      "count": 1
+    },
+    {
+      "book": "1CO",
+      "chapter": 9,
+      "start": 20,
+      "end": 21,
+      "count": 2
+    },
+    {
+      "book": "2CO",
+      "chapter": 2,
+      "start": 1,
+      "end": 1,
+      "count": 1
+    },
+    {
+      "book": "2CO",
+      "chapter": 6,
+      "start": 1,
+      "end": 1,
+      "count": 1
+    },
+    {
+      "book": "2CO",
+      "chapter": 13,
+      "start": 14,
+      "end": 14,
+      "count": 1
+    },
+    {
+      "book": "1TH",
+      "chapter": 4,
+      "start": 11,
+      "end": 18,
+      "count": 8
+    },
+    {
+      "book": "HEB",
+      "chapter": 13,
+      "start": 25,
+      "end": 25,
+      "count": 1
+    },
+    {
+      "book": "JAS",
+      "chapter": 4,
+      "start": 14,
+      "end": 15,
+      "count": 2
+    }
+  ],
+  "empties": {
+    "shiftedTail": [
+      "MAT.17.27",
+      "MRK.9.50",
+      "ACT.14.28",
+      "1TH.4.18"
+    ],
+    "noPrecedingShift": [
+      "ACT.7.60",
+      "ACT.19.41",
+      "2CO.13.14",
+      "HEB.13.25"
+    ],
+    "chapterStart": [
+      "2CO.2.1",
+      "2CO.6.1"
+    ]
+  }
+}

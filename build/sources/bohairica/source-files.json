@@ -1,0 +1,245 @@
+{
+  "source": "https://ebible.org/details.php?id=copbhc",
+  "retrieved": "2026-10-18",
+  "archives": [
+    {
+      "path": "copbhc_usfm.zip",
+      "url": "https://ebible.org/Scriptures/copbhc_usfm.zip"
+    },
+    {
+      "path": "copbhc_usfx.zip",
+      "url": "https://ebible.org/Scriptures/copbhc_usfx.zip"
+    }
+  ],
+  "files": [
+    {
+      "path": "copbhc_usfm.zip",
+      "sha256": "45e2d392e6cd68df7d5ee28a8184a94d7e62f33ad1805fcdc75d9174a0c85555",
+      "bytes": 437130
+    },
+    {
+      "path": "copbhc_usfx.zip",
+      "sha256": "b3226c09eb800646f63edd258e51d0a06bc6a02252cf87efe8063b80b35c6368",
+      "bytes": 461820
+    },
+    {
+      "path": "copyright.htm",
+      "sha256": "9d83f7e8fe245da6a1094c1050f71f71aa3e780585d10f6721f2a767aebce106",
+      "bytes": 2847
+    },
+    {
+      "path": "edition.html",
+      "sha256": "00fabdaf385fe8de2f8c1d9ed0a54e506035861f1ccefe23665fda8bff5320e8",
+      "bytes": 6479
+    },
+    {
+      "path": "font-METADATA.pb",
+      "sha256": "bc523772800e9dbe4f3641c696f5734f8da7d314b5c0160c9038763847ec1886",
+      "bytes": 1224
+    },
+    {
+      "path": "usfm/46-MATcopbhc.usfm",
+      "sha256": "a0679f281ccf2c78ae72b20bd1b335b1e181dbaa305c0b4734ea6609c47d2ba4",
+      "bytes": 271019
+    },
+    {
+      "path": "usfm/47-MRKcopbhc.usfm",
+      "sha256": "090c63a0a51abfdee848e5760d0272e61ec489f3ba304c791484e368f75bdae3",
+      "bytes": 169527
+    },
+    {
+      "path": "usfm/48-LUKcopbhc.usfm",
+      "sha256": "48414d2d0230dfd31042e47e8bb07175c4c59340a6cd29bcf39a17b4fcc4b972",
+      "bytes": 293406
+    },
+    {
+      "path": "usfm/49-JHNcopbhc.usfm",
+      "sha256": "c531ca6a9dacce1e1c9295a43e5d8de7044ee9a5c37397c24aa9392baee2833d",
+      "bytes": 226037
+    },
+    {
+      "path": "usfm/50-ACTcopbhc.usfm",
+      "sha256": "c8872eb58c4c114919540fe62f137dbe4d33ff17b7b09e1c60ec8ea4ca477ca0",
+      "bytes": 287016
+    },
+    {
+      "path": "usfm/51-ROMcopbhc.usfm",
+      "sha256": "5b74f035490164fa414449473e15a303c641f43764dabf976a7a4ed30b65d9d2",
+      "bytes": 112541
+    },
+    {
+      "path": "usfm/52-1COcopbhc.usfm",
+      "sha256": "559524978d478d4a4def0ac4de30a30a7a6995e91ed3c7bd08ad9e20f9905a41",
+      "bytes": 110898
+    },
+    {
+      "path": "usfm/53-2COcopbhc.usfm",
+      "sha256": "9017d4ea4ee3a7ce1a061afc28632d65474443ecd45b1c2f9a572de756c883ec",
+      "bytes": 73766
+    },
+    {
+      "path": "usfm/54-GALcopbhc.usfm",
+      "sha256": "b266cb5ad3403fcae90efb37ae7b34cf8508bc434560b16b863049319c0aa121",
+      "bytes": 37292
+    },
+    {
+      "path": "usfm/55-EPHcopbhc.usfm",
+      "sha256": "2bee48cb1a46c20474f6db4c720c49258ce0002d183ba1ab01bdf85548c62566",
+      "bytes": 39150
+    },
+    {
+      "path": "usfm/56-PHPcopbhc.usfm",
+      "sha256": "e80147a6d2b3ee9b4238ae56f136967291dce985680dff9d59f0a656fc203442",
+      "bytes": 27262
+    },
+    {
+      "path": "usfm/57-COLcopbhc.usfm",
+      "sha256": "8de4632a3ccb4b6ca1d9ec552803f16e2a340c76adf8d748d3c42d06a351708f",
+      "bytes": 26377
+    },
+    {
+      "path": "usfm/58-1THcopbhc.usfm",
+      "sha256": "0c2f2e7b81224ce13936c206651d969e08a459c2fe6214c6d13edfdd286f67e1",
+      "bytes": 24410
+    },
+    {
+      "path": "usfm/59-2THcopbhc.usfm",
+      "sha256": "c8af9caf1e32e659dc1bcdf4ec8b037ff12963d0a67b0326d53740b0f02e5a7b",
+      "bytes": 13480
+    },
+    {
+      "path": "usfm/60-1TIcopbhc.usfm",
+      "sha256": "d62ef0c38807c5a0c193ac34a9539b8c345c7f3bb3e900eed0a64d61e8ab87bc",
+      "bytes": 29531
+    },
+    {
+      "path": "usfm/61-2TIcopbhc.usfm",
+      "sha256": "33a9be760b8981768b1d3b3f1c359673a16fa6f0302e2a30888a6a500f2984eb",
+      "bytes": 21534
+    },
+    {
+      "path": "usfm/62-TITcopbhc.usfm",
+      "sha256": "4185e08baf0d6e08f48fa287c2c8c256b45bddaa625695e737bdfaa6fcee3e76",
+      "bytes": 12281
+    },
+    {
+      "path": "usfm/63-PHMcopbhc.usfm",
+      "sha256": "ad01b13e7f354b867b60eb45cec8c0a0fd3702e73d370c6af2e0afa8f81e7ccd",
+      "bytes": 5345
+    },
+    {
+      "path": "usfm/64-HEBcopbhc.usfm",
+      "sha256": "62d91d90bc2d65209443b9964222f33c8f606cfe390065d18123a58846131981",
+      "bytes": 84228
+    },
+    {
+      "path": "usfm/65-JAScopbhc.usfm",
+      "sha256": "c48314cd38397f3a4e29fb246173b6ece472a54e3ca6c275880fae15430437ef",
+      "bytes": 29068
+    },
+    {
+      "path": "usfm/66-1PEcopbhc.usfm",
+      "sha256": "1b53021232b37b08961a3cb3fadc9f25a785c989a231cb1585c8b9d03f96446a",
+      "bytes": 31830
+    },
+    {
+      "path": "usfm/67-2PEcopbhc.usfm",
+      "sha256": "d881dccdb9e4a11f7443e0e1e8bcc4fdc9dbc3a99f8886b15ba190bbda20fda6",
+      "bytes": 20560
+    },
+    {
+      "path": "usfm/68-1JNcopbhc.usfm",
+      "sha256": "06421eac5373a633ea192c33ae09db013cac6f94610a64eef8500b753c96a03e",
+      "bytes": 29489
+    },
+    {
+      "path": "usfm/69-2JNcopbhc.usfm",
+      "sha256": "7a51c5c409d24ff6f5530ce0d8a9fd9cc6dd638c67ef97f74e0d3bcf6e50f084",
+      "bytes": 3800
+    },
+    {
+      "path": "usfm/70-3JNcopbhc.usfm",
+      "sha256": "1ae8b462be66d1d75ea795570cafa24bafdf491bbadbeb5d960e085689a04247",
+      "bytes": 3976
+    },
+    {
+      "path": "usfm/71-JUDcopbhc.usfm",
+      "sha256": "ffdabc1aafd3a3aeb90e1eb801f346c76197cb70cb38f741f0cc04edb76cf062",
+      "bytes": 8422
+    },
+    {
+      "path": "usfm/72-REVcopbhc.usfm",
+      "sha256": "5713dac58cf547d17a4faf5b2b9a581c79c3776bc258d2f30eb23bd0506d0106",
+      "bytes": 135651
+    },
+    {
+      "path": "usfm/copr.htm",
+      "sha256": "9309c461468d1d397157f013ba36777019aa4e1a80c1ffcd30b8761205786adc",
+      "bytes": 2842
+    },
+    {
+      "path": "usfm/keys.asc",
+      "sha256": "8659487be35d9a79b8bb41eb68db1e96e9a1933792f683b88e0de50cd3841942",
+      "bytes": 21585
+    },
+    {
+      "path": "usfm/new_athena_unicode.css",
+      "sha256": "a918d034aae4bb8ae187f98d6c6010957829546a6fb79b8a59491b9fa0b14cda",
+      "bytes": 11131
+    },
+    {
+      "path": "usfx/BookNames.xml",
+      "sha256": "81a471b9596c9d7a52816b365c4b26564485a778120c76e7930856c178f89146",
+      "bytes": 4539
+    },
+    {
+      "path": "usfx/copbhc-VernacularAdditional.xml",
+      "sha256": "6409618585fccf7b49a1756cbc8895c8f2a5de9790f70119ebf02d9190d4917e",
+      "bytes": 298
+    },
+    {
+      "path": "usfx/copbhc-VernacularParms.xml",
+      "sha256": "8a7ebf96647755945aaab2e39cf41718bad933273ddd90a779222ee33bfafa5e",
+      "bytes": 11389
+    },
+    {
+      "path": "usfx/copbhc_usfx.xml",
+      "sha256": "e50c9f79cddff5641392fbe075be0158f0ecc8b99305a9a9da0e6c3773cb4dd5",
+      "bytes": 2352087
+    },
+    {
+      "path": "usfx/copbhcmetadata.xml",
+      "sha256": "db42ddb8d2be134f0e9d7f2d1c8a159140127a4056daa417e7e818efe0f304e3",
+      "bytes": 8629
+    },
+    {
+      "path": "usfx/copr.htm",
+      "sha256": "9309c461468d1d397157f013ba36777019aa4e1a80c1ffcd30b8761205786adc",
+      "bytes": 2842
+    },
+    {
+      "path": "usfx/keys.asc",
+      "sha256": "8659487be35d9a79b8bb41eb68db1e96e9a1933792f683b88e0de50cd3841942",
+      "bytes": 21585
+    },
+    {
+      "path": "usfx/new_athena_unicode.css",
+      "sha256": "a918d034aae4bb8ae187f98d6c6010957829546a6fb79b8a59491b9fa0b14cda",
+      "bytes": 11131
+    }
+  ],
+  "font": {
+    "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/notosanscoptic/NotoSansCoptic-Regular.ttf",
+    "upstreamCommit": "ed3522436a4e3c41b0479c8d7785facd3c397eaa",
+    "files": [
+      {
+        "path": "fonts/NotoSansCoptic-Regular.ttf",
+        "sha256": "51990af1bb0df7be8bfe98fda97769cecfa36eee15381e5504df400276abd735"
+      },
+      {
+        "path": "fonts/NotoSansCoptic-OFL.txt",
+        "sha256": "322570ceef6e9935b2422470682e42481903eb444fc416455c32c2c3c888c78c"
+      }
+    ]
+  }
+}

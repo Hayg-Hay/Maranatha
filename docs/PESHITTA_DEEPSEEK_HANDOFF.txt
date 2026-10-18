@@ -1,0 +1,27 @@
+Finish the Peshitta/Murdock integration in C:\maranatha\maranatha_new.
+Read README workflow, docs/PESHITTA.md and the source investigations.
+Codex implemented both NT witnesses; only a basic app smoke was run.
+
+Independently verify every Syriac/English unit against pinned raw sources,
+including words/punctuation, GBF footnotes, the explicit Mark 9:50 marker,
+and the three Murdock native-reference wrappers. Do not reuse the importer
+as the independent reader. Verify source hashes and deterministic outputs.
+Check the ten Murdock empty slots against matching source evidence; distinguish
+omission from merged/shifted residue. Never invent text or fill from another
+edition. Preserve English Lord wording; no MarYa substitution/annotation.
+
+Add/run dedicated desktop/mobile offline tests and npm test wiring.
+Cover lazy loading, RTL/font/shaping, mark-safe search and exact copied text,
+native references, comparison/interlinear guards, collapsed notes/provenance,
+five later Syriac books, no invented OT and service-worker font/data caching.
+Run npm test, fix routine failures and retest until verification succeeds.
+
+Use build/cache/peshitta-pair-files.txt as a scope guide; include new tests.
+Verify Git diff/staging carefully. app.js, index.html, package.json and
+build/check-stage2a.mjs have unrelated LXX work; stage only relevant hunks.
+Exclude Armenian research, original PDFs, unrelated untracked files and cache.
+Do not stage whole mixed files or use git add -A.
+
+Commit and push on main only after successful verification. Report results.
+Escalate unresolved Scripture fidelity or complex architecture questions to
+Codex before changing text or completing publication. No guessed repairs.

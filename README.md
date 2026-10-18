@@ -33,6 +33,17 @@ the ASCII prompt manually.
 
 ## Status
 
+**Coptic addition (2026-10-18):** Bohairica 1.2, a Horner-based Bohairic Coptic
+NT standardized by J. Warren Wells, is available as BOH in independent reading
+blocks. The source is eBible `copbhc` (declared Public Domain), with 27 books,
+Coptic book-name navigation and a local offline font. An independent ZIP/USFX
+audit matched every title, numbered unit, word, punctuation mark and chapter
+boundary; six bracketed source markers are disclosed as placeholders. Dedicated
+desktop/mobile, comparison/search/interlinear, service-worker and full `npm
+test` checks passed. Remaining limits (print/manuscript collation and
+physical-device review) are documented. See
+[implementation notes](docs/BOHAIRICA.md).
+
 **Fifteen translations are registered: World English Bible (WEB-C,
 73 books), King James Version (KJV, 66 books), Byzantine Majority Text (Greek
 NT, 27 books), Hebrew (OSHB, 39 protocanonical OT books), Luther 1912, Louis

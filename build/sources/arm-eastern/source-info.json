@@ -1,0 +1,210 @@
+{
+  "translation": "Eastern Armenian Bible",
+  "translationId": "arm-eastern",
+  "source": "https://ftp.crosswire.org/pub/sword/raw/packages/ArmEastern.zip",
+  "sourceInfoPage": "https://www.crosswire.org/ftpmirror/pub/sword/raw/mods.d/armeastern.conf",
+  "format": "SWORD zText module (BlockType=BOOK, CompressType=ZIP, SourceType=OSIS), decoded with pysword 0.2.8 (the same procedure recorded for ArmWestern).",
+  "cachedAt": "build/sources/arm-eastern/ArmEastern.zip",
+  "archive": {
+    "name": "ArmEastern.zip",
+    "size": 334979,
+    "sha256": "21d6d381734458e584416af6552d762f366a6cfadb2f7710d855b83a19f2f689"
+  },
+  "conf": {
+    "Description": "Eastern Armenian Bible",
+    "About": "Eastern Armenian Bible\\par Includes Genesis, Exodus, and the Gospels",
+    "Encoding": "UTF-8",
+    "DistributionLicense": "Public Domain",
+    "TextSource": "Slavic Bible via http://unbound.biola.edu",
+    "Lang": "hy",
+    "Version": "1.1",
+    "SwordVersionDate": "2008-07-14"
+  },
+  "licenseNote": "SWORD conf declares DistributionLicense=Public Domain. Gentoo portage metadata and STEPBible label the same module 'freedist' (freely distributable). Both are permissive/holdable-verbatim; recorded here rather than collapsing to one label.",
+  "scope": {
+    "declaredInConf": "Includes Genesis, Exodus, and the Gospels",
+    "blocksFound": 6,
+    "presentBooks": [
+      "Gen",
+      "Exo",
+      "Matt",
+      "Mark",
+      "Luke",
+      "John"
+    ],
+    "allOtherCanonBooksEmpty": true,
+    "matchesExpected": true
+  },
+  "encodingAudit": {
+    "declared": "UTF-8",
+    "strictUtf8Decode": "all 6 blocks decode cleanly with utf-8 strict",
+    "bom": false,
+    "replacementChars": 0,
+    "nulBytes": 0,
+    "controlChars": 0,
+    "charCategories": {
+      "Lu": 15588,
+      "Zs": 108012,
+      "Ll": 548936,
+      "Po": 28783,
+      "Pi": 2295,
+      "Pf": 2282,
+      "Pd": 123,
+      "Ps": 27,
+      "Pe": 27
+    },
+    "note": "Only Armenian letters (Lu/Ll), spaces, and Armenian/Latin punctuation — no Latin letters, digits, mojibake, or fallback characters."
+  },
+  "blocks": {
+    "ot": {
+      "blocks": 2,
+      "records": [
+        {
+          "idx": 0,
+          "compressedBytes": 73147,
+          "uncompressedBytes": 311414,
+          "uncompressedBytesMatch": true,
+          "chars": 171370,
+          "bom": false,
+          "replacementChars": 0,
+          "nulBytes": 0,
+          "hasControlChars": false
+        },
+        {
+          "idx": 1,
+          "compressedBytes": 59932,
+          "uncompressedBytes": 272279,
+          "uncompressedBytesMatch": true,
+          "chars": 148933,
+          "bom": false,
+          "replacementChars": 0,
+          "nulBytes": 0,
+          "hasControlChars": false
+        }
+      ]
+    },
+    "nt": {
+      "blocks": 4,
+      "records": [
+        {
+          "idx": 0,
+          "compressedBytes": 48757,
+          "uncompressedBytes": 197840,
+          "uncompressedBytesMatch": true,
+          "chars": 109171,
+          "bom": false,
+          "replacementChars": 0,
+          "nulBytes": 0,
+          "hasControlChars": false
+        },
+        {
+          "idx": 1,
+          "compressedBytes": 32610,
+          "uncompressedBytes": 127756,
+          "uncompressedBytesMatch": true,
+          "chars": 70561,
+          "bom": false,
+          "replacementChars": 0,
+          "nulBytes": 0,
+          "hasControlChars": false
+        },
+        {
+          "idx": 2,
+          "compressedBytes": 53204,
+          "uncompressedBytes": 209938,
+          "uncompressedBytesMatch": true,
+          "chars": 116030,
+          "bom": false,
+          "replacementChars": 0,
+          "nulBytes": 0,
+          "hasControlChars": false
+        },
+        {
+          "idx": 3,
+          "compressedBytes": 38517,
+          "uncompressedBytes": 161849,
+          "uncompressedBytesMatch": true,
+          "chars": 90008,
+          "bom": false,
+          "replacementChars": 0,
+          "nulBytes": 0,
+          "hasControlChars": false
+        }
+      ]
+    }
+  },
+  "contentProblems": {
+    "totalVersesInTheSixBooks": 6525,
+    "emptyVerses": [
+      "Gen 21:34",
+      "Gen 49:33",
+      "Exo 25:40",
+      "Exo 40:38",
+      "Matt 12:47",
+      "Matt 12:48",
+      "Matt 12:49",
+      "Matt 12:50",
+      "Matt 16:28",
+      "Matt 17:27",
+      "Matt 23:39",
+      "Mark 9:48",
+      "Mark 9:49",
+      "Mark 9:50",
+      "Mark 11:33",
+      "Luke 1:60",
+      "Luke 1:61",
+      "Luke 1:62",
+      "Luke 1:63",
+      "Luke 1:64",
+      "Luke 1:65",
+      "Luke 1:66",
+      "Luke 1:67",
+      "Luke 1:68",
+      "Luke 1:69",
+      "Luke 1:70",
+      "Luke 1:71",
+      "Luke 1:72",
+      "Luke 1:73",
+      "Luke 1:74",
+      "Luke 1:75",
+      "Luke 1:76",
+      "Luke 1:77",
+      "Luke 1:78",
+      "Luke 1:79",
+      "Luke 1:80",
+      "Luke 2:49",
+      "Luke 2:50",
+      "Luke 2:51",
+      "Luke 2:52",
+      "Luke 3:37",
+      "Luke 3:38",
+      "Luke 11:53",
+      "Luke 11:54",
+      "John 7:53",
+      "John 11:57",
+      "John 14:31"
+    ],
+    "emptyVerseCount": 47,
+    "emptyVersesAreAllChapterTails": true,
+    "selfDuplicatedVerses": [
+      "Gen 21:30",
+      "Gen 21:31",
+      "Gen 49:31",
+      "Exo 25:38",
+      "John 8:1",
+      "John 11:56",
+      "John 19:25"
+    ],
+    "shiftEvidence": {
+      "explanation": "Non-empty verses after an omitted verse are renumbered sequentially, so they no longer line up with canon/KJV verse numbers; the shortfall is padded as zero-length tail records.",
+      "examples": {
+        "Luke 1:47": "contains the text of canon Luke 1:56 ('Mary remained about three months…'); the Magnificat (1:47-55) is absent from the module bytes",
+        "Luke 1:59": "contains the text of canon Luke 1:80 ('the child grew…'); the Benedictus (1:68-79) is absent",
+        "Mark 9:44": "contains the text of canon Mark 9:47; the disputed 9:44-46 are absent",
+        "Matthew 12:43": "contains the text of canon Matthew 12:47; 12:43-46 are absent"
+      },
+      "crossCheck": "data/armwestern.json (1853 Western Armenian NT, KJV-aligned) has the expected text at 1:47/1:56/1:68/1:80, confirming ArmEastern is the shifted side."
+    }
+  },
+  "decision": "HELD — not imported. Byte audit found the 6-book scope and UTF-8 encoding are clean, but the module has 47 zero-length verses plus intra-chapter verse renumbering and at least two self-duplicated verses. Importing by SWORD index would place the wrong text under canon verse numbers. No data/arm-eastern.* files and no app.js changes were made. Awaiting a decision on whether to reconcile versification (Segond-style) or import as-is with a verse-boundary warning."
+}

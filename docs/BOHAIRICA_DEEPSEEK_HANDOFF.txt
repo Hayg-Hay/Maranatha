@@ -1,0 +1,42 @@
+Work in C:\maranatha\maranatha_new. Validate and finish the Bohairica Coptic
+integration implemented by Codex. Read README.md, docs/BOHAIRICA.md and
+docs/investigations/coptic-translations.md first.
+
+Selected edition: eBible copbhc, Bohairica 1.2 (2006-12-14), J. Warren Wells,
+based on Horner. Not Sahidica, not an unmodified Horner print, and no official
+church-edition claim. Source notices declare Public Domain. Font is OFL 1.1.
+
+1. Independently verify archive/extracted-file hashes, exact edition notices,
+   metadata and licensing against build/sources/bohairica/source-files.json.
+   Use an independent USFX reader, not the importer/parser, to compare all
+   numbered output units, words, punctuation, titles and chapter boundaries.
+   Expected initial profile: 27 NT books, 260 chapters, 7956 nonempty source
+   records, 7957 positions including ACT 24:7 empty; 3 John has 15 verses.
+   Investigate native omissions, trailing gaps, Mark endings and John 7-8.
+   No Scripture patching, filling, renumbering or merging from another witness.
+2. Add independent dedicated tests and wire appropriate checks into npm test.
+   Run npm run check:bohairica and npm run test:bohairica-smoke. Add desktop and
+   mobile UI checks for native reference extents/aliases, OT unavailability,
+   gap notices, separate comparison blocks in all layouts, search comparison
+   guards in both directions, interlinear guard, independent parallel pane,
+   exact copy/highlights, combining marks/case and distinct Coptic letters.
+3. Review actual browser appearance: Coptic glyphs/combining marks, long lines,
+   book names, headings, inputs, mobile wrapping and no missing-glyph boxes.
+   Verify local font/licence/hash, and file:// with no network. Verify HTTPS
+   service-worker install/update, shell v67, data cache v3, font/locale precache
+   and lazy translation caching. Preserve other cached translations.
+4. Run full npm test. Fix routine implementation/test problems and retest.
+   Recheck other languages, reference parser, LXX and existing dirty-tree work.
+   Return unresolved Scripture/source/licensing or architectural questions to
+   Codex; do not silently change the chosen edition or comparison policy.
+5. Update docs with independent results and remaining limits. Review final diff
+   and staging scope, preserving all unrelated pre-existing changes. Relevant
+   shared files: app.js, style.css, index.html, service-worker.js, package.json,
+   .gitattributes, README.md, PROJECT_HISTORY.md. Coptic additions: importer,
+   smoke, data/bohairica.*, data/locales/cop.*, source directory, font/licence,
+   docs/BOHAIRICA.md, text licence and investigation/handoff docs.
+
+Codex ran initial sanity only: deterministic output/hash checks and focused
+desktop/mobile JSDOM smoke plus source-character font cmap coverage passed.
+No full fidelity audit or regression suite has been run for this integration.
+Do not commit, merge or push without explicit user authorization.

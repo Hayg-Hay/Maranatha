@@ -116,7 +116,7 @@ function staticChecks() {
   out('css-aligned-cell-rules', /\.aligned-cell\s*\{/.test(css) && /\.aligned-source-ref\s*\{/.test(css));
 
   const sw = read('service-worker.js');
-  out('sw-shell-v66', /CACHE_VERSION\s*=\s*'v66'/.test(sw));
+  out('sw-shell-v67', /CACHE_VERSION\s*=\s*'v67'/.test(sw));
   out('sw-data-v3-kept', /DATA_CACHE_VERSION\s*=\s*'v3'/.test(sw));
   out('sw-keeps-data-cache-on-activate', /keep = new Set\(\[SHELL_CACHE, DATA_CACHE\]\)/.test(sw));
   out('sw-data-cache-ignores-query-false', /ignoreSearch: cacheName !== DATA_CACHE/.test(sw));
@@ -213,11 +213,10 @@ async function desktopChecks() {
   await goChapter(dom, 'GEN', 2);
   out('genesis2-now-covered', correspondences(d).length === 25, String(correspondences(d).length));
 
-  await goChapter(dom, 'GEN', 6);
-  out('genesis6-2-unresolved',
-    correspondences(d).length === 1 && aligned(d).length > 1
-      && aligned(d).filter((c) => !c.classList.contains('aligned-correspondence'))
-        .every((c) => /alignment not available/.test(c.textContent)));
+  await goChapter(dom, 'GEN', 16);
+  out('genesis16-unresolved',
+    correspondences(d).length === 0 && aligned(d).length > 0
+      && aligned(d).every((c) => /alignment not available/.test(c.textContent)));
 
   await goChapter(dom, 'PSA', 23);
   out('psalms-unresolved-no-greek',

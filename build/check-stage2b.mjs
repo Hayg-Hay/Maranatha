@@ -79,10 +79,12 @@ const nativeChapter = (chapter) => native.books.find((b) => b.id === 'GEN')
 
 // ---------------------------------------------------------------------------
 function staticChecks() {
-  out('mapping-covers-genesis1-5-and-boundary6',
-    mapping.scope.covered.map((c) => c.chapter).join(',') === '1,2,3,4,5,6'
+  out('mapping-covers-genesis1-15',
+    mapping.scope.covered.map((c) => c.chapter).join(',') === '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15'
       && Array.isArray(mapping.groups) && mapping.groups.some((g) => g.id === 'GEN3-1')
-      && mapping.groups.some((g) => g.id === 'GEN6-1'));
+      && mapping.groups.some((g) => g.id === 'GEN15-18'));
+  out('mapping-third-ledger-bound',
+    mapping.bindings.ledger3 && mapping.bindings.ledger3.path === 'build/reviews/lxx-genesis6-15-evidence.json');
   out('mapping-human-approval-null', mapping.review && mapping.review.humanApproval === null);
   out('mapping-both-ledgers-bound',
     mapping.bindings.ledger && mapping.bindings.ledger2
@@ -195,12 +197,11 @@ async function chapterChecks(dom, label) {
     d.querySelectorAll('#results .aligned-cell .lxx-text').length === 1
       && /Greek 3:1/.test(d.querySelector('#results .aligned-note')?.textContent || ''));
 
-  // Genesis 6:2 and later stay unresolved.
-  await goChapter(dom, 'GEN', 6);
-  out(`${label}-genesis6-2-unresolved`,
-    correspondences(d).length === 1
-      && aligned(d).filter((c) => !c.classList.contains('aligned-correspondence'))
-        .every((c) => /alignment not available/.test(c.textContent)));
+  // Genesis 16 and later stay unresolved.
+  await goChapter(dom, 'GEN', 16);
+  out(`${label}-genesis16-unresolved`,
+    correspondences(d).length === 0
+      && aligned(d).every((c) => /alignment not available/.test(c.textContent)));
 }
 
 async function mobileChecks() {

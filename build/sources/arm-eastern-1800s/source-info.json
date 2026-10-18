@@ -1,0 +1,127 @@
+{
+  "identifier": "bibleinmodernarm00cons",
+  "title": "[Bible in modern Armenian]",
+  "date": "1884",
+  "imprint": "Constantinople : British and Foreign Bible Society; printed by A. Ya. Boyajian",
+  "languageCode": "aarmund (invalid/legacy; archive OCR flagged it)",
+  "contributor": "Robarts - University of Toronto",
+  "externalIds": {
+    "oclc": "219473784",
+    "openlibraryEdition": "OL33114453M",
+    "openlibraryWork": "OL24912426W",
+    "ark": "ark:/13960/t9j41d60n"
+  },
+  "physical": {
+    "imagecount": 1170,
+    "leafCount": 1168,
+    "ppi": 500,
+    "marc300": "879, 274 p.",
+    "scanNote": "No copyright page found. No table-of-contents pages found. (Note: a TOC does exist in the images; OCR just failed on it.)"
+  },
+  "archiveMetadata": {
+    "ocr": "tesseract 5.0.0-beta-20210815",
+    "ocr_parameters": "-l lat+jav+que+ltz+Latin",
+    "ocr_detected_script": [
+      "Devanagari",
+      "Latin",
+      "Arabic"
+    ],
+    "ocr_detected_lang": "lb",
+    "ocr_invalid_language": "aarmund"
+  },
+  "files": {
+    "bibleinmodernarm00cons_djvu.txt": {
+      "size": 5474210,
+      "sha256": "df0262500ae96441e13959e5d336e7ca37e614006da1b4c7dd19da89c979a815"
+    },
+    "bibleinmodernarm00cons.pdf": {
+      "size": 149698273,
+      "sha256": "7f7d8538533cb508acd7f35c6b2fd04c55c4b82ff75fe8c72d73ee9b64654985"
+    },
+    "_fallback-armenian_mark/mark_djvu.txt": {
+      "size": 143035,
+      "sha256": "d462afef16f34df2435a61642a74570d4124c86f61d7f064c66294e06d92e05e"
+    }
+  },
+  "audit": {
+    "ocrTextUsable": false,
+    "ocrEvidence": {
+      "djvuTxtBytes": 5474210,
+      "djvuTxtLines": 341385,
+      "armemianUnicodeCharsInDjvuTxt": 0,
+      "armemianUnicodeCharsInPdfTextLayer": 0,
+      "rootCause": "Tesseract ran with Latin (plus jav/que/ltz) models only; no Armenian traineddata, so the whole book OCR'd as Latin transliteration garbage. Representative across the entire file, not a preview quirk."
+    },
+    "dialect": "Western Armenian (Constantinople/Ashkharhabar)",
+    "dialectEvidence": {
+      "imprint": "Constantinople, 1884, BFBS",
+      "Genesis1_1": "ՍԿԻԶԲՆ Աստուած երկինքն ու երկիրը ստեղծեց",
+      "Genesis1_3": "Եւ Աստուած ըսաւ. «Եղիցի լոյս». ու լոյս եղաւ",
+      "John2_3": "Յիսուսի մայրը ըսաւ անոր. «Գինի չունին»",
+      "John3_16": "Աստուած այնպէս սիրեց աշխարհը, որ տուաւ իր միածին Որդին ... անոր հաւատայ",
+      "Psalm23_1": "ՏԷրը իմ հովիւ է. Ես բանի մը կարօտութիւն պիտի չունենամ",
+      "westernMarkers": [
+        "ըսաւ (not ասաց)",
+        "տուաւ (not տուեց)",
+        "անոր (not նրան/անոր)",
+        "չունին (not չունեն)"
+      ],
+      "easternMarkersAbsent": [
+        "ասաց",
+        "տուեց",
+        "այնքան",
+        "նրան",
+        "հաւատում է"
+      ]
+    },
+    "completeness": {
+      "coverage": "Full Protestant 66-book OT + NT (no deuterocanon)",
+      "otPages": "1-879",
+      "ntPages": "1-274",
+      "tocBooks": 66,
+      "chapterCountsMatchStandard": true,
+      "verifiedByPageImages": [
+        "Genesis (print p5)",
+        "Exodus (print p96)",
+        "Psalms (print p542-596)",
+        "John (print p96-112)",
+        "TOC (print p3)"
+      ],
+      "deuterocanonAbsent": [
+        "TOB",
+        "JDT",
+        "WIS",
+        "SIR",
+        "BAR",
+        "1MA",
+        "2MA"
+      ]
+    }
+  },
+  "fallback": {
+    "identifier": "armenian_mark",
+    "title": "Armenian Bible (Ararat) - Gospel of Mark",
+    "dialect": "Eastern/Ararat",
+    "ocr": "ABBYY FineReader 11.0",
+    "armemianUnicodeCharsInDjvuTxt": 54655,
+    "verdict": "Worth caching as a small Eastern-Armenian dialect reference (it has real Armenian-script OCR, unlike the main item), but Mark-only so NOT an import candidate.",
+    "cachedFile": "_fallback-armenian_mark/mark_djvu.txt"
+  },
+  "decision": "Does not pass the gate: OCR text is unusable and the dialect is Western (not Eastern). Stopped; no data/ or app.js changes.",
+  "hyeReocr": {
+    "model": "tesseract 5.4.0 + tessdata_best hye.traineddata (6,372,242 B), --tessdata-dir build/sources/arm-eastern-1800s/tessdata, -l hye",
+    "method": "pdftoppm -r 300 -gray, crop page margins (x 12%-88%, y 3%-97%) to drop the cross-reference margin columns, then tesseract --psm 3. Page-level PSM 1/3 without the crop fail (margin/column confusion); PSM 4 without crop captures text but jumbles reading order across the two columns.",
+    "cacheFile": "bibleinmodernarm00cons_hye_ocr.txt",
+    "cacheFileSize": 234911,
+    "pagesInCache": 49,
+    "note": "Sample only (front matter + Genesis 1-2 start, Exodus, Psalms 22-23/24-25/119, John 2-3/18, etc.). A full 1168-page pass was NOT run: pdftoppm renders this JP2 PDF at ~9 s/page, so full render alone is ~3 h, plus ~1.7 h OCR.",
+    "spotCheckRatios": {
+      "Gen 1:1": 0.66,
+      "Gen 1:3": 0.85,
+      "John 2:3": 0.8,
+      "John 3:16": 0.93,
+      "Ps 23:1": 0.8
+    },
+    "verdict": "Armenian script and reading order now correct, but ~80% character agreement with the page-image transcriptions and occasional whole-word corruption of key terms (e.g. Ps 23:1 'հովիւ'->'Գովեա', Gen 1:1 'ՍԿԻԶԲՆ'->'Հ4եգուն', Jn 3:16 'այնքան'->'անանկ'). Readable, not import-grade without correction."
+  }
+}

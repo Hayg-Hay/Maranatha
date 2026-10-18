@@ -45,7 +45,7 @@ for (const entry of fontManifest.files) {
   assert.equal(sha(fs.readFileSync(target)), entry.sha256, `font hash ${entry.path}`);
 }
 const sw = read('service-worker.js');
-assert(/CACHE_VERSION\s*=\s*'v66'/.test(sw)); assert(/DATA_CACHE_VERSION\s*=\s*'v3'/.test(sw));
+assert(/CACHE_VERSION\s*=\s*'v67'/.test(sw)); assert(/DATA_CACHE_VERSION\s*=\s*'v3'/.test(sw));
 assert(sw.includes(`'./fonts/NotoSansSyriac-Regular.ttf'`));
 assert(!/https?:\/\//.test(sw.split('SHELL_FILES')[1].split(']')[0]), 'shell files must be local');
 const css = read('style.css');

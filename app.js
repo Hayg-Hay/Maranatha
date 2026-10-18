@@ -156,7 +156,7 @@ class ReferenceParser {
         // Japanese book-label selection also accepts the existing English
         // names; this adds no changes to the established English/Armenian UI.
         const english = (typeof window !== 'undefined' && window.MARANATHA_LOCALE_EN) || null;
-        if (['ja', 'zh-Hant', 'id', 'th', 'tl', 'vi', 'ms'].includes(locale.language) && english?.books) {
+        if (['ja', 'zh-Hant', 'id', 'th', 'tl', 'vi', 'ms', 'cop'].includes(locale.language) && english?.books) {
             for (const book of canon.books) {
                 const info = english.books[book.id];
                 if (!info) continue;
@@ -224,6 +224,17 @@ class ReferenceParser {
         if (vietnamese?.books && vietnamese !== locale) {
             for (const book of canon.books) {
                 const info = vietnamese.books[book.id];
+                if (!info) continue;
+                for (const alias of [info.name, ...(info.aliases || [])]) {
+                    this.bookMap.set(ReferenceParser.normalizeKey(alias), book);
+                }
+            }
+        }
+
+        const coptic = (typeof window !== 'undefined' && window.MARANATHA_LOCALE_COP) || null;
+        if (coptic?.books && coptic !== locale) {
+            for (const book of canon.books) {
+                const info = coptic.books[book.id];
                 if (!info) continue;
                 for (const alias of [info.name, ...(info.aliases || [])]) {
                     this.bookMap.set(ReferenceParser.normalizeKey(alias), book);
@@ -434,6 +445,7 @@ class ReferenceParser {
     { id: 'zh-Hant', label: '繁體中文', global: 'MARANATHA_LOCALE_ZH_HANT' },
     { id: 'id', label: 'Bahasa Indonesia', global: 'MARANATHA_LOCALE_ID' },
     { id: 'ms', label: 'Bahasa Melayu', global: 'MARANATHA_LOCALE_MS' },
+    { id: 'cop', label: 'Coptic (Bohairic book names)', global: 'MARANATHA_LOCALE_COP' },
     { id: 'vi', label: 'Tiếng Việt', global: 'MARANATHA_LOCALE_VI' },
     { id: 'tl', label: 'Filipino / Tagalog', global: 'MARANATHA_LOCALE_TL' },
     { id: 'th', label: 'ภาษาไทย', global: 'MARANATHA_LOCALE_TH' },
@@ -494,6 +506,7 @@ class ReferenceParser {
     { id: 'otb-ja', label: 'Open Translation Bible (Japanese)', short: 'OTB-JA', src: 'data/otb-ja.js', description: 'The publisher\u2019s Open Translation Bible (OTB) Japanese edition, launched December 2025 and released under CC BY-SA 4.0 (openbible.uk). Read in its own native reference numbering (66 books, 1189 chapters, 31103 numbered source records). Daniel has 12 chapters. The publisher does not document the translation or editorial method, so this edition is not accuracy-certified. Two source records (Matthew 23:14 and John 5:4) contain only a bracketed placeholder with no Scripture text and are shown exactly as supplied. Converted offline from the publisher JSON; each verse\u2019s original text segments are preserved.' },
     { id: 'cuv-traditional', label: 'Chinese Union Version (Traditional, New Punctuation, 上帝)', short: 'CUV-T', src: 'data/cuv-traditional.js', description: '新標點和合本・繁體・上帝版. Traditional Chinese New Punctuation CUV, from eBible.org cmn-cu89t (distributor declares Public Domain). The older CUV wording is retained; this is not the Revised Chinese Union Version. Source numbering and 70 combined passages are preserved in their own reading block. Footnotes and headings are shown separately; 11 references have no separately numbered source record.' },
     { id: 'ayt', label: 'Alkitab Yang Terbuka (Indonesian)', short: 'AYT', src: 'data/ayt.js', description: 'Indonesian AYT from the official YLSA datasets. Copyright YLSA-AYT 2011,2024; non-commercial distribution with attribution and share-alike terms. All 66 books are included. Ordinary passages are compared by matching publisher references; Isaiah 22 and Romans 14 are read separately because of source content-placement differences. Three Isaiah records contain only source reference pointers.' },
+    { id: 'bohairica', label: 'Bohairica (Coptic Bohairic NT, 1.2)', short: 'BOH', src: 'data/bohairica.js', note: 'Independent source numbering; no verified verse alignment. Acts 24:7 has no numbered text; six records contain only a bracketed empty marker; 3 John has 15 verses. New Testament only.', description: 'Horner-based Bohairic Coptic NT standardized by J. Warren Wells, Bohairica 1.2 (2006-12-14), distributed by eBible.org as copbhc with a Public Domain declaration. All 27 NT books; source letters and numbering retained. Distinct from Sahidic; no official church-edition claim. Read in independent blocks.' },
     { id: 'peshitta', label: 'Syriac Peshitta (BFBS digital NT)', short: 'PESH', src: 'data/peshitta.js', description: 'Unpointed Syriac NT from CrossWire Peshitta 2.0, Public Domain as declared by its distributor. All 27 NT books; five later-supplied books are identified separately. The module labels its BFBS source 1905; no exact complete print impression is asserted. Mark 9:50 is recovered from an explicit source marker. No OT or MarYa annotation layer.' },
     { id: 'murdock', label: 'James Murdock’s English Syriac NT (1852)', short: 'MUR', src: 'data/murdock.js?v=2', note: 'The digital module has ten empty indexed slots, verified as merged/shifted indexing residue. Their wording remains in adjacent source slots identified in the notices. Native reference placement differs in several chapters. See docs/PESHITTA.md.', description: 'Public-domain English NT, translated using earlier Syriac editions of 1816/1826 rather than the imported BFBS witness. All 27 NT books; 19 footnotes kept separately. Explicitly appended native verse units are restored with a conversion ledger. English Lord wording is unchanged; no MarYa substitution.' },
     { id: 'kszi', label: 'Kitab Suci Zabur dan Injil (Malay NT, 2013)', short: 'KSZI', src: 'data/kszi.js', description: 'Malaysian Malay New Testament only: 27 books, copyright © 2013 Pengamat Kitab Mulia, CC BY-ND 4.0. Isa al-Masih, Yahya and all words/punctuation are preserved. No Psalms or other Old Testament books are included. Source headings are collapsed below reading. Ordinary chapters share comparison rows; 3 John and Romans 14 read separately.' },
@@ -770,10 +783,10 @@ const refs = {
     generation: 0,
     callbacks: [],
   };
-  const ALIGNMENT_MAP_URL = 'data/lxx-swete-alignment.js?v=stage2b-20261007';
-  const ALIGNMENT_SCHEMES_URL = 'data/versification-schemes.js?v=stage2b-20261007';
+  const ALIGNMENT_MAP_URL = 'data/lxx-swete-alignment.js?v=stage2c-20261007';
+  const ALIGNMENT_SCHEMES_URL = 'data/versification-schemes.js?v=stage2c-20261007';
   const ALIGNMENT_NOTICE_DEFAULT =
-    'Canon view only. AI-proposed correspondences for Genesis 1-5 (plus boundary Genesis 6:1) awaiting human review; the Greek is read from the native Swete text and is never guessed.';
+    'Canon view only. AI-proposed correspondences for Genesis 1-15 awaiting human review; the Greek is read from the native Swete text and is never guessed.';
   // Source units already rendered in the current comparison view, keyed by
   // source ref. A single source spanning two targets is shown in full once per
   // view; later visible targets get a short shared-source reference instead.
@@ -1237,6 +1250,10 @@ function init() {
       element.dir = 'ltr';
       element.lang = 'id';
       element.classList.add('indonesian-verse');
+    }
+    else if (language === 'cop') {
+      element.lang = 'cop'; element.dir = 'ltr';
+      element.classList.add('coptic-verse');
     }
     else if (language === 'syr') {
       element.lang = 'syr'; element.dir = 'rtl';
@@ -1928,7 +1945,10 @@ function init() {
       note.className = 'verse-source-note aligned-note';
       note.setAttribute('role', 'note');
       const presentationNote = cell.presentation && cell.presentation.note ? cell.presentation.note : '';
-      note.textContent = verseRows
+      // The authored material caveats (age/wording/source-condition) stay in
+      // the review table; a brief source-condition notice is shown inline with
+      // the correspondence note when one is recorded for the group.
+      const base = verseRows
         ? '“And it was so” ends Greek 6; English/Hebrew place it in 7.'
         : sharedReference
         ? `Greek ${sharedReference.refLabel} shown once above; this row shares it.`
@@ -1937,6 +1957,7 @@ function init() {
         : cell.collective
         ? `Proposed collective passage (${cell.groupId}); boundaries differ \u2014 not a word-for-word or exact verse-boundary match.`
         : `Proposed correspondence (${cell.groupId}); awaiting human review.`;
+      note.textContent = verseRows || sharedReference || !cell.note ? base : `${base} ${cell.note}`;
       td.append(note);
       return;
     }
@@ -1951,7 +1972,7 @@ function init() {
     note.className = 'verse-source-note';
     note.setAttribute('role', 'note');
     note.textContent = cell.state === 'alignment-unavailable'
-      ? 'No proposal for this reference in the Genesis 1-5 pilot.'
+      ? 'No proposal for this reference in the Genesis 1-15 pilot.'
       : cell.state === 'missing-edition'
         ? 'The Swete Septuagint source does not cover this book.'
         : cell.state === 'missing-source-text'
@@ -2488,7 +2509,7 @@ function init() {
   // ---------------------------------------------------------------------
 
   function isGraphemeSearchLanguage(language) {
-    return language === 'ja' || language === 'zh-Hant' || language === 'zh-Hans' || language === 'th' || language === 'vi' || language === 'syr';
+    return language === 'ja' || language === 'zh-Hant' || language === 'zh-Hans' || language === 'th' || language === 'vi' || language === 'syr' || language === 'cop';
   }
 
   // Language-aware normalization. Hebrew/Paleo, Greek and Latin keep their
@@ -2498,6 +2519,9 @@ function init() {
   // for the SAME character still matches. No width/kana/NFKC folding is added,
   // and the stored Scripture is never changed.
   function normalizeSearchText(text, language) {
+    // Preserve Coptic combining marks and distinct letters; case folding is
+    // search-only. Grapheme mapping keeps highlights/copies in source spelling.
+    if (language === 'cop') return String(text).normalize('NFC').toLowerCase();
     if (language === 'syr') return String(text).normalize('NFC').replace(/[\u0730-\u074A]/g, '');
     if (language === 'vi') return String(text).normalize('NFC').toLowerCase();
     if (language === 'th') return String(text).replace(/[\u200B\r\n]/g, '').normalize('NFC');
@@ -3907,11 +3931,11 @@ function init() {
   }
 
   function alignmentVirtualTranslation() {
-    return { id: 'lxx-aligned', label: 'LXX alignment (Genesis 1-5)', short: 'LXX alignment', virtual: true };
+    return { id: 'lxx-aligned', label: 'LXX alignment (Genesis 1-15)', short: 'LXX alignment', virtual: true };
   }
 
   // Warns, before reading the pilot, when a currently selected edition has no
-  // Genesis 1-5 proposal coverage. Those editions are compared as unreviewed,
+  // Genesis 1-15 proposal coverage. Those editions are compared as unreviewed,
   // edition-specific numbering; no Greek correspondence is asserted against
   // them. The coverage set comes from the compiled scheme registry.
   function updateAlignmentNotice() {
@@ -3926,7 +3950,7 @@ function init() {
       .map((t) => t.id)
       .filter((id) => id !== 'lxx-swete' && !coverage.has(id));
     note.textContent = unreviewed.length
-      ? `Warning: the Genesis 1-5 pilot is compared only with WEB/KJV/OSHB. Selected edition(s) ${unreviewed.join(', ')} use unreviewed, edition-specific numbering; no Greek correspondence is asserted against them.`
+      ? `Warning: the Genesis 1-15 pilot is compared only with WEB/KJV/OSHB. Selected edition(s) ${unreviewed.join(', ')} use unreviewed, edition-specific numbering; no Greek correspondence is asserted against them.`
       : ALIGNMENT_NOTICE_DEFAULT;
   }
 

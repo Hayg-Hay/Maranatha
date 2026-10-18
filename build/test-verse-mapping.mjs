@@ -33,11 +33,12 @@ function shapeChecks() {
   const targets = new Set(mapping.entries.flatMap((e) => e.to.map((t) => `${t.book}|${t.chapter}|${t.verse}`)));
   const genesis1Entries = mapping.entries.filter((e) => e.provenance.ledger === 'build/reviews/lxx-genesis1-evidence.json');
   const genesis25Entries = mapping.entries.filter((e) => e.provenance.ledger === 'build/reviews/lxx-genesis2-5-evidence.json');
-  out('137-unique-source-refs', sources.size === 137, String(sources.size));
-  out('139-unique-target-refs', targets.size === 139, String(targets.size));
-  out('136-groups', mapping.groups.length === 136, String(mapping.groups.length));
-  out('genesis1-evidence-unchanged', genesis1Entries.length === 31 && genesis25Entries.length === 106,
-    `${genesis1Entries.length}/${genesis25Entries.length}`);
+  const genesis615Entries = mapping.entries.filter((e) => e.provenance.ledger === 'build/reviews/lxx-genesis6-15-evidence.json');
+  out('377-unique-source-refs', sources.size === 377, String(sources.size));
+  out('382-unique-target-refs', targets.size === 382, String(targets.size));
+  out('376-groups', mapping.groups.length === 376, String(mapping.groups.length));
+  out('immutable-ledgers-preserved', genesis1Entries.length === 31 && genesis25Entries.length === 106
+    && genesis615Entries.length === 240, `${genesis1Entries.length}/${genesis25Entries.length}/${genesis615Entries.length}`);
   const group = mapping.groups.find((g) => g.id === 'GEN1-6-7');
   out('collective-6-7-preserved',
     !!group && group.collective === true && group.sources.length === 2 && group.targets.length === 2
@@ -348,7 +349,11 @@ function resolverChecks() {
   out('resolver-genesis2-covered', resolver.resolveTarget('GEN', 2, 1).state === 'correspondence');
   out('resolver-genesis5-32-covered', resolver.resolveTarget('GEN', 5, 32).state === 'correspondence');
   out('resolver-genesis6-1-covered', resolver.resolveTarget('GEN', 6, 1).groupId === 'GEN6-1');
-  out('resolver-genesis6-2-unresolved', resolver.resolveTarget('GEN', 6, 2).state === 'alignment-unavailable');
+  out('resolver-genesis6-2-covered', resolver.resolveTarget('GEN', 6, 2).state === 'correspondence');
+  out('resolver-genesis16-1-unresolved', resolver.resolveTarget('GEN', 16, 1).state === 'alignment-unavailable');
+  const span15 = resolver.resolveTarget('GEN', 15, 20);
+  out('resolver-genesis15-18-spanning', span15.groupId === 'GEN15-18' && span15.spanning === true
+    && span15.members.length === 1 && span15.targets.length === 4);
   const cross = resolver.resolveTarget('GEN', 2, 25);
   out('resolver-cross-chapter-group', cross.state === 'correspondence' && cross.groupId === 'GEN3-1'
     && cross.members.length === 1 && cross.spanning === true);
@@ -399,6 +404,30 @@ function stage2bEvidenceChecks() {
       const m = clone(mapping);
       const e = m.entries.find((x) => x.provenance.rowId === 'GEN2-1');
       e.source.label = '404';
+      return m;
+    },
+    // Stage 2c: 4-target spanning evidence and third ledger binding.
+    'reject-forged-15-18-target-hash': () => {
+      const m = clone(mapping);
+      m.entries.find((e) => e.provenance.rowId === 'GEN15-18').provenance.targetEvidence[2].textHashes.web = hex;
+      return m;
+    },
+    'reject-missing-15-18-target-evidence': () => {
+      const m = clone(mapping);
+      m.entries.find((e) => e.provenance.rowId === 'GEN15-18').provenance.targetEvidence.splice(1, 1);
+      return m;
+    },
+    'reject-duplicate-15-18-target-evidence': () => {
+      const m = clone(mapping);
+      const e = m.entries.find((x) => x.provenance.rowId === 'GEN15-18');
+      e.provenance.targetEvidence.push(clone(e.provenance.targetEvidence[0]));
+      return m;
+    },
+    'reject-forged-ledger3-binding': () => { const m = clone(mapping); m.bindings.ledger3.sha256 = hex; return m; },
+    'reject-duplicate-source-15-18': () => {
+      const m = clone(mapping);
+      const e = m.entries.find((x) => x.provenance.rowId === 'GEN15-18');
+      m.entries.push(clone(e)); // duplicate source 15:18
       return m;
     },
   };

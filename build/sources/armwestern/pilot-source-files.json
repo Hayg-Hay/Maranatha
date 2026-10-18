@@ -1,0 +1,31 @@
+{
+  "source": "https://www.crosswire.org/ftpmirror/pub/sword/packages/rawzip/ArmWestern.zip",
+  "retrieved": "2026-10-09",
+  "files": [
+    {
+      "path": "ArmWestern.zip",
+      "size": 428741,
+      "sha256": "bc273232f6b822b9d957fb318396b7863aa5bba9cae3e8e90c108808dd9916f2"
+    },
+    {
+      "path": "module/mods.d/armwestern.conf",
+      "size": 479,
+      "sha256": "4d2951630a749788a01848e27d41dd2e463d638bdb12897c103d920dcc6700d1"
+    },
+    {
+      "path": "module/modules/texts/ztext/armwestern/nt.bzs",
+      "size": 324,
+      "sha256": "8bad1994a0ccb13b72bcec0414b439b1e99fc646c451e3b6f41ffd0cc85a0310"
+    },
+    {
+      "path": "module/modules/texts/ztext/armwestern/nt.bzv",
+      "size": 82460,
+      "sha256": "f7e35104dc5dab7be357585176572a6029904db88b454402bfad82de75ddc67b"
+    },
+    {
+      "path": "module/modules/texts/ztext/armwestern/nt.bzz",
+      "size": 415075,
+      "sha256": "d2ea7544cfe1efdd109d8b35e77109ac239e3ff31e032b69174866b9d318f211"
+    }
+  ]
+}

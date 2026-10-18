@@ -25,6 +25,7 @@ const root = path.resolve(here, '..');
 const LEDGERS = [
   { key: 'genesis1', path: 'build/reviews/lxx-genesis1-evidence.json' },
   { key: 'genesis2_5', path: 'build/reviews/lxx-genesis2-5-evidence.json' },
+  { key: 'genesis6_15', path: 'build/reviews/lxx-genesis6-15-evidence.json' },
 ];
 const NATIVE = path.join(root, 'data', 'lxx-swete.json');
 const CANON = path.join(root, 'data', 'canon.js');
@@ -60,7 +61,7 @@ function targetKey(ref) {
 
 // The scheme declarations name each existing edition's own scheme without
 // claiming universal identity. WEB/KJV/OSHB comparison coverage is limited to
-// the Genesis 1 proposals; other editions stay unreviewed/legacy-indexed.
+// the Genesis 1-15 proposals; other editions stay unreviewed/legacy-indexed.
 function buildSchemes() {
   return {
     version: 1,
@@ -72,13 +73,13 @@ function buildSchemes() {
         'Scheme declarations: Maranatha Stage 2a. Greek: First1KGreek / Swete, CC BY-SA 4.0; Hebrew: OSHB, CC BY 4.0; WEB Catholic Edition and imported KJV: source declarations in the shipped datasets.',
       changes: 'Editorial scheme declarations only; no Scripture text changed.',
     },
-    // Only these three comparison editions have Genesis 1-5 proposal coverage
+    // Only these three comparison editions have Genesis 1-15 proposal coverage
     // (plus the single disclosed boundary unit GEN 6:1). Any other selected
     // edition is shown against the pilot as unreviewed numbering, not as an
     // identity claim.
     comparisonCoverage: {
       editions: ['web', 'kjv', 'he'],
-      note: 'Only WEB/KJV/OSHB are compared in the Genesis 1-5 pilot. Target coordinates follow the Maranatha navigation canon anchored to WEB-C; selecting any other edition compares the Greek pilot against unreviewed, edition-specific numbering.',
+      note: 'Only WEB/KJV/OSHB are compared in the Genesis 1-15 pilot. Target coordinates follow the Maranatha navigation canon anchored to WEB-C; selecting any other edition compares the Greek pilot against unreviewed, edition-specific numbering.',
     },
     schemes: [
       {
@@ -93,21 +94,21 @@ function buildSchemes() {
         label: 'World English Bible Catholic Edition',
         kind: 'canon',
         dataset: 'web',
-        note: 'Comparison coverage in this pilot is limited to the Genesis 1-5 proposals (plus boundary GEN 6:1); other books are unreviewed.',
+        note: 'Comparison coverage in this pilot is limited to the Genesis 1-15 proposals; other books are unreviewed.',
       },
       {
         id: 'kjv',
         label: 'King James Version (standard 66-book edition)',
         kind: 'canon',
         dataset: 'kjv',
-        note: 'Comparison coverage in this pilot is limited to the Genesis 1-5 proposals; the edition omits the deuterocanonical books.',
+        note: 'Comparison coverage in this pilot is limited to the Genesis 1-15 proposals; the edition omits the deuterocanonical books.',
       },
       {
         id: 'oshb',
         label: 'Open Scriptures Hebrew Bible (Masoretic)',
         kind: 'canon',
         dataset: 'he',
-        note: 'Comparison coverage in this pilot is limited to the Genesis 1-5 proposals; the edition covers the 39 protocanonical books only.',
+        note: 'Comparison coverage in this pilot is limited to the Genesis 1-15 proposals; the edition covers the 39 protocanonical books only.',
       },
       {
         id: 'byz-greek',
@@ -159,7 +160,7 @@ function buildSchemes() {
       },
       {
         id: 'lxx-aligned',
-        label: 'LXX alignment pilot (Genesis 1-5)',
+        label: 'LXX alignment pilot (Genesis 1-15)',
         kind: 'virtual',
         nativeScheme: 'lxx-swete-native',
         mapping: 'data/lxx-swete-alignment.json',
@@ -286,7 +287,7 @@ export function build() {
   const mapping = {
     version: 2,
     id: 'lxx-swete-alignment',
-    label: 'LXX-canon alignment pilot (Genesis 1-5)',
+    label: 'LXX-canon alignment pilot (Genesis 1-15)',
     status: 'proposal',
     review: {
       humanApproval: null,
@@ -296,12 +297,12 @@ export function build() {
     license: {
       id: ledgers[0].data.license.id,
       attribution: ledgers[0].data.license.attribution,
-      changes: 'Editorial correspondence proposals for Genesis 1-5 (plus the disclosed boundary unit GEN 6:1); no Scripture text changed.',
+      changes: 'Editorial correspondence proposals for Genesis 1-15; no Scripture text changed.',
     },
     scope: {
       covered: [...covered.values()],
-      boundary: [{ book: 'GEN', chapter: '6', verses: [1], note: 'Boundary-only: only GEN 6:1 is proposed; GEN 6:2 and later remain unresolved.' }],
-      note: 'This pilot covers Genesis 1-5 plus the single disclosed boundary unit GEN 6:1. A target reference with no entry and no explicit negative assertion is unresolved; it is never inferred from equal counts or ordinals.',
+      unresolved: [{ book: 'GEN', chapter: '16', note: 'Genesis 16 and later remain unresolved in this batch.' }],
+      note: 'This pilot covers Genesis 1-15. A target reference with no entry and no explicit negative assertion is unresolved; it is never inferred from equal counts or ordinals.',
       edges: 'Each source member names its group\'s complete target set. A group is a collective passage correspondence, not a claim of exact individual equivalence.',
     },
     schemes: 'data/versification-schemes.json',
@@ -309,7 +310,7 @@ export function build() {
     targetScheme: 'web-c',
     targetSchemeNote:
       'Target coordinates are the Maranatha navigation canon anchored to the WEB Catholic Edition. ' +
-      'They do not assert that every edition or manuscript shares that numbering; Genesis 1-5 (plus boundary GEN 6:1) is the proposal-covered scope.',
+      'They do not assert that every edition or manuscript shares that numbering; Genesis 1-15 is the proposal-covered scope.',
     hashMethod: CANONICAL_HASH,
     bindings,
     groups,

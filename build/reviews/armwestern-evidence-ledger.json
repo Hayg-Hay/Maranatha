@@ -1,0 +1,899 @@
+{
+  "status": "20 chapter-level review records. Empty witness/class fields are unresolved, never fabricated evidence.",
+  "moduleArchiveSha256": "bc273232f6b822b9d957fb318396b7863aa5bba9cae3e8e90c108808dd9916f2",
+  "cacheSha256": "40afae32f170325d54cccca592075eac6e11555fe51c942d662c34e0fba17680",
+  "empties": {
+    "shiftedTail": [
+      "MAT.17.27",
+      "MRK.9.50",
+      "ACT.14.28",
+      "1TH.4.18"
+    ],
+    "noPrecedingShift": [
+      "ACT.7.60",
+      "ACT.19.41",
+      "2CO.13.14",
+      "HEB.13.25"
+    ],
+    "chapterStart": [
+      "2CO.2.1",
+      "2CO.6.1"
+    ]
+  },
+  "entries": [
+    {
+      "chapter": "MAT.1",
+      "runs": [
+        {
+          "book": "MAT",
+          "chapter": 1,
+          "start": 7,
+          "end": 8,
+          "count": 2
+        },
+        {
+          "book": "MAT",
+          "chapter": 1,
+          "start": 10,
+          "end": 16,
+          "count": 7
+        }
+      ],
+      "reviewRefs": [
+        "MAT.1.6",
+        "MAT.1.7",
+        "MAT.1.8",
+        "MAT.1.9",
+        "MAT.1.10",
+        "MAT.1.16"
+      ],
+      "witness": null,
+      "witnessPdfPages": [],
+      "witnessPrintedNtPages": [],
+      "nativeLabels": [],
+      "moduleSlots": [
+        "MAT.1.6",
+        "MAT.1.7",
+        "MAT.1.8",
+        "MAT.1.9",
+        "MAT.1.10",
+        "MAT.1.16"
+      ],
+      "cacheRefs": [
+        "MAT.1.6",
+        "MAT.1.7",
+        "MAT.1.8",
+        "MAT.1.9",
+        "MAT.1.10",
+        "MAT.1.16"
+      ],
+      "class": null,
+      "allowedClasses": [
+        "native difference",
+        "upstream merge",
+        "upstream empty",
+        "extraction"
+      ],
+      "observations": null,
+      "verdict": "Pending exact wording witness and boundary/tail verification; no repair decision."
+    },
+    {
+      "chapter": "MAT.17",
+      "runs": [
+        {
+          "book": "MAT",
+          "chapter": 17,
+          "start": 14,
+          "end": 27,
+          "count": 14
+        }
+      ],
+      "reviewRefs": [
+        "MAT.17.13",
+        "MAT.17.14",
+        "MAT.17.27"
+      ],
+      "witness": null,
+      "witnessPdfPages": [],
+      "witnessPrintedNtPages": [],
+      "nativeLabels": [],
+      "moduleSlots": [
+        "MAT.17.13",
+        "MAT.17.14",
+        "MAT.17.27"
+      ],
+      "cacheRefs": [
+        "MAT.17.13",
+        "MAT.17.14",
+        "MAT.17.27"
+      ],
+      "class": null,
+      "allowedClasses": [
+        "native difference",
+        "upstream merge",
+        "upstream empty",
+        "extraction"
+      ],
+      "observations": null,
+      "verdict": "Pending exact wording witness and boundary/tail verification; no repair decision."
+    },
+    {
+      "chapter": "MAT.22",
+      "runs": [
+        {
+          "book": "MAT",
+          "chapter": 22,
+          "start": 2,
+          "end": 3,
+          "count": 2
+        },
+        {
+          "book": "MAT",
+          "chapter": 22,
+          "start": 42,
+          "end": 43,
+          "count": 2
+        }
+      ],
+      "reviewRefs": [
+        "MAT.22.1",
+        "MAT.22.2",
+        "MAT.22.3",
+        "MAT.22.41",
+        "MAT.22.42",
+        "MAT.22.43"
+      ],
+      "witness": null,
+      "witnessPdfPages": [],
+      "witnessPrintedNtPages": [],
+      "nativeLabels": [],
+      "moduleSlots": [
+        "MAT.22.1",
+        "MAT.22.2",
+        "MAT.22.3",
+        "MAT.22.41",
+        "MAT.22.42",
+        "MAT.22.43"
+      ],
+      "cacheRefs": [
+        "MAT.22.1",
+        "MAT.22.2",
+        "MAT.22.3",
+        "MAT.22.41",
+        "MAT.22.42",
+        "MAT.22.43"
+      ],
+      "class": null,
+      "allowedClasses": [
+        "native difference",
+        "upstream merge",
+        "upstream empty",
+        "extraction"
+      ],
+      "observations": null,
+      "verdict": "Pending exact wording witness and boundary/tail verification; no repair decision."
+    },
+    {
+      "chapter": "MRK.8",
+      "runs": [
+        {
+          "book": "MRK",
+          "chapter": 8,
+          "start": 38,
+          "end": 38,
+          "count": 1
+        }
+      ],
+      "reviewRefs": [
+        "MRK.8.37",
+        "MRK.8.38"
+      ],
+      "witness": "bibleinmodernarm00cons, Constantinople 1884; comparison only, not matched edition",
+      "witnessPdfPages": [
+        932,
+        933
+      ],
+      "witnessPrintedNtPages": [
+        44,
+        45
+      ],
+      "nativeLabels": [],
+      "moduleSlots": [
+        "MRK.8.37",
+        "MRK.8.38"
+      ],
+      "cacheRefs": [
+        "MRK.8.37",
+        "MRK.8.38"
+      ],
+      "class": null,
+      "allowedClasses": [
+        "native difference",
+        "upstream merge",
+        "upstream empty",
+        "extraction"
+      ],
+      "observations": "1884 print separates 8:38 and 9:1. Module merges their material into 8:38; exact wording witness still unresolved.",
+      "verdict": "Pending exact wording witness and boundary/tail verification; no repair decision."
+    },
+    {
+      "chapter": "MRK.9",
+      "runs": [
+        {
+          "book": "MRK",
+          "chapter": 9,
+          "start": 1,
+          "end": 50,
+          "count": 50
+        }
+      ],
+      "reviewRefs": [
+        "MRK.9.1",
+        "MRK.9.50"
+      ],
+      "witness": "bibleinmodernarm00cons, Constantinople 1884; comparison only, not matched edition",
+      "witnessPdfPages": [
+        933
+      ],
+      "witnessPrintedNtPages": [
+        45
+      ],
+      "nativeLabels": [],
+      "moduleSlots": [
+        "MRK.9.1",
+        "MRK.9.50"
+      ],
+      "cacheRefs": [
+        "MRK.9.1",
+        "MRK.9.50"
+      ],
+      "class": null,
+      "allowedClasses": [
+        "native difference",
+        "upstream merge",
+        "upstream empty",
+        "extraction"
+      ],
+      "observations": "1884 print puts kingdom saying at 9:1 and transfiguration at 9:2; module 9:1 is transfiguration. Tail print check still pending.",
+      "verdict": "Pending exact wording witness and boundary/tail verification; no repair decision."
+    },
+    {
+      "chapter": "LUK.4",
+      "runs": [
+        {
+          "book": "LUK",
+          "chapter": 4,
+          "start": 18,
+          "end": 19,
+          "count": 2
+        },
+        {
+          "book": "LUK",
+          "chapter": 4,
+          "start": 38,
+          "end": 44,
+          "count": 7
+        }
+      ],
+      "reviewRefs": [
+        "LUK.4.17",
+        "LUK.4.18",
+        "LUK.4.19",
+        "LUK.4.37",
+        "LUK.4.38",
+        "LUK.4.44"
+      ],
+      "witness": null,
+      "witnessPdfPages": [],
+      "witnessPrintedNtPages": [],
+      "nativeLabels": [],
+      "moduleSlots": [
+        "LUK.4.17",
+        "LUK.4.18",
+        "LUK.4.19",
+        "LUK.4.37",
+        "LUK.4.38",
+        "LUK.4.44"
+      ],
+      "cacheRefs": [
+        "LUK.4.17",
+        "LUK.4.18",
+        "LUK.4.19",
+        "LUK.4.37",
+        "LUK.4.38",
+        "LUK.4.44"
+      ],
+      "class": null,
+      "allowedClasses": [
+        "native difference",
+        "upstream merge",
+        "upstream empty",
+        "extraction"
+      ],
+      "observations": null,
+      "verdict": "Pending exact wording witness and boundary/tail verification; no repair decision."
+    },
+    {
+      "chapter": "LUK.9",
+      "runs": [
+        {
+          "book": "LUK",
+          "chapter": 9,
+          "start": 42,
+          "end": 44,
+          "count": 3
+        }
+      ],
+      "reviewRefs": [
+        "LUK.9.41",
+        "LUK.9.42",
+        "LUK.9.44"
+      ],
+      "witness": null,
+      "witnessPdfPages": [],
+      "witnessPrintedNtPages": [],
+      "nativeLabels": [],
+      "moduleSlots": [
+        "LUK.9.41",
+        "LUK.9.42",
+        "LUK.9.44"
+      ],
+      "cacheRefs": [
+        "LUK.9.41",
+        "LUK.9.42",
+        "LUK.9.44"
+      ],
+      "class": null,
+      "allowedClasses": [
+        "native difference",
+        "upstream merge",
+        "upstream empty",
+        "extraction"
+      ],
+      "observations": null,
+      "verdict": "Pending exact wording witness and boundary/tail verification; no repair decision."
+    },
+    {
+      "chapter": "LUK.20",
+      "runs": [
+        {
+          "book": "LUK",
+          "chapter": 20,
+          "start": 5,
+          "end": 6,
+          "count": 2
+        },
+        {
+          "book": "LUK",
+          "chapter": 20,
+          "start": 16,
+          "end": 17,
+          "count": 2
+        }
+      ],
+      "reviewRefs": [
+        "LUK.20.4",
+        "LUK.20.5",
+        "LUK.20.6",
+        "LUK.20.15",
+        "LUK.20.16",
+        "LUK.20.17"
+      ],
+      "witness": null,
+      "witnessPdfPages": [],
+      "witnessPrintedNtPages": [],
+      "nativeLabels": [],
+      "moduleSlots": [
+        "LUK.20.4",
+        "LUK.20.5",
+        "LUK.20.6",
+        "LUK.20.15",
+        "LUK.20.16",
+        "LUK.20.17"
+      ],
+      "cacheRefs": [
+        "LUK.20.4",
+        "LUK.20.5",
+        "LUK.20.6",
+        "LUK.20.15",
+        "LUK.20.16",
+        "LUK.20.17"
+      ],
+      "class": null,
+      "allowedClasses": [
+        "native difference",
+        "upstream merge",
+        "upstream empty",
+        "extraction"
+      ],
+      "observations": null,
+      "verdict": "Pending exact wording witness and boundary/tail verification; no repair decision."
+    },
+    {
+      "chapter": "JHN.6",
+      "runs": [
+        {
+          "book": "JHN",
+          "chapter": 6,
+          "start": 51,
+          "end": 71,
+          "count": 21
+        }
+      ],
+      "reviewRefs": [
+        "JHN.6.50",
+        "JHN.6.51",
+        "JHN.6.71"
+      ],
+      "witness": "bibleinmodernarm00cons, Constantinople 1884; comparison only, not matched edition",
+      "witnessPdfPages": [
+        989,
+        990
+      ],
+      "witnessPrintedNtPages": [
+        101,
+        102
+      ],
+      "nativeLabels": [],
+      "moduleSlots": [
+        "JHN.6.50",
+        "JHN.6.51",
+        "JHN.6.71"
+      ],
+      "cacheRefs": [
+        "JHN.6.50",
+        "JHN.6.51",
+        "JHN.6.71"
+      ],
+      "class": null,
+      "allowedClasses": [
+        "native difference",
+        "upstream merge",
+        "upstream empty",
+        "extraction"
+      ],
+      "observations": "1884 witness splits 51/52 and ends at 72. Module has 71 slots; cache normalizes to 71 conventional references. Native labels must not be defined by English extent.",
+      "verdict": "Pending exact wording witness and boundary/tail verification; no repair decision."
+    },
+    {
+      "chapter": "JHN.10",
+      "runs": [
+        {
+          "book": "JHN",
+          "chapter": 10,
+          "start": 22,
+          "end": 23,
+          "count": 2
+        },
+        {
+          "book": "JHN",
+          "chapter": 10,
+          "start": 41,
+          "end": 42,
+          "count": 2
+        }
+      ],
+      "reviewRefs": [
+        "JHN.10.21",
+        "JHN.10.22",
+        "JHN.10.23",
+        "JHN.10.40",
+        "JHN.10.41",
+        "JHN.10.42"
+      ],
+      "witness": null,
+      "witnessPdfPages": [],
+      "witnessPrintedNtPages": [],
+      "nativeLabels": [],
+      "moduleSlots": [
+        "JHN.10.21",
+        "JHN.10.22",
+        "JHN.10.23",
+        "JHN.10.40",
+        "JHN.10.41",
+        "JHN.10.42"
+      ],
+      "cacheRefs": [
+        "JHN.10.21",
+        "JHN.10.22",
+        "JHN.10.23",
+        "JHN.10.40",
+        "JHN.10.41",
+        "JHN.10.42"
+      ],
+      "class": null,
+      "allowedClasses": [
+        "native difference",
+        "upstream merge",
+        "upstream empty",
+        "extraction"
+      ],
+      "observations": null,
+      "verdict": "Pending exact wording witness and boundary/tail verification; no repair decision."
+    },
+    {
+      "chapter": "ACT.7",
+      "runs": [
+        {
+          "book": "ACT",
+          "chapter": 7,
+          "start": 60,
+          "end": 60,
+          "count": 1
+        }
+      ],
+      "reviewRefs": [
+        "ACT.7.59",
+        "ACT.7.60"
+      ],
+      "witness": null,
+      "witnessPdfPages": [],
+      "witnessPrintedNtPages": [],
+      "nativeLabels": [],
+      "moduleSlots": [
+        "ACT.7.59",
+        "ACT.7.60"
+      ],
+      "cacheRefs": [
+        "ACT.7.59",
+        "ACT.7.60"
+      ],
+      "class": null,
+      "allowedClasses": [
+        "native difference",
+        "upstream merge",
+        "upstream empty",
+        "extraction"
+      ],
+      "observations": null,
+      "verdict": "Pending exact wording witness and boundary/tail verification; no repair decision."
+    },
+    {
+      "chapter": "ACT.14",
+      "runs": [
+        {
+          "book": "ACT",
+          "chapter": 14,
+          "start": 6,
+          "end": 28,
+          "count": 23
+        }
+      ],
+      "reviewRefs": [
+        "ACT.14.5",
+        "ACT.14.6",
+        "ACT.14.28"
+      ],
+      "witness": null,
+      "witnessPdfPages": [],
+      "witnessPrintedNtPages": [],
+      "nativeLabels": [],
+      "moduleSlots": [
+        "ACT.14.5",
+        "ACT.14.6",
+        "ACT.14.28"
+      ],
+      "cacheRefs": [
+        "ACT.14.5",
+        "ACT.14.6",
+        "ACT.14.28"
+      ],
+      "class": null,
+      "allowedClasses": [
+        "native difference",
+        "upstream merge",
+        "upstream empty",
+        "extraction"
+      ],
+      "observations": null,
+      "verdict": "Pending exact wording witness and boundary/tail verification; no repair decision."
+    },
+    {
+      "chapter": "ACT.19",
+      "runs": [
+        {
+          "book": "ACT",
+          "chapter": 19,
+          "start": 41,
+          "end": 41,
+          "count": 1
+        }
+      ],
+      "reviewRefs": [
+        "ACT.19.40",
+        "ACT.19.41"
+      ],
+      "witness": null,
+      "witnessPdfPages": [],
+      "witnessPrintedNtPages": [],
+      "nativeLabels": [],
+      "moduleSlots": [
+        "ACT.19.40",
+        "ACT.19.41"
+      ],
+      "cacheRefs": [
+        "ACT.19.40",
+        "ACT.19.41"
+      ],
+      "class": null,
+      "allowedClasses": [
+        "native difference",
+        "upstream merge",
+        "upstream empty",
+        "extraction"
+      ],
+      "observations": null,
+      "verdict": "Pending exact wording witness and boundary/tail verification; no repair decision."
+    },
+    {
+      "chapter": "1CO.9",
+      "runs": [
+        {
+          "book": "1CO",
+          "chapter": 9,
+          "start": 20,
+          "end": 21,
+          "count": 2
+        }
+      ],
+      "reviewRefs": [
+        "1CO.9.19",
+        "1CO.9.20",
+        "1CO.9.21"
+      ],
+      "witness": null,
+      "witnessPdfPages": [],
+      "witnessPrintedNtPages": [],
+      "nativeLabels": [],
+      "moduleSlots": [
+        "1CO.9.19",
+        "1CO.9.20",
+        "1CO.9.21"
+      ],
+      "cacheRefs": [
+        "1CO.9.19",
+        "1CO.9.20",
+        "1CO.9.21"
+      ],
+      "class": null,
+      "allowedClasses": [
+        "native difference",
+        "upstream merge",
+        "upstream empty",
+        "extraction"
+      ],
+      "observations": null,
+      "verdict": "Pending exact wording witness and boundary/tail verification; no repair decision."
+    },
+    {
+      "chapter": "2CO.2",
+      "runs": [
+        {
+          "book": "2CO",
+          "chapter": 2,
+          "start": 1,
+          "end": 1,
+          "count": 1
+        }
+      ],
+      "reviewRefs": [
+        "2CO.2.1"
+      ],
+      "witness": "bibleinmodernarm00cons, Constantinople 1884; comparison only, not matched edition",
+      "witnessPdfPages": [
+        1076
+      ],
+      "witnessPrintedNtPages": [
+        188
+      ],
+      "nativeLabels": [],
+      "moduleSlots": [
+        "2CO.2.1"
+      ],
+      "cacheRefs": [
+        "2CO.2.1"
+      ],
+      "class": null,
+      "allowedClasses": [
+        "native difference",
+        "upstream merge",
+        "upstream empty",
+        "extraction"
+      ],
+      "observations": "1884 print contains numbered 2:1; raw module slot has zero byte length. Different wording prevents filling from this witness.",
+      "verdict": "Pending exact wording witness and boundary/tail verification; no repair decision."
+    },
+    {
+      "chapter": "2CO.6",
+      "runs": [
+        {
+          "book": "2CO",
+          "chapter": 6,
+          "start": 1,
+          "end": 1,
+          "count": 1
+        }
+      ],
+      "reviewRefs": [
+        "2CO.6.1"
+      ],
+      "witness": "bibleinmodernarm00cons, Constantinople 1884; comparison only, not matched edition",
+      "witnessPdfPages": [
+        1080
+      ],
+      "witnessPrintedNtPages": [
+        192
+      ],
+      "nativeLabels": [],
+      "moduleSlots": [
+        "2CO.6.1"
+      ],
+      "cacheRefs": [
+        "2CO.6.1"
+      ],
+      "class": null,
+      "allowedClasses": [
+        "native difference",
+        "upstream merge",
+        "upstream empty",
+        "extraction"
+      ],
+      "observations": "1884 print contains numbered 6:1; raw module slot has zero byte length. Different wording prevents filling from this witness.",
+      "verdict": "Pending exact wording witness and boundary/tail verification; no repair decision."
+    },
+    {
+      "chapter": "2CO.13",
+      "runs": [
+        {
+          "book": "2CO",
+          "chapter": 13,
+          "start": 14,
+          "end": 14,
+          "count": 1
+        }
+      ],
+      "reviewRefs": [
+        "2CO.13.13",
+        "2CO.13.14"
+      ],
+      "witness": null,
+      "witnessPdfPages": [],
+      "witnessPrintedNtPages": [],
+      "nativeLabels": [],
+      "moduleSlots": [
+        "2CO.13.13",
+        "2CO.13.14"
+      ],
+      "cacheRefs": [
+        "2CO.13.13",
+        "2CO.13.14"
+      ],
+      "class": null,
+      "allowedClasses": [
+        "native difference",
+        "upstream merge",
+        "upstream empty",
+        "extraction"
+      ],
+      "observations": null,
+      "verdict": "Pending exact wording witness and boundary/tail verification; no repair decision."
+    },
+    {
+      "chapter": "1TH.4",
+      "runs": [
+        {
+          "book": "1TH",
+          "chapter": 4,
+          "start": 11,
+          "end": 18,
+          "count": 8
+        }
+      ],
+      "reviewRefs": [
+        "1TH.4.10",
+        "1TH.4.11",
+        "1TH.4.18"
+      ],
+      "witness": null,
+      "witnessPdfPages": [],
+      "witnessPrintedNtPages": [],
+      "nativeLabels": [],
+      "moduleSlots": [
+        "1TH.4.10",
+        "1TH.4.11",
+        "1TH.4.18"
+      ],
+      "cacheRefs": [
+        "1TH.4.10",
+        "1TH.4.11",
+        "1TH.4.18"
+      ],
+      "class": null,
+      "allowedClasses": [
+        "native difference",
+        "upstream merge",
+        "upstream empty",
+        "extraction"
+      ],
+      "observations": null,
+      "verdict": "Pending exact wording witness and boundary/tail verification; no repair decision."
+    },
+    {
+      "chapter": "HEB.13",
+      "runs": [
+        {
+          "book": "HEB",
+          "chapter": 13,
+          "start": 25,
+          "end": 25,
+          "count": 1
+        }
+      ],
+      "reviewRefs": [
+        "HEB.13.24",
+        "HEB.13.25"
+      ],
+      "witness": null,
+      "witnessPdfPages": [],
+      "witnessPrintedNtPages": [],
+      "nativeLabels": [],
+      "moduleSlots": [
+        "HEB.13.24",
+        "HEB.13.25"
+      ],
+      "cacheRefs": [
+        "HEB.13.24",
+        "HEB.13.25"
+      ],
+      "class": null,
+      "allowedClasses": [
+        "native difference",
+        "upstream merge",
+        "upstream empty",
+        "extraction"
+      ],
+      "observations": null,
+      "verdict": "Pending exact wording witness and boundary/tail verification; no repair decision."
+    },
+    {
+      "chapter": "JAS.4",
+      "runs": [
+        {
+          "book": "JAS",
+          "chapter": 4,
+          "start": 14,
+          "end": 15,
+          "count": 2
+        }
+      ],
+      "reviewRefs": [
+        "JAS.4.13",
+        "JAS.4.14",
+        "JAS.4.15"
+      ],
+      "witness": null,
+      "witnessPdfPages": [],
+      "witnessPrintedNtPages": [],
+      "nativeLabels": [],
+      "moduleSlots": [
+        "JAS.4.13",
+        "JAS.4.14",
+        "JAS.4.15"
+      ],
+      "cacheRefs": [
+        "JAS.4.13",
+        "JAS.4.14",
+        "JAS.4.15"
+      ],
+      "class": null,
+      "allowedClasses": [
+        "native difference",
+        "upstream merge",
+        "upstream empty",
+        "extraction"
+      ],
+      "observations": null,
+      "verdict": "Pending exact wording witness and boundary/tail verification; no repair decision."
+    }
+  ]
+}

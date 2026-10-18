@@ -7,12 +7,14 @@
 //   node build/test-service-worker.mjs
 //
 // It asserts:
-//   - install precaches the NEW shell (maranatha-shell-v66);
+//   - install precaches the NEW shell (maranatha-shell-v67);
 //   - activate keeps the existing data cache (maranatha-data-v3) and every file
 //     already stored in it (previously downloaded translations / Greek books);
-//   - activate deletes the OLD shell cache (maranatha-shell-v29);
+//   - activate deletes the OLD shell caches (maranatha-shell-v66 and v29);
 //   - data/berean-hebrew/manifest-v5.js is routed through the data cache by
 //     isTranslationFile (and is not a shell file).
+//   - the Coptic locale and local Coptic font are shell-precached, while the
+//     large Bohairica translation stays lazy/data-cached.
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -92,6 +94,11 @@ async function main() {
       // The Leviticus-milestone files.
       ['./data/berean-hebrew/manifest-v3.js', { url: './data/berean-hebrew/manifest-v3.js', body: 'OLD-LEVITICUS-MANIFEST' }],
       ['./data/berean-hebrew/LEV.js', { url: './data/berean-hebrew/LEV.js', body: 'LEV' }],
+      // A previously selected Coptic translation must survive a shell update.
+      ['./data/bohairica.js', { url: './data/bohairica.js', body: 'BOH' }],
+    ],
+    'maranatha-shell-v66': [
+      ['./index.html', { url: './index.html', body: 'PREVIOUS-SHELL' }],
     ],
     'maranatha-shell-v29': [
       ['./index.html', { url: './index.html', body: 'OLD-SHELL' }],
@@ -102,19 +109,21 @@ async function main() {
   await fire(env.listeners, 'install');
   await fire(env.listeners, 'activate');
 
-  check('install creates the new shell cache (maranatha-shell-v66)', caches.store.has('maranatha-shell-v66'));
-  check('new shell cache is populated', (caches.store.get('maranatha-shell-v66') || new Map()).size > 0);
-  check('Paleo converter, Chinese/Indonesian/Thai locales and fonts are precached for offline reading', ['./hebrew-script.js', './data/locales/zh-Hant.js', './data/locales/id.js', './data/locales/th.js', './data/locales/tl.js', './data/locales/vi.js', './data/locales/ms.js', './fonts/NotoSansSyriac-Regular.ttf', './fonts/NotoSansPhoenician-Regular.ttf', './fonts/ProtoCanaanite.ttf'].every(url => caches.store.get('maranatha-shell-v66')?.has(url)));
+  check('install creates the new shell cache (maranatha-shell-v67)', caches.store.has('maranatha-shell-v67'));
+  check('new shell cache is populated', (caches.store.get('maranatha-shell-v67') || new Map()).size > 0);
+  check('Paleo converter, Chinese/Indonesian/Thai/Coptic locales and fonts are precached for offline reading', ['./hebrew-script.js', './data/locales/zh-Hant.js', './data/locales/id.js', './data/locales/th.js', './data/locales/tl.js', './data/locales/vi.js', './data/locales/ms.js', './data/locales/cop.js', './fonts/NotoSansCoptic-Regular.ttf', './fonts/NotoSansSyriac-Regular.ttf', './fonts/NotoSansPhoenician-Regular.ttf', './fonts/ProtoCanaanite.ttf'].every(url => caches.store.get('maranatha-shell-v67')?.has(url)));
   check('activation preserves the existing data cache (maranatha-data-v3)', caches.store.has('maranatha-data-v3'));
-  check('activation deletes the old shell cache (maranatha-shell-v29)', !caches.store.has('maranatha-shell-v29'));
+  check('activation deletes the immediately previous shell cache (maranatha-shell-v66)', !caches.store.has('maranatha-shell-v66'));
+  check('activation deletes an older shell cache (maranatha-shell-v29)', !caches.store.has('maranatha-shell-v29'));
 
   const data = caches.store.get('maranatha-data-v3');
   check('downloaded translation file survives the shell update', data && data.get('./data/web.js')?.body === 'WEB');
   check('downloaded Berean Greek book survives the shell update', data && data.get('./data/berean/JHN.js')?.body === 'GREEK-JOHN');
+  check('the previously selected Coptic translation survives the shell update', data && data.get('./data/bohairica.js')?.body === 'BOH');
   check('the stale old pilot file is retained, not wiped', data && data.get('./data/berean-hebrew-pilot.js')?.body === 'OLD-HEBREW-PILOT');
   check('the Leviticus-milestone manifest and chunk are retained, not wiped',
     data && data.get('./data/berean-hebrew/manifest-v3.js')?.body === 'OLD-LEVITICUS-MANIFEST' && data.get('./data/berean-hebrew/LEV.js')?.body === 'LEV');
-  check('every previously stored data file is retained (no wipes)', data && data.size === 11, data && String(data.size));
+  check('every previously stored data file is retained (no wipes)', data && data.size === 12, data && String(data.size));
   check('the versioned manifest URL is distinct, so an old manifest cannot shadow new coverage',
     './data/berean-hebrew/manifest-v5.js' !== './data/berean-hebrew/manifest-v4.js');
 
@@ -131,6 +140,8 @@ async function main() {
   const translationsRouted = vm.runInContext('isTranslationFile("/data/web.js")', env.sandbox);
   const delitzschRouted = vm.runInContext('isTranslationFile("/data/delitzsch.js")', env.sandbox);
   const delitzsch1901Routed = vm.runInContext('isTranslationFile("/data/delitzsch1901.js")', env.sandbox);
+  const bohairicaRouted = vm.runInContext('isTranslationFile("/data/bohairica.js")', env.sandbox);
+  const copticLocaleRouted = vm.runInContext('isTranslationFile("/data/locales/cop.js")', env.sandbox);
   const localeRouted = vm.runInContext('isTranslationFile("/data/locales/en.js")', env.sandbox);
   check('versioned/plain Hebrew preview chunks are routed through the data cache', genV3Routed === true && exoV2Routed === true && levRouted === true && numRouted === true && deuRouted === true);
   check('versioned Hebrew preview manifest is routed through the data cache', manifestRouted === true);
@@ -141,14 +152,17 @@ async function main() {
   check('ordinary translation files are still data-cache routed', translationsRouted === true);
   check('the Delitzsch translation is data-cache routed (not shell-precached)', delitzschRouted === true);
   check('the vocalized Delitzsch 1901 is data-cache routed (not shell-precached)', delitzsch1901Routed === true);
+  check('the large Bohairica translation is data-cache routed (not shell-precached)', bohairicaRouted === true);
+  check('the small Coptic locale stays a shell file, not a translation data file', copticLocaleRouted === false);
   check('the changed GEN/EXO chunks are re-versioned so old copies cannot shadow the new variants',
     './data/berean-hebrew/GEN-v3.js' !== './data/berean-hebrew/GEN-v2.js' && './data/berean-hebrew/EXO-v2.js' !== './data/berean-hebrew/EXO.js');
 
   const shellList = (swSource.match(/const SHELL_FILES = \[([\s\S]*?)\];/) || [])[1] || '';
   check('Hebrew preview files are not precached into the shell', !/berean-hebrew/.test(shellList));
   check('the large Delitzsch translations are not precached into the shell', !/delitzsch/.test(shellList));
+  check('the large Bohairica translation is not precached into the shell', !/bohairica/.test(shellList));
   check('data cache version is v3 (unchanged by the Hebrew preview)', /DATA_CACHE_VERSION\s*=\s*'v3'/.test(swSource));
-  check('shell cache version was bumped for the app change', /CACHE_VERSION\s*=\s*'v66'/.test(swSource));
+  check('shell cache version was bumped for the Coptic addition', /CACHE_VERSION\s*=\s*'v67'/.test(swSource));
 
   check('data cache honors version query strings for corrected WEB data', /ignoreSearch: cacheName !== DATA_CACHE/.test(swSource));
 

@@ -1,0 +1,30 @@
+{
+  "status": "Identified print inspected; not a verbatim match for the current digital module. No restoration authorized.",
+  "received": "2026-10-09",
+  "path": "docs/Astowatsashownchʻ_Girkʻ_Hin_ew_Nor_Kta.pdf",
+  "size": 85652958,
+  "sha256": "0232d11aa695fa06d3a3901fc44f33dd7b1ae3d35e35b990907bf1f35714404a",
+  "pdfPages": 1195,
+  "edition": "Smyrna, 1853; Riggs / American Bible Society catalogue identification",
+  "catalogue": {
+    "hathiRecord": "103048520",
+    "hathiVolume": "nyp.33433097476828",
+    "googleBooks": "vWQManhLqYMC"
+  },
+  "identityPages": { "pdfTitle": 8, "pdfLibraryNote": 7, "pdfLibraryStamp": 9, "pdfContents": 10 },
+  "scope": "Contents list corresponds to 39 OT and 27 NT books; complete scan-leaf inventory not yet certified.",
+  "pilot": [
+    { "passage": "MAT 1", "pdfPages": [914], "printedPages": [901], "finding": "Wording/forms differ from module; no full diplomatic transcription claimed." },
+    { "passage": "MRK 1", "pdfPages": [947], "printedPages": [934], "finding": "Wilderness quotation wording differs from module." },
+    { "passage": "JHN 1", "pdfPages": [1000,1001], "printedPages": [987,988], "finding": "Opening/creation wording differs from module." },
+    { "passage": "JHN 6", "pdfPages": [1008,1009], "printedPages": [995,996], "nativeLabels": ["6:51","6:52","6:72"], "finding": "Separate 51/52 and terminal 72; different wording from module/electronic family." },
+    { "passage": "MRK 8-9", "pdfPages": [954,955], "printedPages": [941,942], "nativeLabels": ["8:37","9:1","9:2"], "finding": "Mark 8 ends at 37; kingdom saying at 9:1, transfiguration at 9:2." },
+    { "passage": "2CO 2:1", "pdfPages": [1093], "printedPages": [1080], "nativeLabels": ["2:1"], "finding": "Present in print, absent from module and same-family ebook; cannot fill another wording witness from it." },
+    { "passage": "2CO 6:1", "pdfPages": [1096], "printedPages": [1083], "nativeLabels": ["6:1"], "finding": "Present in print, absent from module and same-family ebook; cannot fill another wording witness from it." }
+  ],
+  "limitations": [
+    "No full 40-anchor diplomatic print comparison or whole-Bible transcription.",
+    "Native print refs, module slots and conventional cache refs are distinct.",
+    "No Scripture, cache repair, source replacement, staging or commit performed."
+  ]
+}

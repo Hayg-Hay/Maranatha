@@ -1,5 +1,23 @@
 # Maranatha Project History
 
+## Bohairica Coptic Bohairic NT — October 18, 2026
+
+Added `bohairica` / BOH, eBible copbhc Bohairica 1.2 (2006-12-14), Wells'
+Horner-based standardized NT. Source archives/notices and extracted files are
+hash-pinned; distributor declares Public Domain. Inventory: 27 books, 260
+chapters, 7,956 numbered text records and 7,957 positions; Acts 24:7 remains a
+disclosed gap, six records contain only the source's `[ ]` marker and are
+tagged as placeholders, and 3 John retains 15 verses. All chapters use
+independent source numbering. Coptic source book names, case-aware grapheme
+search and local OFL Noto Sans Coptic are included. Independent ZIP/USFX audit
+matched every title, unit, word, punctuation mark and boundary; dedicated
+desktop/mobile, comparison/search/interlinear, service-worker and full `npm
+test` checks passed. Shell v67 retains data cache v3. Desktop and
+mobile-breakpoint headless Chrome review found no missing glyphs. Remaining
+limits (print/manuscript collation, physical-device and screen-reader review)
+are documented; no commit/merge/push is authorized. See docs/BOHAIRICA.md and
+docs/BOHAIRICA_DEEPSEEK_HANDOFF.txt.
+
 ## Syriac Peshitta and Murdock English NT — October 9, 2026
 
 Implemented independently credited, source-pinned NT witnesses. Syriac has

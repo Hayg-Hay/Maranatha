@@ -8,3 +8,5 @@ build/sources/tcv/** -text -whitespace
 build/sources/asd/** -text -whitespace
 build/sources/ovcb/** -text -whitespace
 build/sources/kszi/** -text -whitespace
+build/sources/bohairica/** -text -whitespace
+fonts/NotoSansCoptic-OFL.txt -text
