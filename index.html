@@ -203,6 +203,15 @@
         </div>
       </details>
       <p id="bookmark-status" role="status" aria-live="polite"></p>
+      <details id="recent-passages" class="tool-section">
+        <summary>Recent passages (<span id="recent-count">0</span>)</summary>
+        <div class="recent-content">
+          <p>Your last 10 passages, saved on this device. Search queries are not saved.</p>
+          <ul id="recent-list"></ul>
+          <button id="recent-clear" type="button">Clear history</button>
+        </div>
+      </details>
+      <p id="recent-status" role="status" aria-live="polite"></p>
     </section>
 
     <section id="message" class="message" aria-live="polite"></section>
@@ -259,6 +268,7 @@
   <script src="reference-exceptions.js"></script>
   <script src="reading-session.js"></script>
   <script src="saved-passages.js"></script>
+  <script src="recent-passages.js"></script>
   <script src="app.js"></script>
   <script>
     // Register the service worker for offline use, but ONLY over http(s).

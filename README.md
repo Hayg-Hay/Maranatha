@@ -34,6 +34,10 @@ the ASCII prompt manually.
 
 ## Status
 
+**Recent passages:** a collapsed local history keeps the last 10 distinct
+readings and reopens their passages, editions and saved preferences. Clear
+history leaves bookmarks intact. See [recent passages](docs/RECENT_PASSAGES.md).
+
 **Saved passages:** bookmark a reading with an optional name, reopen it from the
 collapsed list, and export/import JSON backups. Bookmarks stay on your device;
 imports merge with existing passages. See [saved passages](docs/SAVED_PASSAGES.md).

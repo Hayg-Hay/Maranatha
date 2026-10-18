@@ -1,5 +1,18 @@
 # Maranatha Project History
 
+## Recent passages - October 18, 2026
+
+On `codex/recent-passages`, added a collapsed local history of the last 10
+distinct readings, reopening through the shared validated restore path, and
+Clear history independent of bookmarks and Continue reading. Repeated renders
+do not add duplicate visits; startup alone and search queries are not recorded.
+Shell v70 precaches the history script with data cache v3 unchanged. Focused
+store and desktop/mobile DOM tests cover ordering, persistence, reopening and
+clear isolation. Full regression and visual/device checks were not run.
+The user approved committing, merging to main and pushing this milestone
+on 2026-10-18.
+See docs/RECENT_PASSAGES.md.
+
 ## Saved passages - October 18, 2026
 
 On `codex/saved-passages`, added named local bookmarks, a collapsed list,

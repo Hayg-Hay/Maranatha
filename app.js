@@ -806,7 +806,7 @@ const refs = {
 
   const readingStore = window.MARANATHA_READING_SESSION;
   const readingCatalog = { translations: TRANSLATIONS.map(t => t.id), books: canon.books.map(b => b.id), locales: LOCALES.map(l => l.id) };
-  let bookmarks;
+  let bookmarks, recentPassages;
   let savedReading = null;
   try { savedReading = readingStore?.load(window.localStorage, readingCatalog) || null; } catch {}
   let readingStarted = false;
@@ -855,6 +855,7 @@ function init() {
 
     showSavedReading();
     bookmarks = window.MARANATHA_SAVED_PASSAGES.mount({ catalog: readingCatalog, capture: captureReading, describe: readingDescription, open: restoreReading });
+    recentPassages = window.MARANATHA_RECENT_PASSAGES.mount({ catalog: readingCatalog, describe: readingDescription, open: restoreReading });
     refs.resumeButton.addEventListener('click', continueReading);
     refs.forgetReading.addEventListener('click', () => {
       readingRestoreGeneration++; restoringReading = false; readingStarted = false;
@@ -1234,6 +1235,7 @@ function init() {
     if (!readingStarted) return;
     const snapshot = captureReading();
     if (!snapshot) return;
+    recentPassages?.record(snapshot);
     try { readingStore.save(window.localStorage, snapshot, readingCatalog); } catch {}
   }
 

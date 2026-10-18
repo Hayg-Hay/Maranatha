@@ -675,3 +675,8 @@ code { font-family:Consolas, monospace; }
 .bookmark-import { display: block; margin-top: .75rem; }
 .bookmark-import input { display: block; max-width: 100%; margin-top: .35rem; }
 #bookmark-status:empty { display: none; }
+.recent-content { padding: .75rem 1rem; }
+#recent-list { list-style: none; padding: 0; }
+#recent-list li { margin: .5rem 0; }
+#recent-list button { max-width: 100%; text-align: start; overflow-wrap: anywhere; white-space: normal; }
+#recent-status:empty { display: none; }
