@@ -34,6 +34,10 @@ the ASCII prompt manually.
 
 ## Status
 
+**Reader focus:** temporarily hide the main controls with **Enter reader focus**.
+A sticky exit button and Escape restore them; chapter navigation, copy controls
+and source attribution stay available. See [reader focus](docs/READER_FOCUS.md).
+
 **Copy passage:** copy source text with references and translation credits
 beside each passage heading. Clipboard restrictions reveal selectable text for
 manual copying. See [copy passage](docs/COPY_PASSAGE.md).

@@ -684,3 +684,12 @@ code { font-family:Consolas, monospace; }
 .copy-status { margin-inline-start: .5rem; font-size: .9rem; }
 .copy-fallback { margin: .75rem 0; max-width: 100%; }
 .copy-fallback textarea { display: block; width: min(42rem, 100%); box-sizing: border-box; font: inherit; color: var(--ink); background: var(--paper); margin-bottom: .5rem; }
+#reader-focus-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: .5rem 1rem; margin: 1rem 0; }
+#reader-focus-hint { margin-inline-end: auto; color: var(--muted); }
+.reader-focus .shell > header,
+.reader-focus .browse-panel,
+.reader-focus #reading-actions,
+.reader-focus #parallel-view .chapter-bar { display: none; }
+.reader-focus .shell { margin-top: 0; }
+.reader-focus #reader-focus-bar { position: sticky; top: 0; z-index: 20; margin-top: 0; padding: .5rem 0; background: var(--body-bg); border-bottom: 1px solid var(--line); }
+.reader-focus #current-reference { scroll-margin-top: 7rem; }

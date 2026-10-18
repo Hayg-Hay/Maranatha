@@ -1,5 +1,18 @@
 # Maranatha Project History
 
+## Reader focus - October 18, 2026
+
+On `codex/reader-focus`, added a temporary presentation that hides the header,
+main controls, bookmarks/history and parallel chapter pickers. A sticky toggle
+and Escape exit the mode; rendered text, bottom chapter navigation, copy
+controls, notices and attribution remain available. Mode changes do not
+rerender Scripture or write storage, and refresh starts in normal mode.
+Shell v72 precaches the new focus script; data cache v3 is unchanged. Focused
+desktop/mobile DOM and CSS checks cover controls, keyboard handling, storage
+isolation, navigation, parallel panes and refresh. Full regression and visual/
+physical-device checks were not run. The user approved committing, merging to
+main and pushing this milestone on 2026-10-18. See docs/READER_FOCUS.md.
+
 ## Copy passage - October 18, 2026
 
 On `codex/copy-passage`, added per-passage copying with source references,

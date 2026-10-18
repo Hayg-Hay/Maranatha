@@ -214,6 +214,11 @@
       <p id="recent-status" role="status" aria-live="polite"></p>
     </section>
 
+    <div id="reader-focus-bar" role="group" aria-label="Reader focus controls">
+      <span id="reader-focus-hint" hidden>Reader focus · Escape to exit</span>
+      <button id="reader-focus-toggle" type="button" aria-pressed="false" disabled>Enter reader focus</button>
+    </div>
+
     <section id="message" class="message" aria-live="polite"></section>
 
     <section id="parallel-view" class="parallel-view" hidden aria-label="Parallel reading with independent numbering">
@@ -271,6 +276,7 @@
   <script src="recent-passages.js"></script>
   <script src="copy-passage.js"></script>
   <script src="app.js"></script>
+  <script src="reader-focus.js"></script>
   <script>
     // Register the service worker for offline use, but ONLY over http(s).
     // Opening index.html directly from disk (file://) must keep working with
