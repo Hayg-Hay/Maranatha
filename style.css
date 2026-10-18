@@ -680,3 +680,7 @@ code { font-family:Consolas, monospace; }
 #recent-list li { margin: .5rem 0; }
 #recent-list button { max-width: 100%; text-align: start; overflow-wrap: anywhere; white-space: normal; }
 #recent-status:empty { display: none; }
+.passage-copy { min-width: 0; max-width: 100%; }
+.copy-status { margin-inline-start: .5rem; font-size: .9rem; }
+.copy-fallback { margin: .75rem 0; max-width: 100%; }
+.copy-fallback textarea { display: block; width: min(42rem, 100%); box-sizing: border-box; font: inherit; color: var(--ink); background: var(--paper); margin-bottom: .5rem; }

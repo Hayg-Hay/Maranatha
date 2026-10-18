@@ -867,7 +867,7 @@ function init() {
     // Only a reading/settings action starts recording: merely opening the app
     // or expanding a disclosure must never replace the previous session.
     const readingAction = event => {
-      if (refs.resumeReading.contains(event.target) || event.target.closest('#reading-actions')) return;
+      if (refs.resumeReading.contains(event.target) || event.target.closest('#reading-actions, .passage-copy')) return;
       if (event.type === 'click' && !event.target.closest('button, .search-hit')) return;
       if (restoringReading) {
         readingRestoreGeneration++;
@@ -2476,11 +2476,31 @@ function init() {
     return list;
   }
 
-  // Builds one heading + table block and appends it to #results. Shared by
-  // both browse mode (a single block, the whole chapter, unhighlighted) and
-  // reference mode (one block per group, restricted verses, highlighted).
-  // When exactVerses is provided (reference mode) an individual per-block
-  // context-toggle button is added beside the heading.
+  // Copy source units rather than rendered cells, which can contain study
+  // annotations or multiple visual presentations of the same Hebrew edition.
+  function canonicalCopyText({ bookId, chapterNum, name, verses, translations, exactVerses }) {
+    const editions = [...new Map(translations.filter(t => !t.virtual).map(t => [t.id, t])).values()];
+    return editions.map(t => {
+      const data = window.MARANATHA_TRANSLATIONS?.[t.id];
+      if (!data || !loaded.has(t.id)) return '';
+      const requested = exactVerses ? [...exactVerses] : verses;
+      const units = nativeReadingUnits(bookId, chapterNum, requested, [t], null).verses;
+      const rows = units.flatMap(v => {
+        const cell = VerseAvailability.cell(data, bookId, chapterNum, v);
+        if (!['text', 'additional'].includes(cell.state) || !cell.text) return [];
+        return [{ label: sourceVerseLabel(bookId, chapterNum, v, [t]), text: cell.text, placeholder: cell.placeholder }];
+      });
+      const reference = exactVerses ? `${name} ${rows.map(row => row.label).join(', ')}` : `${name} ${chapterNum}`;
+      const notes = [];
+      if (versificationEntry(t, bookId, chapterNum)) notes.push('Source-edition numbering; equal verse numbers do not establish correspondence with another edition.');
+      if (rows.length < units.length) notes.push('Only available source verse text is included; missing or note-only positions are not filled.');
+      if (rows.some(row => row.placeholder)) notes.push('Bracket-only source placeholders are preserved; they do not supply verse text.');
+      return window.MARANATHA_COPY_PASSAGE.format({ reference, label: t.label, rows, data, notice: notes.join(' ') });
+    }).filter(Boolean).join('\n\n');
+  }
+
+  // One heading and reading block for browse/reference modes and parallel panes.
+  // Reference selections also offer a per-block context toggle.
   function appendResultBlock({ bookId, chapterNum, name, verseCount, verses, translations, layout, highlight, anchorFirst, exactVerses = null, showContext = false, showContextToggle = false, versificationDisclosure = false }) {
     const head = document.createElement('div');
     head.className = 'result-head';
@@ -2501,6 +2521,11 @@ function init() {
       : 'reading view';
     head.innerHTML = `<h2>${name} ${chapterNum} <small>(${verseLabel}, ${layoutLabel})</small></h2>`;
     refs.results.appendChild(head);
+    const copy = window.MARANATHA_COPY_PASSAGE.control(
+      () => canonicalCopyText({ bookId, chapterNum, name, verses, translations, exactVerses }),
+      `${name} ${chapterNum} — ${[...new Set(translations.filter(t => !t.virtual).map(t => t.label))].join(' / ')}`,
+    );
+    head.appendChild(copy);
 
     // Per-block context toggle — reference mode only (not browse-highlight)
     if (showContextToggle) {
@@ -4502,6 +4527,16 @@ function init() {
     }
 
     if (!parallelPane) container.appendChild(heading);
+
+    container.appendChild(window.MARANATHA_COPY_PASSAGE.control(() => {
+      const rows = chapter.segments.filter(segment => segment.t).map(segment => ({
+        label: segment.kind === 'verse' ? `${chapter.n}:${segment.l}` : '[Unnumbered source text]', text: segment.t,
+      }));
+      return window.MARANATHA_COPY_PASSAGE.format({
+        reference: `${book.label} ${lxxChapterLabel(chapter)}`, label: 'Septuagint (Swete)', rows, data: dataset,
+        notice: 'Native LXX numbering; this chapter is independent of canon-numbered translations.',
+      });
+    }, `${book.label} ${chapter.n} — Septuagint (Swete)`));
 
     const list = document.createElement('div');
     list.className = 'lxx-verses';

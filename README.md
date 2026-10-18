@@ -34,6 +34,10 @@ the ASCII prompt manually.
 
 ## Status
 
+**Copy passage:** copy source text with references and translation credits
+beside each passage heading. Clipboard restrictions reveal selectable text for
+manual copying. See [copy passage](docs/COPY_PASSAGE.md).
+
 **Recent passages:** a collapsed local history keeps the last 10 distinct
 readings and reopens their passages, editions and saved preferences. Clear
 history leaves bookmarks intact. See [recent passages](docs/RECENT_PASSAGES.md).

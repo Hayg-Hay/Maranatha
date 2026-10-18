@@ -1,5 +1,18 @@
 # Maranatha Project History
 
+## Copy passage - October 18, 2026
+
+On `codex/copy-passage`, added per-passage copying with source references,
+translation labels and available copyright/license/source metadata. Reference
+selections exclude expanded context; combined native units remain intact.
+Independent LXX and parallel panes use their own references. A read-only,
+selected textarea supports manual copying when clipboard access fails.
+Shell v71 precaches the copy script; data cache v3 is unchanged. Focused
+desktop/mobile DOM checks cover clipboard/fallback, source fidelity for selected
+examples, combined units, multiple editions and independent panes. Full
+regression and visual/device checks were not run. The user approved committing,
+merging to main and pushing this milestone on 2026-10-18. See docs/COPY_PASSAGE.md.
+
 ## Recent passages - October 18, 2026
 
 On `codex/recent-passages`, added a collapsed local history of the last 10

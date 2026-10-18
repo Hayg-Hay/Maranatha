@@ -35,7 +35,7 @@
 // the new shell. The update is therefore user-driven, not a silent replacement
 // mid-read.
 
-const CACHE_VERSION = 'v70';      // bump when shell files change
+const CACHE_VERSION = 'v71';      // bump when shell files change
 // Data cache intentionally stays at v3. The Berean Hebrew preview uses
 // versioned/uniquely named data files (data/berean-hebrew/manifest-v5.js and
 // data/berean-hebrew/<BOOK>.js); the LXX disclosure update uses a query-versioned
@@ -64,6 +64,7 @@ const SHELL_FILES = [
   './reading-session.js',
   './saved-passages.js',
   './recent-passages.js',
+  './copy-passage.js',
   './hebrew-script.js',
   './PROJECT_HISTORY.md',
   './data/canon.js',
