@@ -702,7 +702,10 @@ code { font-family:Consolas, monospace; }
 .print-actions button { margin: 0 .5rem .5rem 0; color: #111; background: #f2eee8; border-color: #786650; }
 .print-actions button:hover { background: #e5dacd; }
 .print-actions button:focus-visible { outline-color: #7a4a24; }
-.print-text { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; unicode-bidi: plaintext; font: 1rem/1.7 Georgia, 'Ezra SIL', 'Noto Sans Coptic', 'Noto Sans Syriac', serif; }
+.print-size-label { display: inline-flex; align-items: center; gap: .5rem; }
+.print-actions select { color: #111; background: #f2eee8; border-color: #786650; }
+.print-actions select:focus-visible { outline-color: #7a4a24; }
+.print-text { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; unicode-bidi: plaintext; font: 12pt/1.6 Georgia, 'Ezra SIL', 'Noto Sans Coptic', 'Noto Sans Syriac', serif; }
 @media (max-width: 700px) { #print-preview { padding: 1rem; margin: 1rem; } }
 @media print {
   @page { margin: 18mm; }
@@ -712,5 +715,5 @@ code { font-family:Consolas, monospace; }
   html.print-passage-ready body > :not(#print-preview) { display: none !important; }
   html.print-passage-ready #print-preview { display: block !important; width: auto; max-width: none; margin: 0; padding: 0; border: 0; background: #fff; color: #000; }
   html.print-passage-ready .print-actions { display: none !important; }
-  html.print-passage-ready .print-text { font-size: 12pt; line-height: 1.6; height: auto; max-height: none; overflow: visible; break-inside: auto; orphans: 3; widows: 3; }
+  html.print-passage-ready .print-text { line-height: 1.6; height: auto; max-height: none; overflow: visible; break-inside: auto; orphans: 3; widows: 3; }
 }

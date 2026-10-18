@@ -7,6 +7,13 @@ then choose **Print / Save as PDF** to open the browser's print dialog. Select
 a printer or Save as PDF there. No popup window, clipboard permission, server
 or network request is required.
 
+Use **Print size** to choose 12, 14, 16, 18 or 24 pt. The preview and printed
+verse text and passage heading use that same size, independently of the main
+reader font-size setting. Default is 12 pt; the selection stays for this page
+session across previews and resets on refresh. No new storage is written.
+For larger print, try 16 or 18 pt and choose what is comfortable. Browser
+print scaling should be 100% to preserve the selected point size on paper.
+
 The preview uses the same text as Copy passage: selected verses exclude
 expanded context; chapter browsing copies the chapter; combined source units
 retain their complete text/range labels; independent editions and parallel
@@ -25,7 +32,7 @@ capture. Printing or cancelling leaves the preview available for retry.
 
 With a preview open, printing includes only that captured passage. Navigation,
 settings, buttons, search results and the normal page footer are hidden. The
-layout uses white paper, black text, local source fonts, 12pt text, 18mm page
+layout uses white paper, black text, local source fonts, the selected text size, 18mm page
 margins and wrapping without a fixed-height container. Themes and the warm/
 low-contrast overlays are removed from print output without changing reading
 preferences. Bidirectional plaintext layout preserves direction per paragraph.
@@ -43,7 +50,7 @@ storage; existing reading, history and bookmarks are unaffected.
 `print-passage.js` owns the in-page preview and print action, and loads before
 `copy-passage.js`, which supplies a print button beside each copy button using
 the same source-text callback. Print CSS is scoped to the open preview class.
-Shell v74 precaches the new script, retaining data cache v3.
+Shell v75 includes the print-size update, retaining data cache v3.
 
 Run `npm run test:print-passage` for desktop/mobile DOM checks covering selected
 source text and copy parity, print-only visibility, keyboard/focus behavior,

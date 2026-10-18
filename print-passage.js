@@ -9,10 +9,23 @@
   const description = document.createElement('p'); description.className = 'print-description';
   const print = document.createElement('button'); print.type = 'button'; print.textContent = 'Print / Save as PDF';
   const close = document.createElement('button'); close.type = 'button'; close.textContent = 'Close print preview';
+  const sizeLabel = document.createElement('label'); sizeLabel.className = 'print-size-label'; sizeLabel.textContent = 'Print size ';
+  const size = document.createElement('select'); size.id = 'print-size';
+  for (const points of [12, 14, 16, 18, 24]) {
+    const option = document.createElement('option'); option.value = String(points); option.textContent = `${points} pt`;
+    size.appendChild(option);
+  }
+  sizeLabel.appendChild(size);
+  const sizeHint = document.createElement('p'); sizeHint.textContent = 'Preview and PDF use this size. Print at 100% scale to keep the selected size on paper.';
   const status = document.createElement('p'); status.setAttribute('role', 'status');
   const text = document.createElement('pre'); text.className = 'print-text'; text.dir = 'auto';
   let origin = null;
-  actions.append(heading, print, close, status); preview.append(actions, description, text); document.body.append(preview);
+  function applySize() {
+    if (![12, 14, 16, 18, 24].includes(Number(size.value))) size.value = '12';
+    text.style.fontSize = `${size.value}pt`; description.style.fontSize = `${size.value}pt`;
+  }
+  size.addEventListener('change', applySize); applySize();
+  actions.append(heading, sizeLabel, sizeHint, print, close, status); preview.append(actions, description, text); document.body.append(preview);
   function dismiss() {
     preview.hidden = true; document.documentElement.classList.remove('print-passage-ready');
     text.textContent = ''; status.textContent = '';

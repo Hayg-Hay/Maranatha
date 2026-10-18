@@ -1,5 +1,15 @@
 # Maranatha Project History
 
+## Print-size choices - October 18, 2026
+
+At the user's request, worked directly on main to add 12/14/16/18/24 pt print
+size choices, shared by the preview, printed text and passage heading. Size
+is independent of reading preferences and stays only for the page session.
+The default remains 12 pt. Shell v75 retains data cache v3. Focused print
+checks cover all sizes, print-media parity, reading-size isolation and session
+retention. The user approved staging and committing this follow-up on
+2026-10-18. Pushing this follow-up has not been authorized.
+
 ## Print passage - October 18, 2026
 
 On `codex/print-passage`, added per-passage print previews using the existing

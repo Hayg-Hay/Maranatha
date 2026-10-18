@@ -41,18 +41,32 @@ for (const narrow of [false, true]) {
   click('.print-actions button'); assert.deepEqual(printed, [text]);
   assert.equal(d.querySelector('#print-preview').hidden, false, 'preview stays open after printing or cancelling');
   assert.equal(JSON.stringify([...values]), before); assert.equal(d.querySelector('#results').innerHTML, markup);
+  const size = d.querySelector('#print-size');
+  assert.deepEqual([...size.options].map(option => option.value), ['12', '14', '16', '18', '24']);
+  for (const points of ['12', '14', '16', '18', '24']) {
+    change('#print-size', points);
+    assert.equal(d.querySelector('.print-text').style.fontSize, `${points}pt`);
+    assert.equal(d.querySelector('.print-description').style.fontSize, `${points}pt`);
+    assert.equal(d.querySelector('.print-text').textContent, text);
+  }
+  assert.equal(JSON.stringify([...values]), before, 'print size is independent of reading/history storage');
+  change('#print-size', '18');
+  change('#fontsize', 'largest');
+  assert.equal(w.getComputedStyle(d.querySelector('.print-text')).fontSize, '24px', '18pt preview is independent of reader font size');
   // Activate only the print-media rules to inspect the DOM presented to a printer.
   const printRules = [...d.styleSheets[0].cssRules].filter(rule => rule.media?.mediaText === 'print').flatMap(rule => [...rule.cssRules]).filter(rule => rule.selectorText);
   const sheet = d.createElement('style'); sheet.textContent = printRules.map(rule => rule.cssText).join('\n'); d.head.append(sheet);
   for (const selector of ['.shell', 'footer', '.print-actions']) assert.equal(w.getComputedStyle(d.querySelector(selector)).display, 'none');
   assert.equal(w.getComputedStyle(d.querySelector('#print-preview')).display, 'block');
-  assert.equal(w.getComputedStyle(d.querySelector('.print-text')).fontSize, '16px'); sheet.remove(); // 12pt at 96 CSS px/in.
+  assert.equal(w.getComputedStyle(d.querySelector('.print-text')).fontSize, '24px');
+  assert.equal(w.getComputedStyle(d.querySelector('.print-description')).fontSize, '24px'); sheet.remove(); // 18pt at 96 CSS px/in.
   d.dispatchEvent(new w.KeyboardEvent('keydown', { key: 'Escape', cancelable: true }));
   assert.equal(d.querySelector('#print-preview').hidden, true); assert.equal(d.activeElement, origin);
   assert.equal(d.documentElement.classList.contains('print-passage-ready'), false);
   click('.copy-passage-button'); await until(() => copied.length === 1); assert.equal(copied[0], text);
   // Safe plain text and print API failure feedback.
   const special = w.MARANATHA_PRINT_PASSAGE.control(() => '<img src=x onerror=alert(1)>\ncredit', 'Test fixture'); d.body.append(special); special.click();
+  assert.equal(d.querySelector('#print-size').value, '18', 'print size stays selected across previews in this session');
   assert.equal(d.querySelector('#print-preview img'), null); assert(d.querySelector('.print-text').textContent.includes('<img'));
   w.print = () => { throw new Error('Unavailable'); }; click('.print-actions button'); assert.match(d.querySelector('.print-actions [role="status"]').textContent, /browser’s Print command/);
   click('.print-actions button + button'); special.remove();
