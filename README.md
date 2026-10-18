@@ -34,6 +34,11 @@ the ASCII prompt manually.
 
 ## Status
 
+**Search polish:** long verses show excerpts around matches. Opening a result
+offers **Back to search results**, preserving the query, original edition,
+expanded comparisons and result position for the current session. See
+[search polish](docs/SEARCH_POLISH.md).
+
 **Reader focus:** temporarily hide the main controls with **Enter reader focus**.
 A sticky exit button and Escape restore them; chapter navigation, copy controls
 and source attribution stay available. See [reader focus](docs/READER_FOCUS.md).

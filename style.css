@@ -693,3 +693,5 @@ code { font-family:Consolas, monospace; }
 .reader-focus .shell { margin-top: 0; }
 .reader-focus #reader-focus-bar { position: sticky; top: 0; z-index: 20; margin-top: 0; padding: .5rem 0; background: var(--body-bg); border-bottom: 1px solid var(--line); }
 .reader-focus #current-reference { scroll-margin-top: 7rem; }
+.reader-focus #results { scroll-margin-top: 7rem; }
+.search-excerpt-hint { color: var(--muted); font-size: .9rem; }

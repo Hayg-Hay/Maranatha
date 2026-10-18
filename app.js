@@ -807,6 +807,8 @@ const refs = {
   const readingStore = window.MARANATHA_READING_SESSION;
   const readingCatalog = { translations: TRANSLATIONS.map(t => t.id), books: canon.books.map(b => b.id), locales: LOCALES.map(l => l.id) };
   let bookmarks, recentPassages;
+  // One in-memory search visit; never included in reading/bookmark storage.
+  let searchReturn = null;
   let savedReading = null;
   try { savedReading = readingStore?.load(window.localStorage, readingCatalog) || null; } catch {}
   let readingStarted = false;
@@ -857,6 +859,7 @@ function init() {
     bookmarks = window.MARANATHA_SAVED_PASSAGES.mount({ catalog: readingCatalog, capture: captureReading, describe: readingDescription, open: restoreReading });
     recentPassages = window.MARANATHA_RECENT_PASSAGES.mount({ catalog: readingCatalog, describe: readingDescription, open: restoreReading });
     refs.resumeButton.addEventListener('click', continueReading);
+    q('#back-to-search').addEventListener('click', returnToSearch);
     refs.forgetReading.addEventListener('click', () => {
       readingRestoreGeneration++; restoringReading = false; readingStarted = false;
       refs.resumeButton.disabled = false; refs.resumeButton.textContent = 'Continue reading';
@@ -2952,6 +2955,60 @@ function init() {
 
   const SEARCH_RESULT_CAP = 300;
 
+  function searchExcerpt(text, query, translationId) {
+    const language = translationLanguage(translationId), needle = normalizeSearchText(query, language);
+    const { form, map, ends } = buildSearchForm(text, language);
+    const match = needle ? form.indexOf(needle) : -1;
+    if (match < 0) return { text, leading: false, trailing: false };
+    let clusters;
+    if (typeof Intl.Segmenter === 'function') {
+      clusters = [...new Intl.Segmenter(language || 'en', { granularity: 'grapheme' }).segment(text)];
+    } else {
+      clusters = [];
+      for (const part of codePointsWithIndex(text)) {
+        const last = clusters[clusters.length - 1];
+        if (last && (/\p{M}/u.test(part.ch) || part.ch === '\u200d' || last.segment.endsWith('\u200d'))) last.segment += part.ch;
+        else clusters.push({ index: part.index, segment: part.ch });
+      }
+    }
+    if (clusters.length <= 240) return { text, leading: false, trailing: false };
+    const start = map[match], end = ends ? ends[match + needle.length - 1] : map[match + needle.length - 1] + 1;
+    const first = clusters.findIndex(part => part.index + part.segment.length > start);
+    const last = clusters.findIndex(part => part.index >= end);
+    let from = Math.max(0, first - 75), to = Math.min(clusters.length, (last < 0 ? clusters.length : last) + 110);
+    // Prefer whole words when a nearby whitespace boundary exists; scripts
+    // without spaces still cut only at grapheme boundaries.
+    for (let i = from; i > Math.max(0, from - 20); i--) {
+      if (/\s/u.test(clusters[i - 1].segment)) { from = i; break; }
+    }
+    for (let i = to; i < Math.min(clusters.length, to + 20); i++) {
+      if (/\s/u.test(clusters[i].segment)) { to = i; break; }
+    }
+    if (from < 20) from = 0;
+    if (clusters.length - to < 20) to = clusters.length;
+    return { text: text.slice(clusters[from].index, to === clusters.length ? text.length : clusters[to].index), leading: from > 0, trailing: to < clusters.length };
+  }
+
+  function searchHitKey(match) { return `${match.bookId}-${match.chapter}-${match.verse}`; }
+
+  function returnToSearch() {
+    if (!searchReturn) return;
+    // Returning supersedes any pending asynchronous saved-reading restore.
+    readingRestoreGeneration++; restoringReading = false;
+    refs.resumeButton.disabled = false; refs.resumeButton.textContent = 'Continue reading';
+    cancelLxxReference(); refs.viewMode.value = 'canon';
+    viewState.mode = 'search'; viewState.groups = null; viewState.highlightVerse = null;
+    viewState.search = searchReturn.search;
+    refs.search.value = searchReturn.search.query;
+    populateSearchTranslations(); refs.searchTranslation.value = searchReturn.search.translationId;
+    render({ scrollToReference: false });
+    const hit = [...refs.results.querySelectorAll('.search-hit')].find(node => node.dataset.searchKey === searchReturn.key);
+    if (hit) {
+      hit.focus({ preventScroll: true });
+      window.scrollTo({ top: Math.max(0, window.scrollY + hit.getBoundingClientRect().top - searchReturn.top), behavior: 'instant' });
+    } else window.scrollTo({ top: searchReturn.scrollY, behavior: 'instant' });
+  }
+
   function performSearch() {
     // Text search is canon-only (it indexes canon-numbered translations):
     // invoking it from the LXX or parallel view returns to the canon view.
@@ -2974,12 +3031,17 @@ function init() {
     }
     setMessage('');
     const { matches, total } = searchVerses(data, query);
+    searchReturn = null;
     viewState.mode = 'search';
     viewState.groups = null;
     viewState.highlightVerse = null;
-    viewState.search = { query, translationId: t.id, translationLabel: t.label, matches, total };
+    viewState.search = { query, translationId: t.id, translationLabel: t.label, matches, total, expanded: new Set() };
     refs.contextBtn.hidden = true;
     render();
+    refs.results.scrollIntoView({
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      block: 'start',
+    });
   }
 
   function renderSearchResults() {
@@ -2997,6 +3059,9 @@ function init() {
     h2.appendChild(small);
     head.appendChild(h2);
     refs.results.appendChild(head);
+    const hint = document.createElement('p'); hint.className = 'search-excerpt-hint';
+    hint.textContent = 'Long verses show an excerpt around the first match. Open a result to read the full chapter.';
+    refs.results.appendChild(hint);
 
     if (!s.total) {
       const empty = document.createElement('p');
@@ -3011,6 +3076,7 @@ function init() {
     for (const m of s.matches.slice(0, SEARCH_RESULT_CAP)) {
       const hit = document.createElement('div');
       hit.className = 'search-hit';
+      hit.dataset.searchKey = searchHitKey(m);
       hit.tabIndex = 0;
       hit.setAttribute('role', 'button');
 
@@ -3032,7 +3098,12 @@ function init() {
           label.textContent = scriptMode === 'square' ? 'Square Hebrew' : scriptMode === 'paleo' ? 'Paleo-Hebrew' : 'Proto-Sinaitic (approx.)';
           hit.append(label);
         }
-        appendHighlighted(body, m.text, s.query, s.translationId, scriptMode);
+        const excerpt = searchExcerpt(m.text, s.query, s.translationId);
+        if (excerpt.leading) body.append(document.createTextNode('…'));
+        const content = document.createElement('span');
+        appendHighlighted(content, excerpt.text, s.query, s.translationId, scriptMode);
+        body.append(content);
+        if (excerpt.trailing) body.append(document.createTextNode('…'));
         hit.append(body);
         const sourceCell = VerseAvailability.cell(window.MARANATHA_TRANSLATIONS[s.translationId], m.bookId, m.chapter, m.verse);
         if (sourceCell.placeholder && sourceCell.note) {
@@ -3044,7 +3115,11 @@ function init() {
         }
       }
 
-      const openHit = () => jumpToVerse(m.bookId, m.chapter, m.verse);
+      const openHit = () => {
+        searchReturn = { search: s, key: searchHitKey(m), top: hit.getBoundingClientRect().top, scrollY: window.scrollY };
+        readingStarted = true;
+        jumpToVerse(m.bookId, m.chapter, m.verse);
+      };
       hit.addEventListener('click', openHit);
       hit.addEventListener('keydown', (event) => {
         if (event.target !== hit) return;
@@ -3065,6 +3140,10 @@ function init() {
         toggle.textContent = 'Compare translations';
         toggle.setAttribute('aria-expanded', 'false');
         let panel = null;
+        if (s.expanded?.has(searchHitKey(m))) {
+          panel = buildComparePanel(m, s.query, s.translationId); hit.appendChild(panel);
+          toggle.setAttribute('aria-expanded', 'true'); toggle.textContent = 'Hide translations';
+        }
         toggle.addEventListener('click', (event) => {
           event.stopPropagation();
           if (!panel) {
@@ -3073,6 +3152,7 @@ function init() {
             hit.appendChild(panel);
           }
           panel.hidden = !panel.hidden;
+          if (!panel.hidden) s.expanded?.add(searchHitKey(m)); else s.expanded?.delete(searchHitKey(m));
           toggle.setAttribute('aria-expanded', String(!panel.hidden));
           toggle.textContent = panel.hidden ? 'Compare translations' : 'Hide translations';
         });
@@ -3198,6 +3278,10 @@ function init() {
     refs.searchTranslation.innerHTML = '';
     const available = selectedTranslations()
       .filter(t => loaded.has(t.id) && window.MARANATHA_TRANSLATIONS[t.id]);
+    // Keep the original edition available when revisiting a search, even if
+    // the reader changed its checkboxes while inspecting a chapter.
+    const retained = viewState.mode === 'search' && TRANSLATIONS.find(t => t.id === viewState.search?.translationId);
+    if (retained && loaded.has(retained.id) && !available.some(t => t.id === retained.id)) available.push(retained);
     for (const t of available) {
       const opt = document.createElement('option');
       opt.value = t.id;
@@ -4668,6 +4752,8 @@ function init() {
 
   function render({ scrollToReference = true } = {}) {
     q('#bookmark-passage').disabled = true;
+    q('#back-to-search').hidden = !searchReturn || (refs.viewMode.value === 'canon' && viewState.mode === 'search');
+    if (searchReturn) q('#back-to-search').title = `Return to “${searchReturn.search.query}” in ${searchReturn.search.translationLabel}`;
     const lxx = refs.viewMode.value === 'lxx';
     const parallel = refs.viewMode.value === 'parallel';
     // Keep the reference hint in step with the actual view on every render,
@@ -4700,6 +4786,13 @@ function init() {
     const translations = pilotOn ? [...baseTranslations, alignmentVirtualTranslation()] : baseTranslations;
 
     refs.results.innerHTML = '';
+
+    // Search results remain searchable independently of study overlays and
+    // the current reading-edition checkboxes.
+    if (viewState.mode === 'search') {
+      setMessage(''); populateSearchTranslations(); refs.contextBtn.hidden = true;
+      renderSearchResults(); return;
+    }
 
     // An interlinear overrides the normal reading view (works even with no
     // translation selected — a selected one is used only as a caption). A
@@ -4789,8 +4882,6 @@ function init() {
 
     if (viewState.mode === 'reference') {
       renderReferenceGroups(viewState.groups, translations, layout);
-    } else if (viewState.mode === 'search') {
-      renderSearchResults();
     } else {
       renderBrowseChapter(translations, layout);
     }
@@ -4827,6 +4918,7 @@ function init() {
     buildSearchForm,
     searchVerses,
     appendHighlighted,
+    searchExcerpt,
     translationLanguage,
   });
 })();

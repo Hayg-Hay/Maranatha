@@ -1,5 +1,20 @@
 # Maranatha Project History
 
+## Search polish - October 18, 2026
+
+On `codex/search-polish`, added source-preserving excerpts around the first
+match in long verses and Back to search results after opening a hit. Search
+submission scrolls to results, respecting reduced-motion preferences. The last
+query/edition, result position and expanded comparisons are retained only in
+memory. Keyboard opening records reading normally; returning does not write
+queries or search state into reading/bookmark/history storage. Search results
+remain available independently of reading checkboxes and study overlays.
+Shell v73 retains data cache v3. Focused desktop/mobile DOM tests cover Unicode
+boundaries, capped results, query/edition/position restoration, comparisons,
+keyboard navigation and reader focus compatibility. Full regression and visual/
+physical-device checks were not run. The user approved committing, merging to
+main and pushing this milestone on 2026-10-18. See docs/SEARCH_POLISH.md.
+
 ## Reader focus - October 18, 2026
 
 On `codex/reader-focus`, added a temporary presentation that hides the header,
