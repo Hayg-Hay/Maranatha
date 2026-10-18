@@ -34,6 +34,12 @@ the ASCII prompt manually.
 
 ## Status
 
+**Edition information:** all registered editions and native LXX have the same
+collapsed provenance, coverage, reuse, limitation and verification fields.
+Existing warnings remain; source limitations are distinguished from an open
+audit. Recorded digital checks are not blanket certification. See
+[edition-information consolidation](docs/EDITION_INFORMATION.md).
+
 **Calmer reading controls:** Translations, Study tools and Reading settings
 start collapsed, with the active canon editions summarized. Navigation stays
 visible; bookmark/focus actions share a row, with saved/recent lists below.

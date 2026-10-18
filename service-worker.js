@@ -35,7 +35,7 @@
 // the new shell. The update is therefore user-driven, not a silent replacement
 // mid-read.
 
-const CACHE_VERSION = 'v76';      // bump when shell files change
+const CACHE_VERSION = 'v77';      // bump when shell files change
 // Data cache intentionally stays at v3. The Berean Hebrew preview uses
 // versioned/uniquely named data files (data/berean-hebrew/manifest-v5.js and
 // data/berean-hebrew/<BOOK>.js); the LXX disclosure update uses a query-versioned
@@ -67,6 +67,8 @@ const SHELL_FILES = [
   './copy-passage.js',
   './print-passage.js',
   './reader-focus.js',
+  './edition-information.js',
+  './data/edition-information.js',
   './hebrew-script.js',
   './PROJECT_HISTORY.md',
   './data/canon.js',
@@ -99,7 +101,8 @@ const SHELL_FILES = [
 // shell data files (canon.js, locales/*.js). The [^/]+ keeps the nested locales
 // path out, and canon.js is excluded explicitly.
 function isTranslationFile(pathname) {
-  return /\/data\/(?:berean\/|berean-hebrew\/)?[^/]+\.js$/.test(pathname) && !pathname.endsWith('/data/canon.js');
+  return /\/data\/(?:berean\/|berean-hebrew\/)?[^/]+\.js$/.test(pathname)
+    && !['/data/canon.js', '/data/edition-information.js'].some(file => pathname.endsWith(file));
 }
 
 // Berean Interlinear NT chunks. Kept in sync with the importer's deterministic

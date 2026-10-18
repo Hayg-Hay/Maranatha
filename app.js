@@ -1324,7 +1324,7 @@ function init() {
           groupEditions.set(groupId, chosen.id);
           const control = box.closest('.translation-group');
           control.querySelector('select').value = chosen.id;
-          control.querySelector('.translation-source p').textContent = activeEditionEntry(groupId).description || '';
+          window.MARANATHA_EDITION_INFORMATION.update(control.querySelector('.translation-source'), activeEditionEntry(groupId));
         }
       }
       setLocale(snapshot.settings.language);
@@ -1705,22 +1705,13 @@ function init() {
       const disclosure = document.createElement('details');
       disclosure.className = 'translation-warning';
       const summary = document.createElement('summary');
-      summary.textContent = 'Under audit';
+      summary.textContent = window.MARANATHA_EDITION_INFORMATION.warningTitle(t);
       const note = document.createElement('p');
       note.textContent = t.note;
       disclosure.append(summary, note);
       option.append(disclosure);
     }
-    if (t.description) {
-      const disclosure = document.createElement('details');
-      disclosure.className = 'translation-source';
-      const summary = document.createElement('summary');
-      summary.textContent = 'Source';
-      const note = document.createElement('p');
-      note.textContent = t.description;
-      disclosure.append(summary, note);
-      option.append(disclosure);
-    }
+    option.append(window.MARANATHA_EDITION_INFORMATION.create(t));
     refs.translations.appendChild(option);
     if (box.checked) loadTranslation(t, render);
   }
@@ -1762,12 +1753,7 @@ function init() {
       select.appendChild(opt);
     }
 
-    const details = document.createElement('details');
-    details.className = 'translation-source';
-    const summary = document.createElement('summary');
-    summary.textContent = 'Source';
-    const note = document.createElement('p');
-    details.append(summary, note);
+    const details = window.MARANATHA_EDITION_INFORMATION.create(activeEditionEntry(groupId));
 
     // Reflect the chosen edition in both the dropdown and the Source text,
     // whether or not the group is checked.
@@ -1775,7 +1761,7 @@ function init() {
       const id = activeEditionId(groupId);
       select.value = id;
       const t = TRANSLATIONS.find(x => x.id === id);
-      note.textContent = (t && t.description) || '';
+      window.MARANATHA_EDITION_INFORMATION.update(details, t);
     };
 
     box.addEventListener('change', () => {
@@ -2033,13 +2019,14 @@ function init() {
 
   function updateTranslationSummary() {
     const editions = selectedTranslations();
-    const audited = editions.filter(t => t.note).length;
+    const audited = editions.filter(t => t.note && window.MARANATHA_EDITION_INFORMATION.warningKind(t) === 'audit').length;
+    const limited = editions.filter(t => t.note && window.MARANATHA_EDITION_INFORMATION.warningKind(t) === 'limitations').length;
     const selected = editions.length === 1 ? editions[0].short || editions[0].label
       : editions.length ? `${editions.length} selected` : 'None selected';
-    q('#translations-summary').textContent = `· ${selected}${audited ? ` · ${audited} under audit` : ''}`;
+    q('#translations-summary').textContent = `· ${selected}${audited ? ` · ${audited} under audit` : ''}${limited ? ` · ${limited} with limitations` : ''}`;
     const summary = q('#translation-tools > summary');
     summary.title = editions.map(t => t.label).join(' / ') || 'Select an edition to read';
-    summary.setAttribute('aria-label', `Translations. ${summary.title}.${audited ? ` ${audited} under audit.` : ''} Select editions for canon reading.`);
+    summary.setAttribute('aria-label', `Translations. ${summary.title}.${audited ? ` ${audited} under audit.` : ''}${limited ? ` ${limited} with textual limitations.` : ''} Select editions for canon reading.`);
   }
 
   // Number of chapters actually shown for a book: the canon extent, extended by
@@ -4632,6 +4619,7 @@ function init() {
         notice: 'Native LXX numbering; this chapter is independent of canon-numbered translations.',
       });
     }, `${book.label} ${chapter.n} — Septuagint (Swete)`));
+    container.appendChild(window.MARANATHA_EDITION_INFORMATION.create({ id: 'lxx-swete', label: 'Septuagint (Swete)' }));
 
     const list = document.createElement('div');
     list.className = 'lxx-verses';

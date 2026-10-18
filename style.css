@@ -195,6 +195,18 @@ code { font-family:Consolas, monospace; }
 .tool-sections { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); align-items:start; gap:8px; }
 .tool-sections > .tool-section[open] { grid-column:1 / -1; }
 .tool-summary-state { font-weight:normal; overflow-wrap:anywhere; }
+.edition-information { flex:1 1 100%; }
+.translation-source.edition-information { max-width:100%; }
+.edition-information > .edition-description,
+.edition-information > .edition-verification-scope { width:auto; margin:8px 10px; padding:0; border:0; background:transparent; }
+.edition-fields { margin:10px; font-size:.9rem; }
+.edition-fields dt { margin-top:.75rem; font-weight:bold; color:var(--ink); }
+.edition-fields dd { margin:.2rem 0 0; white-space:pre-line; overflow-wrap:anywhere; }
+.edition-evidence { display:flex; flex-direction:column; gap:.4rem; margin:10px; overflow-wrap:anywhere; }
+.edition-information .edition-verification-scope { font-size:.8rem; }
+.study-material-info { margin:10px 11px; font-size:.85rem; }
+.study-material-info > summary { cursor:pointer; color:var(--accent); }
+.study-material-info > summary:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
 .tool-section > summary:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
 .tool-section { min-width:0; border:1px solid var(--line); background:var(--paper); }
 .tool-section > summary { padding:9px 11px; cursor:pointer; font-size:.9rem; font-weight:bold; color:var(--accent); user-select:none; }

@@ -231,7 +231,7 @@ function setScript(w, value) {
   await waitFor(() => w.MARANATHA_TRANSLATIONS && w.MARANATHA_TRANSLATIONS.delitzsch);
   assert([...d.querySelectorAll('script[src]')].some((s) => /data\/delitzsch\.js/.test(s.src)), 'delitzsch loaded via a local script tag');
   const delitzschOption = d.querySelector('#translation-group-delitzsch').closest('.translation-option');
-  assert.equal(delitzschOption.querySelector('.translation-source summary')?.textContent, 'Source');
+  assert.equal(delitzschOption.querySelector('.translation-source summary')?.textContent, 'Edition information');
   const desc = delitzschOption.querySelector('.translation-source p').textContent;
   assert.match(desc, /first published in 1877/);
   assert.match(desc, /does not identify its underlying print edition/);

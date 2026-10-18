@@ -1,5 +1,25 @@
 # Maranatha Project History
 
+## Edition-information consolidation - October 18, 2026
+
+On `codex/edition-information`, implemented consolidation priority 2: a shared
+metadata-only disclosure for all 21 registered editions and native LXX. Five
+fields distinguish provenance, coverage, recorded reuse terms, numbering/
+limitations and documented verification. A deterministic builder combines
+retained dataset metadata with explicitly curated evidence summaries. Opening
+information does not load Bible corpora. Grouped edition changes and resume
+refresh the whole disclosure. Existing note text is retained; Bohairica and
+Murdock are labelled Textual limitations rather than Under audit, while the
+Western Armenian audit flag remains. A study-material disclosure distinguishes
+source words from glosses, draft coverage and proposed alignments. No Scripture,
+numbering, mapping, licence document or source dataset is changed. Shell v77
+precaches the metadata/renderer; metadata is excluded from the long-lived
+translation cache and data cache v3 remains. Metadata generation and functional
+desktop/mobile journeys have dedicated tests. This is a presentation/evidence
+consolidation, not a new textual audit or legal certification. The user approved
+committing, merging to main and pushing this increment on 2026-10-18.
+See docs/EDITION_INFORMATION.md.
+
 ## Calmer reading controls - October 18, 2026
 
 On `codex/calmer-reading`, implemented consolidation priority 1 only:
