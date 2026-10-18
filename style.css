@@ -662,3 +662,16 @@ code { font-family:Consolas, monospace; }
 .syriac-verse { font-family: 'Noto Sans Syriac', 'Estrangelo Edessa', serif; direction: rtl; unicode-bidi: isolate; display: block; text-align: right; font-size: 1.25em; line-height: 1.7; white-space: pre-wrap; }
 @font-face { font-family: 'Noto Sans Coptic'; src: url('fonts/NotoSansCoptic-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
 .coptic-verse { font-family: 'Noto Sans Coptic', serif; direction: ltr; unicode-bidi: isolate; text-align: left; font-size: 1.2em; line-height: 1.8; white-space: pre-wrap; }
+/* One shared bookmark toolbar serves every reading view. */
+#reading-actions { margin: 1rem 0; }
+#reading-actions > .tool-section { margin-top: .75rem; }
+#bookmark-editor { margin: .75rem 0; }
+#bookmark-editor input { max-width: 100%; box-sizing: border-box; font: inherit; }
+.bookmark-content { padding: .75rem 1rem; }
+#bookmark-list { list-style: none; padding: 0; }
+#bookmark-list li { padding: .75rem 0; border-bottom: 1px solid var(--border, #ccc); overflow-wrap: anywhere; }
+#bookmark-list p { margin: .3rem 0; }
+#bookmark-list button { margin-right: .5rem; }
+.bookmark-import { display: block; margin-top: .75rem; }
+.bookmark-import input { display: block; max-width: 100%; margin-top: .35rem; }
+#bookmark-status:empty { display: none; }

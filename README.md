@@ -15,8 +15,9 @@ implementation, and decisions requiring careful reasoning. Once implementation
 is complete and basic functionality is established, Codex stops and does not
 run the entire regression suite.
 
-Codex supplies a concise ASCII handoff prompt for the user to give manually to
-DeepSeek OpenCode. The handoff must cover:
+Generate a DeepSeek OpenCode handoff only when the user explicitly requests
+DeepSeek involvement. Do not automatically create handoff files. When requested,
+the concise ASCII handoff should cover:
 
 - Independent source fidelity checks.
 - Dedicated integration tests.
@@ -25,13 +26,17 @@ DeepSeek OpenCode. The handoff must cover:
 - Git diff and staging verification, excluding unrelated work.
 - Commit and push after successful verification.
 
-Delegate routine execution aggressively. Avoid repetitive polling, log
+When delegation is requested, delegate routine execution. Avoid repetitive polling, log
 inspection, and unnecessary micro-checks in Codex. Return to Codex only for
 genuinely complex problems, architectural uncertainty, or unresolved Scripture
 fidelity discrepancies. Do not automatically message DeepSeek; the user passes
 the ASCII prompt manually.
 
 ## Status
+
+**Saved passages:** bookmark a reading with an optional name, reopen it from the
+collapsed list, and export/import JSON backups. Bookmarks stay on your device;
+imports merge with existing passages. See [saved passages](docs/SAVED_PASSAGES.md).
 
 **Reading polish:** the local **Continue reading** banner restores a saved
 passage, selected editions and reading settings, including LXX/parallel chapter

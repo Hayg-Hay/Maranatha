@@ -806,6 +806,7 @@ const refs = {
 
   const readingStore = window.MARANATHA_READING_SESSION;
   const readingCatalog = { translations: TRANSLATIONS.map(t => t.id), books: canon.books.map(b => b.id), locales: LOCALES.map(l => l.id) };
+  let bookmarks;
   let savedReading = null;
   try { savedReading = readingStore?.load(window.localStorage, readingCatalog) || null; } catch {}
   let readingStarted = false;
@@ -853,6 +854,7 @@ function init() {
     updateReferenceHint();
 
     showSavedReading();
+    bookmarks = window.MARANATHA_SAVED_PASSAGES.mount({ catalog: readingCatalog, capture: captureReading, describe: readingDescription, open: restoreReading });
     refs.resumeButton.addEventListener('click', continueReading);
     refs.forgetReading.addEventListener('click', () => {
       readingRestoreGeneration++; restoringReading = false; readingStarted = false;
@@ -864,7 +866,7 @@ function init() {
     // Only a reading/settings action starts recording: merely opening the app
     // or expanding a disclosure must never replace the previous session.
     const readingAction = event => {
-      if (refs.resumeReading.contains(event.target)) return;
+      if (refs.resumeReading.contains(event.target) || event.target.closest('#reading-actions')) return;
       if (event.type === 'click' && !event.target.closest('button, .search-hit')) return;
       if (restoringReading) {
         readingRestoreGeneration++;
@@ -1204,8 +1206,8 @@ function init() {
     if (savedReading) refs.resumeDescription.textContent = readingDescription(savedReading);
   }
 
-  function rememberReading() {
-    if (!readingStore || !readingStarted || restoringReading || refs.message.textContent) return;
+  function captureReading() {
+    if (!readingStore || restoringReading || refs.message.textContent) return null;
     const translations = selectedTranslationIds();
     if (translations.some(id => !loaded.has(id))) return;
     const view = refs.viewMode.value;
@@ -1224,6 +1226,14 @@ function init() {
       settings: { layout: refs.layout.value, theme: refs.theme.value, reading: refs.reading.value, appearance: refs.appearance.value,
         fontsize: refs.fontsize.value, language: refs.language.value, hebrewScripts: selectedHebrewScripts() },
     };
+    return readingStore.validate(snapshot, readingCatalog);
+  }
+
+  function rememberReading() {
+    bookmarks?.refresh();
+    if (!readingStarted) return;
+    const snapshot = captureReading();
+    if (!snapshot) return;
     try { readingStore.save(window.localStorage, snapshot, readingCatalog); } catch {}
   }
 
@@ -1249,8 +1259,9 @@ function init() {
     });
   }
 
-  async function continueReading() {
-    const snapshot = savedReading;
+  function continueReading() { return restoreReading(savedReading); }
+
+  async function restoreReading(snapshot) {
     if (!snapshot || restoringReading) return;
     const generation = ++readingRestoreGeneration;
     restoringReading = true;
@@ -4619,6 +4630,7 @@ function init() {
   }
 
   function render({ scrollToReference = true } = {}) {
+    q('#bookmark-passage').disabled = true;
     const lxx = refs.viewMode.value === 'lxx';
     const parallel = refs.viewMode.value === 'parallel';
     // Keep the reference hint in step with the actual view on every render,

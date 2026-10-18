@@ -1,5 +1,18 @@
 # Maranatha Project History
 
+## Saved passages - October 18, 2026
+
+On `codex/saved-passages`, added named local bookmarks, a collapsed list,
+removal and portable JSON backup export/import. Reuses validated reading
+snapshots and the existing lazy-load restore path for editions, references,
+LXX/parallel chapters and preferences. Imports merge without replacing existing
+entries; invalid files are rejected before writing. Shell v69 precaches the
+bookmark script and retains data cache v3. Focused checks cover storage and
+desktop/mobile DOM workflows; full regression was not run. The user approved
+committing, merging to main and pushing this milestone on 2026-10-18.
+DeepSeek handoffs are generated only upon explicit user request. See
+docs/SAVED_PASSAGES.md.
+
 ## Reading polish — October 18, 2026
 
 On `codex/reading-polish`, added local Continue reading with validated reference

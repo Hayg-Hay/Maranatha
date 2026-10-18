@@ -184,6 +184,27 @@
       </div>
     </section>
 
+    <section id="reading-actions" aria-label="Save this reading">
+      <button id="bookmark-passage" type="button" disabled>Bookmark this passage</button>
+      <form id="bookmark-editor" hidden>
+        <p id="bookmark-preview"></p>
+        <label for="bookmark-name">Name (optional)</label>
+        <input id="bookmark-name" type="text" maxlength="120" placeholder="For example, Sunday reading">
+        <button type="submit">Save passage</button>
+        <button id="bookmark-cancel" type="button">Cancel</button>
+      </form>
+      <details id="saved-passages" class="tool-section">
+        <summary>Saved passages (<span id="bookmark-count">0</span>)</summary>
+        <div class="bookmark-content">
+          <p>Saved on this device. Export a backup to keep your passages or move them to another browser.</p>
+          <ul id="bookmark-list"></ul>
+          <button id="bookmark-export" type="button" disabled>Export backup</button>
+          <label class="bookmark-import">Import backup <input id="bookmark-import" type="file" accept=".json,application/json"></label>
+        </div>
+      </details>
+      <p id="bookmark-status" role="status" aria-live="polite"></p>
+    </section>
+
     <section id="message" class="message" aria-live="polite"></section>
 
     <section id="parallel-view" class="parallel-view" hidden aria-label="Parallel reading with independent numbering">
@@ -237,6 +258,7 @@
   <script src="verse-mapping.js"></script>
   <script src="reference-exceptions.js"></script>
   <script src="reading-session.js"></script>
+  <script src="saved-passages.js"></script>
   <script src="app.js"></script>
   <script>
     // Register the service worker for offline use, but ONLY over http(s).
