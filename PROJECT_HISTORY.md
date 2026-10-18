@@ -1,5 +1,23 @@
 # Maranatha Project History
 
+## Print passage - October 18, 2026
+
+On `codex/print-passage`, added per-passage print previews using the existing
+credited source-text formatter. Selected references exclude expanded context;
+native numbering, combined units and available source/license metadata remain
+intact. The browser print dialog can print or save as PDF. Print CSS shows only
+the captured passage, with a white background and source fonts. Preview/print
+do not write storage or rerender reading. Shell v74 precaches the new print
+script; data cache v3 is unchanged. Focused desktop/mobile DOM checks cover
+source selection, print CSS, keyboard behavior, storage isolation and native
+parallel panes. The user's one-page John 3:16 PDF was rendered and checked:
+WEB, Western Armenian and Greek are complete, readable and unclipped. The
+test file is retained in ignored build/cache/print-review/. Long-passage PDF
+pagination, physical printer output and full regression were not checked.
+The user approved committing, merging to main and pushing this milestone
+on 2026-10-18.
+See docs/PRINT_PASSAGE.md.
+
 ## Search polish - October 18, 2026
 
 On `codex/search-polish`, added source-preserving excerpts around the first

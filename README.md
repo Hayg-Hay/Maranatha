@@ -34,6 +34,10 @@ the ASCII prompt manually.
 
 ## Status
 
+**Print passage:** review a clean, credited source passage, then print it or
+choose Save as PDF in the browser's print dialog. The print layout excludes
+navigation and tools. See [print passage](docs/PRINT_PASSAGE.md).
+
 **Search polish:** long verses show excerpts around matches. Opening a result
 offers **Back to search results**, preserving the query, original edition,
 expanded comparisons and result position for the current session. See

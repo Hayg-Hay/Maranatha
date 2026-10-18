@@ -870,7 +870,7 @@ function init() {
     // Only a reading/settings action starts recording: merely opening the app
     // or expanding a disclosure must never replace the previous session.
     const readingAction = event => {
-      if (refs.resumeReading.contains(event.target) || event.target.closest('#reading-actions, #reader-focus-bar, .passage-copy')) return;
+      if (refs.resumeReading.contains(event.target) || event.target.closest('#reading-actions, #reader-focus-bar, #print-preview, .passage-copy')) return;
       if (event.type === 'click' && !event.target.closest('button, .search-hit')) return;
       if (restoringReading) {
         readingRestoreGeneration++;

@@ -21,6 +21,7 @@
     const close = document.createElement('button'); close.type = 'button'; close.textContent = 'Close copy text';
     close.addEventListener('click', () => { fallback.hidden = true; button.focus(); });
     fallback.append(hint, text, close); wrap.append(button, status, fallback);
+    wrap.insertBefore(window.MARANATHA_PRINT_PASSAGE.control(getText, description), status);
     button.addEventListener('click', async () => {
       const value = getText();
       if (!value) { status.textContent = 'No source verse text is available to copy in this passage.'; return; }

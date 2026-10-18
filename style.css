@@ -695,3 +695,22 @@ code { font-family:Consolas, monospace; }
 .reader-focus #current-reference { scroll-margin-top: 7rem; }
 .reader-focus #results { scroll-margin-top: 7rem; }
 .search-excerpt-hint { color: var(--muted); font-size: .9rem; }
+.print-passage-button { margin-inline-start: .5rem; }
+#print-preview { max-width: 60rem; margin: 2rem auto; padding: 1.5rem; background: #fff; color: #111; border: 1px solid var(--border); scroll-margin-top: 7rem; }
+#print-preview[hidden] { display: none; }
+.print-description { overflow-wrap: anywhere; font-weight: bold; }
+.print-actions button { margin: 0 .5rem .5rem 0; color: #111; background: #f2eee8; border-color: #786650; }
+.print-actions button:hover { background: #e5dacd; }
+.print-actions button:focus-visible { outline-color: #7a4a24; }
+.print-text { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; unicode-bidi: plaintext; font: 1rem/1.7 Georgia, 'Ezra SIL', 'Noto Sans Coptic', 'Noto Sans Syriac', serif; }
+@media (max-width: 700px) { #print-preview { padding: 1rem; margin: 1rem; } }
+@media print {
+  @page { margin: 18mm; }
+  html.print-passage-ready,
+  html.print-passage-ready body { background: #fff !important; color: #000 !important; filter: none !important; }
+  html.print-passage-ready body::after { display: none !important; }
+  html.print-passage-ready body > :not(#print-preview) { display: none !important; }
+  html.print-passage-ready #print-preview { display: block !important; width: auto; max-width: none; margin: 0; padding: 0; border: 0; background: #fff; color: #000; }
+  html.print-passage-ready .print-actions { display: none !important; }
+  html.print-passage-ready .print-text { font-size: 12pt; line-height: 1.6; height: auto; max-height: none; overflow: visible; break-inside: auto; orphans: 3; widows: 3; }
+}
