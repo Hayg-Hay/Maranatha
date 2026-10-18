@@ -137,13 +137,13 @@ assert(fs.existsSync(path.join(ROOT, 'fonts/NotoSansCoptic-Regular.ttf')), 'font
 assert(fs.statSync(path.join(ROOT, 'fonts/NotoSansCoptic-Regular.ttf')).size > 10000, 'font is not a stub');
 assert.match(read('fonts/NotoSansCoptic-OFL.txt'), /SIL Open Font License, Version 1\.1/);
 const sw = read('service-worker.js');
-assert.match(sw, /CACHE_VERSION\s*=\s*'v67'/);
+assert(Number(sw.match(/const CACHE_VERSION\s*=\s*'v(\d+)'/)?.[1]) >= 67);
 assert.match(sw, /DATA_CACHE_VERSION\s*=\s*'v3'/);
 assert(sw.includes("'./data/locales/cop.js'"), 'Coptic locale precached in shell');
 assert(sw.includes("'./fonts/NotoSansCoptic-Regular.ttf'"), 'Coptic font precached in shell');
 const shellList = (sw.match(/const SHELL_FILES = \[([\s\S]*?)\];/) || [])[1] || '';
 assert(!/bohairica/.test(shellList), 'large Coptic translation is not shell-precached');
-check('A3. local OFL font/CSS, shell v67, data cache v3, locale/font precache, lazy translation');
+check('A3. local OFL font/CSS, current shell, data cache v3, locale/font precache, lazy translation');
 
 const before = [sha('data/bohairica.json'), sha('data/bohairica.js'), sha('data/locales/cop.json'), sha('data/locales/cop.js')];
 const output = execFileSync(process.execPath, ['build/import-bohairica.mjs', '--check'], { cwd: ROOT, encoding: 'utf8' });

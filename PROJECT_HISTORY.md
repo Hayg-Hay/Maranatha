@@ -1,5 +1,16 @@
 # Maranatha Project History
 
+## Reading polish — October 18, 2026
+
+On `codex/reading-polish`, added local Continue reading with validated reference
+and preference storage, grouped/native edition restore, LXX/parallel chapters,
+failure handling and cancellation. Added explicit comparison exceptions for
+Hebrew Psalm 13 and older Romans closing/doxology cases; no Scripture changes.
+Shell v68 precaches the new session/policy scripts and retains data cache v3.
+Focused regression tests are included in npm test; heavy verification goes to
+the manual DeepSeek handoff. See docs/READING_POLISH.md. The user approved
+committing, merging to main and pushing this milestone on 2026-10-18.
+
 ## Bohairica Coptic Bohairic NT — October 18, 2026
 
 Added `bohairica` / BOH, eBible copbhc Bohairica 1.2 (2006-12-14), Wells'

@@ -533,6 +533,10 @@ class ReferenceParser {
 
   const canon = window.MARANATHA_CANON;
 const refs = {
+    resumeReading: q('#resume-reading'),
+    resumeDescription: q('#resume-description'),
+    resumeButton: q('#resume-button'),
+    forgetReading: q('#forget-reading'),
     reference: q('#reference'),
     referenceGo: q('#reference-go'),
     book: q('#book'),
@@ -585,6 +589,7 @@ const refs = {
   refs.canonControls = [...document.querySelectorAll('[data-canon-only]')];
   const loaded = new Set();   // translation ids whose <script> has finished loading
   const loading = new Set();  // translation ids whose <script> is in flight
+  const translationCallbacks = new Map();
   // Active edition per grouped control (group id -> selected translation id).
   // Initialised from each group's defaultEdition in populateTranslationCheckboxes.
   const groupEditions = new Map();
@@ -799,6 +804,14 @@ const refs = {
     search: null,         // populated only when mode === 'search'
   };
 
+  const readingStore = window.MARANATHA_READING_SESSION;
+  const readingCatalog = { translations: TRANSLATIONS.map(t => t.id), books: canon.books.map(b => b.id), locales: LOCALES.map(l => l.id) };
+  let savedReading = null;
+  try { savedReading = readingStore?.load(window.localStorage, readingCatalog) || null; } catch {}
+  let readingStarted = false;
+  let readingRestoreGeneration = 0;
+  let restoringReading = false;
+
   function setBrowseMode(highlightVerse = null) {
     viewState.mode = 'browse';
     viewState.groups = null;
@@ -838,6 +851,32 @@ function init() {
     populateTranslationCheckboxes();
     populateParallelControls();
     updateReferenceHint();
+
+    showSavedReading();
+    refs.resumeButton.addEventListener('click', continueReading);
+    refs.forgetReading.addEventListener('click', () => {
+      readingRestoreGeneration++; restoringReading = false; readingStarted = false;
+      refs.resumeButton.disabled = false; refs.resumeButton.textContent = 'Continue reading';
+      try { readingStore?.clear(window.localStorage); } catch {}
+      savedReading = null;
+      refs.resumeReading.hidden = true;
+    });
+    // Only a reading/settings action starts recording: merely opening the app
+    // or expanding a disclosure must never replace the previous session.
+    const readingAction = event => {
+      if (refs.resumeReading.contains(event.target)) return;
+      if (event.type === 'click' && !event.target.closest('button, .search-hit')) return;
+      if (restoringReading) {
+        readingRestoreGeneration++;
+        restoringReading = false;
+        refs.resumeButton.disabled = false;
+        refs.resumeButton.textContent = 'Continue reading';
+      }
+      readingStarted = true;
+      rememberReading();
+    };
+    document.addEventListener('change', readingAction);
+    document.addEventListener('click', readingAction);
 
     refs.language.addEventListener('change', () => {
         setLocale(refs.language.value);
@@ -1149,6 +1188,162 @@ function init() {
 
     render();
 }
+
+  function readingDescription(snapshot) {
+    const name = id => window.MARANATHA_LOCALE_EN.books[id]?.name || id;
+    const passage = snapshot.passage;
+    const describeGroup = g => `${name(g.bookId)} ${g.chapter}${g.ranges ? ':' + g.ranges.map(r => r.start === r.end ? r.start : `${r.start}–${r.end}`).join(',') : ''}`;
+    if (snapshot.view === 'lxx') return `Septuagint (Swete) · ${name(snapshot.native.bookId)} ${snapshot.native.chapter}`;
+    if (snapshot.view === 'parallel') return `Parallel reading · LXX ${name(snapshot.native.bookId)} ${snapshot.native.chapter} · ${name(snapshot.parallel.bookId)} ${snapshot.parallel.chapter}`;
+    const reference = passage.mode === 'reference' ? passage.groups.map(describeGroup).join('; ') : describeGroup(passage);
+    return `${reference} · ${snapshot.translations.map(id => TRANSLATIONS.find(t => t.id === id)?.short || id).join(' / ')}`;
+  }
+
+  function showSavedReading() {
+    refs.resumeReading.hidden = !savedReading;
+    if (savedReading) refs.resumeDescription.textContent = readingDescription(savedReading);
+  }
+
+  function rememberReading() {
+    if (!readingStore || !readingStarted || restoringReading || refs.message.textContent) return;
+    const translations = selectedTranslationIds();
+    if (translations.some(id => !loaded.has(id))) return;
+    const view = refs.viewMode.value;
+    if (view === 'canon' && viewState.mode === 'search') return;
+    if (view !== 'canon' && !lxxDataset()) return;
+    if (view === 'parallel' && !loaded.has(refs.parallelTranslation.value)) return;
+    const snapshot = {
+      version: 1, view, translations,
+      passage: { bookId: refs.book.value, chapter: Number(refs.chapter.value), mode: view === 'canon' ? viewState.mode : 'browse', groups: view === 'canon' ? viewState.groups : null,
+        highlight: view === 'canon' && viewState.highlightVerse?.bookId === refs.book.value && viewState.highlightVerse.chapter === Number(refs.chapter.value) ? viewState.highlightVerse.verse : null },
+      native: view === 'canon' ? null : {
+        bookId: view === 'parallel' ? refs.parallelLxxBook.value : refs.lxxBook.value,
+        chapter: view === 'parallel' ? refs.parallelLxxChapter.value : refs.lxxChapter.value,
+      },
+      parallel: view === 'parallel' ? { translation: refs.parallelTranslation.value, bookId: refs.parallelBook.value, chapter: Number(refs.parallelChapter.value) } : null,
+      settings: { layout: refs.layout.value, theme: refs.theme.value, reading: refs.reading.value, appearance: refs.appearance.value,
+        fontsize: refs.fontsize.value, language: refs.language.value, hebrewScripts: selectedHebrewScripts() },
+    };
+    try { readingStore.save(window.localStorage, snapshot, readingCatalog); } catch {}
+  }
+
+  // Resume waits for the exact selected datasets before validating native
+  // references. Failed/missing files leave the saved record available to retry.
+  function readingDataReady(start, ready, url) {
+    if (ready()) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      let finished = false, script;
+      const fail = () => finish(new Error('A saved edition could not be loaded. Check that its files are available on this device, then try again.'));
+      const timer = setTimeout(fail, 15000);
+      function finish(error) {
+        if (finished) return;
+        finished = true; clearTimeout(timer);
+        script?.removeEventListener('error', fail);
+        error ? reject(error) : resolve();
+      }
+      start(() => finish(ready() ? null : new Error('The saved edition data is unavailable.')));
+      if (!finished) {
+        script = [...document.scripts].reverse().find(s => s.src === new URL(url, document.baseURI).href);
+        script?.addEventListener('error', fail, { once: true });
+      }
+    });
+  }
+
+  async function continueReading() {
+    const snapshot = savedReading;
+    if (!snapshot || restoringReading) return;
+    const generation = ++readingRestoreGeneration;
+    restoringReading = true;
+    refs.resumeButton.disabled = true;
+    refs.resumeButton.textContent = 'Opening…';
+    setMessage('');
+    try {
+      for (const group of TRANSLATION_GROUPS) {
+        if (snapshot.translations.filter(id => group.editions.some(e => e.id === id)).length > 1) throw new Error('The saved edition selection is invalid.');
+      }
+      const needed = [...new Set([...snapshot.translations, ...(snapshot.parallel ? [snapshot.parallel.translation] : [])])];
+      const loads = needed.map(id => {
+        const t = TRANSLATIONS.find(t => t.id === id);
+        return readingDataReady(done => loadTranslation(t, done), () => loaded.has(id) && window.MARANATHA_TRANSLATIONS?.[id], t.src);
+      });
+      if (snapshot.view !== 'canon') loads.push(readingDataReady(loadLxx, lxxDataset, 'data/lxx-swete.js?v=disclosures-20261007'));
+      await Promise.all(loads);
+      if (generation !== readingRestoreGeneration) return;
+      const selectedData = Object.fromEntries(snapshot.translations.map(id => [id, window.MARANATHA_TRANSLATIONS[id]]));
+      const savedLocale = localeById(snapshot.settings.language);
+      const validator = new ReferenceParser(canon, savedLocale, () => selectedData);
+      const { passage } = snapshot;
+      if (snapshot.view === 'canon' && passage.chapter > validator.maxChapter(passage.bookId)) throw new Error('The saved chapter is not available in these editions.');
+      let groups = null, reference = '';
+      if (passage.mode === 'reference') {
+        reference = passage.groups.map(g => `${savedLocale.books[g.bookId]?.name || g.bookId} ${g.chapter}${g.ranges ? ':' + g.ranges.map(r => `${r.start}-${r.end}`).join(',') : ''}`).join('; ');
+        groups = validator.parseMulti(reference);
+      }
+      if (snapshot.view === 'canon' && passage.highlight != null) {
+        validator.parseMulti(`${savedLocale.books[passage.bookId]?.name || passage.bookId} ${passage.chapter}:${passage.highlight}`);
+      }
+      const nativeBook = snapshot.native && lxxDataset().books.find(b => b.id === snapshot.native.bookId);
+      if (snapshot.native && !nativeBook?.chapters.some(c => c.n === snapshot.native.chapter)) throw new Error('The saved native LXX chapter is not available.');
+      if (snapshot.parallel) {
+        const parallelValidator = new ReferenceParser(canon, savedLocale, () => ({ [snapshot.parallel.translation]: window.MARANATHA_TRANSLATIONS[snapshot.parallel.translation] }));
+        if (snapshot.parallel.chapter > parallelValidator.maxChapter(snapshot.parallel.bookId)) throw new Error('The saved parallel chapter is not available.');
+      }
+
+      // Apply only after all files and references pass validation. Study/pilot
+      // overlays are not automatically enabled by a remembered reading.
+      for (const config of Object.values(INTERLINEARS)) {
+        interlinearState[config.key].enabled = false;
+        refs[config.toggleRef].checked = false;
+        syncInterlinearModeVisibility(config);
+      }
+      alignmentState.enabled = false; alignmentState.generation++;
+      refs.alignmentPilot.checked = false;
+      for (const box of refs.translations.querySelectorAll('input[type="checkbox"]')) {
+        const groupId = box.dataset.translationGroup;
+        if (!groupId) { box.checked = snapshot.translations.includes(box.value); continue; }
+        const group = translationGroup(groupId);
+        const chosen = group.editions.find(e => snapshot.translations.includes(e.id));
+        box.checked = !!chosen;
+        if (chosen) {
+          groupEditions.set(groupId, chosen.id);
+          const control = box.closest('.translation-group');
+          control.querySelector('select').value = chosen.id;
+          control.querySelector('.translation-source p').textContent = activeEditionEntry(groupId).description || '';
+        }
+      }
+      setLocale(snapshot.settings.language);
+      for (const key of ['layout', 'theme', 'reading', 'appearance', 'fontsize']) refs[key].value = snapshot.settings[key];
+      setTheme(); setReading(); setAppearance(); setFontSize();
+      refs.hebrewScript.querySelectorAll('input').forEach(box => { box.checked = snapshot.settings.hebrewScripts.includes(box.value); });
+      syncHebrewScriptNote();
+      refs.book.value = passage.bookId; populateChapters(); refs.chapter.value = String(passage.chapter);
+      setBrowseMode(passage.highlight == null ? null : { bookId: passage.bookId, chapter: passage.chapter, verse: passage.highlight });
+      if (groups) { setReferenceMode(groups); refs.reference.value = reference; }
+      if (snapshot.native) {
+        const bookSelect = snapshot.view === 'parallel' ? refs.parallelLxxBook : refs.lxxBook;
+        const chapterSelect = snapshot.view === 'parallel' ? refs.parallelLxxChapter : refs.lxxChapter;
+        populateLxxBooks(bookSelect, lxxDataset()); bookSelect.value = snapshot.native.bookId;
+        populateLxxChapters(chapterSelect, nativeBook); chapterSelect.value = snapshot.native.chapter;
+      }
+      if (snapshot.parallel) {
+        refs.parallelTranslation.value = snapshot.parallel.translation; refs.parallelBook.value = snapshot.parallel.bookId;
+        populateParallelChapters(); refs.parallelChapter.value = String(snapshot.parallel.chapter);
+      }
+      cancelLxxReference(); refs.viewMode.value = snapshot.view;
+      restoringReading = false; readingStarted = true;
+      refs.resumeReading.hidden = true;
+      render({ scrollToReference: false });
+      if (snapshot.view === 'canon' && passage.highlight != null) document.getElementById('current-reference')?.scrollIntoView({ block: 'center' });
+      refs.reference.focus();
+    } catch (error) {
+      if (generation === readingRestoreGeneration) setMessage(`Could not continue reading. ${error.message}`);
+    } finally {
+      if (generation === readingRestoreGeneration) {
+        restoringReading = false;
+        refs.resumeButton.disabled = false; refs.resumeButton.textContent = 'Continue reading';
+      }
+    }
+  }
 
   function setTheme() { document.documentElement.dataset.theme = refs.theme.value; }
 
@@ -1663,12 +1858,20 @@ function init() {
       onReady();
       return;
     }
+    const pending = translationCallbacks.get(t.id) || [];
+    pending.push(onReady);
+    translationCallbacks.set(t.id, pending);
     if (loading.has(t.id)) return;
     loading.add(t.id);
     const script = document.createElement('script');
     script.src = t.src;
-    script.onload = () => { loading.delete(t.id); loaded.add(t.id); onReady(); };
-    script.onerror = () => { loading.delete(t.id); setMessage(`Could not load ${t.label} (${t.src}).`); };
+    script.onload = () => {
+      loading.delete(t.id); loaded.add(t.id);
+      const callbacks = translationCallbacks.get(t.id) || [];
+      translationCallbacks.delete(t.id);
+      for (const callback of callbacks) callback();
+    };
+    script.onerror = () => { loading.delete(t.id); translationCallbacks.delete(t.id); setMessage(`Could not load ${t.label} (${t.src}).`); };
     document.head.appendChild(script);
   }
 
@@ -1770,7 +1973,18 @@ function init() {
   }
 
   function hasReferenceComparisonException(t, bookId, chapterNum) {
-    return !!(t && (window.MARANATHA_TRANSLATIONS || {})[t.id]?.versification?.[bookId]?.[chapterNum]?.comparisonUnavailable);
+    return !!comparisonException(t, bookId, chapterNum)?.comparisonUnavailable;
+  }
+
+  function comparisonException(t, bookId, chapterNum) {
+    if (!t) return null;
+    const data = (window.MARANATHA_TRANSLATIONS || {})[t.id];
+    const declared = data?.versification?.[bookId]?.[chapterNum];
+    if (declared) return declared;
+    const older = window.MARANATHA_REFERENCE_EXCEPTIONS?.[t.id]?.[bookId]?.[chapterNum];
+    const verses = data?.books?.[bookId]?.[chapterNum - 1];
+    if (!older || !Array.isArray(verses)) return null;
+    return { ...older, source: verses.length, canon: canon.books.find(b => b.id === bookId)?.chapters[chapterNum - 1] || 0 };
   }
 
   // Edge cases for translations that declare an edition-specific versification
@@ -1781,7 +1995,7 @@ function init() {
   // row positions are never mistaken for equivalent verses.
   function versificationEntry(t, bookId, chapterNum) {
     const datasets = window.MARANATHA_TRANSLATIONS || {};
-    const declared = datasets[t.id]?.versification?.[bookId]?.[chapterNum];
+    const declared = comparisonException(t, bookId, chapterNum);
     if (declared) return declared;
     if (datasets[t.id]?.nativeVersification) {
       const arr = datasets[t.id].books?.[bookId]?.[chapterNum - 1];
@@ -2293,7 +2507,8 @@ function init() {
     // a chapter's headings and footnotes between its title and first verse.
     let sourceDetails = null;
     const annotationContainer = (translation) => {
-      if (translation.id !== 'cuv-traditional' && !(window.MARANATHA_TRANSLATIONS || {})[translation.id]?.collapseSourceAnnotations) return refs.results;
+      const collapsePassage = comparisonException(translation, bookId, chapterNum)?.collapseSourceAnnotations;
+      if (!collapsePassage && translation.id !== 'cuv-traditional' && !(window.MARANATHA_TRANSLATIONS || {})[translation.id]?.collapseSourceAnnotations) return refs.results;
       if (!sourceDetails) {
         sourceDetails = document.createElement('details');
         sourceDetails.className = 'passage-source-details';
@@ -2470,7 +2685,14 @@ function init() {
 
       blocks.forEach((subset, blockIndex) => {
         const verseCount = extentForTranslations(subset, book.id, group.chapter);
-        const exactVerses = versesForGroup(group, verseCount);
+        let exactVerses = versesForGroup(group, verseCount);
+        // A requested canon number may not exist as an independent source
+        // unit (Hebrew Psalm 13:6). Do not invent a missing-text row for it.
+        if (mismatched.some(t => subset.includes(t))) {
+          const data = Object.fromEntries(subset.map(t => [t.id, window.MARANATHA_TRANSLATIONS[t.id]]).filter(([, d]) => d));
+          const available = VerseAvailability.references(canon, data, book.id, group.chapter);
+          exactVerses = exactVerses.filter(v => available.has(v));
+        }
         const exactSet = new Set(exactVerses);
 
         let displayVerses = exactVerses;
@@ -2494,6 +2716,12 @@ function init() {
           showContextToggle: true,
           versificationDisclosure: mismatched.some(t => subset.includes(t)),
         });
+        if (!exactVerses.length) {
+          const note = document.createElement('p');
+          note.className = 'notice independent-reference-note';
+          note.textContent = 'This requested reference has no separately numbered unit in this edition. Read the complete chapter to inspect its independent numbering; no missing Scripture is inferred.';
+          refs.results.appendChild(note);
+        }
       });
     });
   }
@@ -4305,6 +4533,7 @@ function init() {
     // callback (the parallel pane has the same guard).
     renderLxxInto(refs.lxxBook, refs.lxxChapter, refs.results,
       () => { if (refs.viewMode.value === 'lxx') render({ scrollToReference: false }); });
+    rememberReading();
   }
 
   // ---------------------------------------------------------------------
@@ -4332,6 +4561,7 @@ function init() {
       // would otherwise reveal the LXX footer attribution in Canon view).
       () => { if (refs.viewMode.value === 'parallel') renderParallelLxxPane(); },
     );
+    rememberReading();
   }
 
   function renderParallelTranslationPane() {
@@ -4378,6 +4608,7 @@ function init() {
     // quiet and use the existing reading renderer at every screen width.
     const heading = container.querySelector('.result-head h2');
     if (heading) heading.textContent = `${name} ${chapterNum}`;
+    rememberReading();
   }
 
   function renderParallelView() {
@@ -4533,6 +4764,7 @@ function init() {
     if (scrollToReference && target) {
       target.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
+    rememberReading();
   }
 
   function setMessage(message) { refs.message.textContent = message; }

@@ -1,0 +1,41 @@
+Work in C:\maranatha\maranatha_new, branch codex/reading-polish. Keep this one
+workspace. Read docs/READING_POLISH.md and inspect the diff first. Do not add
+translations, change Scripture, or touch the pre-existing untracked Armenian
+PDF. The user approved merging/pushing this milestone on 2026-10-18; subsequent
+review work needs its own authorization before publishing further changes.
+
+Implemented: explicit older-edition comparison exceptions, plus local Continue
+reading with selected editions/settings, references/highlight and LXX/parallel
+chapters. New scripts: reference-exceptions.js and reading-session.js. Shell
+v68; existing data cache v3. Normal entry offers resume; no automatic resume.
+
+Run npm run test:reading-polish, then the full npm test suite. Review any older
+tests that assumed shared rows in a newly disclosed exception; verify the
+reference relationship, do not weaken safety guards to satisfy a stale test.
+The stage2a test still needs the pre-existing ignored cache baseline; resolving
+fresh-checkout reproducibility is outside this milestone unless separately
+authorized. Note missing/skip conditions clearly.
+
+Independently verify:
+- No dataset bytes, Scripture words or native labels were changed. Hebrew
+  Psalm 13:5-6 separates reading blocks, keeps the complete Hebrew unit 5 and
+  does not claim absent Hebrew wording at 6. Search comparison both ways and
+  interlinear captions respect the exception. Check Romans 14/16 placement.
+- Resume on real browsers from file:// and HTTPS: passage groups, search-hit
+  highlight, grouped edition, Coptic 3 John 1:15, native LXX chapters, and both
+  parallel panes; layout/font/theme/locale/RTL settings survive reload.
+- Initial boot never overwrites the saved reading. Invalid references and
+  search queries do not replace it. Denied/quota/corrupt/oversized storage is
+  safe. Forget clears only the reading key. No external storage/network calls.
+- Slow/failed/cached loads, retry, concurrent requests, rapid navigation and
+  forgetting while resume is pending cannot apply an obsolete session.
+- New shell scripts are precached; previously cached translations survive
+  updating v67 to v68. Actual offline reload works; no service worker on file://.
+- Desktop/mobile visual QA, banner wrapping, keyboard/focus, screen-reader
+  labels and readable messages. Browser visual testing was unavailable in Codex
+  because direct file:// navigation was blocked by browser security policy.
+
+Fix routine implementation/test problems and retest. Return unclear Scripture
+relationships or architecture questions to Codex. Update documentation with
+verification results and limits, and inspect final diff scope. No publishing or
+unrelated Git mutations without user authorization.

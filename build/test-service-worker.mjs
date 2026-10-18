@@ -7,7 +7,7 @@
 //   node build/test-service-worker.mjs
 //
 // It asserts:
-//   - install precaches the NEW shell (maranatha-shell-v67);
+//   - install precaches the NEW shell (maranatha-shell-v68);
 //   - activate keeps the existing data cache (maranatha-data-v3) and every file
 //     already stored in it (previously downloaded translations / Greek books);
 //   - activate deletes the OLD shell caches (maranatha-shell-v66 and v29);
@@ -97,7 +97,7 @@ async function main() {
       // A previously selected Coptic translation must survive a shell update.
       ['./data/bohairica.js', { url: './data/bohairica.js', body: 'BOH' }],
     ],
-    'maranatha-shell-v66': [
+    'maranatha-shell-v67': [
       ['./index.html', { url: './index.html', body: 'PREVIOUS-SHELL' }],
     ],
     'maranatha-shell-v29': [
@@ -109,11 +109,11 @@ async function main() {
   await fire(env.listeners, 'install');
   await fire(env.listeners, 'activate');
 
-  check('install creates the new shell cache (maranatha-shell-v67)', caches.store.has('maranatha-shell-v67'));
-  check('new shell cache is populated', (caches.store.get('maranatha-shell-v67') || new Map()).size > 0);
-  check('Paleo converter, Chinese/Indonesian/Thai/Coptic locales and fonts are precached for offline reading', ['./hebrew-script.js', './data/locales/zh-Hant.js', './data/locales/id.js', './data/locales/th.js', './data/locales/tl.js', './data/locales/vi.js', './data/locales/ms.js', './data/locales/cop.js', './fonts/NotoSansCoptic-Regular.ttf', './fonts/NotoSansSyriac-Regular.ttf', './fonts/NotoSansPhoenician-Regular.ttf', './fonts/ProtoCanaanite.ttf'].every(url => caches.store.get('maranatha-shell-v67')?.has(url)));
+  check('install creates the new shell cache (maranatha-shell-v68)', caches.store.has('maranatha-shell-v68'));
+  check('new shell cache is populated', (caches.store.get('maranatha-shell-v68') || new Map()).size > 0);
+  check('Reading session/policy, locales and fonts are precached for offline reading', ['./reading-session.js', './reference-exceptions.js', './hebrew-script.js', './data/locales/zh-Hant.js', './data/locales/id.js', './data/locales/th.js', './data/locales/tl.js', './data/locales/vi.js', './data/locales/ms.js', './data/locales/cop.js', './fonts/NotoSansCoptic-Regular.ttf', './fonts/NotoSansSyriac-Regular.ttf', './fonts/NotoSansPhoenician-Regular.ttf', './fonts/ProtoCanaanite.ttf'].every(url => caches.store.get('maranatha-shell-v68')?.has(url)));
   check('activation preserves the existing data cache (maranatha-data-v3)', caches.store.has('maranatha-data-v3'));
-  check('activation deletes the immediately previous shell cache (maranatha-shell-v66)', !caches.store.has('maranatha-shell-v66'));
+  check('activation deletes the immediately previous shell cache (maranatha-shell-v67)', !caches.store.has('maranatha-shell-v67'));
   check('activation deletes an older shell cache (maranatha-shell-v29)', !caches.store.has('maranatha-shell-v29'));
 
   const data = caches.store.get('maranatha-data-v3');
@@ -162,7 +162,7 @@ async function main() {
   check('the large Delitzsch translations are not precached into the shell', !/delitzsch/.test(shellList));
   check('the large Bohairica translation is not precached into the shell', !/bohairica/.test(shellList));
   check('data cache version is v3 (unchanged by the Hebrew preview)', /DATA_CACHE_VERSION\s*=\s*'v3'/.test(swSource));
-  check('shell cache version was bumped for the Coptic addition', /CACHE_VERSION\s*=\s*'v67'/.test(swSource));
+  check('shell cache version was bumped for reading polish', /CACHE_VERSION\s*=\s*'v68'/.test(swSource));
 
   check('data cache honors version query strings for corrected WEB data', /ignoreSearch: cacheName !== DATA_CACHE/.test(swSource));
 

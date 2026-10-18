@@ -33,6 +33,11 @@ the ASCII prompt manually.
 
 ## Status
 
+**Reading polish:** the local **Continue reading** banner restores a saved
+passage, selected editions and reading settings, including LXX/parallel chapter
+views. Older documented numbering exceptions now receive independent reading
+and comparison guards. See [reading polish](docs/READING_POLISH.md).
+
 **Coptic addition (2026-10-18):** Bohairica 1.2, a Horner-based Bohairic Coptic
 NT standardized by J. Warren Wells, is available as BOH in independent reading
 blocks. The source is eBible `copbhc` (declared Public Domain), with 27 books,

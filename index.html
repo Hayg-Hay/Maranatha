@@ -35,6 +35,11 @@
         <span class="offline-badge" aria-label="Works without an internet connection">Works offline</span>
       </div>
 
+      <div id="resume-reading" class="resume-reading" hidden>
+        <div><strong>Pick up where you left off</strong><p id="resume-description"></p><small>Saved on this device.</small></div>
+        <div class="resume-actions"><button id="resume-button" type="button" class="primary-action">Continue reading</button><button id="forget-reading" type="button">Forget saved reading</button></div>
+      </div>
+
       <div class="lookup-grid">
         <div class="reference-search">
           <label for="reference">Reference</label>
@@ -230,6 +235,8 @@
   <script src="data/locales/cop.js"></script>
   <script src="hebrew-script.js"></script>
   <script src="verse-mapping.js"></script>
+  <script src="reference-exceptions.js"></script>
+  <script src="reading-session.js"></script>
   <script src="app.js"></script>
   <script>
     // Register the service worker for offline use, but ONLY over http(s).
