@@ -20,6 +20,9 @@ on either side for arrows or handwritten parsing notes. It works with both
 layouts and retains source direction and font size. **Standard** restores the
 normal width and alignment. The setting lasts for the page session, resets
 on refresh and writes no storage. The narrower column may increase page count.
+Centered output uses compact titles: edition labels are 70% of the chosen text
+size, verse headings 80%, and the passage heading 75%. Title line height and
+the gap below edition labels are reduced; Scripture retains the chosen size.
 
 The preview uses the same text as Copy passage: selected verses exclude
 expanded context; chapter browsing copies the chapter; combined source units
@@ -79,7 +82,7 @@ storage; existing reading, history and bookmarks are unaffected.
 `print-passage.js` owns the in-page preview and print action, and loads before
 `copy-passage.js`, which supplies a print button beside each copy button using
 the same source-text callback. Print CSS is scoped to the open preview class.
-Shell v78 includes comparison printing, retaining data cache v3.
+Shell v79 includes compact centered-print titles, retaining data cache v3.
 
 Run `npm run test:comparison-print` for desktop/mobile journeys through four
 editions, exact source text, context exclusion, sequential parity, credits,

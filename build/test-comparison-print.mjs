@@ -54,6 +54,8 @@ for (const narrow of [false, true]) {
   assert.equal(w.getComputedStyle(d.querySelector('.print-comparison')).width, '76%');
   assert.equal(w.getComputedStyle(d.querySelector('.print-comparison')).textAlign, 'center');
   assert.equal(d.querySelector('.print-comparison').textContent, comparisonText);
+  assert.equal(w.getComputedStyle(d.querySelector('.print-translation-label')).fontSize, '11.2px');
+  assert.equal(w.getComputedStyle(d.querySelector('.print-verse-heading')).fontSize, '12.8px');
   change('#print-size', '18'); assert.equal(d.querySelector('.print-comparison').style.fontSize, '18pt');
   click('.print-actions button'); assert.deepEqual(printed, [comparisonText]);
   const printRules = [...d.styleSheets[0].cssRules].filter(rule => rule.media?.mediaText === 'print').flatMap(rule => [...rule.cssRules]).filter(rule => rule.selectorText);

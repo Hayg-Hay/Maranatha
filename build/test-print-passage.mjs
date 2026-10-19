@@ -52,7 +52,7 @@ for (const narrow of [false, true]) {
   for (const points of ['12', '14', '16', '18', '24']) {
     change('#print-size', points);
     assert.equal(d.querySelector('.print-text').style.fontSize, `${points}pt`);
-    assert.equal(d.querySelector('.print-description').style.fontSize, `${points}pt`);
+    assert.equal(d.querySelector('.print-description').style.fontSize, `${Number(points) * .75}pt`);
     assert.equal(d.querySelector('.print-text').textContent, text);
   }
   assert.equal(JSON.stringify([...values]), before, 'print size is independent of reading/history storage');
@@ -65,11 +65,12 @@ for (const narrow of [false, true]) {
   for (const selector of ['.shell', 'footer', '.print-actions']) assert.equal(w.getComputedStyle(d.querySelector(selector)).display, 'none');
   assert.equal(w.getComputedStyle(d.querySelector('#print-preview')).display, 'block');
   assert.equal(w.getComputedStyle(d.querySelector('.print-text')).fontSize, '24px');
-  assert.equal(w.getComputedStyle(d.querySelector('.print-description')).fontSize, '24px');
+  assert.equal(w.getComputedStyle(d.querySelector('.print-description')).fontSize, '18px');
   assert.equal(w.getComputedStyle(d.querySelector('.print-text')).textAlign, 'center');
   assert.equal(w.getComputedStyle(d.querySelector('.print-text')).width, '76%'); sheet.remove(); // 18pt at 96 CSS px/in.
   change('#print-alignment', 'standard');
   assert(!d.querySelector('#print-preview').classList.contains('print-centered'));
+  assert.equal(d.querySelector('.print-description').style.fontSize, '18pt');
   d.dispatchEvent(new w.KeyboardEvent('keydown', { key: 'Escape', cancelable: true }));
   assert.equal(d.querySelector('#print-preview').hidden, true); assert.equal(d.activeElement, origin);
   assert.equal(d.documentElement.classList.contains('print-passage-ready'), false);

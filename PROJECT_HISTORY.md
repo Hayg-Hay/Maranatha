@@ -7,6 +7,16 @@ milestones; they are not necessarily the current application state. Use the
 shipped feature inventory, and individual evidence records for verification
 scope. Historical verification claims are not a new audit of today's tree.
 
+## Compact centered-print titles - October 19, 2026
+
+On `codex/compact-print-titles`, reduced centered edition labels to 70% of the
+selected Scripture size, verse headings to 80% and the passage heading to 75%.
+Tighter title line height and the gap below edition labels leave more room for
+annotations. Standard alignment and Scripture size remain unchanged. Shell v79
+retains data cache v3. Print DOM and offline-cache checks accompany the change;
+actual exported PDF appearance was left to user review. The user authorized
+committing and publishing this increment on October 19, 2026.
+
 ## Comparison printing - October 19, 2026
 
 On `codex/comparison-print`, added a verse-by-verse print layout alongside

@@ -29,7 +29,9 @@
   }
   alignmentLabel.append(alignment);
   const alignmentHint = document.createElement('p'); alignmentHint.textContent = 'Centered text leaves space on both sides for handwritten notes and arrows.';
-  alignment.addEventListener('change', () => preview.classList.toggle('print-centered', alignment.value === 'centered'));
+  alignment.addEventListener('change', () => {
+    preview.classList.toggle('print-centered', alignment.value === 'centered'); applySize();
+  });
   const layoutHint = document.createElement('p'); layoutHint.className = 'print-layout-hint';
   const sizeHint = document.createElement('p'); sizeHint.textContent = 'Preview and PDF use this size. Print at 100% scale to keep the selected size on paper.';
   const status = document.createElement('p'); status.setAttribute('role', 'status');
@@ -38,7 +40,8 @@
   let origin = null, captured = null;
   function applySize() {
     if (![12, 14, 16, 18, 24].includes(Number(size.value))) size.value = '12';
-    text.style.fontSize = `${size.value}pt`; description.style.fontSize = `${size.value}pt`;
+    text.style.fontSize = `${size.value}pt`;
+    description.style.fontSize = `${Number(size.value) * (alignment.value === 'centered' ? .75 : 1)}pt`;
     comparison.style.fontSize = `${size.value}pt`;
   }
   size.addEventListener('change', applySize); applySize();

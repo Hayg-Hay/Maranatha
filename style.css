@@ -740,6 +740,11 @@ code { font-family:Consolas, monospace; }
 #print-preview.print-centered > .print-description,
 #print-preview.print-centered > .print-text,
 #print-preview.print-centered > .print-comparison { width:76%; margin-inline:auto; text-align:center; }
+#print-preview.print-centered .print-translation-label,
+#print-preview.print-centered .print-text strong { font-size:.7em; line-height:1.25; }
+#print-preview.print-centered .print-verse-heading,
+#print-preview.print-centered .print-comparison-credits h3 { font-size:.8em; line-height:1.25; margin-bottom:.5em; }
+#print-preview.print-centered .print-translation > .print-translation-label { margin-bottom:.6em; }
 @media (max-width: 700px) { #print-preview { padding: 1rem; margin: 1rem; } }
 @media print {
   @page { margin: 18mm; }
