@@ -22,6 +22,14 @@
     const option = document.createElement('option'); option.value = value; option.textContent = label; layout.append(option);
   }
   layoutLabel.append(layout);
+  const alignmentLabel = document.createElement('label'); alignmentLabel.className = 'print-alignment-label'; alignmentLabel.textContent = 'Text alignment ';
+  const alignment = document.createElement('select'); alignment.id = 'print-alignment';
+  for (const [value, label] of [['standard', 'Standard'], ['centered', 'Centered with side margins']]) {
+    const option = document.createElement('option'); option.value = value; option.textContent = label; alignment.append(option);
+  }
+  alignmentLabel.append(alignment);
+  const alignmentHint = document.createElement('p'); alignmentHint.textContent = 'Centered text leaves space on both sides for handwritten notes and arrows.';
+  alignment.addEventListener('change', () => preview.classList.toggle('print-centered', alignment.value === 'centered'));
   const layoutHint = document.createElement('p'); layoutHint.className = 'print-layout-hint';
   const sizeHint = document.createElement('p'); sizeHint.textContent = 'Preview and PDF use this size. Print at 100% scale to keep the selected size on paper.';
   const status = document.createElement('p'); status.setAttribute('role', 'status');
@@ -35,7 +43,7 @@
   }
   size.addEventListener('change', applySize); applySize();
   layout.addEventListener('change', renderLayout);
-  actions.append(heading, sizeLabel, layoutLabel, sizeHint, layoutHint, print, close, status); preview.append(actions, description, text, comparison); document.body.append(preview);
+  actions.append(heading, sizeLabel, layoutLabel, alignmentLabel, sizeHint, layoutHint, alignmentHint, print, close, status); preview.append(actions, description, text, comparison); document.body.append(preview);
   function canCompare() {
     if (!(captured?.editions?.length > 1)) return false;
     const labels = new Map();

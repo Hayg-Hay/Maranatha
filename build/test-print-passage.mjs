@@ -36,6 +36,12 @@ for (const narrow of [false, true]) {
   const before = JSON.stringify([...values]), markup = d.querySelector('#results').innerHTML;
   const origin = d.querySelector('.print-passage-button'); origin.click();
   const text = d.querySelector('.print-text').textContent;
+  assert.equal(d.querySelector('#print-alignment').value, 'standard');
+  change('#print-alignment', 'centered');
+  assert.equal(w.getComputedStyle(d.querySelector('.print-text')).textAlign, 'center');
+  assert.equal(w.getComputedStyle(d.querySelector('.print-text')).width, '76%');
+  assert.equal(d.querySelector('.print-text').textContent, text);
+  assert.equal(JSON.stringify([...values]), before, 'alignment does not write storage');
   assert.equal(text, `3:16 ${w.MARANATHA_TRANSLATIONS.web.books.JHN[2][15]}\n— John 3:16 — World English Bible`);
   assert.equal(d.activeElement, d.querySelector('.print-actions button'));
   click('.print-actions button'); assert.deepEqual(printed, [text]);
@@ -59,7 +65,11 @@ for (const narrow of [false, true]) {
   for (const selector of ['.shell', 'footer', '.print-actions']) assert.equal(w.getComputedStyle(d.querySelector(selector)).display, 'none');
   assert.equal(w.getComputedStyle(d.querySelector('#print-preview')).display, 'block');
   assert.equal(w.getComputedStyle(d.querySelector('.print-text')).fontSize, '24px');
-  assert.equal(w.getComputedStyle(d.querySelector('.print-description')).fontSize, '24px'); sheet.remove(); // 18pt at 96 CSS px/in.
+  assert.equal(w.getComputedStyle(d.querySelector('.print-description')).fontSize, '24px');
+  assert.equal(w.getComputedStyle(d.querySelector('.print-text')).textAlign, 'center');
+  assert.equal(w.getComputedStyle(d.querySelector('.print-text')).width, '76%'); sheet.remove(); // 18pt at 96 CSS px/in.
+  change('#print-alignment', 'standard');
+  assert(!d.querySelector('#print-preview').classList.contains('print-centered'));
   d.dispatchEvent(new w.KeyboardEvent('keydown', { key: 'Escape', cancelable: true }));
   assert.equal(d.querySelector('#print-preview').hidden, true); assert.equal(d.activeElement, origin);
   assert.equal(d.documentElement.classList.contains('print-passage-ready'), false);

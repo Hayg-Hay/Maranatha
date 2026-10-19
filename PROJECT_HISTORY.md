@@ -17,9 +17,13 @@ missing-coverage notices, RTL paragraphs and print-size choices are preserved.
 No source datasets or mappings changed. Shell v78 retains data cache v3.
 Dedicated desktop/mobile DOM tests cover the comparison journeys and safeguards;
 actual PDF pagination and rendering still require manual review. This increment
-was saved in checkpoint commit `f478336` at the user's request; it is not yet
-merged or pushed. A subsequent spacing refinement brings translations closer
-together and separates verse groups more clearly, pending user review.
+was saved in checkpoint commit `f478336` at the user's request. A subsequent spacing refinement brings translations closer
+together and separates verse groups more clearly; approved and saved in commit
+`5e25294`. An optional centered text column leaves equal side margins for
+annotation in either print layout. The user approved the centered option and
+symmetrical 0.9em title/text gaps, then authorized committing and publishing
+this feature on October 19, 2026. The earlier 0.65em gap remains a documented
+fallback if a tighter layout is preferred later.
 
 ## Documentation consolidation - October 18, 2026
 

@@ -14,6 +14,13 @@ session across previews and resets on refresh. No new storage is written.
 For larger print, try 16 or 18 pt and choose what is comfortable. Browser
 print scaling should be 100% to preserve the selected point size on paper.
 
+Use **Text alignment → Centered with side margins** for annotation: it centers
+the text in a column occupying 76% of the printable width, leaving equal space
+on either side for arrows or handwritten parsing notes. It works with both
+layouts and retains source direction and font size. **Standard** restores the
+normal width and alignment. The setting lasts for the page session, resets
+on refresh and writes no storage. The narrower column may increase page count.
+
 The preview uses the same text as Copy passage: selected verses exclude
 expanded context; chapter browsing copies the chapter; combined source units
 retain their complete text/range labels; independent editions and parallel
@@ -50,7 +57,7 @@ direction. Layout defaults are recalculated for each newly opened preview.
 
 Short verse groups are kept together where the browser allows. Groups longer
 than a page can span pages; there are no fixed-height verse containers.
-Handwritten-note spacing is not included in this increment.
+Extra line spacing for handwritten notes is not included in this increment.
 
 With a preview open, printing includes only that captured passage. Navigation,
 settings, buttons, search results and the normal page footer are hidden. The
