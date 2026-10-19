@@ -726,9 +726,9 @@ code { font-family:Consolas, monospace; }
 .print-text, .print-comparison { margin: 0; overflow-wrap: anywhere; font: 12pt/1.6 Georgia, 'Ezra SIL', 'Noto Sans Coptic', 'Noto Sans Syriac', serif; }
 .print-text { white-space:pre-wrap; unicode-bidi:plaintext; }
 .print-text[hidden], .print-comparison[hidden] { display:none !important; }
-.print-verse-group { margin:1.5em 0; break-inside:avoid; page-break-inside:avoid; }
+.print-verse-group { margin:2em 0; break-inside:avoid; page-break-inside:avoid; }
 .print-verse-heading, .print-comparison-credits h3 { font-size:1em; margin:0 0 .75em; break-after:avoid; page-break-after:avoid; }
-.print-translation { margin:.75em 0; break-inside:avoid; page-break-inside:avoid; }
+.print-translation { margin:.4em 0; break-inside:avoid; page-break-inside:avoid; }
 .print-translation-label { font-weight:bold; margin:0 0 .2em; break-after:avoid; page-break-after:avoid; }
 .print-verse-text, .print-credit-text { margin:0; white-space:pre-wrap; unicode-bidi:plaintext; }
 .print-unavailable { font-style:italic; }

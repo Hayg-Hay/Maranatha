@@ -17,7 +17,9 @@ missing-coverage notices, RTL paragraphs and print-size choices are preserved.
 No source datasets or mappings changed. Shell v78 retains data cache v3.
 Dedicated desktop/mobile DOM tests cover the comparison journeys and safeguards;
 actual PDF pagination and rendering still require manual review. This increment
-is awaiting user review and is not yet committed or pushed.
+was saved in checkpoint commit `f478336` at the user's request; it is not yet
+merged or pushed. A subsequent spacing refinement brings translations closer
+together and separates verse groups more clearly, pending user review.
 
 ## Documentation consolidation - October 18, 2026
 
