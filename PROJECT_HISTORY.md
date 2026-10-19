@@ -7,6 +7,30 @@ milestones; they are not necessarily the current application state. Use the
 shipped feature inventory, and individual evidence records for verification
 scope. Historical verification claims are not a new audit of today's tree.
 
+## Parsing print spacing - October 19, 2026
+
+Added an optional Parsing print-spacing selector alongside the parallel
+alignment work. Source text uses 3.5 line height; comparison paragraphs reserve
+equal 1.5em above and below for handwritten annotations. Normal spacing remains the
+default, centered titles stay compact, and no text or storage is changed.
+Both layouts support the option. Comparison groups may span pages to accommodate
+the extra writing space. DOM checks verify spacing, layout switching, source
+fidelity and print CSS; actual PDF pagination remains a manual check. Print
+settings have vertical gaps when wrapping onto multiple rows. The user approved
+committing and publishing this increment on October 19, 2026.
+
+## Parallel verse-box alignment - October 19, 2026
+
+On `codex/parallel-box-alignment`, grouped each pane's passage headings,
+actions and disclosures above its verse body. Desktop subgrids share the
+header/body boundary so the two verse boxes start at the same height, even
+when controls wrap or disclosures expand. Mobile retains stacked independent
+panes; native numbering, verse rows and navigation stay independent. Shell v80
+retains data cache v3. Desktop/mobile DOM journeys cover wrapper placement,
+independent rerenders, print and focus controls; offline-cache checks pass.
+Actual pixel alignment requires manual browser review. The user authorized
+publishing this increment with Parsing print spacing on October 19, 2026.
+
 ## Compact centered-print titles - October 19, 2026
 
 On `codex/compact-print-titles`, reduced centered edition labels to 70% of the

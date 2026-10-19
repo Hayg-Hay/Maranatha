@@ -82,6 +82,24 @@ for (const narrow of [false, true]) {
   w.print = () => { throw new Error('Unavailable'); }; click('.print-actions button'); assert.match(d.querySelector('.print-actions [role="status"]').textContent, /browser’s Print command/);
   click('.print-actions button + button'); special.remove();
   change('#view-mode', 'parallel'); await until(() => d.querySelectorAll('#parallel-view .print-passage-button').length === 2);
+  const checkPaneGroups = () => {
+    for (const pane of d.querySelectorAll('.parallel-content')) {
+      assert.equal(pane.querySelectorAll(':scope > .parallel-passage-header').length, 1);
+      assert(pane.querySelector(':scope > .parallel-passage-header .print-passage-button'));
+      assert(pane.querySelector(':scope > .parallel-passage-body > .lxx-verses, :scope > .parallel-passage-body > .mobile-verses'));
+    }
+  };
+  checkPaneGroups();
+  assert.equal(w.getComputedStyle(d.querySelector('.parallel-pane')).gridRow, 'span 4');
+  assert.equal(w.getComputedStyle(d.querySelector('.parallel-content')).gridTemplateRows, 'subgrid');
+  const translationText = d.querySelector('#parallel-translation-content').textContent;
+  change('#parallel-lxx-chapter', '2'); checkPaneGroups();
+  assert.equal(d.querySelector('#parallel-translation-content').textContent, translationText);
+  const lxxText = d.querySelector('#parallel-lxx-content').textContent;
+  change('#parallel-chapter', '2'); checkPaneGroups();
+  assert.equal(d.querySelector('#parallel-lxx-content').textContent, lxxText);
+  const information = d.querySelector('#parallel-lxx-content .edition-information'); information.open = true;
+  assert(information.closest('.parallel-passage-header')); checkPaneGroups();
   click('#reader-focus-toggle');
   click('#parallel-lxx-content .print-passage-button'); assert.match(d.querySelector('.print-text').textContent, /Native LXX numbering/);
   assert(d.querySelector('.print-text').textContent.includes(d.querySelector('#parallel-lxx-content .lxx-text').textContent));

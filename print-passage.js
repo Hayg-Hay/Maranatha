@@ -28,6 +28,14 @@
     const option = document.createElement('option'); option.value = value; option.textContent = label; alignment.append(option);
   }
   alignmentLabel.append(alignment);
+  const spacingLabel = document.createElement('label'); spacingLabel.className = 'print-spacing-label'; spacingLabel.textContent = 'Print spacing ';
+  const spacing = document.createElement('select'); spacing.id = 'print-spacing';
+  for (const [value, label] of [['normal', 'Normal'], ['parsing', 'Parsing — extra writing space']]) {
+    const option = document.createElement('option'); option.value = value; option.textContent = label; spacing.append(option);
+  }
+  spacingLabel.append(spacing);
+  spacing.addEventListener('change', () => preview.classList.toggle('print-parsing', spacing.value === 'parsing'));
+  const spacingHint = document.createElement('p'); spacingHint.textContent = 'Parsing adds generous line spacing and writing room below source text. It uses more pages.';
   const alignmentHint = document.createElement('p'); alignmentHint.textContent = 'Centered text leaves space on both sides for handwritten notes and arrows.';
   alignment.addEventListener('change', () => {
     preview.classList.toggle('print-centered', alignment.value === 'centered'); applySize();
@@ -46,7 +54,7 @@
   }
   size.addEventListener('change', applySize); applySize();
   layout.addEventListener('change', renderLayout);
-  actions.append(heading, sizeLabel, layoutLabel, alignmentLabel, sizeHint, layoutHint, alignmentHint, print, close, status); preview.append(actions, description, text, comparison); document.body.append(preview);
+  actions.append(heading, sizeLabel, layoutLabel, alignmentLabel, spacingLabel, sizeHint, layoutHint, alignmentHint, spacingHint, print, close, status); preview.append(actions, description, text, comparison); document.body.append(preview);
   function canCompare() {
     if (!(captured?.editions?.length > 1)) return false;
     const labels = new Map();

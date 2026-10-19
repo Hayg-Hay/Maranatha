@@ -4695,6 +4695,21 @@ function init() {
     try { fn(); } finally { refs.results = previous; }
   }
 
+  // Share only the header/body boundary across desktop panes. Verse rows and
+  // native numbering remain independent, including after either pane reloads.
+  function groupParallelPane(container) {
+    const verses = container.querySelector('.lxx-verses, .mobile-verses');
+    if (!verses) return;
+    const header = document.createElement('div'); header.className = 'parallel-passage-header';
+    const body = document.createElement('div'); body.className = 'parallel-passage-body';
+    let inBody = false;
+    for (const node of [...container.childNodes]) {
+      if (node === verses) inBody = true;
+      (inBody ? body : header).appendChild(node);
+    }
+    container.append(header, body);
+  }
+
   function renderParallelLxxPane() {
     renderLxxInto(
       refs.parallelLxxBook,
@@ -4705,6 +4720,7 @@ function init() {
       // would otherwise reveal the LXX footer attribution in Canon view).
       () => { if (refs.viewMode.value === 'parallel') renderParallelLxxPane(); },
     );
+    groupParallelPane(refs.parallelLxxContent);
     rememberReading();
   }
 
@@ -4752,6 +4768,7 @@ function init() {
     // quiet and use the existing reading renderer at every screen width.
     const heading = container.querySelector('.result-head h2');
     if (heading) heading.textContent = `${name} ${chapterNum}`;
+    groupParallelPane(container);
     rememberReading();
   }
 

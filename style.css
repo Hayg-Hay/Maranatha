@@ -651,10 +651,12 @@ code { font-family:Consolas, monospace; }
 .parallel-view[hidden] { display:none; }
 .parallel-banner { background:var(--notice-bg); border:1px solid var(--notice-border); border-inline-start:4px solid var(--accent); padding:10px 14px; margin:0 0 14px; font-size:.92rem; }
 .parallel-panes { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); column-gap:28px; }
-.parallel-pane { display:grid; grid-template-rows:subgrid; grid-row:span 3; min-width:0; }
+.parallel-pane { display:grid; grid-template-rows:subgrid; grid-row:span 4; min-width:0; }
 .parallel-pane > h2 { margin:0; font-size:1.05rem; }
 .parallel-pane .chapter-bar { padding:8px 0; }
-.parallel-content { min-width:0; }
+.parallel-content { min-width:0; display:grid; grid-template-rows:subgrid; grid-row:span 2; }
+.parallel-passage-header { display:flow-root; align-self:start; }
+.parallel-passage-body { min-width:0; display:flow-root; align-self:start; }
 .parallel-content .lxx-heading,
 .parallel-content .result-head { margin:18px 0 12px; }
 .parallel-content .mobile-verses { background:var(--paper); border:1px solid var(--line); padding:12px 14px; }
@@ -667,6 +669,7 @@ code { font-family:Consolas, monospace; }
 @media (max-width:700px) {
   .parallel-panes { display:flex; flex-direction:column; gap:28px; }
   .parallel-pane { display:block; width:100%; }
+  .parallel-content { display:block; }
   .parallel-content .mobile-verse-text { font-size:1.05rem; }
   .parallel-content .mobile-verse { grid-template-columns:2em minmax(0, 1fr); }
 }
@@ -719,8 +722,8 @@ code { font-family:Consolas, monospace; }
 .print-actions button { margin: 0 .5rem .5rem 0; color: #111; background: #f2eee8; border-color: #786650; }
 .print-actions button:hover { background: #e5dacd; }
 .print-actions button:focus-visible { outline-color: #7a4a24; }
-.print-size-label, .print-layout-label, .print-alignment-label { display: inline-flex; flex-wrap:wrap; align-items: center; gap: .5rem; margin-inline-end:1rem; max-width:100%; }
-.print-layout-label select, .print-alignment-label select { max-width:100%; }
+.print-size-label, .print-layout-label, .print-alignment-label, .print-spacing-label { display: inline-flex; flex-wrap:wrap; align-items: center; gap: .5rem; margin-inline-end:1rem; margin-bottom:.75rem; max-width:100%; }
+.print-layout-label select, .print-alignment-label select, .print-spacing-label select { max-width:100%; }
 .print-actions select { color: #111; background: #f2eee8; border-color: #786650; }
 .print-actions select:focus-visible { outline-color: #7a4a24; }
 .print-text, .print-comparison { margin: 0; overflow-wrap: anywhere; font: 12pt/1.6 Georgia, 'Ezra SIL', 'Noto Sans Coptic', 'Noto Sans Syriac', serif; }
@@ -745,6 +748,12 @@ code { font-family:Consolas, monospace; }
 #print-preview.print-centered .print-verse-heading,
 #print-preview.print-centered .print-comparison-credits h3 { font-size:.8em; line-height:1.25; margin-bottom:.5em; }
 #print-preview.print-centered .print-translation > .print-translation-label { margin-bottom:.6em; }
+#print-preview.print-parsing .print-verse-text:not(.print-unavailable),
+#print-preview.print-parsing .print-text { line-height:3.5; padding-bottom:1.5em; }
+#print-preview.print-parsing .print-verse-text:not(.print-unavailable) { padding-top:1.5em; }
+#print-preview.print-parsing .print-translation { margin:0; }
+#print-preview.print-parsing .print-translation > .print-translation-label { margin-bottom:0; }
+#print-preview.print-parsing .print-verse-group { break-inside:auto; page-break-inside:auto; }
 @media (max-width: 700px) { #print-preview { padding: 1rem; margin: 1rem; } }
 @media print {
   @page { margin: 18mm; }

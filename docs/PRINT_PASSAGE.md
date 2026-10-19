@@ -60,7 +60,16 @@ direction. Layout defaults are recalculated for each newly opened preview.
 
 Short verse groups are kept together where the browser allows. Groups longer
 than a page can span pages; there are no fixed-height verse containers.
-Extra line spacing for handwritten notes is not included in this increment.
+**Print spacing → Parsing — extra writing space** gives source text a 3.5
+line height and adds equal 1.5em writing space above and below each comparison
+paragraph, replacing the normal title/block gaps for symmetrical spacing.
+Sequential output uses the same generous line height and extra space at its
+end. The option works with either alignment and leaves Scripture wording,
+font size and compact centered titles intact. Comparison groups may span
+pages, keeping individual translation blocks together where possible. Missing
+text notices and comparison credits retain normal spacing. Normal is the
+default; the choice lasts for this page session without storage. Parsing uses
+more pages; exported PDF pagination requires visual review.
 
 With a preview open, printing includes only that captured passage. Navigation,
 settings, buttons, search results and the normal page footer are hidden. The
@@ -82,7 +91,7 @@ storage; existing reading, history and bookmarks are unaffected.
 `print-passage.js` owns the in-page preview and print action, and loads before
 `copy-passage.js`, which supplies a print button beside each copy button using
 the same source-text callback. Print CSS is scoped to the open preview class.
-Shell v79 includes compact centered-print titles, retaining data cache v3.
+Shell v80 includes Parsing spacing and parallel box alignment, retaining data cache v3.
 
 Run `npm run test:comparison-print` for desktop/mobile journeys through four
 editions, exact source text, context exclusion, sequential parity, credits,
