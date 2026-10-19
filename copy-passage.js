@@ -9,7 +9,7 @@
     if (!rows.length) return '';
     return [rows.map(row => `${row.label} ${row.text}`).join('\n'), `— ${reference} — ${label}`, notice, ...credits(data)].filter(Boolean).join('\n');
   }
-  function control(getText, description) {
+  function control(getText, description, getPrintData) {
     const wrap = document.createElement('div'); wrap.className = 'passage-copy';
     const button = document.createElement('button'); button.type = 'button'; button.className = 'copy-passage-button'; button.textContent = 'Copy passage';
     button.setAttribute('aria-label', `Copy passage: ${description}`);
@@ -21,7 +21,7 @@
     const close = document.createElement('button'); close.type = 'button'; close.textContent = 'Close copy text';
     close.addEventListener('click', () => { fallback.hidden = true; button.focus(); });
     fallback.append(hint, text, close); wrap.append(button, status, fallback);
-    wrap.insertBefore(window.MARANATHA_PRINT_PASSAGE.control(getText, description), status);
+    wrap.insertBefore(window.MARANATHA_PRINT_PASSAGE.control(getText, description, getPrintData), status);
     button.addEventListener('click', async () => {
       const value = getText();
       if (!value) { status.textContent = 'No source verse text is available to copy in this passage.'; return; }
@@ -38,5 +38,5 @@
     });
     return wrap;
   }
-  window.MARANATHA_COPY_PASSAGE = Object.freeze({ format, control });
+  window.MARANATHA_COPY_PASSAGE = Object.freeze({ format, control, credits });
 })();

@@ -29,7 +29,8 @@ from another edition.
 - **Local reading aids:** explicit resume, the last 10 recent passages, named
   bookmarks and bookmark JSON export/import. There is no account synchronization.
 - **Copy and print:** source text, references and translation credits stay
-  together. Printing has its own 12/14/16/18/24 pt selector, independent of the
+  together. Printing offers verse-by-verse comparison for eligible shared reading
+  blocks, plus translation-by-translation output. It has its own 12/14/16/18/24 pt selector, independent of the
   reader font size. The browser print dialog can save as PDF; use 100% scaling
   to preserve the chosen point size. Browser headers/footers are optional.
 - **Edition information:** each edition has provenance, coverage, recorded

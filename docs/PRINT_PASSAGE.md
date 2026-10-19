@@ -30,6 +30,28 @@ capture. Printing or cancelling leaves the preview available for retry.
 
 ## Print layout
 
+**Print layout** offers **Verse-by-verse comparison** and
+**Translation-by-translation**. Comparison is the default when the captured
+reading block has at least two eligible editions. Each verse reference is
+followed by the selected editions in reading order, with credits and source
+notices collected at the end. The sequential option retains the original
+copy-text output, with its reference-and-translation lines in bold. Changing
+layout or size does not change the captured passage.
+
+Comparison uses the existing shared reading block and reference safeguards.
+It groups displayed references; it does not certify textual equivalence.
+Independent numbering, known chapter-boundary exceptions and combined source
+units keep sequential output. Native LXX panes remain independent. A Print
+button prints its own block, not every separate pane on the page. Missing
+coverage, note-only references and absent source units are explicitly labelled
+in comparison output; no missing verse is invented. Source placeholders retain
+their marker and a separate explanation. RTL source paragraphs retain their
+direction. Layout defaults are recalculated for each newly opened preview.
+
+Short verse groups are kept together where the browser allows. Groups longer
+than a page can span pages; there are no fixed-height verse containers.
+Handwritten-note spacing is not included in this increment.
+
 With a preview open, printing includes only that captured passage. Navigation,
 settings, buttons, search results and the normal page footer are hidden. The
 layout uses white paper, black text, local source fonts, the selected text size, 18mm page
@@ -50,7 +72,13 @@ storage; existing reading, history and bookmarks are unaffected.
 `print-passage.js` owns the in-page preview and print action, and loads before
 `copy-passage.js`, which supplies a print button beside each copy button using
 the same source-text callback. Print CSS is scoped to the open preview class.
-Shell v75 includes the print-size update, retaining data cache v3.
+Shell v78 includes comparison printing, retaining data cache v3.
+
+Run `npm run test:comparison-print` for desktop/mobile journeys through four
+editions, exact source text, context exclusion, sequential parity, credits,
+font size, RTL, missing coverage, combined-unit and boundary guards, independent
+panes, print-only CSS visibility and storage isolation. These are DOM/CSS
+checks; actual comparison-PDF pagination and rendering require manual review.
 
 Run `npm run test:print-passage` for desktop/mobile DOM checks covering selected
 source text and copy parity, print-only visibility, keyboard/focus behavior,

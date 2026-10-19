@@ -7,6 +7,18 @@ milestones; they are not necessarily the current application state. Use the
 shipped feature inventory, and individual evidence records for verification
 scope. Historical verification claims are not a new audit of today's tree.
 
+## Comparison printing - October 19, 2026
+
+On `codex/comparison-print`, added a verse-by-verse print layout alongside
+the existing translation-by-translation output. Eligible shared reading blocks
+default to comparison; independent numbering, known boundary differences and
+combined source units retain sequential output. Source wording, credits,
+missing-coverage notices, RTL paragraphs and print-size choices are preserved.
+No source datasets or mappings changed. Shell v78 retains data cache v3.
+Dedicated desktop/mobile DOM tests cover the comparison journeys and safeguards;
+actual PDF pagination and rendering still require manual review. This increment
+is awaiting user review and is not yet committed or pushed.
+
 ## Documentation consolidation - October 18, 2026
 
 On `codex/documentation-consolidation`, completed the documentation-only part

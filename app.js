@@ -2479,25 +2479,37 @@ function init() {
 
   // Copy source units rather than rendered cells, which can contain study
   // annotations or multiple visual presentations of the same Hebrew edition.
-  function canonicalCopyText({ bookId, chapterNum, name, verses, translations, exactVerses }) {
+  function canonicalPassageEditions({ bookId, chapterNum, name, verses, translations, exactVerses }) {
     const editions = [...new Map(translations.filter(t => !t.virtual).map(t => [t.id, t])).values()];
     return editions.map(t => {
       const data = window.MARANATHA_TRANSLATIONS?.[t.id];
-      if (!data || !loaded.has(t.id)) return '';
+      if (!data || !loaded.has(t.id)) return null;
       const requested = exactVerses ? [...exactVerses] : verses;
       const units = nativeReadingUnits(bookId, chapterNum, requested, [t], null).verses;
-      const rows = units.flatMap(v => {
+      const positions = units.map(v => {
         const cell = VerseAvailability.cell(data, bookId, chapterNum, v);
-        if (!['text', 'additional'].includes(cell.state) || !cell.text) return [];
-        return [{ label: sourceVerseLabel(bookId, chapterNum, v, [t]), text: cell.text, placeholder: cell.placeholder }];
+        const available = ['text', 'additional'].includes(cell.state) && !!cell.text;
+        return { verse: v, label: sourceVerseLabel(bookId, chapterNum, v, [t]), text: available ? cell.text : null, placeholder: !!cell.placeholder,
+          message: cell.state === 'missing-book' ? 'This edition does not include this book.'
+            : cell.state === 'note' ? 'This reference is retained in a source note, not as main verse text.'
+            : cell.note || 'No separately indexed source verse text is supplied at this reference.' };
       });
+      const rows = positions.filter(row => row.text);
       const reference = exactVerses ? `${name} ${rows.map(row => row.label).join(', ')}` : `${name} ${chapterNum}`;
       const notes = [];
       if (versificationEntry(t, bookId, chapterNum)) notes.push('Source-edition numbering; equal verse numbers do not establish correspondence with another edition.');
       if (rows.length < units.length) notes.push('Only available source verse text is included; missing or note-only positions are not filled.');
       if (rows.some(row => row.placeholder)) notes.push('Bracket-only source placeholders are preserved; they do not supply verse text.');
-      return window.MARANATHA_COPY_PASSAGE.format({ reference, label: t.label, rows, data, notice: notes.join(' ') });
-    }).filter(Boolean).join('\n\n');
+      return { reference, label: t.label, rows, positions, data, notice: notes.join(' '), credits: window.MARANATHA_COPY_PASSAGE.credits(data),
+        language: data.language || (t.id === 'he' ? 'he' : t.id === 'byz' ? 'el' : ''),
+        comparable: !isNativeVersification(t) && !versificationEntry(t, bookId, chapterNum)
+          && positions.every(row => row.label === `${chapterNum}:${row.verse}`),
+      };
+    }).filter(Boolean);
+  }
+
+  function canonicalCopyText(passage) {
+    return canonicalPassageEditions(passage).map(edition => window.MARANATHA_COPY_PASSAGE.format(edition)).filter(Boolean).join('\n\n');
   }
 
   // One heading and reading block for browse/reference modes and parallel panes.
@@ -2525,6 +2537,7 @@ function init() {
     const copy = window.MARANATHA_COPY_PASSAGE.control(
       () => canonicalCopyText({ bookId, chapterNum, name, verses, translations, exactVerses }),
       `${name} ${chapterNum} — ${[...new Set(translations.filter(t => !t.virtual).map(t => t.label))].join(' / ')}`,
+      () => ({ bookName: name, editions: canonicalPassageEditions({ bookId, chapterNum, name, verses, translations, exactVerses }).map(({ data, ...edition }) => edition) }),
     );
     head.appendChild(copy);
 
