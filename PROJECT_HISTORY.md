@@ -7,6 +7,22 @@ milestones; they are not necessarily the current application state. Use the
 shipped feature inventory, and individual evidence records for verification
 scope. Historical verification claims are not a new audit of today's tree.
 
+## Supplemental Greek case government - October 21, 2026
+
+Added a separate, documented general-government annotation layer to the Berean
+and Byzantine Greek interlinears in both modes. Compact case chips have full
+accessible descriptions; explanations and unresolved status stay in disclosures.
+The 56-entry inventory contains 53 reviewed references and 3 unresolved entries.
+No complement scanning, occurrence-specific parsing or source dataset edits
+were introduced. Shell v81 precaches the helper; data cache v3 is retained.
+
+Relevant automated suites passed 366 checks, including 4 regression checks for
+the layout-measurement helper. User-supplied browser captures passed 48/48 checks
+at minimum card widths across four text sizes. Chips add 19.07–24.77px to dense
+cards and 9.07–14.77px to expandable cards. Captures used a desktop viewport;
+physical mobile and assistive-technology behavior were not certified. The user
+approved integration on October 21, 2026. See docs/GRAMMATICAL_ANNOTATIONS.md.
+
 ## Parsing print spacing - October 19, 2026
 
 Added an optional Parsing print-spacing selector alongside the parallel

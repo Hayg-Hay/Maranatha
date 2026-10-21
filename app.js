@@ -640,6 +640,7 @@ const refs = {
       unavailable: 'Interlinear data is available for the Greek New Testament only.',
       sourceNote: 'Greek text: Robinson-Pierpont Byzantine (Unlicense) \u00b7 glosses: Strong\'s, Open Scriptures (CC-BY-SA) \u00b7 candidate reading pilot: John 6:50\u201351.',
       token: { surface: 0, strongs: 1, morph: 2 },
+      grammarScheme: 'robinson',
       readingGlossLabel: 'Reading gloss (candidate pilot)',
       surfaceClass: 'iw-greek',
       rtl: false,
@@ -700,6 +701,7 @@ const refs = {
       chunkGlobal: (bookId) => `MARANATHA_BEREAN_${bookId}`,
       // token = [surface, transliteration, morphology, strongs, gloss]
       token: { surface: 0, translit: 1, morph: 2, strongs: 3, gloss: 4 },
+      grammarScheme: 'berean',
       readingGlossLabel: 'Berean reading gloss',
       surfaceClass: 'iw-greek',
       rtl: false,
@@ -3841,13 +3843,71 @@ function init() {
     return parsedGloss(definition);
   }
 
+  // Supplemental grammar is independent of gloss overrides and source morphology.
+  // Only explicit Greek scheme adapters opt in; Hebrew has its own future rules.
+  function grammaticalAnnotation(config, strongs, morph) {
+    if (!config.grammarScheme) return null;
+    const annotation = window.MARANATHA_GRAMMATICAL_ANNOTATIONS?.lookup({
+      language: 'grc', scheme: config.grammarScheme, strongs, morph,
+    });
+    return annotation && annotation.status !== 'non-applicable' ? annotation : null;
+  }
+
+  function grammarChip(annotation) {
+    if (annotation.status !== 'reviewed') return null;
+    const span = document.createElement('span');
+    span.className = 'iw-case-chip';
+    const abbreviations = { Genitive: 'Gen', Dative: 'Dat', Accusative: 'Acc' };
+    span.textContent = '+' + annotation.cases.map(c => abbreviations[c]).join('/');
+    // The controlling button/summary supplies the full accessible description.
+    span.setAttribute('aria-hidden', 'true');
+    span.title = grammarDescription(annotation);
+    return span;
+  }
+
+  function grammarDescription(annotation) {
+    return `General government: ${annotation.status === 'reviewed' ? annotation.cases.join(' / ') : 'unresolved'}. ${annotation.scope}`;
+  }
+
+  function attachGrammarDescription(control, annotation, id) {
+    const description = document.createElement('span');
+    description.id = id;
+    description.hidden = true;
+    description.textContent = grammarDescription(annotation);
+    control.setAttribute('aria-describedby', id);
+    control.appendChild(description);
+  }
+
+  function appendGrammarNote(parent, annotation) {
+    const note = document.createElement('div');
+    note.className = 'iw-grammar-note';
+    const heading = document.createElement('strong');
+    heading.textContent = annotation.status === 'unresolved'
+      ? 'Supplemental grammar · unresolved' : 'Supplemental grammar';
+    note.appendChild(heading);
+    for (const text of [annotation.note, annotation.scope]) {
+      const p = document.createElement('p');
+      p.textContent = text;
+      note.appendChild(p);
+    }
+    if (annotation.source) {
+      const link = document.createElement('a');
+      link.href = annotation.source.url;
+      link.textContent = annotation.source.title + ' (online reference)';
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      note.appendChild(link);
+    }
+    parent.appendChild(note);
+  }
+
   // Read-mode experiment (Greek and Hebrew): an accessible disclosure card.
   // The button is the always-visible reading surface (word, transliteration,
   // short gloss); the neutral definition, KJV renderings, Strong's id and
   // morphology live in a detail panel that the button reveals. Independent per
   // card (no accordion), keyboard/touch/SR friendly. Study mode does not use
   // this builder.
-  function buildDisclosureWord(config, surface, strongs, morph, definition, rendering, detailId, override) {
+  function buildDisclosureWord(config, surface, strongs, morph, definition, rendering, detailId, override, grammar) {
     // `override` is optional { transliteration, gloss, label }. It is used by
     // the Byzantine candidate-gloss layer, by Berean's own word records, and by
     // the Berean Hebrew pilot (which also passes glossStatus / strongsList /
@@ -3893,7 +3953,16 @@ function init() {
     caret.setAttribute('aria-hidden', 'true');
     caret.textContent = '\u25be';
 
-    button.append(surfaceSpan, translit, shortGlossEl, caret);
+    button.append(surfaceSpan, translit, shortGlossEl);
+    const chip = grammar && grammarChip(grammar);
+    if (chip) {
+      button.classList.add('iw-has-case-chip', `iw-case-count-${grammar.cases.length}`);
+      const footer = document.createElement('span');
+      footer.className = 'iw-grammar-footer';
+      footer.append(chip, caret);
+      button.appendChild(footer);
+    } else button.appendChild(caret);
+    if (grammar) attachGrammarDescription(button, grammar, detailId + '-grammar-description');
 
     const detail = document.createElement('div');
     detail.className = 'iw-detail';
@@ -3959,6 +4028,7 @@ function init() {
       dl.append(dt, dd);
     }
     detail.appendChild(dl);
+    if (grammar) appendGrammarNote(detail, grammar);
 
     button.addEventListener('click', () => {
       const expanded = button.getAttribute('aria-expanded') === 'true';
@@ -4122,6 +4192,7 @@ function init() {
         const surface = raw[layout.surface];
         const strongs = raw[layout.strongs];
         const morph = raw[layout.morph];
+        const grammar = grammaticalAnnotation(config, strongs, morph);
         // Berean supplies its own transliteration and contextual gloss inline;
         // Byzantine/Hebrew do not (gloss comes from Strong's / the candidate
         // layer). `tokenGloss === null` means "not provided by the data".
@@ -4157,7 +4228,7 @@ function init() {
 
         if (disclosure) {
           const detailId = `iw-detail-${book.id}-${chapterNum}-${verseNum}-${t}`;
-          const { button, detail } = buildDisclosureWord(config, surface, strongs, morph, definition, rendering, detailId, override);
+          const { button, detail } = buildDisclosureWord(config, surface, strongs, morph, definition, rendering, detailId, override, grammar);
           words.appendChild(button);
           details.appendChild(detail);
           continue;
@@ -4173,7 +4244,8 @@ function init() {
         else if (tokenGloss !== null) glossText = tokenGloss; // '' = intentional blank
         else glossText = rendering;
 
-        const card = document.createElement('span');
+        // Native details requires flow content; other cards keep their markup.
+        const card = document.createElement(grammar ? 'div' : 'span');
         card.className = 'iw';
 
         const surfaceSpan = document.createElement('span');
@@ -4204,6 +4276,27 @@ function init() {
         meta.textContent = strongsLabel;
 
         card.append(surfaceSpan, translit, gloss, meta);
+        if (grammar) {
+          const disclosure = document.createElement('details');
+          disclosure.className = 'iw-grammar-disclosure';
+          const summary = document.createElement('summary');
+          summary.setAttribute('aria-label', `Supplemental grammar for ${surface}`);
+          const chip = grammarChip(grammar);
+          if (chip) {
+            card.classList.add('iw-has-case-chip', `iw-case-count-${grammar.cases.length}`);
+            summary.appendChild(chip);
+          }
+          else summary.appendChild(document.createTextNode('Grammar'));
+          const caret = document.createElement('span');
+          caret.className = 'iw-grammar-caret';
+          caret.setAttribute('aria-hidden', 'true');
+          caret.textContent = '\u25be';
+          summary.appendChild(caret);
+          attachGrammarDescription(summary, grammar, `iw-grammar-description-${book.id}-${chapterNum}-${verseNum}-${t}`);
+          disclosure.appendChild(summary);
+          appendGrammarNote(disclosure, grammar);
+          card.appendChild(disclosure);
+        }
         words.appendChild(card);
       }
       block.appendChild(words);

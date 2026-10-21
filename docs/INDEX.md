@@ -46,6 +46,8 @@ font notices under `fonts/` are distinct from application-code licensing.
 
 ## Study and source records
 
+- [Supplemental grammatical annotations](GRAMMATICAL_ANNOTATIONS.md): Greek
+  case government, references, coverage inventory and unresolved questions.
 - [Native Swete source and licence](../data/LICENSE-lxx-swete.md).
 - [Native LXX verification report](../build/reports/architect-handoff-REPORT.md).
 - [Stage 2 architecture](STAGE2A_ARCHITECTURE.md),

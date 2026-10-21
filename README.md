@@ -104,6 +104,11 @@ Malachi samples. Glosses, dictionaries and morphology explanations are study
 material, not additional Scripture. Coverage, source notices and draft limits
 remain visible in the relevant controls/readings.
 
+Both Greek interlinears include separately labelled supplemental preposition
+case-government notes in Reading and Study modes. These describe general NT
+grammar and do not identify complements or parse an occurrence automatically.
+See the [reference and coverage inventory](docs/GRAMMATICAL_ANNOTATIONS.md).
+
 The **LXX alignment pilot (Genesis 1-15)** is opt-in and off by default. Its
 correspondences remain **proposals awaiting human review**. Shipped proposal
 coverage does not mean verified alignment. See the

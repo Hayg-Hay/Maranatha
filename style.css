@@ -381,7 +381,7 @@ code { font-family:Consolas, monospace; }
 }
 .interlinear-ref { font-weight: bold; color: var(--accent); font-size: .9rem; margin-bottom: 4px; }
 .interlinear-caption { color: var(--muted); font-size: .9rem; margin-bottom: 8px; }
-.interlinear-words { display: flex; flex-wrap: wrap; gap: 8px; }
+.interlinear-words { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 8px; }
 .iw {
   display: inline-flex;
   flex-direction: column;
@@ -401,6 +401,33 @@ code { font-family:Consolas, monospace; }
   display: -webkit-box; line-clamp: 2; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
 .iw-meta { font-size: .68rem; color: var(--placeholder); }
+.iw-case-chip {
+  display: inline-block; flex: none; padding: 1px 4px;
+  font-size: .68rem; line-height: 1.2; font-weight: normal;
+  border: 1px solid var(--line); border-radius: 8px;
+  color: var(--verse-ink); white-space: nowrap;
+}
+/* Reserve horizontal room for the full, unbroken chip plus disclosure caret.
+   A three-case chip cannot fit legibly in a 4.5rem border-box card. */
+.iw.iw-case-count-2 { min-width: 6.5rem; }
+.iw.iw-case-count-3 { min-width: 8rem; }
+.iw-grammar-footer,
+.iw-grammar-disclosure > summary {
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+  min-width: max-content; margin-top: 2px;
+}
+.iw-grammar-disclosure { max-width: 100%; text-align: left; }
+.iw-grammar-disclosure > summary { cursor: pointer; padding: 0; font-size: .68rem; line-height: 1.2; list-style: none; }
+.iw-grammar-disclosure > summary::-webkit-details-marker { display: none; }
+.iw-grammar-caret { flex: none; font-size: .6rem; }
+.iw-grammar-disclosure:not([open]) .iw-grammar-caret { transform: rotate(-90deg); }
+.iw-grammar-disclosure > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.iw-grammar-note {
+  margin: 6px 0; padding: 7px; border-inline-start: 2px dashed var(--accent);
+  font-size: .8rem; line-height: 1.5; color: var(--verse-ink);
+  text-align: left; overflow-wrap: anywhere; white-space: normal;
+}
+.iw-grammar-note p { margin: 5px 0; }
 .interlinear-source { color: var(--muted); font-size: .8rem; margin-top: 10px; }
 
 /* Documented source omissions (e.g. NA-omitted verses in Berean). A real,
@@ -452,6 +479,9 @@ code { font-family:Consolas, monospace; }
   transition: transform .15s ease;
 }
 .iw-toggle.is-expanded .iw-caret { transform: translateX(-50%) rotate(180deg); }
+.iw-toggle.iw-has-case-chip { padding-bottom: 5px; }
+.iw-grammar-footer .iw-caret { position: static; transform: none; }
+.iw-toggle.is-expanded .iw-grammar-footer .iw-caret { transform: rotate(180deg); }
 .interlinear-details { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
 .iw-detail {
   background: var(--paper);
